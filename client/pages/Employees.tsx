@@ -1586,10 +1586,8 @@ ${data.timeEntries
             </DialogTrigger>
             <DialogContent className="max-w-md mx-4 max-h-[90vh] overflow-y-auto">
               <DialogHeader>
-                <DialogTitle>Record Daily Sale</DialogTitle>
-                <DialogDescription>
-                  Record a sale for an employee.
-                </DialogDescription>
+                <DialogTitle>{t("employees.record_daily_sale_title")}</DialogTitle>
+                <DialogDescription>{t("employees.record_sale_desc")}</DialogDescription>
               </DialogHeader>
               <div className="space-y-4">
                 <div className="space-y-2">
@@ -1693,17 +1691,17 @@ ${data.timeEntries
                 </div>
                 <div className="flex gap-2">
                   <Button className="flex-1" onClick={addDailySale}>
-                    Record Sale
-                  </Button>
+                  {t("employees.record_sale")}
+                </Button>
                   <Button
-                    variant="outline"
-                    onClick={() => {
-                      clearNewSale();
-                      setIsAddSaleOpen(false);
-                    }}
-                  >
-                    Cancel
-                  </Button>
+                  variant="outline"
+                  onClick={() => {
+                    clearNewSale();
+                    setIsAddSaleOpen(false);
+                  }}
+                >
+                  {t("common.cancel")}
+                </Button>
                 </div>
               </div>
             </DialogContent>
