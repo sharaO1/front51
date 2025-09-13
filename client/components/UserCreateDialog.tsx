@@ -176,7 +176,10 @@ export default function UserCreateDialog({
       const fullName = `${firstName} ${lastName}`.trim();
       toast({
         title: t("admin.users.toast.created_success_title"),
-        description: t("admin.users.toast.created_success_desc", { name: fullName, role: t(`roles.labels.${formData.role}`) }),
+        description: t("admin.users.toast.created_success_desc", {
+          name: fullName,
+          role: t(`roles.labels.${formData.role}`),
+        }),
       });
 
       setFormData({
@@ -195,7 +198,8 @@ export default function UserCreateDialog({
     } catch (error: any) {
       toast({
         title: t("admin.users.toast.error"),
-        description: error?.message || t("admin.users.toast.create_failed_fallback"),
+        description:
+          error?.message || t("admin.users.toast.create_failed_fallback"),
         variant: "destructive",
       });
     } finally {
@@ -283,7 +287,9 @@ export default function UserCreateDialog({
         >
           {/* Basic Information */}
           <div className="space-y-4">
-            <h3 className="text-lg font-medium">{t("admin.users.create.sections.basic_info")}</h3>
+            <h3 className="text-lg font-medium">
+              {t("admin.users.create.sections.basic_info")}
+            </h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
@@ -383,7 +389,9 @@ export default function UserCreateDialog({
 
           {/* Role and Permissions */}
           <div className="space-y-4">
-            <h3 className="text-lg font-medium">{t("admin.users.create.sections.role_access")}</h3>
+            <h3 className="text-lg font-medium">
+              {t("admin.users.create.sections.role_access")}
+            </h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
@@ -413,15 +421,27 @@ export default function UserCreateDialog({
                   }
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder={t("admin.users.create.placeholders.select_department")} />
+                    <SelectValue
+                      placeholder={t(
+                        "admin.users.create.placeholders.select_department",
+                      )}
+                    />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="sales">{t("departments.sales")}</SelectItem>
-                    <SelectItem value="marketing">{t("departments.marketing")}</SelectItem>
-                    <SelectItem value="finance">{t("departments.finance")}</SelectItem>
+                    <SelectItem value="sales">
+                      {t("departments.sales")}
+                    </SelectItem>
+                    <SelectItem value="marketing">
+                      {t("departments.marketing")}
+                    </SelectItem>
+                    <SelectItem value="finance">
+                      {t("departments.finance")}
+                    </SelectItem>
                     <SelectItem value="hr">{t("departments.hr")}</SelectItem>
                     <SelectItem value="it">{t("departments.it")}</SelectItem>
-                    <SelectItem value="operations">{t("departments.operations")}</SelectItem>
+                    <SelectItem value="operations">
+                      {t("departments.operations")}
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -444,7 +464,9 @@ export default function UserCreateDialog({
                     placeholder={
                       loadingFilials
                         ? t("filials.loading")
-                        : t("admin.users.create.placeholders.select_work_location")
+                        : t(
+                            "admin.users.create.placeholders.select_work_location",
+                          )
                     }
                   />
                 </SelectTrigger>
@@ -463,11 +485,19 @@ export default function UserCreateDialog({
 
             {/* Role Preview */}
             <div className="p-4 bg-muted rounded-lg">
-              <h4 className="font-medium mb-2">{t("admin.users.create.sections.permissions_preview")}</h4>
+              <h4 className="font-medium mb-2">
+                {t("admin.users.create.sections.permissions_preview")}
+              </h4>
               <div className="text-sm text-muted-foreground">
                 <RoleBadge role={formData.role} className="mb-2" />
                 <p>
-                  {t("admin.users.create.permissions_summary", { count: ROLE_PERMISSIONS[formData.role]?.length || 0, resources: new Set(ROLE_PERMISSIONS[formData.role]?.map((p) => p.resource)).size || 0 })}
+                  {t("admin.users.create.permissions_summary", {
+                    count: ROLE_PERMISSIONS[formData.role]?.length || 0,
+                    resources:
+                      new Set(
+                        ROLE_PERMISSIONS[formData.role]?.map((p) => p.resource),
+                      ).size || 0,
+                  })}
                 </p>
               </div>
             </div>
@@ -475,14 +505,18 @@ export default function UserCreateDialog({
 
           {/* Additional Notes */}
           <div className="space-y-2">
-            <Label htmlFor="notes">{t("admin.users.create.labels.additional_notes")}</Label>
+            <Label htmlFor="notes">
+              {t("admin.users.create.labels.additional_notes")}
+            </Label>
             <Textarea
               id="notes"
               value={formData.notes}
               onChange={(e) =>
                 setFormData((prev) => ({ ...prev, notes: e.target.value }))
               }
-              placeholder={t("admin.users.create.placeholders.additional_notes")}
+              placeholder={t(
+                "admin.users.create.placeholders.additional_notes",
+              )}
               rows={3}
             />
           </div>
@@ -491,7 +525,8 @@ export default function UserCreateDialog({
           <div className="flex items-start gap-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
             <AlertCircle className="h-4 w-4 text-amber-600 mt-0.5" />
             <div className="text-sm text-amber-800">
-              <strong>{t("admin.users.create.security_notice_title")}</strong> {t("admin.users.create.security_notice_message")}
+              <strong>{t("admin.users.create.security_notice_title")}</strong>{" "}
+              {t("admin.users.create.security_notice_message")}
             </div>
           </div>
         </form>

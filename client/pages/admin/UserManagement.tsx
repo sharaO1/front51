@@ -110,7 +110,9 @@ export default function UserManagement() {
     if (success) {
       toast({
         title: t("admin.users.toast.role_updated_title"),
-        description: t("admin.users.toast.role_updated_desc", { role: t(`roles.labels.${newRole}`) || newRole.replace("_", " ") }),
+        description: t("admin.users.toast.role_updated_desc", {
+          role: t(`roles.labels.${newRole}`) || newRole.replace("_", " "),
+        }),
       });
       setIsRoleDialogOpen(false);
     } else {
@@ -130,7 +132,9 @@ export default function UserManagement() {
     if (success) {
       toast({
         title: t("admin.users.toast.status_updated_title"),
-        description: t("admin.users.toast.status_updated_desc", { status: t(`status.${status}`) || status }),
+        description: t("admin.users.toast.status_updated_desc", {
+          status: t(`status.${status}`) || status,
+        }),
       });
     } else {
       toast({
@@ -304,7 +308,9 @@ export default function UserManagement() {
                       <TableHead>{t("admin.users.table.role")}</TableHead>
                       <TableHead>{t("admin.users.table.department")}</TableHead>
                       <TableHead>{t("admin.users.table.status")}</TableHead>
-                      <TableHead className="text-right">{t("admin.users.table.actions")}</TableHead>
+                      <TableHead className="text-right">
+                        {t("admin.users.table.actions")}
+                      </TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -349,7 +355,9 @@ export default function UserManagement() {
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
-                              <DropdownMenuLabel>{t("admin.users.menu.actions")}</DropdownMenuLabel>
+                              <DropdownMenuLabel>
+                                {t("admin.users.menu.actions")}
+                              </DropdownMenuLabel>
                               <DropdownMenuItem
                                 onClick={() => {
                                   setSelectedUser(user);
@@ -429,9 +437,13 @@ export default function UserManagement() {
           <Dialog open={isRoleDialogOpen} onOpenChange={setIsRoleDialogOpen}>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>{t("admin.users.dialogs.change_role.title")}</DialogTitle>
+                <DialogTitle>
+                  {t("admin.users.dialogs.change_role.title")}
+                </DialogTitle>
                 <DialogDescription>
-                  {t("admin.users.dialogs.change_role.desc_prefix")} {selectedUser?.name}. {t("admin.users.dialogs.change_role.desc_suffix")}
+                  {t("admin.users.dialogs.change_role.desc_prefix")}{" "}
+                  {selectedUser?.name}.{" "}
+                  {t("admin.users.dialogs.change_role.desc_suffix")}
                 </DialogDescription>
               </DialogHeader>
 
@@ -460,7 +472,9 @@ export default function UserManagement() {
                   </div>
 
                   <div>
-                    <label className="text-sm font-medium">{t("admin.users.dialogs.change_role.new_role")}</label>
+                    <label className="text-sm font-medium">
+                      {t("admin.users.dialogs.change_role.new_role")}
+                    </label>
                     <div className="mt-2">
                       <RoleSelector
                         currentRole={selectedUser.role}
@@ -476,7 +490,8 @@ export default function UserManagement() {
                   <div className="flex items-start gap-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
                     <AlertCircle className="h-4 w-4 text-amber-600 mt-0.5" />
                     <div className="text-sm text-amber-800">
-                      <strong>{t("admin.users.dialogs.warning.title")}</strong> {t("admin.users.dialogs.warning.message")}
+                      <strong>{t("admin.users.dialogs.warning.title")}</strong>{" "}
+                      {t("admin.users.dialogs.warning.message")}
                     </div>
                   </div>
                 </div>
@@ -491,9 +506,12 @@ export default function UserManagement() {
           >
             <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
               <DialogHeader>
-                <DialogTitle>{t("admin.users.dialogs.permissions.title")}</DialogTitle>
+                <DialogTitle>
+                  {t("admin.users.dialogs.permissions.title")}
+                </DialogTitle>
                 <DialogDescription>
-                  {t("admin.users.dialogs.permissions.desc_prefix")} {selectedUser?.name}
+                  {t("admin.users.dialogs.permissions.desc_prefix")}{" "}
+                  {selectedUser?.name}
                 </DialogDescription>
               </DialogHeader>
 
