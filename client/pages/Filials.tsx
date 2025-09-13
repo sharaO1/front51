@@ -455,8 +455,8 @@ export default function Filials() {
       !newFilial.manager
     ) {
       toast({
-        title: "Error",
-        description: "Please fill in all required fields",
+        title: t("common.error"),
+        description: t("filials.required_fields_error"),
         variant: "destructive",
       });
       return;
@@ -498,8 +498,8 @@ export default function Filials() {
     setIsAddDialogOpen(false);
 
     toast({
-      title: "Filial added",
-      description: `${filial.name} has been added successfully.`,
+      title: t("filials.toast.added_title"),
+      description: t("filials.toast.added_desc", { name: filial.name }),
     });
   };
 
@@ -512,8 +512,8 @@ export default function Filials() {
       !newFilial.manager
     ) {
       toast({
-        title: "Error",
-        description: "Please fill in all required fields",
+        title: t("common.error"),
+        description: t("filials.required_fields_error"),
         variant: "destructive",
       });
       return;
@@ -557,8 +557,8 @@ export default function Filials() {
     setIsEditDialogOpen(false);
 
     toast({
-      title: "Filial updated",
-      description: `${updatedFilial.name} has been updated successfully.`,
+      title: t("filials.toast.updated_title"),
+      description: t("filials.toast.updated_desc", { name: updatedFilial.name }),
     });
   };
 
@@ -569,8 +569,8 @@ export default function Filials() {
     setFilials(filials.filter((f) => f.id !== filialId));
 
     toast({
-      title: "Filial deleted",
-      description: `${filial.name} has been removed.`,
+      title: t("filials.toast.deleted_title"),
+      description: t("filials.toast.deleted_desc", { name: filial.name }),
     });
   };
 
@@ -590,7 +590,7 @@ export default function Filials() {
           <DialogTrigger asChild>
             <Button>
               <Plus className="mr-2 h-4 w-4" />
-              Add Filial
+              {t("filials.add_filial")}
             </Button>
           </DialogTrigger>
           <DialogContent className="max-w-2xl">
@@ -774,7 +774,7 @@ export default function Filials() {
               </div>
               <div className="flex gap-2">
                 <Button className="flex-1" onClick={addFilial}>
-                  Add Filial
+                  {t("filials.add_filial")}
                 </Button>
                 <Button
                   variant="outline"
@@ -1124,12 +1124,12 @@ export default function Filials() {
         </DialogContent>
       </Dialog>
 
-      {/* Edit Filial Dialog - Similar structure to Add Dialog */}
+      {/* {t("filials.edit_filial")} Dialog - Similar structure to Add Dialog */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Edit Filial</DialogTitle>
-            <DialogDescription>Update filial information.</DialogDescription>
+            <DialogTitle>{t("filials.edit_filial")}</DialogTitle>
+            <DialogDescription>{t("filials.edit_description")}</DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             {/* Same form structure as Add Dialog but with edit functionality */}
@@ -1204,7 +1204,7 @@ export default function Filials() {
             </div>
             <div className="flex gap-2">
               <Button className="flex-1" onClick={editFilial}>
-                Update Filial
+                {t("filials.update_filial")}
               </Button>
               <Button
                 variant="outline"
