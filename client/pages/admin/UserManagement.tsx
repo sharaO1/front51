@@ -192,9 +192,7 @@ export default function UserManagement() {
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold">{t("admin.users.title")}</h1>
-        <p className="text-muted-foreground">
-          Manage user accounts, permissions, and access control
-        </p>
+        <p className="text-muted-foreground">{t("admin.users.subtitle")}</p>
       </div>
 
       <div className="w-full">
