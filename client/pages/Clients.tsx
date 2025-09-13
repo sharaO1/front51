@@ -371,7 +371,9 @@ export default function Clients() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">{t("clients.title")}</h1>
+          <h1 className="text-3xl font-bold tracking-tight">
+            {t("clients.title")}
+          </h1>
           <p className="text-muted-foreground">{t("clients.subtitle")}</p>
         </div>
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
@@ -384,7 +386,9 @@ export default function Clients() {
           <DialogContent className="max-w-md">
             <DialogHeader>
               <DialogTitle>{t("clients.add_new_client")}</DialogTitle>
-              <DialogDescription>{t("clients.create_client_profile")}</DialogDescription>
+              <DialogDescription>
+                {t("clients.create_client_profile")}
+              </DialogDescription>
             </DialogHeader>
             <div className="space-y-4">
               <div className="space-y-2">
@@ -446,14 +450,22 @@ export default function Clients() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="retail">{t("clients.retail")}</SelectItem>
-                      <SelectItem value="wholesale">{t("clients.wholesale")}</SelectItem>
-                      <SelectItem value="distributor">{t("clients.distributor")}</SelectItem>
+                      <SelectItem value="retail">
+                        {t("clients.retail")}
+                      </SelectItem>
+                      <SelectItem value="wholesale">
+                        {t("clients.wholesale")}
+                      </SelectItem>
+                      <SelectItem value="distributor">
+                        {t("clients.distributor")}
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="creditLimit">{t("clients.credit_limit")}</Label>
+                  <Label htmlFor="creditLimit">
+                    {t("clients.credit_limit")}
+                  </Label>
                   <Input
                     id="creditLimit"
                     type="number"
@@ -500,20 +512,25 @@ export default function Clients() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t("clients.total_clients")}</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              {t("clients.total_clients")}
+            </CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{clients.length}</div>
             <p className="text-xs text-muted-foreground">
-              {clients.filter((c) => c.status === "active").length} {t("status.active")}
+              {clients.filter((c) => c.status === "active").length}{" "}
+              {t("status.active")}
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t("clients.total_debt")}</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              {t("clients.total_debt")}
+            </CardTitle>
             <CreditCard className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -523,13 +540,17 @@ export default function Clients() {
                 .reduce((sum, c) => sum + c.currentDebt, 0)
                 .toLocaleString()}
             </div>
-            <p className="text-xs text-muted-foreground">{t("clients.across_all_clients")}</p>
+            <p className="text-xs text-muted-foreground">
+              {t("clients.across_all_clients")}
+            </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t("clients.overdue_payments")}</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              {t("clients.overdue_payments")}
+            </CardTitle>
             <AlertTriangle className="h-4 w-4 text-red-500" />
           </CardHeader>
           <CardContent>
@@ -544,7 +565,9 @@ export default function Clients() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t("dashboard.total_sales")}</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              {t("dashboard.total_sales")}
+            </CardTitle>
             <CreditCard className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -554,7 +577,9 @@ export default function Clients() {
                 .reduce((sum, c) => sum + c.totalPurchases, 0)
                 .toLocaleString()}
             </div>
-            <p className="text-xs text-muted-foreground">{t("clients.all_time_revenue")}</p>
+            <p className="text-xs text-muted-foreground">
+              {t("clients.all_time_revenue")}
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -581,8 +606,12 @@ export default function Clients() {
               <SelectContent>
                 <SelectItem value="all">{t("clients.all_types")}</SelectItem>
                 <SelectItem value="retail">{t("clients.retail")}</SelectItem>
-                <SelectItem value="wholesale">{t("clients.wholesale")}</SelectItem>
-                <SelectItem value="distributor">{t("clients.distributor")}</SelectItem>
+                <SelectItem value="wholesale">
+                  {t("clients.wholesale")}
+                </SelectItem>
+                <SelectItem value="distributor">
+                  {t("clients.distributor")}
+                </SelectItem>
               </SelectContent>
             </Select>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
@@ -617,7 +646,8 @@ export default function Clients() {
                     <div>
                       <div className="font-medium">{client.name}</div>
                       <div className="text-sm text-muted-foreground">
-                        {t("common.total")}: ${client.totalPurchases.toLocaleString()}
+                        {t("common.total")}: $
+                        {client.totalPurchases.toLocaleString()}
                       </div>
                     </div>
                   </TableCell>
@@ -640,7 +670,8 @@ export default function Clients() {
                         ${client.currentDebt.toLocaleString()}
                       </div>
                       <div className="text-sm text-muted-foreground">
-                        {t("clients.credit_limit")}: ${client.creditLimit.toLocaleString()}
+                        {t("clients.credit_limit")}: $
+                        {client.creditLimit.toLocaleString()}
                       </div>
                     </div>
                   </TableCell>
@@ -801,9 +832,15 @@ export default function Clients() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="retail">{t("clients.retail")}</SelectItem>
-                      <SelectItem value="wholesale">{t("clients.wholesale")}</SelectItem>
-                      <SelectItem value="distributor">{t("clients.distributor")}</SelectItem>
+                      <SelectItem value="retail">
+                        {t("clients.retail")}
+                      </SelectItem>
+                      <SelectItem value="wholesale">
+                        {t("clients.wholesale")}
+                      </SelectItem>
+                      <SelectItem value="distributor">
+                        {t("clients.distributor")}
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>

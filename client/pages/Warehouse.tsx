@@ -1507,8 +1507,10 @@ export default function Warehouse() {
   const formatParty = (party?: string): string => {
     const p = String(party || "").toLowerCase();
     if (p.includes("supplier")) return t("warehouse.supplier");
-    if (p.includes("client") || p.includes("customer")) return t("warehouse.client");
-    if (p.includes("filial") || p.includes("other") || p.includes("transfer")) return t("warehouse.transfer");
+    if (p.includes("client") || p.includes("customer"))
+      return t("warehouse.client");
+    if (p.includes("filial") || p.includes("other") || p.includes("transfer"))
+      return t("warehouse.transfer");
     if (p.includes("discard")) return t("warehouse.discarded");
     return party || "";
   };
@@ -1578,7 +1580,14 @@ export default function Warehouse() {
       entityType: "stock",
       entityId: productId,
       entityName: product.name,
-      description: t(type === "stock_in" ? "warehouse.history_text.added_units" : type === "stock_out" ? "warehouse.history_text.removed_units" : "warehouse.history_text.adjusted_units", { count: quantity, reason: formatReason(reason) }),
+      description: t(
+        type === "stock_in"
+          ? "warehouse.history_text.added_units"
+          : type === "stock_out"
+            ? "warehouse.history_text.removed_units"
+            : "warehouse.history_text.adjusted_units",
+        { count: quantity, reason: formatReason(reason) },
+      ),
       performedBy: "Current User",
       date: new Date().toISOString().split("T")[0],
       time: new Date().toLocaleTimeString([], {
@@ -1702,7 +1711,14 @@ export default function Warehouse() {
         entityType: "stock",
         entityId: movement.productId,
         entityName: movement.productName,
-        description: t(movement.type === "stock_in" ? "warehouse.history_text.added_units" : movement.type === "stock_out" ? "warehouse.history_text.removed_units" : "warehouse.history_text.adjusted_units", { count: movement.quantity, reason: formatReason(movement.reason) }),
+        description: t(
+          movement.type === "stock_in"
+            ? "warehouse.history_text.added_units"
+            : movement.type === "stock_out"
+              ? "warehouse.history_text.removed_units"
+              : "warehouse.history_text.adjusted_units",
+          { count: movement.quantity, reason: formatReason(movement.reason) },
+        ),
         performedBy: movement.performedBy,
         date: movement.date,
         time: movement.time,
@@ -1866,7 +1882,14 @@ export default function Warehouse() {
         entityType: "stock",
         entityId: movement.productId,
         entityName: movement.productName,
-        description: t(movement.type === "stock_in" ? "warehouse.history_text.added_units" : movement.type === "stock_out" ? "warehouse.history_text.removed_units" : "warehouse.history_text.adjusted_units", { count: movement.quantity, reason: formatReason(movement.reason) }),
+        description: t(
+          movement.type === "stock_in"
+            ? "warehouse.history_text.added_units"
+            : movement.type === "stock_out"
+              ? "warehouse.history_text.removed_units"
+              : "warehouse.history_text.adjusted_units",
+          { count: movement.quantity, reason: formatReason(movement.reason) },
+        ),
         performedBy: movement.performedBy,
         date: movement.date,
         time: movement.time,
@@ -2018,7 +2041,9 @@ export default function Warehouse() {
         entityType: "product",
         entityId: product.id,
         entityName: product.name,
-        description: t("warehouse.history_text.created_product", { name: product.name }),
+        description: t("warehouse.history_text.created_product", {
+          name: product.name,
+        }),
         performedBy: "Current User",
         date: new Date().toISOString().split("T")[0],
         time: new Date().toLocaleTimeString([], {
@@ -2183,7 +2208,9 @@ export default function Warehouse() {
       entityType: "product",
       entityId: editingProduct.id,
       entityName: updatedProduct.name,
-      description: t("warehouse.history_text.updated_product", { name: updatedProduct.name }),
+      description: t("warehouse.history_text.updated_product", {
+        name: updatedProduct.name,
+      }),
       performedBy: "Current User",
       date: new Date().toISOString().split("T")[0],
       time: new Date().toLocaleTimeString([], {
@@ -2217,7 +2244,9 @@ export default function Warehouse() {
 
     toast({
       title: t("warehouse.toast.product_updated_title"),
-      description: t("warehouse.toast.product_updated_desc", { name: updatedProduct.name }),
+      description: t("warehouse.toast.product_updated_desc", {
+        name: updatedProduct.name,
+      }),
     });
   };
 
@@ -2257,7 +2286,9 @@ export default function Warehouse() {
       entityType: "product",
       entityId: productId,
       entityName: product.name,
-      description: t("warehouse.history_text.deleted_product", { name: product.name }),
+      description: t("warehouse.history_text.deleted_product", {
+        name: product.name,
+      }),
       performedBy: "Current User",
       date: new Date().toISOString().split("T")[0],
       time: new Date().toLocaleTimeString([], {
@@ -3084,7 +3115,8 @@ export default function Warehouse() {
                                   !movement.fromStore &&
                                   movement.reason && (
                                     <span>
-                                      {t("warehouse.reason")}: {formatReason(movement.reason)}
+                                      {t("warehouse.reason")}:{" "}
+                                      {formatReason(movement.reason)}
                                     </span>
                                   )}
 
@@ -3118,7 +3150,8 @@ export default function Warehouse() {
                                     .includes("discard") && (
                                     <>
                                       <br />
-                                      {t("warehouse.reason")}: {formatReason(movement.reason)}
+                                      {t("warehouse.reason")}:{" "}
+                                      {formatReason(movement.reason)}
                                     </>
                                   )}
                               </>
@@ -3868,8 +3901,12 @@ export default function Warehouse() {
                       <SelectValue placeholder={t("warehouse.select_reason")} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="Purchase">{t("warehouse.purchase")}</SelectItem>
-                      <SelectItem value="Return">{t("warehouse.return")}</SelectItem>
+                      <SelectItem value="Purchase">
+                        {t("warehouse.purchase")}
+                      </SelectItem>
+                      <SelectItem value="Return">
+                        {t("warehouse.return")}
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
