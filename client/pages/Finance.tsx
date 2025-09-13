@@ -1479,7 +1479,7 @@ ${data.transactions
                     <SelectValue placeholder={t("common.category")} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">All Categories</SelectItem>
+                    <SelectItem value="all">{t("finance.all_categories")}</SelectItem>
                     <SelectItem value="Sales Revenue">Sales Revenue</SelectItem>
                     <SelectItem value="Office Supplies">
                       Office Supplies
