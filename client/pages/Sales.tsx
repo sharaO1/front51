@@ -1315,9 +1315,7 @@ export default function Sales() {
                   <span className="ml-2 px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">
                     {dateFilter === "custom" && startDate && endDate
                       ? `${startDate} ${t("sales.to")} ${endDate}`
-                      : dateFilter
-                          .replace("_", " ")
-                          .replace(/\b\w/g, (l) => l.toUpperCase())}
+                      : t(`sales.${dateFilter}`)}
                   </span>
                 )}
               </span>
