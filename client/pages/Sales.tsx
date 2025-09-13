@@ -1719,19 +1719,16 @@ Generated on: ${new Date().toLocaleString()}
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <AlertTriangle className="h-5 w-5 text-red-500" />
-              Cancel Invoice
+              {t("sales.cancel_invoice")}
             </DialogTitle>
-            <DialogDescription>
-              Please provide a reason for cancelling invoice{" "}
-              {invoiceToCancel?.invoiceNumber}.
-            </DialogDescription>
+            <DialogDescription>{t("sales.cancel_invoice_desc", { number: invoiceToCancel?.invoiceNumber })}</DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="cancellationReason">Cancellation Reason *</Label>
+              <Label htmlFor="cancellationReason">{t("sales.cancellation_reason_required")}</Label>
               <Textarea
                 id="cancellationReason"
-                placeholder="Enter the reason for cancelling this invoice..."
+                placeholder={t("sales.cancellation_reason_placeholder")}
                 value={cancellationReason}
                 onChange={(e) => setCancellationReason(e.target.value)}
                 rows={4}
@@ -1755,7 +1752,7 @@ Generated on: ${new Date().toLocaleString()}
                   setCancellationReason("");
                 }}
               >
-                Keep Invoice
+                {t("sales.keep_invoice")}
               </Button>
             </div>
           </div>
