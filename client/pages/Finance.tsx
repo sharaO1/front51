@@ -349,7 +349,9 @@ export default function Finance() {
   const accessToken = useAuthStore((s) => s.accessToken);
   const user = useAuthStore((s) => s.user);
   const [usersMap, setUsersMap] = useState<Record<string, string>>({});
-  const [usersFilialMap, setUsersFilialMap] = useState<Record<string, string>>({});
+  const [usersFilialMap, setUsersFilialMap] = useState<Record<string, string>>(
+    {},
+  );
   const [clientsMap, setClientsMap] = useState<Record<string, string>>({});
   const { t } = useTranslation();
 
@@ -430,7 +432,11 @@ export default function Finance() {
                   u.email ||
                   id) as string;
                 const fid =
-                  u.filialId ?? u.filialID ?? u.storeId ?? u.branchId ?? u.locationId;
+                  u.filialId ??
+                  u.filialID ??
+                  u.storeId ??
+                  u.branchId ??
+                  u.locationId;
                 if (fid) usersFilialLocal[id] = String(fid);
               }
             } catch (err) {
@@ -1127,9 +1133,7 @@ ${data.transactions
           <h1 className="text-3xl font-bold tracking-tight">
             {t("finance.title")}
           </h1>
-          <p className="text-muted-foreground">
-            {t("finance.subtitle")}
-          </p>
+          <p className="text-muted-foreground">{t("finance.subtitle")}</p>
         </div>
         <div className="flex gap-2">
           <DropdownMenu>
@@ -1202,7 +1206,9 @@ ${data.transactions
                 >
                   <Download className="mr-2 h-4 w-4" />
                   <div className="flex-1">
-                    <div className="font-medium">{t("finance.financial_goals")}</div>
+                    <div className="font-medium">
+                      {t("finance.financial_goals")}
+                    </div>
                     <div className="text-xs text-muted-foreground">
                       {t("finance.track_financial_objectives")}
                     </div>
@@ -1356,7 +1362,9 @@ ${data.transactions
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t("finance.total_income")}</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              {t("finance.total_income")}
+            </CardTitle>
             <ArrowUpCircle className="h-4 w-4 text-green-600" />
           </CardHeader>
           <CardContent>
@@ -1388,7 +1396,9 @@ ${data.transactions
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t("finance.net_profit")}</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              {t("finance.net_profit")}
+            </CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -1414,17 +1424,25 @@ ${data.transactions
             <div className="text-2xl font-bold">
               {transactions.filter((t) => t.status === "pending").length}
             </div>
-            <p className="text-xs text-muted-foreground">{t("finance.awaiting_completion")}</p>
+            <p className="text-xs text-muted-foreground">
+              {t("finance.awaiting_completion")}
+            </p>
           </CardContent>
         </Card>
       </div>
 
       <Tabs defaultValue="transactions" className="space-y-4">
         <TabsList>
-          <TabsTrigger value="transactions">{t("finance.transactions")}</TabsTrigger>
+          <TabsTrigger value="transactions">
+            {t("finance.transactions")}
+          </TabsTrigger>
           <TabsTrigger value="debts">{t("finance.debts_lends")}</TabsTrigger>
-          <TabsTrigger value="reports">{t("finance.reports_analytics")}</TabsTrigger>
-          <TabsTrigger value="goals">{t("finance.financial_goals")}</TabsTrigger>
+          <TabsTrigger value="reports">
+            {t("finance.reports_analytics")}
+          </TabsTrigger>
+          <TabsTrigger value="goals">
+            {t("finance.financial_goals")}
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="transactions" className="space-y-4">
@@ -1477,11 +1495,19 @@ ${data.transactions
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">{t("finance.all_time")}</SelectItem>
-                    <SelectItem value="hour">{t("finance.last_hour")}</SelectItem>
+                    <SelectItem value="hour">
+                      {t("finance.last_hour")}
+                    </SelectItem>
                     <SelectItem value="day">{t("finance.last_day")}</SelectItem>
-                    <SelectItem value="week">{t("finance.last_week")}</SelectItem>
-                    <SelectItem value="month">{t("finance.last_month")}</SelectItem>
-                    <SelectItem value="year">{t("finance.last_year")}</SelectItem>
+                    <SelectItem value="week">
+                      {t("finance.last_week")}
+                    </SelectItem>
+                    <SelectItem value="month">
+                      {t("finance.last_month")}
+                    </SelectItem>
+                    <SelectItem value="year">
+                      {t("finance.last_year")}
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -1828,7 +1854,9 @@ ${data.transactions
             <Card>
               <CardHeader>
                 <CardTitle>{t("finance.cash_flow_trend")}</CardTitle>
-                <CardDescription>{t("finance.monthly_income_expenses")}</CardDescription>
+                <CardDescription>
+                  {t("finance.monthly_income_expenses")}
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <ResponsiveContainer width="100%" height={300}>
@@ -1864,7 +1892,9 @@ ${data.transactions
             <Card>
               <CardHeader>
                 <CardTitle>{t("finance.expense_breakdown")}</CardTitle>
-                <CardDescription>{t("finance.expenses_by_category")}</CardDescription>
+                <CardDescription>
+                  {t("finance.expenses_by_category")}
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <ResponsiveContainer width="100%" height={300}>
@@ -1921,7 +1951,9 @@ ${data.transactions
           {/* Financial Goals */}
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-lg font-semibold">{t("finance.financial_goals")}</h3>
+              <h3 className="text-lg font-semibold">
+                {t("finance.financial_goals")}
+              </h3>
               <p className="text-sm text-muted-foreground">
                 {t("finance.track_financial_objectives")}
               </p>
