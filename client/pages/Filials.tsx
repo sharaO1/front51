@@ -1346,7 +1346,6 @@ export default function Filials() {
                     {managerOptions
                       .filter((m) => {
                         const used = getAssignedManagerIds();
-                        // Exclude the current editing filial's manager from the used set
                         const currentId = resolveManagerId(editingFilial?.manager || "");
                         if (currentId) used.delete(currentId);
                         return !used.has(m.id) || m.id === currentId;
@@ -1356,6 +1355,20 @@ export default function Filials() {
                           {m.name}
                         </SelectItem>
                       ))}
+                    {(() => {
+                      const currentId = resolveManagerId(editingFilial?.manager || "");
+                      const hasCurrent = currentId
+                        ? managerOptions.some((m) => m.id === currentId)
+                        : false;
+                      if (currentId && !hasCurrent) {
+                        return (
+                          <SelectItem key={currentId} value={currentId}>
+                            {getManagerDisplay(editingFilial?.manager || String(currentId))}
+                          </SelectItem>
+                        );
+                      }
+                      return null;
+                    })()}
                   </SelectContent>
                 </Select>
               </div>
