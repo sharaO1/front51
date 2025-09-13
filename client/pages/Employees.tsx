@@ -948,18 +948,36 @@ export default function Employees() {
       const { useAuthStore } = await import("@/stores/authStore");
       const token = useAuthStore.getState().accessToken;
 
-      const res = await fetch(joinApi(`/workers/${employee.id}`), {
-        method: "DELETE",
-        headers: {
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
-      });
+      const tryDelete = async (identifier: string) => {
+        const res = await fetch(joinApi(`/workers/${encodeURIComponent(identifier)}`), {
+          method: "DELETE",
+          headers: {
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+        });
+        return res;
+      };
+
+      // First try by primary id, then fall back to employeeId if 404/not found
+      let res = await tryDelete(employee.id);
       if (!res.ok) {
+        const status = res.status;
         const msg = await getErrorMessageFromResponse(res);
-        throw new Error(msg);
+        const notFound = status === 404 || /not\s*found/i.test(msg);
+        if (notFound && employee.employeeId && employee.employeeId !== employee.id) {
+          res = await tryDelete(employee.employeeId);
+        }
+        if (!res.ok) {
+          const finalMsg = await getErrorMessageFromResponse(res);
+          throw new Error(finalMsg || msg || `HTTP ${res.status}`);
+        }
       }
 
-      setEmployees(employees.filter((emp) => emp.employeeId !== employeeId));
+      setEmployees(
+        employees.filter(
+          (emp) => emp.id !== employee.id && emp.employeeId !== employee.employeeId,
+        ),
+      );
       toast({
         title: "Employee removed",
         description: `${employee.firstName} ${employee.lastName} has been removed from the team.`,
