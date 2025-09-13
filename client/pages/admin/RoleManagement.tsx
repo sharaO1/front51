@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Role, ROLE_PERMISSIONS, ROLE_HIERARCHY } from '@shared/rbac';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -29,6 +30,7 @@ import {
 } from 'lucide-react';
 
 export default function RoleManagement() {
+  const { t } = useTranslation();
   const [selectedRole, setSelectedRole] = useState<Role>('admin');
   const [isComparisonOpen, setIsComparisonOpen] = useState(false);
 
@@ -78,10 +80,8 @@ export default function RoleManagement() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold">Role Management</h1>
-          <p className="text-muted-foreground">
-            Manage system roles, permissions, and access hierarchies
-          </p>
+          <h1 className="text-3xl font-bold">{t('admin.roles.title')}</h1>
+          <p className="text-muted-foreground">{t('admin.roles.subtitle')}</p>
         </div>
         <div className="flex gap-2">
           <Button 
@@ -90,11 +90,11 @@ export default function RoleManagement() {
             className="flex items-center gap-2"
           >
             <BarChart3 className="h-4 w-4" />
-            Compare Roles
+            {t('admin.roles.compare_roles')}
           </Button>
           <Button className="flex items-center gap-2">
             <Shield className="h-4 w-4" />
-            Create Role
+            {t('admin.roles.create_role')}
           </Button>
         </div>
       </div>
