@@ -1700,7 +1700,10 @@ export default function Warehouse() {
 
       toast({
         title: t("warehouse.toast.stock_added_title"),
-        description: t("warehouse.toast.stock_added_desc", { quantity: movement.quantity, name: movement.productName }),
+        description: t("warehouse.toast.stock_added_desc", {
+          quantity: movement.quantity,
+          name: movement.productName,
+        }),
       });
     } catch (e: any) {
       toast({
@@ -1859,7 +1862,10 @@ export default function Warehouse() {
 
       toast({
         title: t("warehouse.toast.stock_removed_title"),
-        description: t("warehouse.toast.stock_removed_desc", { quantity: movement.quantity, name: movement.productName }),
+        description: t("warehouse.toast.stock_removed_desc", {
+          quantity: movement.quantity,
+          name: movement.productName,
+        }),
       });
     } catch (e: any) {
       toast({
@@ -2850,11 +2856,16 @@ export default function Warehouse() {
                                   {t("warehouse.delete_product_title")}
                                 </AlertDialogTitle>
                                 <AlertDialogDescription>
-                                  {t("warehouse.delete_product_confirm", { name: product.name })}
-                                  {product.name}                                </AlertDialogDescription>
+                                  {t("warehouse.delete_product_confirm", {
+                                    name: product.name,
+                                  })}
+                                  {product.name}{" "}
+                                </AlertDialogDescription>
                               </AlertDialogHeader>
                               <AlertDialogFooter>
-                                <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
+                                <AlertDialogCancel>
+                                  {t("common.cancel")}
+                                </AlertDialogCancel>
                                 <AlertDialogAction
                                   className={buttonVariants({
                                     variant: "destructive",
@@ -3673,10 +3684,14 @@ export default function Warehouse() {
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="stockInLocation">{t("warehouse.location")} *</Label>
+              <Label htmlFor="stockInLocation">
+                {t("warehouse.location")} *
+              </Label>
               <Select value={stockLocation} onValueChange={setStockLocation}>
                 <SelectTrigger>
-                  <SelectValue placeholder={t("warehouse.select_filial_location")} />
+                  <SelectValue
+                    placeholder={t("warehouse.select_filial_location")}
+                  />
                 </SelectTrigger>
                 <SelectContent>
                   {(stockFromType === "other_filial"
@@ -3691,7 +3706,9 @@ export default function Warehouse() {
               </Select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="stockInQuantity">{t("warehouse.quantity_to_add")} *</Label>
+              <Label htmlFor="stockInQuantity">
+                {t("warehouse.quantity_to_add")} *
+              </Label>
               <Input
                 id="stockInQuantity"
                 type="number"
@@ -3705,10 +3722,14 @@ export default function Warehouse() {
             </div>
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="stockFromType">{t("warehouse.from_origin")} *</Label>
+                <Label htmlFor="stockFromType">
+                  {t("warehouse.from_origin")} *
+                </Label>
                 <Select value={stockFromType} onValueChange={setStockFromType}>
                   <SelectTrigger>
-                    <SelectValue placeholder={t("warehouse.select_origin_type")} />
+                    <SelectValue
+                      placeholder={t("warehouse.select_origin_type")}
+                    />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="supplier">Supplier</SelectItem>
@@ -3722,9 +3743,15 @@ export default function Warehouse() {
               {stockFromType && (
                 <div className="space-y-2">
                   <Label htmlFor="stockFrom">
-                    {stockFromType === "supplier" && (<>{t("warehouse.supplier_name")} *</>)}
-                    {stockFromType === "other_filial" && (<>{t("warehouse.filial_branch_name")} *</>)}
-                    {stockFromType === "customer_return" && (<>{t("warehouse.customer_name")} *</>)}
+                    {stockFromType === "supplier" && (
+                      <>{t("warehouse.supplier_name")} *</>
+                    )}
+                    {stockFromType === "other_filial" && (
+                      <>{t("warehouse.filial_branch_name")} *</>
+                    )}
+                    {stockFromType === "customer_return" && (
+                      <>{t("warehouse.customer_name")} *</>
+                    )}
                   </Label>
                   {stockFromType === "supplier" && (
                     <Select value={stockFrom} onValueChange={setStockFrom}>
@@ -3749,7 +3776,9 @@ export default function Warehouse() {
                   {stockFromType === "other_filial" && (
                     <Select value={stockFrom} onValueChange={setStockFrom}>
                       <SelectTrigger>
-                        <SelectValue placeholder={t("warehouse.filial_branch_name")} />
+                        <SelectValue
+                          placeholder={t("warehouse.filial_branch_name")}
+                        />
                       </SelectTrigger>
                       <SelectContent>
                         {filialOptions
@@ -3802,7 +3831,9 @@ export default function Warehouse() {
               </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="stockInNotes">{t("warehouse.notes_optional")}</Label>
+              <Label htmlFor="stockInNotes">
+                {t("warehouse.notes_optional")}
+              </Label>
               <Textarea
                 id="stockInNotes"
                 value={stockNotes}
@@ -3873,10 +3904,14 @@ export default function Warehouse() {
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="stockOutLocation">{t("warehouse.location")} *</Label>
+              <Label htmlFor="stockOutLocation">
+                {t("warehouse.location")} *
+              </Label>
               <Select value={stockLocation} onValueChange={setStockLocation}>
                 <SelectTrigger>
-                  <SelectValue placeholder={t("warehouse.select_filial_location")} />
+                  <SelectValue
+                    placeholder={t("warehouse.select_filial_location")}
+                  />
                 </SelectTrigger>
                 <SelectContent>
                   {filialOptions.map((f) => (
@@ -3888,7 +3923,9 @@ export default function Warehouse() {
               </Select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="stockOutQuantity">{t("warehouse.quantity_to_remove")} *</Label>
+              <Label htmlFor="stockOutQuantity">
+                {t("warehouse.quantity_to_remove")} *
+              </Label>
               <Input
                 id="stockOutQuantity"
                 type="number"
@@ -3903,15 +3940,25 @@ export default function Warehouse() {
             </div>
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="stockToType">{t("warehouse.to_destination")} *</Label>
+                <Label htmlFor="stockToType">
+                  {t("warehouse.to_destination")} *
+                </Label>
                 <Select value={stockToType} onValueChange={setStockToType}>
                   <SelectTrigger>
-                    <SelectValue placeholder={t("warehouse.select_destination_type")} />
+                    <SelectValue
+                      placeholder={t("warehouse.select_destination_type")}
+                    />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="client">{t("warehouse.client")}</SelectItem>
-                    <SelectItem value="other_filial">{t("warehouse.other_filial")}</SelectItem>
-                    <SelectItem value="discarded">{t("warehouse.discarded")}</SelectItem>
+                    <SelectItem value="client">
+                      {t("warehouse.client")}
+                    </SelectItem>
+                    <SelectItem value="other_filial">
+                      {t("warehouse.other_filial")}
+                    </SelectItem>
+                    <SelectItem value="discarded">
+                      {t("warehouse.discarded")}
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -3919,8 +3966,12 @@ export default function Warehouse() {
               {stockToType && (
                 <div className="space-y-2">
                   <Label htmlFor="stockTo">
-                    {stockToType === "client" && (<>{t("sales.client_name")} *</>)}
-                    {stockToType === "other_filial" && (<>{t("warehouse.filial_branch_name")} *</>)}
+                    {stockToType === "client" && (
+                      <>{t("sales.client_name")} *</>
+                    )}
+                    {stockToType === "other_filial" && (
+                      <>{t("warehouse.filial_branch_name")} *</>
+                    )}
                   </Label>
                   {stockToType === "client" && (
                     <Select value={stockTo} onValueChange={setStockTo}>
@@ -3939,7 +3990,9 @@ export default function Warehouse() {
                   {stockToType === "other_filial" && (
                     <Select value={stockTo} onValueChange={setStockTo}>
                       <SelectTrigger>
-                        <SelectValue placeholder={t("warehouse.filial_branch_name")} />
+                        <SelectValue
+                          placeholder={t("warehouse.filial_branch_name")}
+                        />
                       </SelectTrigger>
                       <SelectContent>
                         {filialOptions
@@ -3954,7 +4007,9 @@ export default function Warehouse() {
                   )}
                   {stockToType === "discarded" && (
                     <div className="space-y-2">
-                      <Label htmlFor="discardReason">{t("warehouse.discard_reason")} *</Label>
+                      <Label htmlFor="discardReason">
+                        {t("warehouse.discard_reason")} *
+                      </Label>
                       <Select
                         value={discardReason}
                         onValueChange={(v) => {
@@ -3968,13 +4023,23 @@ export default function Warehouse() {
                         }}
                       >
                         <SelectTrigger>
-                          <SelectValue placeholder={t("warehouse.select_reason")} />
+                          <SelectValue
+                            placeholder={t("warehouse.select_reason")}
+                          />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="Expired">{t("warehouse.expired")}</SelectItem>
-                          <SelectItem value="Broken">{t("warehouse.broken")}</SelectItem>
-                          <SelectItem value="Lost">{t("warehouse.lost")}</SelectItem>
-                          <SelectItem value="Other">{t("warehouse.other")}</SelectItem>
+                          <SelectItem value="Expired">
+                            {t("warehouse.expired")}
+                          </SelectItem>
+                          <SelectItem value="Broken">
+                            {t("warehouse.broken")}
+                          </SelectItem>
+                          <SelectItem value="Lost">
+                            {t("warehouse.lost")}
+                          </SelectItem>
+                          <SelectItem value="Other">
+                            {t("warehouse.other")}
+                          </SelectItem>
                         </SelectContent>
                       </Select>
                       {discardReason === "Other" && (
@@ -4006,7 +4071,9 @@ export default function Warehouse() {
               </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="stockOutNotes">{t("warehouse.notes_optional")}</Label>
+              <Label htmlFor="stockOutNotes">
+                {t("warehouse.notes_optional")}
+              </Label>
               <Textarea
                 id="stockOutNotes"
                 value={stockNotes}
@@ -4093,7 +4160,10 @@ export default function Warehouse() {
                     </div>
                   ),
                 },
-                { label: t("warehouse.category"), value: selectedProduct.category },
+                {
+                  label: t("warehouse.category"),
+                  value: selectedProduct.category,
+                },
                 {
                   label: t("warehouse.suppliers"),
                   value: (
@@ -4124,12 +4194,24 @@ export default function Warehouse() {
                   label: t("common.description"),
                   value: selectedProduct.description || "—",
                 },
-                { label: t("warehouse.location"), value: selectedProduct.location || "N/A" },
+                {
+                  label: t("warehouse.location"),
+                  value: selectedProduct.location || "N/A",
+                },
               ]}
               stats={[
-                { label: t("warehouse.total_stock"), value: selectedProduct.quantity },
-                { label: t("warehouse.min_stock"), value: selectedProduct.minStock },
-                { label: t("warehouse.max_stock"), value: selectedProduct.maxStock },
+                {
+                  label: t("warehouse.total_stock"),
+                  value: selectedProduct.quantity,
+                },
+                {
+                  label: t("warehouse.min_stock"),
+                  value: selectedProduct.minStock,
+                },
+                {
+                  label: t("warehouse.max_stock"),
+                  value: selectedProduct.maxStock,
+                },
               ]}
             >
               {/* children: store distribution + prices */}
@@ -4215,10 +4297,14 @@ export default function Warehouse() {
               <div className="grid grid-cols-2 gap-3 text-xs text-muted-foreground border-t pt-3 mt-3">
                 <div className="space-y-1">
                   <div>📍 {selectedProduct.location || "N/A"}</div>
-                  <div>📅 {t("warehouse.created")}: {selectedProduct.createdAt}</div>
+                  <div>
+                    📅 {t("warehouse.created")}: {selectedProduct.createdAt}
+                  </div>
                 </div>
                 <div className="space-y-1">
-                  <div>🔄 {t("warehouse.updated")}: {selectedProduct.updatedAt}</div>
+                  <div>
+                    🔄 {t("warehouse.updated")}: {selectedProduct.updatedAt}
+                  </div>
                   <div>
                     💰 {t("warehouse.profit")}:{" "}
                     <span className="font-medium text-green-600">
