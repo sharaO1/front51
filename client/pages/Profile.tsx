@@ -14,6 +14,7 @@ import { useAuthStore } from "@/stores/authStore";
 import { useToast } from "@/hooks/use-toast";
 import AvatarUpload from "@/components/AvatarUpload";
 import RoleBadge from "@/components/ui/role-badge";
+import { useTranslation } from "react-i18next";
 import { LoadingButton } from "@/components/ui/loading-button";
 import {
   User,
@@ -30,6 +31,7 @@ import {
 
 export default function Profile() {
   const { user, updateUserAvatar } = useAuthStore();
+  const { t } = useTranslation();
   const { toast } = useToast();
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -47,16 +49,16 @@ export default function Profile() {
 
       // In a real app, this would update the user in the backend
       toast({
-        title: "Profile updated successfully",
-        description: "Your profile information has been saved.",
+        title: t("profile.toast.updated_title"),
+        description: t("profile.toast.updated_desc"),
         variant: "default",
       });
 
       setIsEditing(false);
     } catch (error) {
       toast({
-        title: "Error updating profile",
-        description: "Please try again later.",
+        title: t("profile.toast.error_title"),
+        description: t("profile.toast.error_desc"),
         variant: "destructive",
       });
     } finally {
@@ -75,8 +77,8 @@ export default function Profile() {
   const handleAvatarUpdate = (avatarUrl: string) => {
     updateUserAvatar(avatarUrl);
     toast({
-      title: "Avatar updated",
-      description: "Your profile picture has been updated successfully",
+      title: t("profile.toast.updated_title"),
+      description: t("profile.toast.updated_desc"),
     });
   };
 
@@ -98,10 +100,10 @@ export default function Profile() {
       {/* Header */}
       <div className="text-center md:text-left">
         <h1 className="text-4xl font-bold tracking-tight bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
-          My Profile
+          {t("profile.title")}
         </h1>
         <p className="text-muted-foreground text-lg mt-2">
-          Manage your personal information and settings
+          {t("profile.subtitle")}
         </p>
       </div>
 
@@ -141,10 +143,10 @@ export default function Profile() {
                 <Building className="h-5 w-5 text-blue-600" />
                 <div>
                   <p className="text-sm font-medium text-blue-900">
-                    Department
+                    {t("profile.department")}
                   </p>
                   <p className="text-sm text-blue-700">
-                    {user.department || "Not specified"}
+                    {user.department ? t(`departments.${user.department}`, { defaultValue: user.department }) : t("profile.not_specified")}
                   </p>
                 </div>
               </div>
@@ -153,7 +155,7 @@ export default function Profile() {
                 <BadgeIcon className="h-5 w-5 text-green-600" />
                 <div>
                   <p className="text-sm font-medium text-green-900">
-                    Job Title
+                    {t("profile.job_title")}
                   </p>
                   <p className="text-sm text-green-700">
                     {user.title || "Not specified"}
@@ -165,10 +167,10 @@ export default function Profile() {
                 <Shield className="h-5 w-5 text-purple-600" />
                 <div>
                   <p className="text-sm font-medium text-purple-900">
-                    Account Status
+                    {t("profile.account_status")}
                   </p>
                   <Badge className="bg-green-100 text-green-800 mt-1">
-                    Active
+                    {t("profile.active")}
                   </Badge>
                 </div>
               </div>
@@ -182,10 +184,10 @@ export default function Profile() {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <CardTitle className="text-2xl font-semibold text-gray-900">
-                  Personal Information
+                  {t("profile.personal_information")}
                 </CardTitle>
                 <CardDescription className="text-gray-600 mt-1">
-                  Update your personal details that you can modify
+                  {t("profile.personal_information_desc")}
                 </CardDescription>
               </div>
 
@@ -195,18 +197,18 @@ export default function Profile() {
                   className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-md hover:shadow-lg transition-all duration-300 self-start sm:self-center"
                 >
                   <Edit className="h-4 w-4 mr-2" />
-                  Edit Profile
+                  {t("profile.edit_profile")}
                 </Button>
               ) : (
                 <div className="flex gap-2 self-start sm:self-center">
                   <LoadingButton
                     onClick={handleSave}
                     loading={isLoading}
-                    loadingText="Saving..."
+                    loadingText={t("profile.saving")}
                     className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800"
                   >
                     <Save className="h-4 w-4 mr-2" />
-                    Save Changes
+                    {t("profile.save_changes")}
                   </LoadingButton>
                   <Button
                     onClick={handleCancel}
@@ -215,7 +217,7 @@ export default function Profile() {
                     className="hover:bg-gray-50"
                   >
                     <X className="h-4 w-4 mr-2" />
-                    Cancel
+                    {t("common.cancel")}
                   </Button>
                 </div>
               )}
@@ -227,7 +229,7 @@ export default function Profile() {
             <div className="grid gap-6 md:grid-cols-2">
               <div className="space-y-3">
                 <Label className="text-sm font-semibold text-gray-700">
-                  Name
+                  {t("profile.name")}
                 </Label>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <div className="relative">
@@ -246,7 +248,7 @@ export default function Profile() {
                           ? "border-blue-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
                           : "bg-gray-50"
                       } transition-all duration-200`}
-                      placeholder="First name"
+                      placeholder={t("profile.first_name_placeholder")}
                     />
                   </div>
                   <div className="relative">
@@ -263,7 +265,7 @@ export default function Profile() {
                           ? "border-blue-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
                           : "bg-gray-50"
                       } transition-all duration-200`}
-                      placeholder="Last name"
+                      placeholder={t("profile.last_name_placeholder")}
                     />
                   </div>
                 </div>
@@ -274,7 +276,7 @@ export default function Profile() {
                   htmlFor="phone"
                   className="text-sm font-semibold text-gray-700"
                 >
-                  Phone Number
+                  {t("profile.phone_number")}
                 </Label>
                 <div className="relative">
                   <Phone className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
@@ -290,7 +292,7 @@ export default function Profile() {
                         ? "border-blue-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
                         : "bg-gray-50"
                     } transition-all duration-200`}
-                    placeholder="Enter your phone number"
+                    placeholder={t("profile.phone_placeholder")}
                   />
                 </div>
               </div>
@@ -299,12 +301,12 @@ export default function Profile() {
             {/* Read-only Information */}
             <div className="pt-6 border-t border-gray-200">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                Account Information
+                {t("profile.account_information")}
               </h3>
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
                   <Label className="text-sm font-medium text-gray-600">
-                    Email Address
+                    {t("profile.email_address")}
                   </Label>
                   <div className="relative">
                     <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
@@ -315,13 +317,13 @@ export default function Profile() {
                     />
                   </div>
                   <p className="text-xs text-gray-500">
-                    Email cannot be changed. Contact your administrator.
+                    {t("profile.email_cannot_change")}
                   </p>
                 </div>
 
                 <div className="space-y-2">
                   <Label className="text-sm font-medium text-gray-600">
-                    User ID
+                    {t("profile.user_id")}
                   </Label>
                   <Input
                     value={user.id}
@@ -329,7 +331,7 @@ export default function Profile() {
                     className="h-11 bg-gray-50 text-gray-600 font-mono text-sm"
                   />
                   <p className="text-xs text-gray-500">
-                    Unique identifier for your account.
+                    {t("profile.user_id_desc")}
                   </p>
                 </div>
               </div>
@@ -341,11 +343,10 @@ export default function Profile() {
                   <Edit className="h-5 w-5 text-blue-600 mt-0.5" />
                   <div>
                     <p className="text-sm font-medium text-blue-900">
-                      Editing Mode Active
+                      {t("profile.editing_mode_active")}
                     </p>
                     <p className="text-xs text-blue-700 mt-1">
-                      You can modify your name, phone number, and avatar.
-                      Other information is managed by your administrator.
+                      {t("profile.editing_mode_desc")}
                     </p>
                   </div>
                 </div>
