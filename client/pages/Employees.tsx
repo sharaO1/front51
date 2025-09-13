@@ -327,7 +327,9 @@ export default function Employees() {
   const [isAddSaleOpen, setIsAddSaleOpen] = useState(false);
   const [isViewSalesOpen, setIsViewSalesOpen] = useState(false);
   const [isAttendanceOpen, setIsAttendanceOpen] = useState(false);
-  const [filialOptions, setFilialOptions] = useState<{ id: string; name: string }[]>([]);
+  const [filialOptions, setFilialOptions] = useState<
+    { id: string; name: string }[]
+  >([]);
 
   // Selected items
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(
@@ -495,8 +497,8 @@ export default function Employees() {
         const arr = Array.isArray((data as any)?.result)
           ? (data as any).result
           : Array.isArray(data)
-          ? (data as any)
-          : [];
+            ? (data as any)
+            : [];
         const mapped = arr
           .map((f: any) => {
             const id =
@@ -2899,9 +2901,20 @@ ${data.timeEntries
               left={[
                 { label: "Employee ID", value: selectedEmployee.employeeId },
                 { label: "Department", value: selectedEmployee.department },
-                { label: "Filial", value: getFilialName(selectedEmployee.filialId) },
+                {
+                  label: "Filial",
+                  value: getFilialName(selectedEmployee.filialId),
+                },
                 { label: "Hire Date", value: selectedEmployee.hireDate },
-                { label: "Email", value: selectedEmployee.email || (users.find((u) => u.id === (selectedEmployee as any).accountId)?.email || "") },
+                {
+                  label: "Email",
+                  value:
+                    selectedEmployee.email ||
+                    users.find(
+                      (u) => u.id === (selectedEmployee as any).accountId,
+                    )?.email ||
+                    "",
+                },
               ]}
               right={[
                 { label: "Phone", value: selectedEmployee.phone },
