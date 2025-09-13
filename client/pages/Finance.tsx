@@ -1333,7 +1333,9 @@ ${data.transactions
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="paymentMethod">{t("sales.payment_method")}</Label>
+                    <Label htmlFor="paymentMethod">
+                      {t("sales.payment_method")}
+                    </Label>
                     <Select
                       value={newTransaction.paymentMethod}
                       onValueChange={(value) =>
@@ -1347,16 +1349,22 @@ ${data.transactions
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                      <SelectItem value="cash">{t("sales.cash")}</SelectItem>
-                      <SelectItem value="card">{t("sales.card")}</SelectItem>
-                      <SelectItem value="bank_transfer">{t("sales.bank_transfer")}</SelectItem>
-                      <SelectItem value="check">{t("finance.check")}</SelectItem>
-                    </SelectContent>
+                        <SelectItem value="cash">{t("sales.cash")}</SelectItem>
+                        <SelectItem value="card">{t("sales.card")}</SelectItem>
+                        <SelectItem value="bank_transfer">
+                          {t("sales.bank_transfer")}
+                        </SelectItem>
+                        <SelectItem value="check">
+                          {t("finance.check")}
+                        </SelectItem>
+                      </SelectContent>
                     </Select>
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="performedBy">{t("finance.performed_by_optional")}</Label>
+                  <Label htmlFor="performedBy">
+                    {t("finance.performed_by_optional")}
+                  </Label>
                   <Input
                     id="performedBy"
                     placeholder="e.g., Cashier #12, Accounting"
@@ -1519,10 +1527,18 @@ ${data.transactions
                     <SelectItem value="all">
                       {t("finance.all_categories")}
                     </SelectItem>
-                    <SelectItem value="Sales Revenue">{t("finance.sales_revenue")}</SelectItem>
-                    <SelectItem value="Office Supplies">{t("finance.office_supplies")}</SelectItem>
-                    <SelectItem value="Marketing">{t("finance.marketing")}</SelectItem>
-                    <SelectItem value="Utilities">{t("finance.utilities")}</SelectItem>
+                    <SelectItem value="Sales Revenue">
+                      {t("finance.sales_revenue")}
+                    </SelectItem>
+                    <SelectItem value="Office Supplies">
+                      {t("finance.office_supplies")}
+                    </SelectItem>
+                    <SelectItem value="Marketing">
+                      {t("finance.marketing")}
+                    </SelectItem>
+                    <SelectItem value="Utilities">
+                      {t("finance.utilities")}
+                    </SelectItem>
                   </SelectContent>
                 </Select>
                 <Select value={timeFilter} onValueChange={setTimeFilter}>
@@ -1582,7 +1598,9 @@ ${data.transactions
                           {transaction.type === "income" ? "Income" : "Expense"}
                         </Badge>
                       </TableCell>
-                      <TableCell>{translateCategory(transaction.category)}</TableCell>
+                      <TableCell>
+                        {translateCategory(transaction.category)}
+                      </TableCell>
                       <TableCell>
                         <div>
                           <div className="font-medium">
@@ -1641,9 +1659,7 @@ ${data.transactions
             <CardHeader className="flex items-center justify-between">
               <div>
                 <CardTitle>{t("finance.debts_title")}</CardTitle>
-                <CardDescription>
-                  {t("finance.debts_subtitle")}
-                </CardDescription>
+                <CardDescription>{t("finance.debts_subtitle")}</CardDescription>
               </div>
               <Dialog open={isAddLoanOpen} onOpenChange={setIsAddLoanOpen}>
                 <DialogTrigger asChild>
@@ -1672,8 +1688,12 @@ ${data.transactions
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="borrow">{t("finance.borrow_label")}</SelectItem>
-                          <SelectItem value="lend">{t("finance.lend_label")}</SelectItem>
+                          <SelectItem value="borrow">
+                            {t("finance.borrow_label")}
+                          </SelectItem>
+                          <SelectItem value="lend">
+                            {t("finance.lend_label")}
+                          </SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -1729,9 +1749,15 @@ ${data.transactions
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="supplier">{t("warehouse.supplier")}</SelectItem>
-                            <SelectItem value="client">{t("sales.client")}</SelectItem>
-                            <SelectItem value="other">{t("warehouse.other")}</SelectItem>
+                            <SelectItem value="supplier">
+                              {t("warehouse.supplier")}
+                            </SelectItem>
+                            <SelectItem value="client">
+                              {t("sales.client")}
+                            </SelectItem>
+                            <SelectItem value="other">
+                              {t("warehouse.other")}
+                            </SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
@@ -1774,7 +1800,9 @@ ${data.transactions
                     <div className="space-y-2">
                       <Label>{t("warehouse.notes")}</Label>
                       <Textarea
-                        placeholder={t("warehouse.additional_notes_placeholder")}
+                        placeholder={t(
+                          "warehouse.additional_notes_placeholder",
+                        )}
                         value={newLoan.notes || ""}
                         onChange={(e) =>
                           setNewLoan({ ...newLoan, notes: e.target.value })
@@ -1825,7 +1853,9 @@ ${data.transactions
                               : "bg-purple-100 text-purple-800"
                           }
                         >
-                          {loan.type === "borrow" ? t("finance.borrow") : t("finance.lend")}
+                          {loan.type === "borrow"
+                            ? t("finance.borrow")
+                            : t("finance.lend")}
                         </Badge>
                       </TableCell>
                       <TableCell>
@@ -1900,7 +1930,15 @@ ${data.transactions
                     <XAxis dataKey="month" />
                     <YAxis />
                     <Tooltip />
-                    <Legend formatter={(v) => (v === "income" ? t("finance.income") : v === "expenses" ? t("finance.expenses") : t("finance.profit"))} />
+                    <Legend
+                      formatter={(v) =>
+                        v === "income"
+                          ? t("finance.income")
+                          : v === "expenses"
+                            ? t("finance.expenses")
+                            : t("finance.profit")
+                      }
+                    />
                     <Line
                       type="monotone"
                       dataKey="income"
@@ -1972,7 +2010,15 @@ ${data.transactions
                   <XAxis dataKey="month" />
                   <YAxis />
                   <Tooltip />
-                  <Legend formatter={(v) => (v === "income" ? t("finance.income") : v === "expenses" ? t("finance.expenses") : t("finance.profit"))} />
+                  <Legend
+                    formatter={(v) =>
+                      v === "income"
+                        ? t("finance.income")
+                        : v === "expenses"
+                          ? t("finance.expenses")
+                          : t("finance.profit")
+                    }
+                  />
                   <Bar dataKey="income" fill="#22c55e" />
                   <Bar dataKey="expenses" fill="#ef4444" />
                   <Bar dataKey="profit" fill="#3b82f6" />
@@ -2002,7 +2048,9 @@ ${data.transactions
               </DialogTrigger>
               <DialogContent className="max-w-md">
                 <DialogHeader>
-                  <DialogTitle>{t("finance.create_financial_goal")}</DialogTitle>
+                  <DialogTitle>
+                    {t("finance.create_financial_goal")}
+                  </DialogTitle>
                   <DialogDescription>
                     {t("finance.set_financial_target")}
                   </DialogDescription>
@@ -2021,7 +2069,9 @@ ${data.transactions
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="targetAmount">{t("finance.target_amount")}</Label>
+                      <Label htmlFor="targetAmount">
+                        {t("finance.target_amount")}
+                      </Label>
                       <Input
                         id="targetAmount"
                         type="number"
@@ -2036,7 +2086,9 @@ ${data.transactions
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="currentAmount">{t("finance.current_amount")}</Label>
+                      <Label htmlFor="currentAmount">
+                        {t("finance.current_amount")}
+                      </Label>
                       <Input
                         id="currentAmount"
                         type="number"
@@ -2053,7 +2105,9 @@ ${data.transactions
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="deadline">{t("dashboard.deadline")}</Label>
+                      <Label htmlFor="deadline">
+                        {t("dashboard.deadline")}
+                      </Label>
                       <Input
                         id="deadline"
                         type="date"
@@ -2064,7 +2118,9 @@ ${data.transactions
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="goalCategory">{t("warehouse.category")}</Label>
+                      <Label htmlFor="goalCategory">
+                        {t("warehouse.category")}
+                      </Label>
                       <Input
                         id="goalCategory"
                         placeholder="e.g., Revenue, Savings, Capital"
@@ -2127,13 +2183,17 @@ ${data.transactions
                     </div>
                     <div className="flex justify-between">
                       <div>
-                        <p className="text-sm text-muted-foreground">{t("dashboard.current")}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {t("dashboard.current")}
+                        </p>
                         <p className="font-semibold">
                           ${goal.currentAmount.toLocaleString()}
                         </p>
                       </div>
                       <div className="text-right">
-                        <p className="text-sm text-muted-foreground">{t("finance.target")}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {t("finance.target")}
+                        </p>
                         <p className="font-semibold">
                           ${goal.targetAmount.toLocaleString()}
                         </p>
@@ -2216,7 +2276,9 @@ ${data.transactions
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="edit-description">{t("common.description")}</Label>
+              <Label htmlFor="edit-description">
+                {t("common.description")}
+              </Label>
               <Input
                 id="edit-description"
                 value={newTransaction.description}
@@ -2245,7 +2307,9 @@ ${data.transactions
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="edit-paymentMethod">{t("sales.payment_method")}</Label>
+                <Label htmlFor="edit-paymentMethod">
+                  {t("sales.payment_method")}
+                </Label>
                 <Select
                   disabled
                   value={newTransaction.paymentMethod}
@@ -2260,22 +2324,28 @@ ${data.transactions
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-  <SelectItem value="cash">{t("sales.cash")}</SelectItem>
-  <SelectItem value="card">{t("sales.card")}</SelectItem>
-  <SelectItem value="bank_transfer">{t("sales.bank_transfer")}</SelectItem>
-  <SelectItem value="check">{t("finance.check")}</SelectItem>
-</SelectContent>
+                    <SelectItem value="cash">{t("sales.cash")}</SelectItem>
+                    <SelectItem value="card">{t("sales.card")}</SelectItem>
+                    <SelectItem value="bank_transfer">
+                      {t("sales.bank_transfer")}
+                    </SelectItem>
+                    <SelectItem value="check">{t("finance.check")}</SelectItem>
+                  </SelectContent>
                 </Select>
               </div>
             </div>
             <div className="flex gap-2">
               <AlertDialog>
                 <AlertDialogTrigger asChild>
-                  <Button className="flex-1">{t("finance.update_transaction")}</Button>
+                  <Button className="flex-1">
+                    {t("finance.update_transaction")}
+                  </Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
-                    <AlertDialogTitle>{t("finance.confirm_update_title")}</AlertDialogTitle>
+                    <AlertDialogTitle>
+                      {t("finance.confirm_update_title")}
+                    </AlertDialogTitle>
                     <AlertDialogDescription>
                       {t("finance.confirm_update_desc")}
                     </AlertDialogDescription>
@@ -2370,7 +2440,9 @@ ${data.transactions
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle>{t("finance.edit_financial_goal")}</DialogTitle>
-            <DialogDescription>{t("finance.update_goal_desc")}</DialogDescription>
+            <DialogDescription>
+              {t("finance.update_goal_desc")}
+            </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
