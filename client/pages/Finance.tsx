@@ -351,6 +351,7 @@ export default function Finance() {
   const [usersMap, setUsersMap] = useState<Record<string, string>>({});
   const [usersFilialMap, setUsersFilialMap] = useState<Record<string, string>>({});
   const [clientsMap, setClientsMap] = useState<Record<string, string>>({});
+  const { t } = useTranslation();
 
   useEffect(() => {
     let mounted = true;
