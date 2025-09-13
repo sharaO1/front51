@@ -1183,7 +1183,7 @@ ${data.transactions
                   <div className="flex-1">
                     <div className="font-medium">{t("finance.export_csv_title")}</div>
                     <div className="text-xs text-muted-foreground">
-                      Raw transaction data for analysis
+                      {t("finance.export_csv_desc")}
                     </div>
                   </div>
                 </DropdownMenuItem>
