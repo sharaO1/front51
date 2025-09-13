@@ -80,9 +80,7 @@ export default function MobileEmployeeCard({
         );
       default:
         return (
-          <Badge variant="outline" className="text-xs">
-            Unknown
-          </Badge>
+          <Badge variant="outline" className="text-xs">{t("common.unknown")}</Badge>
         );
     }
   };
@@ -111,9 +109,7 @@ export default function MobileEmployeeCard({
         );
       default:
         return (
-          <Badge variant="outline" className="text-xs">
-            Unknown
-          </Badge>
+          <Badge variant="outline" className="text-xs">{t("common.unknown")}</Badge>
         );
     }
   };
