@@ -123,7 +123,7 @@
     "reorder": "Аз нав фармоиш додан",
     "view_all_inventory": "Ҳамаи захираро дидан",
     "export_report": "Гузориши содирот",
-    "export_options": "Имконоти содирот",
+    "export_options": "Имконоти сод��рот",
     "export_as_pdf": "Ҳамчун PDF ��одир кардан",
     "export_as_excel": "Ҳамчун Excel содир кардан",
     "export_as_csv": "Ҳамчун CSV содир кардан",
@@ -456,7 +456,7 @@
     "sent": "Фиристода",
     "cancelled": "Бекоршуда",
     "create_new_invoice": "Ҳисобфактураи нав эҷод кардан",
-    "generate_invoice": "Ҳисобфактураи нави фурӯшро бо ашё, андозҳо ва маълумоти муштарӣ эҷод кунед.",
+    "generate_invoice": "Ҳисобфактураи нави фурӯшро бо ашё, анд��зҳо ва маълумоти муштарӣ эҷод кунед.",
     "client_name": "Номи муштарӣ",
     "enter_client_name": "Номи муштариро ворид кунед",
     "payment_method": "Усули пардохт",
@@ -545,10 +545,19 @@
     "all_time": "Ҳама вақт",
     "last_hour": "Соати охир",
     "last_day": "Рӯзи охир",
-    "last_week": "Ҳафтаи охир",
+    "last_week": "��афтаи охир",
     "last_month": "Моҳи охир",
     "last_year": "Соли охир",
-    "amount_label": "Маблағ ($)"
+    "amount_label": "Маблағ ($)",
+    "export_financial_report": "Содироти гузориши молиявӣ",
+    "export_pdf_title": "Гузориши PDF",
+    "export_pdf_desc": "Хулосаи чопшаванда бо нишондиҳандаҳои калидӣ",
+    "export_excel_title": "Файли Excel",
+    "export_excel_desc": "Ҷадвал бо ҳамаи сабтҳо",
+    "export_csv_title": "Содироти CSV",
+    "export_csv_desc": "Қиматҳо бо вергул ҷудошуда барои воридот",
+    "export_transactions_title": "Содироти муомилот",
+    "export_transactions_desc": "CSV ҳамаи муомилотҳои филтршуда"
   },
   "employees": {
     "title": "Идоракунии кормандон",
@@ -630,7 +639,7 @@
     "sales_performance": "Натиҷаҳои фурӯш",
     "sales_performance_desc": "Фурӯш ва комиссияҳои ҳаррӯза аз рӯи корманд",
     "attendance_data": "Додаҳои ҳузур",
-    "attendance_data_desc": "Омадан, рафтан ва соатҳои кор",
+    "attendance_data_desc": "Омадан, рафтан ва соатҳои ��ор",
     "mark_attendance": "Ҳузурро қайд кардан",
     "mark_employee_attendance": "Ҳузури кормандро қайд кунед",
     "record_attendance_desc": "Сабти вақтро барои санаи интихобшуда илова кунед",
@@ -806,7 +815,7 @@
     "overdue": "Мӯҳлат гузашта",
     "on_track": "Дар роҳи дуруст",
     "behind": "Акибмонда",
-    "achieved": "Ноилшуда",
+    "achieved": "Ноилш��да",
     "success": "Муваффақият",
     "failed": "Нокомӣ",
     "present": "Ҳозир",
@@ -1014,7 +1023,7 @@
         "of_total_roles": "аз {{count}} нақшҳои умумӣ"
       },
       "permission_breakdown": {
-        "title": "Тақсимоти ҳуқуқҳо",
+        "title": "Тақсимоти ҳуқуқҳ��",
         "description": "Таҳлили муфасса��и ҳуқуқҳо аз рӯи намудҳои амал"
       },
       "role_comparison": {
