@@ -1411,7 +1411,7 @@ export default function Warehouse() {
       case "stock_in":
         return (
           <Badge variant="default" className="bg-green-100 text-green-800">
-            Stock In
+            {t("warehouse.stock_in")}
           </Badge>
         );
       case "stock_out":
@@ -1450,7 +1450,7 @@ export default function Warehouse() {
       case "stock_in":
         return (
           <Badge variant="default" className="bg-green-100 text-green-800">
-            Stock In
+            {t("warehouse.stock_in")}
           </Badge>
         );
       case "stock_out":
@@ -2265,7 +2265,7 @@ export default function Warehouse() {
             onClick={() => openStockDialog("in")}
           >
             <ArrowUp className="mr-2 h-4 w-4" />
-            Stock In
+            {t("warehouse.stock_in")}
           </Button>
 
           <Button
@@ -3081,7 +3081,7 @@ export default function Warehouse() {
                     <SelectItem value="create">{t("warehouse.actions.created")}</SelectItem>
                     <SelectItem value="edit">{t("warehouse.actions.edited")}</SelectItem>
                     <SelectItem value="delete">{t("warehouse.actions.deleted")}</SelectItem>
-                    <SelectItem value="stock_in">Stock In</SelectItem>
+                    <SelectItem value="stock_in">{t("warehouse.stock_in")}</SelectItem>
                     <SelectItem value="stock_out">Stock Out</SelectItem>
                     <SelectItem value="transfer">{t("warehouse.transfers")}</SelectItem>
                     <SelectItem value="adjustment">{t("warehouse.adjustments")}</SelectItem>
@@ -3588,7 +3588,7 @@ export default function Warehouse() {
         </DialogContent>
       </Dialog>
 
-      {/* Stock In Dialog */}
+      {/* {t("warehouse.stock_in")} Dialog */}
       <Dialog open={isStockInDialogOpen} onOpenChange={setIsStockInDialogOpen}>
         <DialogContent
           className="max-w-md min-h-[420px]"
@@ -3598,7 +3598,7 @@ export default function Warehouse() {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <ArrowUp className="h-5 w-5 text-green-600" />
-              Stock In
+              {t("warehouse.stock_in")}
             </DialogTitle>
             <DialogDescription>
               Add stock for {selectedProduct?.name}
