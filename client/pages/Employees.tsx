@@ -2119,8 +2119,8 @@ ${data.timeEntries
                         </div>
                         {employee.salesTarget && (
                           <div className="text-xs text-muted-foreground">
-                            Target: ${employee.salesTarget.toLocaleString()}
-                          </div>
+                          {t("employees.target_label")}: ${employee.salesTarget.toLocaleString()}
+                        </div>
                         )}
                       </TableCell>
                       <TableCell>{getStatusBadge(employee.status)}</TableCell>
@@ -2290,7 +2290,7 @@ ${data.timeEntries
                           />
                         </div>
                         <div className="text-xs text-muted-foreground">
-                          Target: ${employee.salesTarget.toLocaleString()}
+                          {t("employees.target_label")}: ${employee.salesTarget.toLocaleString()}
                         </div>
                       </div>
                     )}
