@@ -70,6 +70,7 @@ export default function Dashboard() {
   const { toast } = useToast();
   const { t } = useTranslation();
   const { user } = useAuthStore();
+  const accessToken = useAuthStore((s) => s.accessToken);
 
   const [salesSummary, setSalesSummary] = useState<
     SalesSummaryResponse["result"] | null
