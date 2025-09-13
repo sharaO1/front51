@@ -789,7 +789,7 @@ export default function Sales() {
                   <div className="grid grid-cols-1 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="client">
-                        {forBorrow ? "Select Client *" : "Select Client"}
+                        {forBorrow ? `${t("sales.select_client")} *` : t("sales.select_client")}
                       </Label>
                       <Select
                         value={newInvoice.clientId || ""}
