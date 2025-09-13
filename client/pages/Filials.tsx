@@ -400,13 +400,27 @@ export default function Filials() {
       return;
     }
 
-    const normalize = (s: string) => s.trim().toLowerCase();
+    const normalize = (v: any) =>
+      typeof v === "string" ? v.trim().toLowerCase() : String(v ?? "").trim().toLowerCase();
     const idCount: Record<string, number> = {};
     const nameCount: Record<string, number> = {};
 
     for (const u of users) {
-      const fid = (u as any).filialId ?? (u as any).filialID ?? (u as any).storeId ?? (u as any).branchId ?? undefined;
-      const fname = (u as any).filialName ?? (u as any).location ?? undefined;
+      const fid =
+        (u as any).filialId ??
+        (u as any).filialID ??
+        (u as any).storeId ??
+        (u as any).branchId ??
+        (u as any).locationId ??
+        undefined;
+      const fname =
+        (u as any).filialName ??
+        (u as any).location ??
+        (u as any).locationName ??
+        (u as any).storeName ??
+        (u as any).branchName ??
+        (typeof (u as any).filial === "object" ? (u as any).filial?.name : (u as any).filial) ??
+        undefined;
       if (fid) {
         const key = String(fid);
         idCount[key] = (idCount[key] || 0) + 1;
