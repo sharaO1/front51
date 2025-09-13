@@ -1417,7 +1417,7 @@ export default function Warehouse() {
       case "stock_out":
         return (
           <Badge variant="secondary" className="bg-blue-100 text-blue-800">
-            Stock Out
+            {t("warehouse.stock_out")}
           </Badge>
         );
       case "adjustment":
@@ -1456,7 +1456,7 @@ export default function Warehouse() {
       case "stock_out":
         return (
           <Badge variant="secondary" className="bg-blue-100 text-blue-800">
-            Stock Out
+            {t("warehouse.stock_out")}
           </Badge>
         );
       case "transfer":
@@ -2274,7 +2274,7 @@ export default function Warehouse() {
             onClick={() => openStockDialog("out")}
           >
             <ArrowDown className="mr-2 h-4 w-4" />
-            Stock Out
+            {t("warehouse.stock_out")}
           </Button>
 
           <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
@@ -3082,7 +3082,7 @@ export default function Warehouse() {
                     <SelectItem value="edit">{t("warehouse.actions.edited")}</SelectItem>
                     <SelectItem value="delete">{t("warehouse.actions.deleted")}</SelectItem>
                     <SelectItem value="stock_in">{t("warehouse.stock_in")}</SelectItem>
-                    <SelectItem value="stock_out">Stock Out</SelectItem>
+                    <SelectItem value="stock_out">{t("warehouse.stock_out")}</SelectItem>
                     <SelectItem value="transfer">{t("warehouse.transfers")}</SelectItem>
                     <SelectItem value="adjustment">{t("warehouse.adjustments")}</SelectItem>
                   </SelectContent>
@@ -3785,7 +3785,7 @@ export default function Warehouse() {
         </DialogContent>
       </Dialog>
 
-      {/* Stock Out Dialog */}
+      {/* {t("warehouse.stock_out")} Dialog */}
       <Dialog
         open={isStockOutDialogOpen}
         onOpenChange={setIsStockOutDialogOpen}
@@ -3798,7 +3798,7 @@ export default function Warehouse() {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <ArrowDown className="h-5 w-5 text-red-600" />
-              Stock Out
+              {t("warehouse.stock_out")}
             </DialogTitle>
             <DialogDescription>
               Remove stock for {selectedProduct?.name}
