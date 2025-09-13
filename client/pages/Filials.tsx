@@ -272,7 +272,10 @@ export default function Filials() {
       await loadUsers().catch(() => {});
       const userManagers = (users || [])
         .filter((u) => u.role === "manager")
-        .map((u) => ({ id: String(u.id), name: String(u.name || u.email || u.id) }));
+        .map((u) => ({
+          id: String(u.id),
+          name: String(u.name || u.email || u.id),
+        }));
       if (!mounted) return;
       setManagerOptions(userManagers);
       setManagerNames((prev) => ({
@@ -290,7 +293,10 @@ export default function Filials() {
   useEffect(() => {
     const userManagers = (users || [])
       .filter((u) => u.role === "manager")
-      .map((u) => ({ id: String(u.id), name: String(u.name || u.email || u.id) }));
+      .map((u) => ({
+        id: String(u.id),
+        name: String(u.name || u.email || u.id),
+      }));
     setManagerOptions(userManagers);
     setManagerNames((prev) => ({
       ...prev,
@@ -1064,7 +1070,8 @@ export default function Filials() {
                         size="sm"
                         onClick={() => {
                           setEditingFilial(filial);
-                          const mappedManagerId = resolveManagerId(filial.manager) || filial.manager;
+                          const mappedManagerId =
+                            resolveManagerId(filial.manager) || filial.manager;
                           setNewFilial({
                             name: filial.name,
                             type: filial.type,
@@ -1323,7 +1330,9 @@ export default function Filials() {
                     {managerOptions
                       .filter((m) => {
                         const used = getAssignedManagerIds();
-                        const currentId = resolveManagerId(editingFilial?.manager || "");
+                        const currentId = resolveManagerId(
+                          editingFilial?.manager || "",
+                        );
                         if (currentId) used.delete(currentId);
                         return !used.has(m.id) || m.id === currentId;
                       })
@@ -1333,14 +1342,18 @@ export default function Filials() {
                         </SelectItem>
                       ))}
                     {(() => {
-                      const currentId = resolveManagerId(editingFilial?.manager || "");
+                      const currentId = resolveManagerId(
+                        editingFilial?.manager || "",
+                      );
                       const hasCurrent = currentId
                         ? managerOptions.some((m) => m.id === currentId)
                         : false;
                       if (currentId && !hasCurrent) {
                         return (
                           <SelectItem key={currentId} value={currentId}>
-                            {getManagerDisplay(editingFilial?.manager || String(currentId))}
+                            {getManagerDisplay(
+                              editingFilial?.manager || String(currentId),
+                            )}
                           </SelectItem>
                         );
                       }
