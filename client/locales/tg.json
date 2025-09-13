@@ -101,7 +101,7 @@
     "monthly_sales_profit": "Маълумоти моҳона�� фурӯш ва фоида",
     "product_categories": "Категорияҳои маҳсулот",
     "distribution_by_category": "Тақсимоти маҳсулот аз рӯи категория",
-    "recent_activity": "Фаъолияти охирин",
+    "recent_activity": "Фаъолияти о��ирин",
     "latest_activities": "Охирин фаъолиятҳои тиҷоратӣ ва навсозиҳо",
     "inventory_alerts": "Огоҳиҳои захира",
     "products_requiring_attention": "Маҳсулоте, ки диққат талаб мекунанд",
@@ -124,7 +124,7 @@
     "view_all_inventory": "Ҳамаи захираро дидан",
     "export_report": "Гузориши содирот",
     "export_options": "Имконоти содирот",
-    "export_as_pdf": "Ҳамчун PDF содир кардан",
+    "export_as_pdf": "Ҳамчун PDF ��одир кардан",
     "export_as_excel": "Ҳамчун Excel содир кардан",
     "export_as_csv": "Ҳамчун CSV содир кардан",
     "days": "рӯз",
@@ -288,7 +288,7 @@
     "performed_by": "Иҷрокунанда",
     "updated_fields_available": "Майдонҳои навшуда дастрасанд",
     "sale": "Фурӯш",
-    "required_fields_error": "Лутфан ҳамаи майдонҳои ҳатмиро пур кунед",
+    "required_fields_error": "Лут��ан ҳамаи майдонҳои ҳатмиро пур кунед",
     "history_text": {
       "added_units": "Илова шуд {{count}} адад - {{reason}}",
       "removed_units": "Хориҷ шуд {{count}} адад - {{reason}}",
@@ -353,7 +353,7 @@
     }
   },
   "filials": {
-    "title": "Идоракунии филиалҳо",
+    "title": "Идоракунии филиал��о",
     "subtitle": "Филиалҳо, анборҳо ва нуқтаҳои фурӯшро идора кунед",
     "add_filial": "Илова кардани филиал",
     "add_new_filial": "Илова кардани филиали нав",
@@ -440,7 +440,7 @@
     "unknown": "Номуайян"
   },
   "sales": {
-    "title": "Идоракунии фурӯш",
+    "title": "И��оракунии фурӯш",
     "subtitle": "Ҳисобфактураҳо эҷод кунед ва муомилоти фурӯшро идора кунед",
     "new_invoice": "Ҳисобфактураи нав",
     "total_invoices": "Ҳисобфактураҳои умумӣ",
@@ -538,11 +538,21 @@
     "office_supplies": "Лавозимоти идорӣ",
     "marketing": "Маркетинг",
     "utilities": "Хидматрасониҳо",
-    "check": "Чек"
+    "check": "Чек",
+    "transactions": "Муомилот",
+    "debts_lends": "Қарзҳо ва доданиҳо",
+    "performed_by": "Иҷрокунанда",
+    "all_time": "Ҳама вақт",
+    "last_hour": "Соати охир",
+    "last_day": "Рӯзи охир",
+    "last_week": "Ҳафтаи охир",
+    "last_month": "Моҳи охир",
+    "last_year": "Соли охир",
+    "amount_label": "Маблағ ($)"
   },
   "employees": {
     "title": "Идоракунии кормандон",
-    "subtitle": "Кадрҳо, нақшҳо ва ��аҳсулнокиро идора кунед",
+    "subtitle": "Кадрҳ��, нақшҳо ва ��аҳсулнокиро идора кунед",
     "add_employee": "Корманд илова кардан",
     "total_employees": "Кормандони умумӣ",
     "average_salary": "Маоши миёна",

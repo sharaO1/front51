@@ -664,8 +664,8 @@ export default function Finance() {
       !newTransaction.amount
     ) {
       toast({
-        title: "Error",
-        description: "Please fill in all required fields",
+        title: t("common.error"),
+        description: t("common.required_fields_error"),
         variant: "destructive",
       });
       return;
@@ -701,8 +701,8 @@ export default function Finance() {
       !newTransaction.description
     ) {
       toast({
-        title: "Error",
-        description: "Please fill in all required fields",
+        title: t("common.error"),
+        description: t("common.required_fields_error"),
         variant: "destructive",
       });
       return;
@@ -782,8 +782,8 @@ export default function Finance() {
   const addGoal = () => {
     if (!newGoal.title || !newGoal.targetAmount || !newGoal.deadline) {
       toast({
-        title: "Error",
-        description: "Please fill in all required fields",
+        title: t("common.error"),
+        description: t("common.required_fields_error"),
         variant: "destructive",
       });
       return;
@@ -817,8 +817,8 @@ export default function Finance() {
       !newGoal.deadline
     ) {
       toast({
-        title: "Error",
-        description: "Please fill in all required fields",
+        title: t("common.error"),
+        description: t("common.required_fields_error"),
         variant: "destructive",
       });
       return;
@@ -1201,9 +1201,9 @@ ${data.transactions
                 >
                   <Download className="mr-2 h-4 w-4" />
                   <div className="flex-1">
-                    <div className="font-medium">Financial Goals</div>
+                    <div className="font-medium">{t("finance.financial_goals")}</div>
                     <div className="text-xs text-muted-foreground">
-                      Export goals and progress data
+                      {t("finance.track_financial_objectives")}
                     </div>
                   </div>
                 </DropdownMenuItem>
@@ -1355,7 +1355,7 @@ ${data.transactions
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Income</CardTitle>
+            <CardTitle className="text-sm font-medium">{t("finance.total_income")}</CardTitle>
             <ArrowUpCircle className="h-4 w-4 text-green-600" />
           </CardHeader>
           <CardContent>
@@ -1380,7 +1380,7 @@ ${data.transactions
               ${totalExpenses.toLocaleString()}
             </div>
             <p className="text-xs text-muted-foreground">
-              +5.2% from last month
+              +5.2% {t("dashboard.from_last_month")}
             </p>
           </CardContent>
         </Card>
@@ -2040,7 +2040,7 @@ ${data.transactions
                   <div className="space-y-4">
                     <div>
                       <div className="flex justify-between text-sm mb-1">
-                        <span>Progress</span>
+                        <span>{t("finance.progress")}</span>
                         <span>
                           {Math.round(
                             (goal.currentAmount / goal.targetAmount) * 100,
