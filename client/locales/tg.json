@@ -748,17 +748,56 @@
     "users": {
       "title": "Идоракунии корбарон",
       "subtitle": "Ҳисобҳо, ҳуқуқҳо ва дастрасиро идора кунед",
-      "card": {"title":"Корбарон","description":"Дидани ҳама корбарон ва идоракунии онҳо дар система"},
-      "stats": {"total":"Ҳамаи корбарон","active":"Корбарони фаъол","admins":"Админҳо","suspended":"Баста"},
-      "search_placeholder":"Ҷустуҷӯи корбарон...",
-      "table": {"user":"Корбар","role":"Нақш","department":"Шуъба","status":"Ҳолат","actions":"Амалҳо"},
-      "menu": {"actions":"Амалҳо","view_permissions":"Дидани ҳуқуқҳо","change_role":"Иваз кардани нақш","deactivate":"Ғайрифаъол кардан","suspend":"Бастан","activate":"Фаъол кардан"},
-      "dialogs": {
-        "change_role": {"title":"Иваз кардани нақши корбар","desc_prefix":"Нақшро барои","desc_suffix":"навсозӣ кунед. Ин фавран ҳуқуқҳои ӯро тағйир медиҳад.","new_role":"Нақши нав"},
-        "permissions": {"title":"Ҳуқуқҳои корбар","desc_prefix":"Ҳуқуқҳои муфассал барои"},
-        "warning": {"title":"Огоҳӣ:","message":"Иваз кардани нақш ҳуқуқҳоро фавран нав мекунад ва метавонад ба дастрасӣ таъсир расонад."}
+      "card": {
+        "title": "Корбарон",
+        "description": "Дидани ҳама корбарон ва идоракунии онҳо дар система"
       },
-      "toast": {"error":"Хато","load_failed":"Боркунии корбарон ноком шуд","role_updated_title":"Нақш нав шуд","role_updated_desc":"Нақши корбар ба {{role}} нав шуд","status_updated_title":"Ҳолат нав шуд","status_updated_desc":"Ҳолати корбар ба {{status}} нав шуд"}
+      "stats": {
+        "total": "Ҳамаи корбарон",
+        "active": "Корбарони фаъол",
+        "admins": "Админҳо",
+        "suspended": "Баста"
+      },
+      "search_placeholder": "Ҷустуҷӯи корбарон...",
+      "table": {
+        "user": "Корбар",
+        "role": "Нақш",
+        "department": "Шуъба",
+        "status": "Ҳолат",
+        "actions": "Амалҳо"
+      },
+      "menu": {
+        "actions": "Амалҳо",
+        "view_permissions": "Дидани ҳуқуқҳо",
+        "change_role": "Иваз кардани нақш",
+        "deactivate": "Ғайрифаъол кардан",
+        "suspend": "Бастан",
+        "activate": "Фаъол кардан"
+      },
+      "dialogs": {
+        "change_role": {
+          "title": "Иваз кардани нақши корбар",
+          "desc_prefix": "Нақшро барои",
+          "desc_suffix": "навсозӣ кунед. Ин фавран ҳуқуқҳои ӯро тағйир медиҳад.",
+          "new_role": "Нақши нав"
+        },
+        "permissions": {
+          "title": "Ҳуқуқҳои корбар",
+          "desc_prefix": "Ҳуқуқҳои муфассал барои"
+        },
+        "warning": {
+          "title": "Огоҳӣ:",
+          "message": "Иваз кардани нақш ҳуқуқҳоро фавран нав мекунад ва метавонад ба дастрасӣ таъсир расонад."
+        }
+      },
+      "toast": {
+        "error": "Хато",
+        "load_failed": "Боркунии корбарон ноком шуд",
+        "role_updated_title": "Нақш нав шуд",
+        "role_updated_desc": "Нақши корбар ба {{role}} нав шуд",
+        "status_updated_title": "Ҳолат нав шуд",
+        "status_updated_desc": "Ҳолати корбар ба {{status}} нав шуд"
+      }
     }
   }
 }

@@ -203,10 +203,11 @@ export default function UserManagement() {
                 const res = await loadUsers();
                 if (!res.ok) {
                   toast({
-          title: t("admin.users.toast.error"),
-          description: res.message || t("admin.users.toast.load_failed"),
-          variant: "destructive",
-        });
+                    title: t("admin.users.toast.error"),
+                    description:
+                      res.message || t("admin.users.toast.load_failed"),
+                    variant: "destructive",
+                  });
                 }
               }}
             />
@@ -216,7 +217,9 @@ export default function UserManagement() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">{t("admin.users.stats.total")}</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  {t("admin.users.stats.total")}
+                </CardTitle>
                 <Users className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
@@ -226,7 +229,9 @@ export default function UserManagement() {
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">{t("admin.users.stats.active")}</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  {t("admin.users.stats.active")}
+                </CardTitle>
                 <UserCheck className="h-4 w-4 text-green-600" />
               </CardHeader>
               <CardContent>
@@ -238,7 +243,9 @@ export default function UserManagement() {
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">{t("admin.users.stats.admins")}</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  {t("admin.users.stats.admins")}
+                </CardTitle>
                 <Shield className="h-4 w-4 text-red-600" />
               </CardHeader>
               <CardContent>
@@ -254,7 +261,9 @@ export default function UserManagement() {
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">{t("admin.users.stats.suspended")}</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  {t("admin.users.stats.suspended")}
+                </CardTitle>
                 <UserX className="h-4 w-4 text-red-600" />
               </CardHeader>
               <CardContent>

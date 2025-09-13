@@ -139,9 +139,11 @@ export default function Clients() {
       client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       client.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
       client.phone.includes(searchTerm);
-    const matchesType = typeFilter === "all" || client.type === (typeFilter as Client["type"]);
+    const matchesType =
+      typeFilter === "all" || client.type === (typeFilter as Client["type"]);
     const matchesStatus =
-      statusFilter === "all" || client.status === (statusFilter as Client["status"]);
+      statusFilter === "all" ||
+      client.status === (statusFilter as Client["status"]);
     return matchesSearch && matchesType && matchesStatus;
   });
 
@@ -272,7 +274,10 @@ export default function Clients() {
         email: result.email,
         phone: result.phone,
         address: result.address || "",
-        type: result.type.toLowerCase() as "retail" | "wholesale" | "distributor",
+        type: result.type.toLowerCase() as
+          | "retail"
+          | "wholesale"
+          | "distributor",
         creditLimit: result.creditLimit,
         currentDebt: result.currentDebt,
         status: result.status.toLowerCase() as "active" | "inactive",
@@ -338,7 +343,10 @@ export default function Clients() {
         email: result.email,
         phone: result.phone,
         address: result.address || "",
-        type: result.type.toLowerCase() as "retail" | "wholesale" | "distributor",
+        type: result.type.toLowerCase() as
+          | "retail"
+          | "wholesale"
+          | "distributor",
         creditLimit: result.creditLimit,
         currentDebt: result.currentDebt,
         status: result.status.toLowerCase() as "active" | "inactive",
@@ -356,7 +364,9 @@ export default function Clients() {
 
       toast({
         title: t("clients.toast.updated_title"),
-        description: t("clients.toast.updated_desc", { name: updatedClient.name }),
+        description: t("clients.toast.updated_desc", {
+          name: updatedClient.name,
+        }),
       });
     } catch (error: any) {
       toast({
@@ -558,7 +568,8 @@ export default function Clients() {
           <CardContent>
             <div className="text-2xl font-bold">{clients.length}</div>
             <p className="text-xs text-muted-foreground">
-              {clients.filter((c) => c.status === "active").length} {t("status.active")}
+              {clients.filter((c) => c.status === "active").length}{" "}
+              {t("status.active")}
             </p>
           </CardContent>
         </Card>
@@ -572,7 +583,10 @@ export default function Clients() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              ${clients.reduce((sum, c) => sum + c.currentDebt, 0).toLocaleString()}
+              $
+              {clients
+                .reduce((sum, c) => sum + c.currentDebt, 0)
+                .toLocaleString()}
             </div>
             <p className="text-xs text-muted-foreground">
               {t("clients.across_all_clients")}
@@ -606,7 +620,10 @@ export default function Clients() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              ${clients.reduce((sum, c) => sum + c.totalPurchases, 0).toLocaleString()}
+              $
+              {clients
+                .reduce((sum, c) => sum + c.totalPurchases, 0)
+                .toLocaleString()}
             </div>
             <p className="text-xs text-muted-foreground">
               {t("clients.all_time_revenue")}
@@ -637,8 +654,12 @@ export default function Clients() {
               <SelectContent>
                 <SelectItem value="all">{t("clients.all_types")}</SelectItem>
                 <SelectItem value="retail">{t("clients.retail")}</SelectItem>
-                <SelectItem value="wholesale">{t("clients.wholesale")}</SelectItem>
-                <SelectItem value="distributor">{t("clients.distributor")}</SelectItem>
+                <SelectItem value="wholesale">
+                  {t("clients.wholesale")}
+                </SelectItem>
+                <SelectItem value="distributor">
+                  {t("clients.distributor")}
+                </SelectItem>
               </SelectContent>
             </Select>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
@@ -658,41 +679,53 @@ export default function Clients() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead aria-sort={sortKey === "name" ? sortOrder : undefined}>
+                <TableHead
+                  aria-sort={sortKey === "name" ? sortOrder : undefined}
+                >
                   <button
                     type="button"
                     className="inline-flex items-center gap-1"
                     onClick={() => handleSort("name")}
                   >
-                    {t("clients.client")}<span>{headerSortIndicator("name")}</span>
+                    {t("clients.client")}
+                    <span>{headerSortIndicator("name")}</span>
                   </button>
                 </TableHead>
-                <TableHead aria-sort={sortKey === "type" ? sortOrder : undefined}>
+                <TableHead
+                  aria-sort={sortKey === "type" ? sortOrder : undefined}
+                >
                   <button
                     type="button"
                     className="inline-flex items-center gap-1"
                     onClick={() => handleSort("type")}
                   >
-                    {t("clients.type")}<span>{headerSortIndicator("type")}</span>
+                    {t("clients.type")}
+                    <span>{headerSortIndicator("type")}</span>
                   </button>
                 </TableHead>
                 <TableHead>{t("clients.contact")}</TableHead>
-                <TableHead aria-sort={sortKey === "currentDebt" ? sortOrder : undefined}>
+                <TableHead
+                  aria-sort={sortKey === "currentDebt" ? sortOrder : undefined}
+                >
                   <button
                     type="button"
                     className="inline-flex items-center gap-1"
                     onClick={() => handleSort("currentDebt")}
                   >
-                    {t("clients.debt")}<span>{headerSortIndicator("currentDebt")}</span>
+                    {t("clients.debt")}
+                    <span>{headerSortIndicator("currentDebt")}</span>
                   </button>
                 </TableHead>
-                <TableHead aria-sort={sortKey === "status" ? sortOrder : undefined}>
+                <TableHead
+                  aria-sort={sortKey === "status" ? sortOrder : undefined}
+                >
                   <button
                     type="button"
                     className="inline-flex items-center gap-1"
                     onClick={() => handleSort("status")}
                   >
-                    {t("common.status")}<span>{headerSortIndicator("status")}</span>
+                    {t("common.status")}
+                    <span>{headerSortIndicator("status")}</span>
                   </button>
                 </TableHead>
                 <TableHead>{t("common.actions")}</TableHead>
@@ -705,7 +738,8 @@ export default function Clients() {
                     <div>
                       <div className="font-medium">{client.name}</div>
                       <div className="text-sm text-muted-foreground">
-                        {t("common.total")}: ${client.totalPurchases.toLocaleString()}
+                        {t("common.total")}: $
+                        {client.totalPurchases.toLocaleString()}
                       </div>
                     </div>
                   </TableCell>
@@ -728,7 +762,8 @@ export default function Clients() {
                         ${client.currentDebt.toLocaleString()}
                       </div>
                       <div className="text-sm text-muted-foreground">
-                        {t("clients.credit_limit")}: ${client.creditLimit.toLocaleString()}
+                        {t("clients.credit_limit")}: $
+                        {client.creditLimit.toLocaleString()}
                       </div>
                     </div>
                   </TableCell>
@@ -796,16 +831,28 @@ export default function Clients() {
               title={selectedClient.name}
               subtitle={`${t("clients.complete_information")} ${selectedClient.name}`}
               left={[
-                { label: t("clients.type"), value: getTypeBadge(selectedClient.type) },
-                { label: t("common.email"), value: selectedClient.email || "-" },
-                { label: t("common.address"), value: selectedClient.address || "-" },
+                {
+                  label: t("clients.type"),
+                  value: getTypeBadge(selectedClient.type),
+                },
+                {
+                  label: t("common.email"),
+                  value: selectedClient.email || "-",
+                },
+                {
+                  label: t("common.address"),
+                  value: selectedClient.address || "-",
+                },
                 {
                   label: t("clients.last_purchase"),
                   value: selectedClient.lastPurchase || t("clients.never"),
                 },
               ]}
               right={[
-                { label: t("common.phone"), value: selectedClient.phone || "-" },
+                {
+                  label: t("common.phone"),
+                  value: selectedClient.phone || "-",
+                },
                 {
                   label: t("clients.credit_limit"),
                   value: `$${selectedClient.creditLimit.toLocaleString()}`,
@@ -826,7 +873,9 @@ export default function Clients() {
               }
             >
               <div>
-                <div className="text-xs text-muted-foreground mb-1">{t("common.notes")}</div>
+                <div className="text-xs text-muted-foreground mb-1">
+                  {t("common.notes")}
+                </div>
                 <div className="text-sm">
                   {selectedClient.notes || t("clients.no_notes")}
                 </div>
@@ -916,16 +965,24 @@ export default function Clients() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="active">{t("status.active")}</SelectItem>
-                      <SelectItem value="inactive">{t("status.inactive")}</SelectItem>
-                      <SelectItem value="overdue">{t("status.overdue")}</SelectItem>
+                      <SelectItem value="active">
+                        {t("status.active")}
+                      </SelectItem>
+                      <SelectItem value="inactive">
+                        {t("status.inactive")}
+                      </SelectItem>
+                      <SelectItem value="overdue">
+                        {t("status.overdue")}
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-2">
-                  <Label htmlFor="editCreditLimit">{t("clients.credit_limit")}</Label>
+                  <Label htmlFor="editCreditLimit">
+                    {t("clients.credit_limit")}
+                  </Label>
                   <Input
                     id="editCreditLimit"
                     type="number"

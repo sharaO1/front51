@@ -748,17 +748,56 @@
     "users": {
       "title": "User Management",
       "subtitle": "Manage user accounts, permissions, and access control",
-      "card": {"title":"Users","description":"View and manage all users in the system"},
-      "stats": {"total":"Total Users","active":"Active Users","admins":"Admins","suspended":"Suspended"},
-      "search_placeholder":"Search users...",
-      "table": {"user":"User","role":"Role","department":"Department","status":"Status","actions":"Actions"},
-      "menu": {"actions":"Actions","view_permissions":"View Permissions","change_role":"Change Role","deactivate":"Deactivate","suspend":"Suspend","activate":"Activate"},
-      "dialogs": {
-        "change_role": {"title":"Change User Role","desc_prefix":"Update the role for","desc_suffix":"This will immediately change their permissions.","new_role":"New Role"},
-        "permissions": {"title":"User Permissions","desc_prefix":"Detailed permissions for"},
-        "warning": {"title":"Warning:","message":"Changing a user's role will immediately update their permissions and may affect their access to parts of the system."}
+      "card": {
+        "title": "Users",
+        "description": "View and manage all users in the system"
       },
-      "toast": {"error":"Error","load_failed":"Failed to load users","role_updated_title":"Role Updated","role_updated_desc":"User role has been updated to {{role}}","status_updated_title":"Status Updated","status_updated_desc":"User status has been updated to {{status}}"}
+      "stats": {
+        "total": "Total Users",
+        "active": "Active Users",
+        "admins": "Admins",
+        "suspended": "Suspended"
+      },
+      "search_placeholder": "Search users...",
+      "table": {
+        "user": "User",
+        "role": "Role",
+        "department": "Department",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "menu": {
+        "actions": "Actions",
+        "view_permissions": "View Permissions",
+        "change_role": "Change Role",
+        "deactivate": "Deactivate",
+        "suspend": "Suspend",
+        "activate": "Activate"
+      },
+      "dialogs": {
+        "change_role": {
+          "title": "Change User Role",
+          "desc_prefix": "Update the role for",
+          "desc_suffix": "This will immediately change their permissions.",
+          "new_role": "New Role"
+        },
+        "permissions": {
+          "title": "User Permissions",
+          "desc_prefix": "Detailed permissions for"
+        },
+        "warning": {
+          "title": "Warning:",
+          "message": "Changing a user's role will immediately update their permissions and may affect their access to parts of the system."
+        }
+      },
+      "toast": {
+        "error": "Error",
+        "load_failed": "Failed to load users",
+        "role_updated_title": "Role Updated",
+        "role_updated_desc": "User role has been updated to {{role}}",
+        "status_updated_title": "Status Updated",
+        "status_updated_desc": "User status has been updated to {{status}}"
+      }
     }
   }
 }
