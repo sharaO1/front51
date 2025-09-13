@@ -268,9 +268,9 @@ export default function UserManagement() {
           {/* Search and Filters */}
           <Card>
             <CardHeader>
-              <CardTitle>Users</CardTitle>
+              <CardTitle>{t("admin.users.card.title")}</CardTitle>
               <CardDescription>
-                View and manage all users in the system
+                {t("admin.users.card.description")}
               </CardDescription>
             </CardHeader>
             <CardContent>
