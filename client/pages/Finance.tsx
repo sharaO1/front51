@@ -1231,7 +1231,7 @@ ${data.transactions
               <DialogHeader>
                 <DialogTitle>{t("finance.add_new_transaction")}</DialogTitle>
                 <DialogDescription>
-                  Record a new income or expense transaction.
+                  {t("finance.record_transaction")}
                 </DialogDescription>
               </DialogHeader>
               <div className="space-y-4">
