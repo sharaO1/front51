@@ -70,7 +70,11 @@
       "weak": "Weak",
       "medium": "Medium",
       "strong": "Strong"
-    }
+    },
+    "secure_access_title": "Secure Access",
+    "secure_access_message": "User accounts are managed by administrators only. Contact your system administrator to request access.",
+    "email_placeholder": "you@example.com",
+    "password_placeholder": "Enter your password"
   },
   "navigation": {
     "dashboard": "Dashboard",
