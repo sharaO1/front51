@@ -763,11 +763,7 @@ export default function Filials() {
                   <SelectContent>
                     {managerOptions
                       .filter((m) => {
-                        const used = new Set(
-                          filials
-                            .map((f) => f.manager)
-                            .filter((v) => isIdLike(v)),
-                        );
+                        const used = getAssignedManagerIds();
                         return !used.has(m.id);
                       })
                       .map((m) => (
