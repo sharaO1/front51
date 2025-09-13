@@ -262,39 +262,28 @@ export default function Filials() {
     };
   }, [isViewDialogOpen, selectedFilial?.id, accessToken]);
 
-  // Load available managers when dialogs are open
+  // Load available managers when dialogs are open (via RBAC store)
+  const { users, loadUsers } = useRBACStore();
   useEffect(() => {
     let mounted = true;
-    const loadManagers = async () => {
-      try {
-        const res = await fetch(`${API_BASE}/admin/users`, {
-          headers: {
-            ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
-          },
-        });
-        const json = await res.json().catch(() => null);
-        const list = (json?.data || json?.result || []) as any[];
-        const managers = list
-          .filter((u) => String(u.role || "").toLowerCase() === "manager")
-          .map((u) => ({
-            id: String(u.id),
-            name: String(u.name || u.fullName || u.email || u.username || u.id),
-          }));
-        if (!mounted) return;
-        setManagerOptions(managers);
-        setManagerNames((prev) => ({
-          ...prev,
-          ...Object.fromEntries(managers.map((m) => [m.id, m.name])),
-        }));
-      } catch {
-        if (mounted) setManagerOptions([]);
-      }
+    const ensureManagers = async () => {
+      if (!(isAddDialogOpen || isEditDialogOpen)) return;
+      await loadUsers().catch(() => {});
+      if (!mounted) return;
+      const managers = (users || [])
+        .filter((u) => u.role === "manager" && u.status !== "suspended")
+        .map((u) => ({ id: String(u.id), name: String(u.name || u.email || u.id) }));
+      setManagerOptions(managers);
+      setManagerNames((prev) => ({
+        ...prev,
+        ...Object.fromEntries(managers.map((m) => [m.id, m.name])),
+      }));
     };
-    if (isAddDialogOpen || isEditDialogOpen) loadManagers();
+    ensureManagers();
     return () => {
       mounted = false;
     };
-  }, [isAddDialogOpen, isEditDialogOpen, accessToken]);
+  }, [isAddDialogOpen, isEditDialogOpen, loadUsers, users]);
 
   useEffect(() => {
     let mounted = true;
