@@ -2764,10 +2764,9 @@ ${data.timeEntries
       <Dialog open={isViewEmployeeOpen} onOpenChange={setIsViewEmployeeOpen}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Employee Details</DialogTitle>
+            <DialogTitle>{t("employees.employee_details")}</DialogTitle>
             <DialogDescription>
-              Complete profile for {selectedEmployee?.firstName}{" "}
-              {selectedEmployee?.lastName}
+              {t("employees.complete_profile")} {selectedEmployee?.firstName} {selectedEmployee?.lastName}
             </DialogDescription>
           </DialogHeader>
           {selectedEmployee && (
@@ -2819,9 +2818,7 @@ ${data.timeEntries
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <div className="text-xs text-muted-foreground mb-1">
-                      Skills
-                    </div>
+                    <div className="text-xs text-muted-foreground mb-1">{t("employees.skills")}</div>
                     <div className="flex flex-wrap gap-2">
                       {selectedEmployee.skills.map((skill, index) => (
                         <Badge key={index} variant="outline">
@@ -2829,18 +2826,16 @@ ${data.timeEntries
                         </Badge>
                       ))}
                     </div>
-                    <div className="text-xs text-muted-foreground mt-3 mb-1">
-                      Notes
-                    </div>
+                    <div className="text-xs text-muted-foreground mt-3 mb-1">{t("common.notes")}</div>
                     <div className="text-sm text-muted-foreground">
-                      {selectedEmployee.notes || "No notes available"}
+                      {selectedEmployee.notes || t("clients.no_notes")}
                     </div>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-3 text-xs text-muted-foreground border-t pt-3 mt-3">
-                  <div>📅 Joined: {selectedEmployee.hireDate}</div>
-                  <div>🔄 Updated: {selectedEmployee.updatedAt}</div>
+                  <div>📅 {t("employees.hire_date")}: {selectedEmployee.hireDate}</div>
+                  <div>🔄 {t("common.updated")}: {selectedEmployee.updatedAt}</div>
                 </div>
               </div>
             </DetailCard>
@@ -2852,15 +2847,15 @@ ${data.timeEntries
       <Dialog open={isEditEmployeeOpen} onOpenChange={setIsEditEmployeeOpen}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Edit Employee</DialogTitle>
+            <DialogTitle>{t("employees.edit_employee")}</DialogTitle>
             <DialogDescription>
-              Update employee information and settings.
+              {t("employees.update_employee_info")}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="edit-phone">Phone Number</Label>
+                <Label htmlFor="edit-phone">{t("clients.phone_number")}</Label>
                 <Input
                   id="edit-phone"
                   value={newEmployee.phone}
@@ -2870,7 +2865,7 @@ ${data.timeEntries
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="edit-address">Address</Label>
+                <Label htmlFor="edit-address">{t("common.address")}</Label>
                 <Input
                   id="edit-address"
                   value={newEmployee.address}
@@ -2882,7 +2877,7 @@ ${data.timeEntries
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="edit-position">Position</Label>
+                <Label htmlFor="edit-position">{t("employees.position")}</Label>
                 <Input
                   id="edit-position"
                   value={newEmployee.position}
@@ -2892,7 +2887,7 @@ ${data.timeEntries
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="edit-status">Status</Label>
+                <Label htmlFor="edit-status">{t("common.status")}</Label>
                 <Select
                   value={(newEmployee.status as string) || "active"}
                   onValueChange={(value) =>
@@ -2919,7 +2914,7 @@ ${data.timeEntries
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="edit-salary">Annual Salary ($)</Label>
+                <Label htmlFor="edit-salary">{t("employees.annual_salary")}</Label>
                 <Input
                   id="edit-salary"
                   type="number"
@@ -2933,7 +2928,7 @@ ${data.timeEntries
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="edit-commission">Commission (%)</Label>
+                <Label htmlFor="edit-commission">{t("employees.commission")} (%)</Label>
                 <Input
                   id="edit-commission"
                   type="number"
@@ -2948,7 +2943,7 @@ ${data.timeEntries
               </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="edit-salesTarget">Monthly Sales Target ($)</Label>
+              <Label htmlFor="edit-salesTarget">{t("employees.monthly_sales_target")}</Label>
               <Input
                 id="edit-salesTarget"
                 type="number"
@@ -3015,14 +3010,13 @@ ${data.timeEntries
             <div className="flex gap-2">
               <AlertDialog>
                 <AlertDialogTrigger asChild>
-                  <Button className="flex-1">Update Employee</Button>
+                  <Button className="flex-1">{t("employees.update_employee")}</Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
-                    <AlertDialogTitle>Confirm update</AlertDialogTitle>
+                    <AlertDialogTitle>{t("employees.confirm_update_title")}</AlertDialogTitle>
                     <AlertDialogDescription>
-                      Are you sure you want to save these changes to the
-                      employee?
+                      {t("employees.confirm_update_desc")}
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
@@ -3053,10 +3047,9 @@ ${data.timeEntries
       <Dialog open={isViewSalesOpen} onOpenChange={setIsViewSalesOpen}>
         <DialogContent className="max-w-4xl">
           <DialogHeader>
-            <DialogTitle>Sales Details</DialogTitle>
+            <DialogTitle>{t("employees.sales_details_title")}</DialogTitle>
             <DialogDescription>
-              Sales history for {selectedEmployeeSales?.firstName}{" "}
-              {selectedEmployeeSales?.lastName}
+              {t("employees.sales_history_for")} {selectedEmployeeSales?.firstName} {selectedEmployeeSales?.lastName}
             </DialogDescription>
           </DialogHeader>
           {selectedEmployeeSales && (
