@@ -197,13 +197,7 @@ export default function UserManagement() {
 
       <div className="w-full">
         <div className="space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div>
-              <h2 className="text-xl font-semibold">Users</h2>
-              <p className="text-muted-foreground">
-                Manage user accounts, roles, and access permissions
-              </p>
-            </div>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-4">
             <UserCreateDialog
               onUserCreated={async () => {
                 const res = await loadUsers();
