@@ -331,7 +331,24 @@
     "current_debt": "Current Debt",
     "last_purchase": "Last Purchase",
     "never": "Never",
-    "no_notes": "No notes"
+    "no_notes": "No notes",
+    "full_address": "Full address",
+    "edit_client": "Edit Client",
+    "update_client": "Update Client",
+    "update_client_info": "Update client information and settings.",
+    "client": "Client",
+    "required_fields_error": "Please fill in all required fields",
+    "toast": {
+      "added_title": "Client added",
+      "added_desc": "{{name}} has been added successfully.",
+      "updated_title": "Client updated",
+      "updated_desc": "{{name}} has been updated successfully.",
+      "deleted_title": "Client deleted",
+      "deleted_desc": "Client has been removed from the system.",
+      "reminder_title": "Reminder sent",
+      "reminder_desc_prefix": "Payment reminder sent to",
+      "reminder_desc_suffix": "via email and SMS."
+    }
   },
   "filials": {
     "title": "Filials Management",
