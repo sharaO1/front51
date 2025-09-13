@@ -231,7 +231,7 @@ export function RoleComparison({ roles, className }: RoleComparisonProps) {
             onClick={() => toggleRole(role)}
             className="capitalize"
           >
-            {role.replace('_', ' ')}
+            {t(`roles.labels.${role}`)}
           </Button>
         ))}
       </div>
@@ -243,7 +243,7 @@ export function RoleComparison({ roles, className }: RoleComparisonProps) {
               <th className="border border-border p-2 text-left bg-muted">Resource</th>
               {Array.from(selectedRoles).map(role => (
                 <th key={role} className="border border-border p-2 text-center bg-muted capitalize">
-                  {role.replace('_', ' ')}
+                  {t(`roles.labels.${role}`)}
                 </th>
               ))}
             </tr>
