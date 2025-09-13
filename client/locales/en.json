@@ -230,6 +230,7 @@
       "online": "Online"
     },
     "manager": "Manager",
+    "select_manager": "Select manager",
     "statuses": {
       "active": "Active",
       "inactive": "Inactive",
