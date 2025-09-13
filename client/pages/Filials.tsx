@@ -380,7 +380,12 @@ export default function Filials() {
 
   // Recompute each filial's currentStaff from users' filial assignments
   useEffect(() => {
-    if (!Array.isArray(users) || users.length === 0) return;
+    if (!Array.isArray(filials) || filials.length === 0) return;
+    if (!Array.isArray(users) || users.length === 0) {
+      // If users not loaded, ensure counts are zeroed for consistency
+      setFilials((prev) => prev.map((f) => (f.currentStaff !== 0 ? { ...f, currentStaff: 0 } : f)));
+      return;
+    }
 
     const normalize = (s: string) => s.trim().toLowerCase();
     const idCount: Record<string, number> = {};
@@ -413,7 +418,7 @@ export default function Filials() {
       });
       return changed ? updated : prev;
     });
-  }, [users]);
+  }, [users, filials]);
 
   const isIdLike = (v: string) =>
     typeof v === "string" &&
