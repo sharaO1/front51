@@ -270,7 +270,18 @@
     "from_origin": "From (Origin)",
     "to_destination": "To (Destination)",
     "delete_product_title": "Delete product",
-    "delete_product_confirm": "Are you sure you want to delete \"{{name}}\"? This action cannot be undone."
+    "delete_product_confirm": "Are you sure you want to delete \"{{name}}\"? This action cannot be undone.",
+    "current_inventory_value": "Current inventory value",
+    "need_immediate_attention": "Need immediate attention",
+    "require_restocking": "Require restocking",
+    "value": "Value",
+    "store_location": "Store/Location",
+    "reference": "Reference",
+    "stock_change": "Stock Change",
+    "entity": "Entity",
+    "store_details": "Store/Details",
+    "performed_by": "Performed By",
+    "updated_fields_available": "Updated fields available"
   },
   "clients": {
     "title": "Client Management",
