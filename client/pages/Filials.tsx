@@ -355,7 +355,14 @@ export default function Filials() {
             "";
           return {
             id: f.id,
-            name: f.name,
+            name:
+              f.name ||
+              f.title ||
+              f.filialName ||
+              f.filial_name ||
+              f.storeName ||
+              f.branchName ||
+              String(f.id),
             type: f.type || "warehouse",
             address: f.address || "",
             city: f.city || "",
