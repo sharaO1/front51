@@ -185,9 +185,22 @@
     "by": "By",
     "action": "Action",
     "all_actions": "All Actions",
-    "actions": { "created": "Created", "edited": "Edited", "deleted": "Deleted" },
-    "errors": { "load_products": "Failed to load products", "load_movements": "Failed to load stock movements", "load_history": "Failed to load warehouse history" },
-    "toast": { "product_added_title": "Product added", "product_added_desc": "{{name}} has been added to inventory.", "product_deleted_title": "Product deleted", "product_deleted_desc": "{{name}} has been removed from inventory." }
+    "actions": {
+      "created": "Created",
+      "edited": "Edited",
+      "deleted": "Deleted"
+    },
+    "errors": {
+      "load_products": "Failed to load products",
+      "load_movements": "Failed to load stock movements",
+      "load_history": "Failed to load warehouse history"
+    },
+    "toast": {
+      "product_added_title": "Product added",
+      "product_added_desc": "{{name}} has been added to inventory.",
+      "product_deleted_title": "Product deleted",
+      "product_deleted_desc": "{{name}} has been removed from inventory."
+    }
   },
   "clients": {
     "title": "Client Management",

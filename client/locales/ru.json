@@ -185,9 +185,22 @@
     "by": "Кем",
     "action": "Действие",
     "all_actions": "Все действия",
-    "actions": { "created": "Создано", "edited": "Изменено", "deleted": "Удалено" },
-    "errors": { "load_products": "Не удалось загрузить товары", "load_movements": "Не удалось загрузить операции склада", "load_history": "Не удалось загрузить историю склада" },
-    "toast": { "product_added_title": "Товар добавлен", "product_added_desc": "{{name}} добавлен на склад.", "product_deleted_title": "Товар удален", "product_deleted_desc": "{{name}} удален со склада." }
+    "actions": {
+      "created": "Создано",
+      "edited": "Изменено",
+      "deleted": "Удалено"
+    },
+    "errors": {
+      "load_products": "Не удалось загрузить товары",
+      "load_movements": "Не удалось загрузить операции склада",
+      "load_history": "Не удалось загрузить историю склада"
+    },
+    "toast": {
+      "product_added_title": "Товар добавлен",
+      "product_added_desc": "{{name}} добавлен на склад.",
+      "product_deleted_title": "Товар удален",
+      "product_deleted_desc": "{{name}} удален со склада."
+    }
   },
   "clients": {
     "title": "Управление клиентами",

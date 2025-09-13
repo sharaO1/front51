@@ -185,9 +185,22 @@
     "by": "Аз ҷониби",
     "action": "Амалиёт",
     "all_actions": "Ҳамаи амалҳо",
-    "actions": { "created": "Эҷод шуд", "edited": "Таҳрир шуд", "deleted": "Нест шуд" },
-    "errors": { "load_products": "Боркунии маҳсулот ноком шуд", "load_movements": "Боркунии ҳаракатҳои захира ноком шуд", "load_history": "Боркунии таърихи анбор ноком шуд" },
-    "toast": { "product_added_title": "Маҳсулот илова шуд", "product_added_desc": "{{name}} ба захира илова карда шуд.", "product_deleted_title": "Маҳсулот ҳазф шуд", "product_deleted_desc": "{{name}} аз захира ҳазф карда шуд." }
+    "actions": {
+      "created": "Эҷод шуд",
+      "edited": "Таҳрир шуд",
+      "deleted": "Нест шуд"
+    },
+    "errors": {
+      "load_products": "Боркунии маҳсулот ноком шуд",
+      "load_movements": "Боркунии ҳаракатҳои захира ноком шуд",
+      "load_history": "Боркунии таърихи анбор ноком шуд"
+    },
+    "toast": {
+      "product_added_title": "Маҳсулот илова шуд",
+      "product_added_desc": "{{name}} ба захира илова карда шуд.",
+      "product_deleted_title": "Маҳсулот ҳазф шуд",
+      "product_deleted_desc": "{{name}} аз захира ҳазф карда шуд."
+    }
   },
   "clients": {
     "title": "Идоракунии муштариён",

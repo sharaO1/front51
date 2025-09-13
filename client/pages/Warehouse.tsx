@@ -530,7 +530,9 @@ export default function Warehouse() {
   const [stockMovements, setStockMovements] = useState(mockStockMovements);
   const [warehouseHistory, setWarehouseHistory] =
     useState(mockWarehouseHistory);
-  const [usersFilialMap, setUsersFilialMap] = useState<Record<string, string>>({});
+  const [usersFilialMap, setUsersFilialMap] = useState<Record<string, string>>(
+    {},
+  );
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -771,7 +773,11 @@ export default function Warehouse() {
                 u.email ||
                 id) as string;
               const fid =
-                u.filialId ?? u.filialID ?? u.storeId ?? u.branchId ?? u.locationId;
+                u.filialId ??
+                u.filialID ??
+                u.storeId ??
+                u.branchId ??
+                u.locationId;
               if (fid) usersFilialLocal[id] = String(fid);
             }
           } catch (err) {
@@ -1001,12 +1007,18 @@ export default function Warehouse() {
           await Promise.all(
             movementUserIds.map(async (id: string) => {
               try {
-                const uRes = await fetch(`${API_BASE}/users/${id}`, { headers });
+                const uRes = await fetch(`${API_BASE}/users/${id}`, {
+                  headers,
+                });
                 const uJson = await uRes.json().catch(() => null);
                 if (uRes.ok && uJson?.ok && uJson.result) {
                   const u = uJson.result;
                   const fid =
-                    u.filialId ?? u.filialID ?? u.storeId ?? u.branchId ?? u.locationId;
+                    u.filialId ??
+                    u.filialID ??
+                    u.storeId ??
+                    u.branchId ??
+                    u.locationId;
                   if (fid) usersFilialLocal[id] = String(fid);
                 }
               } catch {}
@@ -1165,9 +1177,8 @@ export default function Warehouse() {
           reason: String(detailsObj.reason || m.reason || ""),
           notes: String(detailsObj.notes || m.notes || ""),
           performedBy: String(m.userName || m.username || m.performedBy || ""),
-          performedById: String(
-            m.ph_user_id || m.userId || m.user_id || "",
-          ) || undefined,
+          performedById:
+            String(m.ph_user_id || m.userId || m.user_id || "") || undefined,
           date,
           time,
           ts: isNaN(created.getTime()) ? null : created.getTime(),
@@ -1394,7 +1405,9 @@ export default function Warehouse() {
           </Badge>
         );
       case "out-of-stock":
-        return <Badge variant="destructive">{t("warehouse.out_of_stock")}</Badge>;
+        return (
+          <Badge variant="destructive">{t("warehouse.out_of_stock")}</Badge>
+        );
       case "discontinued":
         return (
           <Badge variant="outline" className="bg-gray-100 text-gray-800">
@@ -1446,7 +1459,9 @@ export default function Warehouse() {
           </Badge>
         );
       case "delete":
-        return <Badge variant="destructive">{t("warehouse.actions.deleted")}</Badge>;
+        return (
+          <Badge variant="destructive">{t("warehouse.actions.deleted")}</Badge>
+        );
       case "stock_in":
         return (
           <Badge variant="default" className="bg-green-100 text-green-800">
@@ -2012,7 +2027,9 @@ export default function Warehouse() {
 
       toast({
         title: t("warehouse.toast.product_added_title"),
-        description: t("warehouse.toast.product_added_desc", { name: product.name }),
+        description: t("warehouse.toast.product_added_desc", {
+          name: product.name,
+        }),
       });
     } catch (error: any) {
       toast({
@@ -2226,7 +2243,9 @@ export default function Warehouse() {
 
     toast({
       title: t("warehouse.toast.product_deleted_title"),
-      description: t("warehouse.toast.product_deleted_desc", { name: product.name }),
+      description: t("warehouse.toast.product_deleted_desc", {
+        name: product.name,
+      }),
     });
   };
 
@@ -2252,9 +2271,7 @@ export default function Warehouse() {
           <h1 className="text-3xl font-bold tracking-tight">
             {t("warehouse.title")}
           </h1>
-          <p className="text-muted-foreground">
-            {t("warehouse.subtitle")}
-          </p>
+          <p className="text-muted-foreground">{t("warehouse.subtitle")}</p>
         </div>
 
         {/* Action Buttons */}
@@ -2668,8 +2685,12 @@ export default function Warehouse() {
 
       <Tabs defaultValue="inventory" className="space-y-4">
         <TabsList>
-          <TabsTrigger value="inventory">{t("warehouse.inventory")}</TabsTrigger>
-          <TabsTrigger value="movements">{t("warehouse.stock_movements")}</TabsTrigger>
+          <TabsTrigger value="inventory">
+            {t("warehouse.inventory")}
+          </TabsTrigger>
+          <TabsTrigger value="movements">
+            {t("warehouse.stock_movements")}
+          </TabsTrigger>
           <TabsTrigger value="history">{t("warehouse.history")}</TabsTrigger>
         </TabsList>
 
@@ -2970,7 +2991,9 @@ export default function Warehouse() {
                               ? movement.partyName ||
                                 movement.fromStore ||
                                 t("warehouse.from")
-                              : movement.party || movement.reason || t("warehouse.details")}
+                              : movement.party ||
+                                movement.reason ||
+                                t("warehouse.details")}
                           </div>
 
                           {/* Directional info and reason */}
@@ -2988,15 +3011,21 @@ export default function Warehouse() {
                             {movement.type === "stock_in" && (
                               <>
                                 {movement.partyName && (
-                                  <span>{t("warehouse.from")}: {movement.partyName}</span>
+                                  <span>
+                                    {t("warehouse.from")}: {movement.partyName}
+                                  </span>
                                 )}
                                 {!movement.partyName && movement.fromStore && (
-                                  <span>{t("warehouse.from")}: {movement.fromStore}</span>
+                                  <span>
+                                    {t("warehouse.from")}: {movement.fromStore}
+                                  </span>
                                 )}
                                 {!movement.partyName &&
                                   !movement.fromStore &&
                                   movement.reason && (
-                                    <span>{t("warehouse.reason")}: {movement.reason}</span>
+                                    <span>
+                                      {t("warehouse.reason")}: {movement.reason}
+                                    </span>
                                   )}
 
                                 {movement.reason &&
@@ -3005,7 +3034,8 @@ export default function Warehouse() {
                                     .includes("transfer") && (
                                     <>
                                       <br />
-                                      {t("warehouse.reason")}: {t("warehouse.transfer")}
+                                      {t("warehouse.reason")}:{" "}
+                                      {t("warehouse.transfer")}
                                     </>
                                   )}
                               </>
@@ -3014,9 +3044,13 @@ export default function Warehouse() {
                             {movement.type === "stock_out" && (
                               <>
                                 {movement.partyName ? (
-                                  <span>{t("warehouse.to")}: {movement.partyName}</span>
+                                  <span>
+                                    {t("warehouse.to")}: {movement.partyName}
+                                  </span>
                                 ) : movement.toStore ? (
-                                  <span>{t("warehouse.to")}: {movement.toStore}</span>
+                                  <span>
+                                    {t("warehouse.to")}: {movement.toStore}
+                                  </span>
                                 ) : null}
                                 {movement.reason &&
                                   String(movement.reason)
@@ -3077,14 +3111,30 @@ export default function Warehouse() {
                     <SelectValue placeholder={t("warehouse.action")} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">{t("warehouse.all_actions")}</SelectItem>
-                    <SelectItem value="create">{t("warehouse.actions.created")}</SelectItem>
-                    <SelectItem value="edit">{t("warehouse.actions.edited")}</SelectItem>
-                    <SelectItem value="delete">{t("warehouse.actions.deleted")}</SelectItem>
-                    <SelectItem value="stock_in">{t("warehouse.stock_in")}</SelectItem>
-                    <SelectItem value="stock_out">{t("warehouse.stock_out")}</SelectItem>
-                    <SelectItem value="transfer">{t("warehouse.transfers")}</SelectItem>
-                    <SelectItem value="adjustment">{t("warehouse.adjustments")}</SelectItem>
+                    <SelectItem value="all">
+                      {t("warehouse.all_actions")}
+                    </SelectItem>
+                    <SelectItem value="create">
+                      {t("warehouse.actions.created")}
+                    </SelectItem>
+                    <SelectItem value="edit">
+                      {t("warehouse.actions.edited")}
+                    </SelectItem>
+                    <SelectItem value="delete">
+                      {t("warehouse.actions.deleted")}
+                    </SelectItem>
+                    <SelectItem value="stock_in">
+                      {t("warehouse.stock_in")}
+                    </SelectItem>
+                    <SelectItem value="stock_out">
+                      {t("warehouse.stock_out")}
+                    </SelectItem>
+                    <SelectItem value="transfer">
+                      {t("warehouse.transfers")}
+                    </SelectItem>
+                    <SelectItem value="adjustment">
+                      {t("warehouse.adjustments")}
+                    </SelectItem>
                   </SelectContent>
                 </Select>
 
