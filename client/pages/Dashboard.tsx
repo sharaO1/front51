@@ -78,6 +78,9 @@ export default function Dashboard() {
   const [salesLoading, setSalesLoading] = useState(false);
   const [salesError, setSalesError] = useState<string | null>(null);
 
+  // Real total revenue computed from Transaction History (income)
+  const [totalRevenue, setTotalRevenue] = useState<number | null>(null);
+
   // Live counts for dashboard
   const [totalProducts, setTotalProducts] = useState<number | null>(null);
   const [newProductsThisMonth, setNewProductsThisMonth] = useState<
