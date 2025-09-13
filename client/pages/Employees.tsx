@@ -1429,10 +1429,8 @@ ${data.timeEntries
             </DialogTrigger>
             <DialogContent className="max-w-md mx-4 max-h-[90vh] overflow-y-auto">
               <DialogHeader>
-                <DialogTitle>Mark Employee Attendance</DialogTitle>
-                <DialogDescription>
-                  Record attendance for an employee.
-                </DialogDescription>
+                <DialogTitle>{t("employees.mark_employee_attendance")}</DialogTitle>
+                <DialogDescription>{t("employees.record_attendance_desc")}</DialogDescription>
               </DialogHeader>
               <div className="space-y-4">
                 <div className="space-y-2">
@@ -1545,7 +1543,7 @@ ${data.timeEntries
                   <Label htmlFor="attendanceNotes">{t("common.notes")}</Label>
                   <Textarea
                     id="attendanceNotes"
-                    placeholder={t("employees.additional_notes")}
+                    placeholder={t("employees.additional_notes_employee")}
                     value={newAttendance.notes}
                     onChange={(e) =>
                       setNewAttendance({
@@ -1558,7 +1556,7 @@ ${data.timeEntries
                 </div>
                 <div className="flex gap-2">
                   <Button className="flex-1" onClick={addAttendanceEntry}>
-                    Mark Attendance
+                    {t("employees.mark_attendance")}
                   </Button>
                   <Button
                     variant="outline"
@@ -1567,7 +1565,7 @@ ${data.timeEntries
                       setIsAttendanceOpen(false);
                     }}
                   >
-                    Cancel
+                    {t("common.cancel")}
                   </Button>
                 </div>
               </div>
@@ -2075,7 +2073,7 @@ ${data.timeEntries
                 <div className="relative flex-1">
                   <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                   <Input
-                    placeholder="Search employees..."
+                    placeholder={t("employees.search_employees")}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="pl-8"
@@ -2088,23 +2086,23 @@ ${data.timeEntries
                   >
                     <SelectTrigger className="flex-1 md:w-[150px]">
                       <Filter className="mr-2 h-4 w-4" />
-                      <SelectValue placeholder="Department" />
+                      <SelectValue placeholder={t("employees.department")} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="all">All Departments</SelectItem>
-                      <SelectItem value="Sales">Sales</SelectItem>
-                      <SelectItem value="Marketing">Marketing</SelectItem>
-                      <SelectItem value="IT">IT</SelectItem>
-                      <SelectItem value="Finance">Finance</SelectItem>
-                      <SelectItem value="HR">HR</SelectItem>
+                      <SelectItem value="all">{t("employees.all_departments")}</SelectItem>
+                      <SelectItem value="Sales">{t("departments.sales")}</SelectItem>
+                      <SelectItem value="Marketing">{t("departments.marketing")}</SelectItem>
+                      <SelectItem value="IT">{t("departments.it")}</SelectItem>
+                      <SelectItem value="Finance">{t("departments.finance")}</SelectItem>
+                      <SelectItem value="HR">{t("departments.hr")}</SelectItem>
                     </SelectContent>
                   </Select>
                   <Select value={statusFilter} onValueChange={setStatusFilter}>
                     <SelectTrigger className="flex-1 md:w-[130px]">
-                      <SelectValue placeholder="Status" />
+                      <SelectValue placeholder={t("common.status")} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="all">All Status</SelectItem>
+                      <SelectItem value="all">{t("employees.all_status")}</SelectItem>
                       <SelectItem value="active">
                         {t("status.active")}
                       </SelectItem>
@@ -2185,7 +2183,7 @@ ${data.timeEntries
                       <TableCell className="font-medium">
                         <div>${employee.salary.toLocaleString()}</div>
                         <div className="text-xs text-muted-foreground">
-                          {employee.commission}% commission
+                          {employee.commission}% {t("employees.commission")}
                         </div>
                         {employee.salesTarget && (
                           <div className="text-xs text-muted-foreground">
