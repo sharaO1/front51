@@ -1491,6 +1491,28 @@ export default function Warehouse() {
     }
   };
 
+  const formatReason = (reason: string): string => {
+    const r = String(reason || "").toLowerCase();
+    if (r === "purchase") return t("warehouse.purchase");
+    if (r === "return") return t("warehouse.return");
+    if (r === "sale") return t("warehouse.sale");
+    if (r === "expired") return t("warehouse.expired");
+    if (r === "broken") return t("warehouse.broken");
+    if (r === "lost") return t("warehouse.lost");
+    if (r === "other") return t("warehouse.other");
+    if (r.includes("transfer")) return t("warehouse.transfer");
+    return reason;
+  };
+
+  const formatParty = (party?: string): string => {
+    const p = String(party || "").toLowerCase();
+    if (p.includes("supplier")) return t("warehouse.supplier");
+    if (p.includes("client") || p.includes("customer")) return t("warehouse.client");
+    if (p.includes("filial") || p.includes("other") || p.includes("transfer")) return t("warehouse.transfer");
+    if (p.includes("discard")) return t("warehouse.discarded");
+    return party || "";
+  };
+
   useEffect(() => {
     // Use the unified fetchStockMovementsFromApi to load movements so formatting stays consistent
     let mounted = true;
