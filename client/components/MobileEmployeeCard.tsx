@@ -9,7 +9,7 @@ interface Employee {
   department: string;
   position?: string;
   role: string;
-  status: 'active' | 'inactive' | 'terminated' | 'on_leave';
+  status: "active" | "inactive" | "terminated" | "on_leave";
   salary: number;
   commission: number;
   hireDate: string;
@@ -58,23 +58,33 @@ export default function MobileEmployeeCard({
     switch (status) {
       case "active":
         return (
-          <Badge className="bg-green-100 text-green-800 text-xs">{t("status.active")}</Badge>
+          <Badge className="bg-green-100 text-green-800 text-xs">
+            {t("status.active")}
+          </Badge>
         );
       case "inactive":
         return (
-          <Badge variant="secondary" className="text-xs">{t("status.inactive")}</Badge>
+          <Badge variant="secondary" className="text-xs">
+            {t("status.inactive")}
+          </Badge>
         );
       case "terminated":
         return (
-          <Badge variant="destructive" className="text-xs">{t("status.terminated")}</Badge>
+          <Badge variant="destructive" className="text-xs">
+            {t("status.terminated")}
+          </Badge>
         );
       case "on_leave":
         return (
-          <Badge className="bg-yellow-100 text-yellow-800 text-xs">{t("status.on_leave")}</Badge>
+          <Badge className="bg-yellow-100 text-yellow-800 text-xs">
+            {t("status.on_leave")}
+          </Badge>
         );
       default:
         return (
-          <Badge variant="outline" className="text-xs">{t("common.unknown")}</Badge>
+          <Badge variant="outline" className="text-xs">
+            {t("common.unknown")}
+          </Badge>
         );
     }
   };
@@ -83,23 +93,33 @@ export default function MobileEmployeeCard({
     switch (role) {
       case "admin":
         return (
-          <Badge className="bg-purple-100 text-purple-800 text-xs">{t("roles.labels.admin")}</Badge>
+          <Badge className="bg-purple-100 text-purple-800 text-xs">
+            {t("roles.labels.admin")}
+          </Badge>
         );
       case "manager":
         return (
-          <Badge className="bg-blue-100 text-blue-800 text-xs">{t("roles.labels.manager")}</Badge>
+          <Badge className="bg-blue-100 text-blue-800 text-xs">
+            {t("roles.labels.manager")}
+          </Badge>
         );
       case "worker":
         return (
-          <Badge variant="outline" className="text-xs">{t("employees.employee_role")}</Badge>
+          <Badge variant="outline" className="text-xs">
+            {t("employees.employee_role")}
+          </Badge>
         );
       case "intern":
         return (
-          <Badge className="bg-orange-100 text-orange-800 text-xs">{t("employees.intern")}</Badge>
+          <Badge className="bg-orange-100 text-orange-800 text-xs">
+            {t("employees.intern")}
+          </Badge>
         );
       default:
         return (
-          <Badge variant="outline" className="text-xs">{t("common.unknown")}</Badge>
+          <Badge variant="outline" className="text-xs">
+            {t("common.unknown")}
+          </Badge>
         );
     }
   };
@@ -206,7 +226,8 @@ export default function MobileEmployeeCard({
           <div className="flex items-center gap-2 text-xs text-muted-foreground pt-1">
             <Calendar className="h-3 w-3" />
             <span>
-              {t("employees.hire_date")}: {new Date(employee.hireDate).toLocaleDateString()}
+              {t("employees.hire_date")}:{" "}
+              {new Date(employee.hireDate).toLocaleDateString()}
             </span>
           </div>
         </div>

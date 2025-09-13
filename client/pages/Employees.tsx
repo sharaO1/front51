@@ -1429,8 +1429,12 @@ ${data.timeEntries
             </DialogTrigger>
             <DialogContent className="max-w-md mx-4 max-h-[90vh] overflow-y-auto">
               <DialogHeader>
-                <DialogTitle>{t("employees.mark_employee_attendance")}</DialogTitle>
-                <DialogDescription>{t("employees.record_attendance_desc")}</DialogDescription>
+                <DialogTitle>
+                  {t("employees.mark_employee_attendance")}
+                </DialogTitle>
+                <DialogDescription>
+                  {t("employees.record_attendance_desc")}
+                </DialogDescription>
               </DialogHeader>
               <div className="space-y-4">
                 <div className="space-y-2">
@@ -1586,8 +1590,12 @@ ${data.timeEntries
             </DialogTrigger>
             <DialogContent className="max-w-md mx-4 max-h-[90vh] overflow-y-auto">
               <DialogHeader>
-                <DialogTitle>{t("employees.record_daily_sale_title")}</DialogTitle>
-                <DialogDescription>{t("employees.record_sale_desc")}</DialogDescription>
+                <DialogTitle>
+                  {t("employees.record_daily_sale_title")}
+                </DialogTitle>
+                <DialogDescription>
+                  {t("employees.record_sale_desc")}
+                </DialogDescription>
               </DialogHeader>
               <div className="space-y-4">
                 <div className="space-y-2">
@@ -1691,17 +1699,17 @@ ${data.timeEntries
                 </div>
                 <div className="flex gap-2">
                   <Button className="flex-1" onClick={addDailySale}>
-                  {t("employees.record_sale")}
-                </Button>
+                    {t("employees.record_sale")}
+                  </Button>
                   <Button
-                  variant="outline"
-                  onClick={() => {
-                    clearNewSale();
-                    setIsAddSaleOpen(false);
-                  }}
-                >
-                  {t("common.cancel")}
-                </Button>
+                    variant="outline"
+                    onClick={() => {
+                      clearNewSale();
+                      setIsAddSaleOpen(false);
+                    }}
+                  >
+                    {t("common.cancel")}
+                  </Button>
                 </div>
               </div>
             </DialogContent>
@@ -2087,11 +2095,19 @@ ${data.timeEntries
                       <SelectValue placeholder={t("employees.department")} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="all">{t("employees.all_departments")}</SelectItem>
-                      <SelectItem value="Sales">{t("departments.sales")}</SelectItem>
-                      <SelectItem value="Marketing">{t("departments.marketing")}</SelectItem>
+                      <SelectItem value="all">
+                        {t("employees.all_departments")}
+                      </SelectItem>
+                      <SelectItem value="Sales">
+                        {t("departments.sales")}
+                      </SelectItem>
+                      <SelectItem value="Marketing">
+                        {t("departments.marketing")}
+                      </SelectItem>
                       <SelectItem value="IT">{t("departments.it")}</SelectItem>
-                      <SelectItem value="Finance">{t("departments.finance")}</SelectItem>
+                      <SelectItem value="Finance">
+                        {t("departments.finance")}
+                      </SelectItem>
                       <SelectItem value="HR">{t("departments.hr")}</SelectItem>
                     </SelectContent>
                   </Select>
@@ -2100,7 +2116,9 @@ ${data.timeEntries
                       <SelectValue placeholder={t("common.status")} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="all">{t("employees.all_status")}</SelectItem>
+                      <SelectItem value="all">
+                        {t("employees.all_status")}
+                      </SelectItem>
                       <SelectItem value="active">
                         {t("status.active")}
                       </SelectItem>
@@ -2228,7 +2246,9 @@ ${data.timeEntries
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
                               <AlertDialogFooter>
-                                <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
+                                <AlertDialogCancel>
+                                  {t("common.cancel")}
+                                </AlertDialogCancel>
                                 <AlertDialogAction
                                   onClick={() => deleteEmployee(employee.id)}
                                 >
@@ -2251,8 +2271,12 @@ ${data.timeEntries
           {/* Daily Sales Tracking */}
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-lg font-semibold">{t("employees.sales_performance_header")}</h3>
-              <p className="text-sm text-muted-foreground">{t("employees.sales_performance_subtitle")}</p>
+              <h3 className="text-lg font-semibold">
+                {t("employees.sales_performance_header")}
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                {t("employees.sales_performance_subtitle")}
+              </p>
             </div>
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
@@ -2321,20 +2345,26 @@ ${data.timeEntries
                   <CardContent className="space-y-3">
                     <div className="grid grid-cols-2 gap-2 text-sm">
                       <div>
-                        <div className="text-muted-foreground">{t("employees.sales_label")}</div>
+                        <div className="text-muted-foreground">
+                          {t("employees.sales_label")}
+                        </div>
                         <div className="font-semibold text-green-600">
                           ${dailySalesAmount.toLocaleString()}
                         </div>
                       </div>
                       <div>
-                        <div className="text-muted-foreground">{t("employees.commission")}</div>
+                        <div className="text-muted-foreground">
+                          {t("employees.commission")}
+                        </div>
                         <div className="font-semibold text-blue-600">
                           ${dailyCommission.toFixed(2)}
                         </div>
                       </div>
                     </div>
                     <div className="text-sm">
-                      <div className="text-muted-foreground">{t("employees.transactions")}: {salesCount}</div>
+                      <div className="text-muted-foreground">
+                        {t("employees.transactions")}: {salesCount}
+                      </div>
                     </div>
                     {employee.salesTarget && (
                       <div className="space-y-1">
@@ -2366,7 +2396,9 @@ ${data.timeEntries
           <Card>
             <CardHeader>
               <CardTitle>{t("employees.sales_performance_trend")}</CardTitle>
-              <CardDescription>{t("employees.monthly_sales_by_employee")}</CardDescription>
+              <CardDescription>
+                {t("employees.monthly_sales_by_employee")}
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={300}>
@@ -2407,8 +2439,12 @@ ${data.timeEntries
           {/* Attendance Tracking */}
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-lg font-semibold">{t("employees.employee_attendance_header")}</h3>
-              <p className="text-sm text-muted-foreground">{t("employees.employee_attendance_subtitle")}</p>
+              <h3 className="text-lg font-semibold">
+                {t("employees.employee_attendance_header")}
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                {t("employees.employee_attendance_subtitle")}
+              </p>
             </div>
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
@@ -2428,7 +2464,9 @@ ${data.timeEntries
           <div className="grid gap-4 md:grid-cols-4">
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm">{t("employees.present_today")}</CardTitle>
+                <CardTitle className="text-sm">
+                  {t("employees.present_today")}
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-green-600">
@@ -2438,12 +2476,16 @@ ${data.timeEntries
                     ).length
                   }
                 </div>
-                <p className="text-xs text-muted-foreground">{t("employees.employees_present")}</p>
+                <p className="text-xs text-muted-foreground">
+                  {t("employees.employees_present")}
+                </p>
               </CardContent>
             </Card>
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm">{t("employees.late_arrivals")}</CardTitle>
+                <CardTitle className="text-sm">
+                  {t("employees.late_arrivals")}
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-yellow-600">
@@ -2453,12 +2495,16 @@ ${data.timeEntries
                     ).length
                   }
                 </div>
-                <p className="text-xs text-muted-foreground">{t("employees.late_employees")}</p>
+                <p className="text-xs text-muted-foreground">
+                  {t("employees.late_employees")}
+                </p>
               </CardContent>
             </Card>
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm">{t("employees.absent_today")}</CardTitle>
+                <CardTitle className="text-sm">
+                  {t("employees.absent_today")}
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-red-600">
@@ -2469,12 +2515,16 @@ ${data.timeEntries
                     ).length
                   }
                 </div>
-                <p className="text-xs text-muted-foreground">{t("employees.not_present")}</p>
+                <p className="text-xs text-muted-foreground">
+                  {t("employees.not_present")}
+                </p>
               </CardContent>
             </Card>
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm">{t("employees.total_hours_card")}</CardTitle>
+                <CardTitle className="text-sm">
+                  {t("employees.total_hours_card")}
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
@@ -2487,15 +2537,21 @@ ${data.timeEntries
                     .toFixed(1)}
                   h
                 </div>
-                <p className="text-xs text-muted-foreground">{t("employees.hours_worked")}</p>
+                <p className="text-xs text-muted-foreground">
+                  {t("employees.hours_worked")}
+                </p>
               </CardContent>
             </Card>
           </div>
 
           <Card>
             <CardHeader>
-              <CardTitle>{t("employees.todays_attendance")} - {selectedDate}</CardTitle>
-              <CardDescription>{t("employees.clock_records_desc")}</CardDescription>
+              <CardTitle>
+                {t("employees.todays_attendance")} - {selectedDate}
+              </CardTitle>
+              <CardDescription>
+                {t("employees.clock_records_desc")}
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <Table>
@@ -2568,7 +2624,9 @@ ${data.timeEntries
                           </Badge>
                         )}
                         {attendance?.status === "absent" && (
-                          <Badge variant="destructive">{t("status.absent")}</Badge>
+                          <Badge variant="destructive">
+                            {t("status.absent")}
+                          </Badge>
                         )}
                         {attendance?.status === "late" && (
                           <Badge
@@ -2766,7 +2824,8 @@ ${data.timeEntries
           <DialogHeader>
             <DialogTitle>{t("employees.employee_details")}</DialogTitle>
             <DialogDescription>
-              {t("employees.complete_profile")} {selectedEmployee?.firstName} {selectedEmployee?.lastName}
+              {t("employees.complete_profile")} {selectedEmployee?.firstName}{" "}
+              {selectedEmployee?.lastName}
             </DialogDescription>
           </DialogHeader>
           {selectedEmployee && (
@@ -2818,7 +2877,9 @@ ${data.timeEntries
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <div className="text-xs text-muted-foreground mb-1">{t("employees.skills")}</div>
+                    <div className="text-xs text-muted-foreground mb-1">
+                      {t("employees.skills")}
+                    </div>
                     <div className="flex flex-wrap gap-2">
                       {selectedEmployee.skills.map((skill, index) => (
                         <Badge key={index} variant="outline">
@@ -2826,7 +2887,9 @@ ${data.timeEntries
                         </Badge>
                       ))}
                     </div>
-                    <div className="text-xs text-muted-foreground mt-3 mb-1">{t("common.notes")}</div>
+                    <div className="text-xs text-muted-foreground mt-3 mb-1">
+                      {t("common.notes")}
+                    </div>
                     <div className="text-sm text-muted-foreground">
                       {selectedEmployee.notes || t("clients.no_notes")}
                     </div>
@@ -2834,8 +2897,12 @@ ${data.timeEntries
                 </div>
 
                 <div className="grid grid-cols-2 gap-3 text-xs text-muted-foreground border-t pt-3 mt-3">
-                  <div>📅 {t("employees.hire_date")}: {selectedEmployee.hireDate}</div>
-                  <div>🔄 {t("common.updated")}: {selectedEmployee.updatedAt}</div>
+                  <div>
+                    📅 {t("employees.hire_date")}: {selectedEmployee.hireDate}
+                  </div>
+                  <div>
+                    🔄 {t("common.updated")}: {selectedEmployee.updatedAt}
+                  </div>
                 </div>
               </div>
             </DetailCard>
@@ -2914,7 +2981,9 @@ ${data.timeEntries
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="edit-salary">{t("employees.annual_salary")}</Label>
+                <Label htmlFor="edit-salary">
+                  {t("employees.annual_salary")}
+                </Label>
                 <Input
                   id="edit-salary"
                   type="number"
@@ -2928,7 +2997,9 @@ ${data.timeEntries
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="edit-commission">{t("employees.commission")} (%)</Label>
+                <Label htmlFor="edit-commission">
+                  {t("employees.commission")} (%)
+                </Label>
                 <Input
                   id="edit-commission"
                   type="number"
@@ -2943,7 +3014,9 @@ ${data.timeEntries
               </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="edit-salesTarget">{t("employees.monthly_sales_target")}</Label>
+              <Label htmlFor="edit-salesTarget">
+                {t("employees.monthly_sales_target")}
+              </Label>
               <Input
                 id="edit-salesTarget"
                 type="number"
@@ -3010,11 +3083,15 @@ ${data.timeEntries
             <div className="flex gap-2">
               <AlertDialog>
                 <AlertDialogTrigger asChild>
-                  <Button className="flex-1">{t("employees.update_employee")}</Button>
+                  <Button className="flex-1">
+                    {t("employees.update_employee")}
+                  </Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
-                    <AlertDialogTitle>{t("employees.confirm_update_title")}</AlertDialogTitle>
+                    <AlertDialogTitle>
+                      {t("employees.confirm_update_title")}
+                    </AlertDialogTitle>
                     <AlertDialogDescription>
                       {t("employees.confirm_update_desc")}
                     </AlertDialogDescription>
@@ -3049,7 +3126,9 @@ ${data.timeEntries
           <DialogHeader>
             <DialogTitle>{t("employees.sales_details_title")}</DialogTitle>
             <DialogDescription>
-              {t("employees.sales_history_for")} {selectedEmployeeSales?.firstName} {selectedEmployeeSales?.lastName}
+              {t("employees.sales_history_for")}{" "}
+              {selectedEmployeeSales?.firstName}{" "}
+              {selectedEmployeeSales?.lastName}
             </DialogDescription>
           </DialogHeader>
           {selectedEmployeeSales && (
