@@ -1310,13 +1310,17 @@ ${data.timeEntries
                 className="w-full sm:w-auto justify-center"
               >
                 <Download className="mr-2 h-4 w-4" />
-                <span className="hidden sm:inline">{t("dashboard.export_report")}</span>
+                <span className="hidden sm:inline">
+                  {t("dashboard.export_report")}
+                </span>
                 <span className="sm:hidden">{t("common.export")}</span>
                 <ChevronDown className="ml-2 h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-80">
-              <DropdownMenuLabel>{t("employees.export_employee_report")}</DropdownMenuLabel>
+              <DropdownMenuLabel>
+                {t("employees.export_employee_report")}
+              </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <div className="p-2 space-y-1">
                 <div className="text-xs text-muted-foreground mb-2">
@@ -1328,7 +1332,9 @@ ${data.timeEntries
                 >
                   <FileSpreadsheet className="mr-2 h-4 w-4" />
                   <div className="flex-1">
-                    <div className="font-medium">{t("employees.pdf_title")}</div>
+                    <div className="font-medium">
+                      {t("employees.pdf_title")}
+                    </div>
                     <div className="text-xs text-muted-foreground">
                       {t("employees.pdf_desc")}
                     </div>
@@ -1340,7 +1346,9 @@ ${data.timeEntries
                 >
                   <FileSpreadsheet className="mr-2 h-4 w-4" />
                   <div className="flex-1">
-                    <div className="font-medium">{t("employees.excel_title")}</div>
+                    <div className="font-medium">
+                      {t("employees.excel_title")}
+                    </div>
                     <div className="text-xs text-muted-foreground">
                       {t("employees.excel_desc")}
                     </div>
@@ -1352,7 +1360,9 @@ ${data.timeEntries
                 >
                   <FileSpreadsheet className="mr-2 h-4 w-4" />
                   <div className="flex-1">
-                    <div className="font-medium">{t("employees.csv_title")}</div>
+                    <div className="font-medium">
+                      {t("employees.csv_title")}
+                    </div>
                     <div className="text-xs text-muted-foreground">
                       {t("employees.csv_desc")}
                     </div>
@@ -1365,7 +1375,9 @@ ${data.timeEntries
                 >
                   <Download className="mr-2 h-4 w-4" />
                   <div className="flex-1">
-                    <div className="font-medium">{t("employees.employee_directory")}</div>
+                    <div className="font-medium">
+                      {t("employees.employee_directory")}
+                    </div>
                     <div className="text-xs text-muted-foreground">
                       {t("employees.directory_desc")}
                     </div>
@@ -1377,7 +1389,9 @@ ${data.timeEntries
                 >
                   <Download className="mr-2 h-4 w-4" />
                   <div className="flex-1">
-                    <div className="font-medium">{t("employees.sales_performance")}</div>
+                    <div className="font-medium">
+                      {t("employees.sales_performance")}
+                    </div>
                     <div className="text-xs text-muted-foreground">
                       {t("employees.sales_performance_desc")}
                     </div>
@@ -1389,7 +1403,9 @@ ${data.timeEntries
                 >
                   <Download className="mr-2 h-4 w-4" />
                   <div className="flex-1">
-                    <div className="font-medium">{t("employees.attendance_data")}</div>
+                    <div className="font-medium">
+                      {t("employees.attendance_data")}
+                    </div>
                     <div className="text-xs text-muted-foreground">
                       {t("employees.attendance_data_desc")}
                     </div>
@@ -1405,7 +1421,9 @@ ${data.timeEntries
                 className="w-full sm:w-auto justify-center"
               >
                 <Clock className="mr-2 h-4 w-4" />
-                <span className="hidden sm:inline">{t("employees.mark_attendance")}</span>
+                <span className="hidden sm:inline">
+                  {t("employees.mark_attendance")}
+                </span>
                 <span className="sm:hidden">{t("employees.attendance")}</span>
               </Button>
             </DialogTrigger>
@@ -1418,7 +1436,9 @@ ${data.timeEntries
               </DialogHeader>
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="attendanceEmployee">{t("employees.employee")} *</Label>
+                  <Label htmlFor="attendanceEmployee">
+                    {t("employees.employee")} *
+                  </Label>
                   <Select
                     value={newAttendance.employeeId}
                     onValueChange={(value) =>
@@ -1426,7 +1446,9 @@ ${data.timeEntries
                     }
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder={t("employees.select_employee")} />
+                      <SelectValue
+                        placeholder={t("employees.select_employee")}
+                      />
                     </SelectTrigger>
                     <SelectContent>
                       {employees
@@ -1456,7 +1478,9 @@ ${data.timeEntries
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="attendanceStatus">{t("common.status")}</Label>
+                    <Label htmlFor="attendanceStatus">
+                      {t("common.status")}
+                    </Label>
                     <Select
                       value={newAttendance.status}
                       onValueChange={(value) =>
@@ -1470,11 +1494,19 @@ ${data.timeEntries
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="present">{t("status.present")}</SelectItem>
-                        <SelectItem value="absent">{t("status.absent")}</SelectItem>
+                        <SelectItem value="present">
+                          {t("status.present")}
+                        </SelectItem>
+                        <SelectItem value="absent">
+                          {t("status.absent")}
+                        </SelectItem>
                         <SelectItem value="late">{t("status.late")}</SelectItem>
-                        <SelectItem value="half_day">{t("status.half_day")}</SelectItem>
-                        <SelectItem value="on_break">{t("status.on_break")}</SelectItem>
+                        <SelectItem value="half_day">
+                          {t("status.half_day")}
+                        </SelectItem>
+                        <SelectItem value="on_break">
+                          {t("status.on_break")}
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -1548,7 +1580,9 @@ ${data.timeEntries
                 className="w-full sm:w-auto justify-center"
               >
                 <ShoppingCart className="mr-2 h-4 w-4" />
-                <span className="hidden sm:inline">{t("employees.record_sale")}</span>
+                <span className="hidden sm:inline">
+                  {t("employees.record_sale")}
+                </span>
                 <span className="sm:hidden">{t("sales.title")}</span>
               </Button>
             </DialogTrigger>
@@ -1561,7 +1595,9 @@ ${data.timeEntries
               </DialogHeader>
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="saleEmployee">{t("employees.employee")} *</Label>
+                  <Label htmlFor="saleEmployee">
+                    {t("employees.employee")} *
+                  </Label>
                   <Select
                     value={newSale.employeeId}
                     onValueChange={(value) =>
@@ -1569,7 +1605,9 @@ ${data.timeEntries
                     }
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder={t("employees.select_employee")} />
+                      <SelectValue
+                        placeholder={t("employees.select_employee")}
+                      />
                     </SelectTrigger>
                     <SelectContent>
                       {getSalesEmployees().map((employee) => (
@@ -1594,7 +1632,9 @@ ${data.timeEntries
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="saleAmount">{t("employees.amount_label")} *</Label>
+                    <Label htmlFor="saleAmount">
+                      {t("employees.amount_label")} *
+                    </Label>
                     <Input
                       id="saleAmount"
                       type="number"
@@ -1611,7 +1651,9 @@ ${data.timeEntries
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="saleQuantity">{t("employees.quantity_label")}</Label>
+                    <Label htmlFor="saleQuantity">
+                      {t("employees.quantity_label")}
+                    </Label>
                     <Input
                       id="saleQuantity"
                       type="number"
@@ -1626,7 +1668,9 @@ ${data.timeEntries
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="clientName">{t("employees.client_name_label")} *</Label>
+                    <Label htmlFor="clientName">
+                      {t("employees.client_name_label")} *
+                    </Label>
                     <Input
                       id="clientName"
                       placeholder={t("employees.client_name_label")}
@@ -1670,7 +1714,9 @@ ${data.timeEntries
             <DialogTrigger asChild>
               <Button className="w-full sm:w-auto justify-center">
                 <Plus className="mr-2 h-4 w-4" />
-                <span className="hidden sm:inline">{t("employees.add_employee")}</span>
+                <span className="hidden sm:inline">
+                  {t("employees.add_employee")}
+                </span>
                 <span className="sm:hidden">{t("common.add")}</span>
               </Button>
             </DialogTrigger>
@@ -1703,7 +1749,9 @@ ${data.timeEntries
                       }}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder={t("employees.select_email_unused")} />
+                        <SelectValue
+                          placeholder={t("employees.select_email_unused")}
+                        />
                       </SelectTrigger>
                       <SelectContent>
                         {users
@@ -1766,7 +1814,9 @@ ${data.timeEntries
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="salary">{t("employees.annual_salary")}</Label>
+                    <Label htmlFor="salary">
+                      {t("employees.annual_salary")}
+                    </Label>
                     <Input
                       id="salary"
                       type="number"
@@ -1785,7 +1835,9 @@ ${data.timeEntries
                 {/* Sales-specific fields */}
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="commission">{t("employees.commission")} (%)</Label>
+                    <Label htmlFor="commission">
+                      {t("employees.commission")} (%)
+                    </Label>
                     <Input
                       id="commission"
                       type="number"
@@ -1907,27 +1959,34 @@ ${data.timeEntries
               {employees.length}
             </div>
             <p className="text-xs text-muted-foreground hidden sm:block">
-              {employees.filter((e) => e.status === "active").length} {t("status.active")}
+              {employees.filter((e) => e.status === "active").length}{" "}
+              {t("status.active")}
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t("employees.sales_team")}</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              {t("employees.sales_team")}
+            </CardTitle>
             <Target className="h-4 w-4 text-green-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
               {getSalesEmployees().length}
             </div>
-            <p className="text-xs text-muted-foreground">{t("employees.active_sales_staff")}</p>
+            <p className="text-xs text-muted-foreground">
+              {t("employees.active_sales_staff")}
+            </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t("employees.todays_sales")}</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              {t("employees.todays_sales")}
+            </CardTitle>
             <ShoppingCart className="h-4 w-4 text-blue-500" />
           </CardHeader>
           <CardContent>
@@ -1939,14 +1998,17 @@ ${data.timeEntries
                 .toLocaleString()}
             </div>
             <p className="text-xs text-muted-foreground">
-              {dailySales.filter((s) => s.date === selectedDate).length} {t("employees.transactions")}
+              {dailySales.filter((s) => s.date === selectedDate).length}{" "}
+              {t("employees.transactions")}
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t("employees.commissions")}</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              {t("employees.commissions")}
+            </CardTitle>
             <DollarSign className="h-4 w-4 text-yellow-500" />
           </CardHeader>
           <CardContent>
@@ -2043,10 +2105,18 @@ ${data.timeEntries
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">All Status</SelectItem>
-                      <SelectItem value="active">{t("status.active")}</SelectItem>
-                      <SelectItem value="inactive">{t("status.inactive")}</SelectItem>
-                      <SelectItem value="on_leave">{t("status.on_leave")}</SelectItem>
-                      <SelectItem value="terminated">{t("status.terminated")}</SelectItem>
+                      <SelectItem value="active">
+                        {t("status.active")}
+                      </SelectItem>
+                      <SelectItem value="inactive">
+                        {t("status.inactive")}
+                      </SelectItem>
+                      <SelectItem value="on_leave">
+                        {t("status.on_leave")}
+                      </SelectItem>
+                      <SelectItem value="terminated">
+                        {t("status.terminated")}
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -2119,8 +2189,9 @@ ${data.timeEntries
                         </div>
                         {employee.salesTarget && (
                           <div className="text-xs text-muted-foreground">
-                          {t("employees.target_label")}: ${employee.salesTarget.toLocaleString()}
-                        </div>
+                            {t("employees.target_label")}: $
+                            {employee.salesTarget.toLocaleString()}
+                          </div>
                         )}
                       </TableCell>
                       <TableCell>{getStatusBadge(employee.status)}</TableCell>
@@ -2290,7 +2361,8 @@ ${data.timeEntries
                           />
                         </div>
                         <div className="text-xs text-muted-foreground">
-                          {t("employees.target_label")}: ${employee.salesTarget.toLocaleString()}
+                          {t("employees.target_label")}: $
+                          {employee.salesTarget.toLocaleString()}
                         </div>
                       </div>
                     )}
@@ -2848,9 +2920,15 @@ ${data.timeEntries
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="active">{t("status.active")}</SelectItem>
-                    <SelectItem value="inactive">{t("status.inactive")}</SelectItem>
-                    <SelectItem value="on_leave">{t("status.on_leave")}</SelectItem>
-                    <SelectItem value="terminated">{t("status.terminated")}</SelectItem>
+                    <SelectItem value="inactive">
+                      {t("status.inactive")}
+                    </SelectItem>
+                    <SelectItem value="on_leave">
+                      {t("status.on_leave")}
+                    </SelectItem>
+                    <SelectItem value="terminated">
+                      {t("status.terminated")}
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
