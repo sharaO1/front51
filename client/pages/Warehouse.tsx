@@ -1415,7 +1415,7 @@ export default function Warehouse() {
           </Badge>
         );
       default:
-        return <Badge variant="outline">Unknown</Badge>;
+        return <Badge variant="outline">{t("warehouse.unknown")}</Badge>;
     }
   };
 
@@ -1440,7 +1440,7 @@ export default function Warehouse() {
           </Badge>
         );
       default:
-        return <Badge variant="outline">Unknown</Badge>;
+        return <Badge variant="outline">{t("warehouse.unknown")}</Badge>;
     }
   };
 
@@ -1487,7 +1487,7 @@ export default function Warehouse() {
           </Badge>
         );
       default:
-        return <Badge variant="outline">Unknown</Badge>;
+        return <Badge variant="outline">{t("warehouse.unknown")}</Badge>;
     }
   };
 
@@ -2638,7 +2638,7 @@ export default function Warehouse() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              Total Products
+              {t("warehouse.total_products")}
             </CardTitle>
             <Package className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
@@ -2653,7 +2653,7 @@ export default function Warehouse() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              Low Stock Alerts
+              {t("warehouse.low_stock_alerts")}
             </CardTitle>
             <AlertTriangle className="h-4 w-4 text-yellow-500" />
           </CardHeader>
@@ -2662,27 +2662,27 @@ export default function Warehouse() {
               {products.filter((p) => p.status === "low-stock").length}
             </div>
             <p className="text-xs text-muted-foreground">
-              Need immediate attention
+              {t("warehouse.need_immediate_attention")}
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Out of Stock</CardTitle>
+            <CardTitle className="text-sm font-medium">{t("warehouse.out_of_stock")}</CardTitle>
             <TrendingDown className="h-4 w-4 text-red-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-red-600">
               {products.filter((p) => p.status === "out-of-stock").length}
             </div>
-            <p className="text-xs text-muted-foreground">Require restocking</p>
+            <p className="text-xs text-muted-foreground">{t("warehouse.require_restocking")}</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Value</CardTitle>
+            <CardTitle className="text-sm font-medium">{t("warehouse.total_value")}</CardTitle>
             <TrendingUp className="h-4 w-4 text-green-500" />
           </CardHeader>
           <CardContent>
@@ -2693,7 +2693,7 @@ export default function Warehouse() {
                 .toLocaleString()}
             </div>
             <p className="text-xs text-muted-foreground">
-              Current inventory value
+              {t("warehouse.current_inventory_value")}
             </p>
           </CardContent>
         </Card>
@@ -2750,7 +2750,7 @@ export default function Warehouse() {
                     <SelectItem value="all">All Status</SelectItem>
                     <SelectItem value="in-stock">In Stock</SelectItem>
                     <SelectItem value="low-stock">Low Stock</SelectItem>
-                    <SelectItem value="out-of-stock">Out of Stock</SelectItem>
+                    <SelectItem value="out-of-stock">{t("warehouse.out_of_stock")}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -2786,7 +2786,7 @@ export default function Warehouse() {
                       <TableCell>
                         <div className="font-medium">{product.quantity}</div>
                         <div className="text-xs text-muted-foreground">
-                          Min: {product.minStock} | Max: {product.maxStock}
+                          {t("warehouse.min_stock")}: {product.minStock} | {t("warehouse.max_stock")}: {product.maxStock}
                         </div>
                       </TableCell>
                       <TableCell>{getStatusBadge(product.status)}</TableCell>
@@ -2939,14 +2939,14 @@ export default function Warehouse() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Date & Time</TableHead>
+                    <TableHead>{t("common.date_time")}</TableHead>
                     <TableHead>{t("warehouse.product_name")}</TableHead>
-                    <TableHead>Type</TableHead>
-                    <TableHead>Store/Location</TableHead>
-                    <TableHead>Quantity</TableHead>
-                    <TableHead>Details</TableHead>
-                    <TableHead>Reference</TableHead>
-                    <TableHead>Stock Change</TableHead>
+                    <TableHead>{t("warehouse.type")}</TableHead>
+                    <TableHead>{t("warehouse.store_location")}</TableHead>
+                    <TableHead>{t("warehouse.quantity")}</TableHead>
+                    <TableHead>{t("warehouse.details")}</TableHead>
+                    <TableHead>{t("warehouse.reference")}</TableHead>
+                    <TableHead>{t("warehouse.stock_change")}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -3206,13 +3206,13 @@ export default function Warehouse() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Date & Time</TableHead>
-                    <TableHead>Action</TableHead>
-                    <TableHead>Entity</TableHead>
-                    <TableHead>Description</TableHead>
-                    <TableHead>Store/Details</TableHead>
-                    <TableHead>Reference</TableHead>
-                    <TableHead>Performed By</TableHead>
+                    <TableHead>{t("common.date_time")}</TableHead>
+                    <TableHead>{t("warehouse.action")}</TableHead>
+                    <TableHead>{t("warehouse.entity")}</TableHead>
+                    <TableHead>{t("common.description")}</TableHead>
+                    <TableHead>{t("warehouse.store_details")}</TableHead>
+                    <TableHead>{t("warehouse.reference")}</TableHead>
+                    <TableHead>{t("warehouse.performed_by")}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
