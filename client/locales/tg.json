@@ -64,10 +64,10 @@
     "admin_demo": "Админ: admin@businesspro.com / admin123",
     "manager_demo": "Модир: manager@businesspro.com / manager123",
     "signing_in": "Ворид шуда истодааст...",
-    "creating_account": "Ҳисоб эҷ��д шуда истодааст...",
+    "creating_account": "Ҳисоб эҷод шуда истодааст...",
     "check_email": "Почтаатонро санҷед",
     "reset_link_sent": "Дастурамали барқароркунии парол фиристода шуд ба",
-    "send_reset_link": "Истинодро фи��истонед",
+    "send_reset_link": "Истинодро фиристонед",
     "back_to_login": "Ба ворид шудан баргардед",
     "password_strength": {
       "weak": "Заиф",
@@ -75,12 +75,12 @@
       "strong": "Қавӣ"
     },
     "secure_access_title": "Дастрасии амн",
-    "secure_access_message": "Ҳисобҳои корбарон танҳо аз ҷониб�� маъмурон идора карда м��шаванд. Барои дархости дастрасӣ ба маъмури система муроҷиат кунед.",
+    "secure_access_message": "Ҳисобҳои корбарон танҳо аз ҷониби маъмурон идора карда мешаванд. Барои дархости дастрасӣ ба маъмури система муроҷиат кунед.",
     "email_placeholder": "шумо@email.com",
     "password_placeholder": "Пароли худро ворид кунед"
   },
   "navigation": {
-    "dashboard": "Лавҳаи наз��рат",
+    "dashboard": "Лавҳаи назорат",
     "warehouse": "Анбор",
     "clients": "Муштариён",
     "sales": "Фурӯш",
