@@ -998,7 +998,7 @@ export default function Sales() {
                 <div className="grid grid-cols-2 gap-2">
                   <Button onClick={addItemToInvoice}>
                     <Plus className="mr-2 h-4 w-4" />
-                    Add Item
+                    {t("sales.add_item")}
                   </Button>
                   <Button variant="outline" onClick={clearCurrentItem}>
                     <X className="mr-2 h-4 w-4" />
