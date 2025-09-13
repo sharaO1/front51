@@ -1,0 +1,4175 @@
+import { useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogFooter,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogAction,
+  AlertDialogCancel,
+} from "@/components/ui/alert-dialog";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
+import { categoryNameToId, categoryIdToName } from "@/lib/categories";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import DetailCard from "@/components/DetailCard";
+import { useMemo, useEffect } from "react";
+import { useAuthStore } from "@/stores/authStore";
+import { API_BASE } from "@/lib/api";
+import {
+  Plus,
+  Search,
+  Package,
+  AlertTriangle,
+  Edit,
+  Trash2,
+  Filter,
+  Eye,
+  Barcode,
+  TrendingUp,
+  TrendingDown,
+  ArrowUp,
+  ArrowDown,
+  History,
+  Calendar,
+  User,
+  Package2,
+} from "lucide-react";
+
+interface Store {
+  id: string;
+  name: string;
+  location: string;
+  type: "warehouse" | "retail" | "online";
+}
+
+interface ProductStore {
+  storeId: string;
+  storeName: string;
+  quantity: number;
+  location: string;
+}
+
+interface Product {
+  id: string;
+  name: string;
+  category: string;
+  brand: string;
+  sku: string;
+  description: string;
+  quantity: number;
+  stores: ProductStore[];
+  minStock: number;
+  maxStock: number;
+  costPrice: number;
+  sellingPrice: number;
+  supplier: string; // legacy single string
+  suppliers?: string[]; // preferred array form
+  location: string;
+  expiryDate?: string;
+  status: "in-stock" | "low-stock" | "out-of-stock" | "discontinued";
+  tags: string[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface StockMovement {
+  id: string;
+  productId: string;
+  productName: string;
+  type: "stock_in" | "stock_out" | "adjustment" | "transfer";
+  quantity: number;
+  reason: string;
+  notes?: string;
+  performedBy: string;
+  performedById?: string;
+  date: string;
+  time: string;
+  previousQuantity: number;
+  newQuantity: number;
+  storeId: string;
+  storeName: string;
+  fromStore?: string;
+  toStore?: string;
+  reference?: string;
+  supplier?: string;
+  customer?: string;
+}
+
+interface WarehouseHistory {
+  id: string;
+  action:
+    | "create"
+    | "edit"
+    | "delete"
+    | "stock_in"
+    | "stock_out"
+    | "transfer"
+    | "adjustment";
+  entityType: "product" | "stock";
+  entityId: string;
+  entityName: string;
+  description: string;
+  performedBy: string;
+  date: string;
+  time: string;
+  details?: any;
+}
+
+const mockStores: Store[] = [
+  {
+    id: "store1",
+    name: "Main Warehouse",
+    location: "Central District, Building A",
+    type: "warehouse",
+  },
+  {
+    id: "store2",
+    name: "Downtown Retail Store",
+    location: "Downtown Mall, Unit 15",
+    type: "retail",
+  },
+  {
+    id: "store3",
+    name: "North Branch",
+    location: "North Plaza, Store 22",
+    type: "retail",
+  },
+  {
+    id: "store4",
+    name: "Online Fulfillment Center",
+    location: "Industrial Park, Zone C",
+    type: "online",
+  },
+];
+
+const mockProducts: Product[] = [
+  {
+    id: "1",
+    name: "iPhone 15 Pro",
+    category: "Smartphones",
+    brand: "Apple",
+    sku: "APL-IP15P-128",
+    description: "Latest iPhone model with advanced features",
+    quantity: 23,
+    stores: [
+      {
+        storeId: "store1",
+        storeName: "Main Warehouse",
+        quantity: 15,
+        location: "A1-B2",
+      },
+      {
+        storeId: "store2",
+        storeName: "Downtown Retail Store",
+        quantity: 5,
+        location: "Display-01",
+      },
+      {
+        storeId: "store4",
+        storeName: "Online Fulfillment Center",
+        quantity: 3,
+        location: "E-COM-A12",
+      },
+    ],
+    minStock: 10,
+    maxStock: 50,
+    costPrice: 799,
+    sellingPrice: 999,
+    supplier: "Apple Inc.",
+    location: "A1-B2",
+    expiryDate: "",
+    status: "in-stock",
+    tags: ["premium", "flagship"],
+    createdAt: "2024-01-01",
+    updatedAt: "2024-01-20",
+  },
+  {
+    id: "2",
+    name: "Samsung Galaxy S24",
+    category: "Smartphones",
+    brand: "Samsung",
+    sku: "SAM-GS24-256",
+    description: "High-end Android smartphone",
+    quantity: 32,
+    stores: [
+      {
+        storeId: "store1",
+        storeName: "Main Warehouse",
+        quantity: 20,
+        location: "A1-B3",
+      },
+      {
+        storeId: "store2",
+        storeName: "Downtown Retail Store",
+        quantity: 8,
+        location: "Display-02",
+      },
+      {
+        storeId: "store3",
+        storeName: "North Branch",
+        quantity: 4,
+        location: "Display-A3",
+      },
+    ],
+    minStock: 10,
+    maxStock: 40,
+    costPrice: 699,
+    sellingPrice: 899,
+    supplier: "Samsung Electronics",
+    location: "A1-B3",
+    status: "in-stock",
+    tags: ["android", "flagship"],
+    createdAt: "2024-01-01",
+    updatedAt: "2024-01-18",
+  },
+  {
+    id: "3",
+    name: "Nike Air Max",
+    category: "Footwear",
+    brand: "Nike",
+    sku: "NIK-AM90-42",
+    description: "Comfortable running shoes",
+    quantity: 2,
+    stores: [
+      {
+        storeId: "store3",
+        storeName: "North Branch",
+        quantity: 2,
+        location: "Footwear-B1",
+      },
+    ],
+    minStock: 15,
+    maxStock: 60,
+    costPrice: 80,
+    sellingPrice: 120,
+    supplier: "Nike Distribution",
+    location: "B2-C1",
+    status: "low-stock",
+    tags: ["sport", "casual"],
+    createdAt: "2024-01-01",
+    updatedAt: "2024-01-15",
+  },
+  {
+    id: "4",
+    name: "MacBook Air M3",
+    category: "Laptops",
+    brand: "Apple",
+    sku: "APL-MBA-M3-13",
+    description: "Lightweight laptop with M3 chip",
+    quantity: 12,
+    stores: [
+      {
+        storeId: "store1",
+        storeName: "Main Warehouse",
+        quantity: 8,
+        location: "C1-D2",
+      },
+      {
+        storeId: "store4",
+        storeName: "Online Fulfillment Center",
+        quantity: 4,
+        location: "E-COM-L05",
+      },
+    ],
+    minStock: 5,
+    maxStock: 25,
+    costPrice: 1099,
+    sellingPrice: 1299,
+    supplier: "Apple Inc.",
+    location: "C1-D2",
+    status: "in-stock",
+    tags: ["laptop", "premium"],
+    createdAt: "2024-01-01",
+    updatedAt: "2024-01-19",
+  },
+];
+
+const mockStockMovements: StockMovement[] = [
+  {
+    id: "1",
+    productId: "1",
+    productName: "iPhone 15 Pro",
+    type: "stock_in",
+    quantity: 20,
+    reason: "New shipment received",
+    notes: "Supplier delivery batch #123",
+    performedBy: "John Smith",
+    date: "2024-01-20",
+    time: "14:30",
+    previousQuantity: 3,
+    newQuantity: 23,
+    storeId: "store1",
+    storeName: "Main Warehouse",
+    supplier: "Apple Inc.",
+    reference: "PO-2024-001",
+  },
+  {
+    id: "2",
+    productId: "2",
+    productName: "Samsung Galaxy S24",
+    type: "stock_out",
+    quantity: 3,
+    reason: "Customer sale",
+    notes: "In-store purchase",
+    performedBy: "Sarah Johnson",
+    date: "2024-01-19",
+    time: "11:15",
+    previousQuantity: 8,
+    newQuantity: 5,
+    storeId: "store2",
+    storeName: "Downtown Retail Store",
+    customer: "John Doe",
+    reference: "INV-2024-002",
+  },
+  {
+    id: "3",
+    productId: "3",
+    productName: "Nike Air Max",
+    type: "adjustment",
+    quantity: -2,
+    reason: "Damaged items",
+    notes: "Found 2 damaged pairs during inspection",
+    performedBy: "Mike Chen",
+    date: "2024-01-18",
+    time: "16:45",
+    previousQuantity: 4,
+    newQuantity: 2,
+    storeId: "store3",
+    storeName: "North Branch",
+    reference: "ADJ-2024-003",
+  },
+  {
+    id: "4",
+    productId: "1",
+    productName: "iPhone 15 Pro",
+    type: "transfer",
+    quantity: 2,
+    reason: "Store transfer",
+    notes: "Transfer for display purposes",
+    performedBy: "Admin",
+    date: "2024-01-17",
+    time: "09:30",
+    previousQuantity: 15,
+    newQuantity: 13,
+    storeId: "store1",
+    storeName: "Main Warehouse",
+    fromStore: "Main Warehouse",
+    toStore: "Downtown Retail Store",
+    reference: "TRF-2024-001",
+  },
+  {
+    id: "5",
+    productId: "4",
+    productName: "MacBook Air M3",
+    type: "stock_out",
+    quantity: 1,
+    reason: "Online order fulfillment",
+    notes: "Express shipping",
+    performedBy: "Alex Wilson",
+    date: "2024-01-16",
+    time: "13:45",
+    previousQuantity: 4,
+    newQuantity: 3,
+    storeId: "store4",
+    storeName: "Online Fulfillment Center",
+    customer: "Emma Smith",
+    reference: "ORD-2024-123",
+  },
+];
+
+const mockWarehouseHistory: WarehouseHistory[] = [
+  {
+    id: "1",
+    action: "stock_in",
+    entityType: "stock",
+    entityId: "1",
+    entityName: "iPhone 15 Pro",
+    description: "Added 20 units - New shipment received",
+    performedBy: "John Smith",
+    date: "2024-01-20",
+    time: "14:30",
+    details: {
+      quantity: 20,
+      reason: "New shipment received",
+      storeName: "Main Warehouse",
+      supplier: "Apple Inc.",
+      reference: "PO-2024-001",
+      notes: "Supplier delivery batch #123",
+    },
+  },
+  {
+    id: "2",
+    action: "edit",
+    entityType: "product",
+    entityId: "2",
+    entityName: "Samsung Galaxy S24",
+    description: "Updated product information",
+    performedBy: "Admin",
+    date: "2024-01-19",
+    time: "15:20",
+    details: {
+      updatedFields: { price: { old: 849, new: 899 } },
+      reference: "UPD-2024-001",
+    },
+  },
+  {
+    id: "3",
+    action: "stock_out",
+    entityType: "stock",
+    entityId: "2",
+    entityName: "Samsung Galaxy S24",
+    description: "Removed 3 units - Customer sale",
+    performedBy: "Sarah Johnson",
+    date: "2024-01-19",
+    time: "11:15",
+    details: {
+      quantity: 3,
+      reason: "Customer sale",
+      storeName: "Downtown Retail Store",
+      customer: "John Doe",
+      reference: "INV-2024-002",
+      notes: "In-store purchase",
+    },
+  },
+  {
+    id: "4",
+    action: "create",
+    entityType: "product",
+    entityId: "4",
+    entityName: "MacBook Air M3",
+    description: "Created new product",
+    performedBy: "Admin",
+    date: "2024-01-18",
+    time: "10:30",
+    details: {
+      category: "Laptops",
+      brand: "Apple",
+      reference: "PROD-2024-004",
+    },
+  },
+  {
+    id: "5",
+    action: "adjustment",
+    entityType: "stock",
+    entityId: "3",
+    entityName: "Nike Air Max",
+    description: "Adjusted -2 units - Damaged items",
+    performedBy: "Mike Chen",
+    date: "2024-01-18",
+    time: "16:45",
+    details: {
+      quantity: -2,
+      reason: "Damaged items",
+      storeName: "North Branch",
+      reference: "ADJ-2024-003",
+      notes: "Found 2 damaged pairs during inspection",
+    },
+  },
+  {
+    id: "6",
+    action: "transfer",
+    entityType: "stock",
+    entityId: "1",
+    entityName: "iPhone 15 Pro",
+    description: "Transferred 2 units between stores",
+    performedBy: "Admin",
+    date: "2024-01-17",
+    time: "09:30",
+    details: {
+      quantity: 2,
+      reason: "Store transfer",
+      storeName: "Main Warehouse",
+      fromStore: { name: "Main Warehouse", type: "warehouse" },
+      toStore: { name: "Downtown Retail Store", type: "retail" },
+      reference: "TRF-2024-001",
+      notes: "Transfer for display purposes",
+    },
+  },
+];
+
+export default function Warehouse() {
+  const [products, setProducts] = useState<Product[]>(mockProducts);
+  const [stockMovements, setStockMovements] = useState(mockStockMovements);
+  const [warehouseHistory, setWarehouseHistory] =
+    useState(mockWarehouseHistory);
+  const [usersFilialMap, setUsersFilialMap] = useState<Record<string, string>>({});
+  const [searchTerm, setSearchTerm] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [historyFilter, setHistoryFilter] = useState("all");
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
+  const [isStockInDialogOpen, setIsStockInDialogOpen] = useState(false);
+  const [isStockOutDialogOpen, setIsStockOutDialogOpen] = useState(false);
+  const [isProductSelectionOpen, setIsProductSelectionOpen] = useState(false);
+  const [stockActionType, setStockActionType] = useState<"in" | "out">("in");
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [stockQuantity, setStockQuantity] = useState(0);
+  const [stockReason, setStockReason] = useState("");
+  const [stockNotes, setStockNotes] = useState("");
+  const [stockLocation, setStockLocation] = useState("");
+  const [stockFrom, setStockFrom] = useState("");
+  const [stockTo, setStockTo] = useState("");
+  const [stockFromType, setStockFromType] = useState("");
+  const [stockToType, setStockToType] = useState("");
+  const [discardReason, setDiscardReason] = useState("");
+  const [discardOther, setDiscardOther] = useState("");
+  const [filialOptions, setFilialOptions] = useState<
+    { id: string; name: string; type?: string }[]
+  >([]);
+  const [clientOptions, setClientOptions] = useState<
+    { id: string; name: string }[]
+  >([]);
+
+  // Date range filters for movements and history
+  const [movementFrom, setMovementFrom] = useState<string | null>(null);
+  const [movementTo, setMovementTo] = useState<string | null>(null);
+  const [historyFrom, setHistoryFrom] = useState<string | null>(null);
+  const [historyTo, setHistoryTo] = useState<string | null>(null);
+
+  // Applied filters (only updated when user clicks Apply)
+  const [appliedMovementFrom, setAppliedMovementFrom] = useState<string | null>(
+    null,
+  );
+  const [appliedMovementTo, setAppliedMovementTo] = useState<string | null>(
+    null,
+  );
+  const [appliedHistoryFrom, setAppliedHistoryFrom] = useState<string | null>(
+    null,
+  );
+  const [appliedHistoryTo, setAppliedHistoryTo] = useState<string | null>(null);
+
+  const [newProduct, setNewProduct] = useState<
+    Partial<Product> & { suppliers?: string[] }
+  >({
+    name: "",
+    category: "",
+    brand: "",
+    sku: "",
+    description: "",
+    quantity: 0,
+    minStock: 0,
+    maxStock: 0,
+    costPrice: 0,
+    sellingPrice: 0,
+    supplier: "",
+    suppliers: [],
+    location: "",
+    expiryDate: "",
+    tags: [],
+    status: "in-stock",
+  });
+
+  const [supplierInput, setSupplierInput] = useState<string>("");
+  const [editSupplierInput, setEditSupplierInput] = useState<string>("");
+  const { toast } = useToast();
+  const accessToken = useAuthStore((s) => s.accessToken);
+  const authUser = useAuthStore((s) => s.user);
+
+  const fetchProductsFromApi = async () => {
+    try {
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+      };
+      if (accessToken) headers["Authorization"] = `Bearer ${accessToken}`;
+      const res = await fetch(`${API_BASE}/products`, {
+        headers,
+      });
+      const json = await res.json().catch(() => null);
+      if (!res.ok || !json?.ok || !Array.isArray(json.result)) return;
+      const mapStatus = (s: any): Product["status"] => {
+        const t = String(s || "").toLowerCase();
+        if (t.includes("out")) return "out-of-stock";
+        if (t.includes("low")) return "low-stock";
+        if (t.includes("discontinued")) return "discontinued";
+        return "in-stock";
+      };
+      const mapped: Product[] = json.result.map((p: any) => {
+        const quantity =
+          typeof p.count === "number"
+            ? p.count
+            : parseInt(p.count || 0, 10) || 0;
+        const stores = Array.isArray(p.filials)
+          ? p.filials.map((fi: any) => ({
+              storeId: String(fi.filialId),
+              storeName:
+                filialOptions.find((f) => f.id === String(fi.filialId))?.name ||
+                String(fi.filialId),
+              quantity:
+                typeof fi.count === "number"
+                  ? fi.count
+                  : parseInt(fi.count || 0, 10) || 0,
+              location: "",
+            }))
+          : [];
+        return {
+          id: String(p.id),
+          name: String(p.name || ""),
+          category: String(
+            p.categoryName ||
+              p.category ||
+              categoryIdToName(p.categoryId) ||
+              "",
+          ),
+          brand: String(p.brand || ""),
+          sku: String(p.sku || ""),
+          description: String(p.description || ""),
+          quantity,
+          stores,
+          minStock:
+            typeof p.minStock === "number"
+              ? p.minStock
+              : parseInt(p.minStock || 0, 10) || 0,
+          maxStock:
+            typeof p.maxStock === "number"
+              ? p.maxStock
+              : parseInt(p.maxStock || 0, 10) || 0,
+          costPrice:
+            typeof p.costPrice === "number"
+              ? p.costPrice
+              : parseFloat(p.costPrice || 0) || 0,
+          sellingPrice:
+            typeof p.sellingPrice === "number"
+              ? p.sellingPrice
+              : parseFloat(p.sellingPrice || 0) || 0,
+          supplier: String(p.supplier || ""),
+          suppliers: Array.isArray(p.suppliers)
+            ? p.suppliers.map((x: any) => String(x))
+            : Array.isArray(p.supplier)
+              ? p.supplier.map((x: any) => String(x))
+              : p.supplier
+                ? String(p.supplier)
+                    .split(",")
+                    .map((x: string) => x.trim())
+                    .filter(Boolean)
+                : [],
+          location: String(p.location || ""),
+          expiryDate: p.expiryDate ? String(p.expiryDate).split("T")[0] : "",
+          status: mapStatus(p.status),
+          tags: [],
+          createdAt: (p.createdAt
+            ? String(p.createdAt)
+            : new Date().toISOString()
+          ).split("T")[0],
+          updatedAt: (p.updatedAt
+            ? String(p.updatedAt)
+            : new Date().toISOString()
+          ).split("T")[0],
+        } as Product;
+      });
+      setProducts(mapped);
+    } catch (e) {
+      toast({
+        title: "Error",
+        description: "Failed to load products",
+        variant: "destructive",
+      });
+    }
+  };
+
+  useEffect(() => {
+    fetchProductsFromApi();
+  }, [accessToken]);
+
+  // Helper: accept either YYYY-MM-DD or DD-MM-YYYY and return DD-MM-YYYY for backend, otherwise null
+  const formatDateForBackend = (input?: string | null) => {
+    if (!input || typeof input !== "string") return null;
+    // reject obviously incomplete placeholders like 'yyyy' or 'mm'
+    if (/[a-zA-Z]/.test(input)) return null;
+
+    // YYYY-MM-DD -> convert to DD-MM-YYYY
+    const isoMatch = input.match(/^\s*(\d{4})-(\d{2})-(\d{2})\s*$/);
+    if (isoMatch) {
+      const [, y, m, d] = isoMatch;
+      return `${d}-${m}-${y}`;
+    }
+    // DD-MM-YYYY -> accept as-is
+    const dmyMatch = input.match(/^\s*(\d{2})-(\d{2})-(\d{4})\s*$/);
+    if (dmyMatch) return input.trim();
+    return null;
+  };
+
+  // Fetch warehouse histories from backend (supports optional from/to YYYY-MM-DD or DD-MM-YYYY inputs)
+  const fetchWarehouseHistoriesFromApi = async (
+    from?: string | null,
+    to?: string | null,
+  ) => {
+    try {
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+      };
+      if (accessToken) headers["Authorization"] = `Bearer ${accessToken}`;
+      const params: string[] = [];
+      const backendFrom = formatDateForBackend(from);
+      const backendTo = formatDateForBackend(to);
+      if (backendFrom) params.push(`from=${encodeURIComponent(backendFrom)}`);
+      if (backendTo) params.push(`to=${encodeURIComponent(backendTo)}`);
+      const url = `${API_BASE}/histories${params.length ? `?${params.join("&")}` : ""}`;
+      const res = await fetch(url, { headers });
+      const json = await res.json().catch(() => null);
+      if (!res.ok || !json?.ok || !Array.isArray(json.result)) return;
+
+      const raw: any[] = json.result;
+
+      // Resolve user names for performedBy
+      const userIds = Array.from(
+        new Set(raw.map((r) => r.userId || r.ph_user_id).filter(Boolean)),
+      );
+      const usersMap: Record<string, string> = {};
+      const usersFilialLocal: Record<string, string> = {};
+      await Promise.all(
+        userIds.map(async (id) => {
+          try {
+            const uRes = await fetch(`${API_BASE}/users/${id}`, { headers });
+            const uJson = await uRes.json().catch(() => null);
+            if (uRes.ok && uJson?.ok && uJson.result) {
+              const u = uJson.result;
+              usersMap[id] = (u.name ||
+                u.userName ||
+                `${u.firstName || ""} ${u.lastName || ""}`.trim() ||
+                u.email ||
+                id) as string;
+              const fid =
+                u.filialId ?? u.filialID ?? u.storeId ?? u.branchId ?? u.locationId;
+              if (fid) usersFilialLocal[id] = String(fid);
+            }
+          } catch (err) {
+            // ignore
+          }
+        }),
+      );
+      setUsersFilialMap((prev) => ({ ...prev, ...usersFilialLocal }));
+
+      const extractStoreName = (h: any) => {
+        const d = h.details || {};
+        // filialId preferred
+        if (d.filialId) {
+          const f = filialOptions.find(
+            (ff) => String(ff.id) === String(d.filialId),
+          );
+          if (f) return f.name;
+          return String(d.filialId);
+        }
+        // explicit storeName
+        if (d.storeName) return d.storeName;
+        // toStore/fromStore objects
+        if (d.toStore && typeof d.toStore === "object" && d.toStore.name)
+          return d.toStore.name;
+        if (d.fromStore && typeof d.fromStore === "object" && d.fromStore.name)
+          return d.fromStore.name;
+        // partyType might be filial id
+        if (d.partyType) {
+          const f = filialOptions.find(
+            (ff) =>
+              String(ff.id) === String(d.partyType) ||
+              String(ff.name) === String(d.partyType),
+          );
+          if (f) return f.name;
+        }
+        if (d.party) return d.party;
+        // try to parse description like "to <name>"
+        const m = String(h.description || "").match(/to\s+([^,.\n]+)/i);
+        if (m && m[1]) return m[1].trim();
+        return null;
+      };
+
+      const mapped = raw.map((h: any) => {
+        // support both ph_ prefixed fields and generic names
+        const createdRaw =
+          h.ph_created_at ||
+          h.createdAt ||
+          h.createdat ||
+          h.ph_createdAt ||
+          h.created ||
+          h.ph_created_at;
+        const created = createdRaw ? new Date(String(createdRaw)) : new Date();
+
+        let action = h.ph_action || h.action || h.ph_action || "";
+        action = String(action).toLowerCase();
+        // normalize some common variants
+        if (action === "in") action = "stock_in";
+        if (action === "out") action = "stock_out";
+
+        let entityType =
+          h.ph_entity_type || h.entityType || h.entity_type || "";
+        entityType = String(entityType).toLowerCase();
+
+        const description = h.ph_description || h.description || "";
+        const userId = h.ph_user_id || h.userId || h.user_id || null;
+        const productId =
+          h.ph_product_id || h.productId || h.ph_productId || null;
+        const detailsRaw = h.ph_details ?? h.details ?? null;
+
+        let entityName = productId
+          ? products.find((p) => String(p.id) === String(productId))?.name ||
+            null
+          : h.entityName || null;
+        // fallback: try to detect product name inside description
+        if (!entityName && description && products.length) {
+          const found = products.find((p) =>
+            description.toLowerCase().includes(p.name.toLowerCase()),
+          );
+          if (found) entityName = found.name;
+        }
+
+        const minimalH = { ...h, details: detailsRaw };
+        const storeName = extractStoreName(minimalH);
+
+        const details = detailsRaw ? { ...detailsRaw } : null;
+        if (details && !details.storeName && storeName)
+          details.storeName = storeName;
+
+        // Special handling for transfers: filialId is often destination, partyType may be source filial id
+        if (details) {
+          const act = String(action || h.action || "");
+          if (act === "transfer") {
+            const toId =
+              details.filialId ??
+              details.toFilialId ??
+              (details.toStore && typeof details.toStore === "string"
+                ? details.toStore
+                : undefined);
+            const fromId =
+              details.partyType ??
+              details.fromFilialId ??
+              (details.fromStore && typeof details.fromStore === "string"
+                ? details.fromStore
+                : undefined);
+
+            if (toId) {
+              const f = filialOptions.find(
+                (ff) =>
+                  String(ff.id) === String(toId) ||
+                  String(ff.name) === String(toId),
+              );
+              if (f) details.toStore = { name: f.name, id: f.id };
+              else if (typeof details.toStore === "string")
+                details.toStore = { name: String(toId), id: String(toId) };
+            }
+
+            if (fromId) {
+              const f = filialOptions.find(
+                (ff) =>
+                  String(ff.id) === String(fromId) ||
+                  String(ff.name) === String(fromId),
+              );
+              if (f) details.fromStore = { name: f.name, id: f.id };
+              else if (typeof details.fromStore === "string")
+                details.fromStore = {
+                  name: String(fromId),
+                  id: String(fromId),
+                };
+            }
+
+            if (
+              !details.storeName &&
+              details.toStore &&
+              typeof details.toStore === "object"
+            ) {
+              details.storeName = details.toStore.name;
+            }
+          } else {
+            if (details.toStore && typeof details.toStore === "string") {
+              const f = filialOptions.find(
+                (ff) => String(ff.id) === String(details.toStore),
+              );
+              if (f) details.toStore = { name: f.name, id: f.id };
+            }
+            if (details.fromStore && typeof details.fromStore === "string") {
+              const f = filialOptions.find(
+                (ff) => String(ff.id) === String(details.fromStore),
+              );
+              if (f) details.fromStore = { name: f.name, id: f.id };
+            }
+          }
+        }
+
+        const performedBy =
+          usersMap[userId] || String(userId || h.performedBy || "");
+
+        return {
+          id: String(h.ph_id || h.id || h.phId || h.ph_id || Math.random()),
+          action: String(action || ""),
+          entityType: String(entityType || ""),
+          entityId: productId ?? h.entityId ?? null,
+          entityName,
+          description: String(description || ""),
+          performedBy,
+          performedById: userId || undefined,
+          date: created.toLocaleDateString(),
+          time: created.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+          ts: created.getTime(),
+          details,
+        } as any;
+      });
+
+      setWarehouseHistory(mapped);
+      return mapped.length;
+    } catch (e) {
+      console.error("Failed to load histories", e);
+      toast({
+        title: "Error",
+        description: "Failed to load warehouse history",
+        variant: "destructive",
+      });
+      return 0;
+    }
+  };
+
+  useEffect(() => {
+    // initial load without filters
+    fetchWarehouseHistoriesFromApi();
+    fetchStockMovementsFromApi();
+  }, [accessToken, products]);
+
+  // Fetch stock movements (supports optional from/to YYYY-MM-DD or DD-MM-YYYY inputs)
+  const fetchStockMovementsFromApi = async (
+    from?: string | null,
+    to?: string | null,
+  ) => {
+    try {
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+      };
+      if (accessToken) headers["Authorization"] = `Bearer ${accessToken}`;
+      const params: string[] = [];
+      const backendFrom = formatDateForBackend(from);
+      const backendTo = formatDateForBackend(to);
+      if (backendFrom) params.push(`from=${encodeURIComponent(backendFrom)}`);
+      if (backendTo) params.push(`to=${encodeURIComponent(backendTo)}`);
+      const url = `${API_BASE}/movement${params.length ? `?${params.join("&")}` : ""}`;
+      const res = await fetch(url, { headers });
+      const json = await res.json().catch(() => null);
+      if (!res.ok || !json?.ok || !Array.isArray(json.result)) return;
+
+      const raw: any[] = json.result;
+      // Resolve performer filial mapping for movements
+      try {
+        const movementUserIds = Array.from(
+          new Set(
+            raw
+              .map((m) => m.ph_user_id || m.userId || m.user_id)
+              .filter(Boolean),
+          ),
+        );
+        if (movementUserIds.length) {
+          const usersFilialLocal: Record<string, string> = {};
+          await Promise.all(
+            movementUserIds.map(async (id: string) => {
+              try {
+                const uRes = await fetch(`${API_BASE}/users/${id}`, { headers });
+                const uJson = await uRes.json().catch(() => null);
+                if (uRes.ok && uJson?.ok && uJson.result) {
+                  const u = uJson.result;
+                  const fid =
+                    u.filialId ?? u.filialID ?? u.storeId ?? u.branchId ?? u.locationId;
+                  if (fid) usersFilialLocal[id] = String(fid);
+                }
+              } catch {}
+            }),
+          );
+          if (Object.keys(usersFilialLocal).length) {
+            setUsersFilialMap((prev) => ({ ...prev, ...usersFilialLocal }));
+          }
+        }
+      } catch {}
+
+      const mapped = raw.map((m: any, idx: number) => {
+        const createdRaw =
+          m.createdAt || m.createdat || m.created || m.created_at;
+        const created = createdRaw ? new Date(String(createdRaw)) : new Date();
+        const date = created.toLocaleDateString();
+        const time = created.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+
+        // normalize type values to canonical keys used in UI
+        const rawType = String(
+          m.action || m.type || m.Type || "",
+        ).toLowerCase();
+        let type: string = rawType;
+        if (rawType.includes("in")) type = "stock_in";
+        else if (rawType.includes("out")) type = "stock_out";
+        else if (rawType.includes("transfer")) type = "transfer";
+        else if (rawType.includes("adjust")) type = "adjustment";
+
+        const detailsObj = m.details || {};
+
+        // product name resolution
+        let productName = String(m.productName || m.productname || "");
+        if (!productName && m.productId) {
+          productName =
+            products.find((p) => String(p.id) === String(m.productId))?.name ||
+            String(m.productId);
+        }
+
+        // store resolution
+        const storeId = String(detailsObj.filialId || m.filialId || "");
+        const storeName =
+          filialOptions.find((f) => String(f.id) === storeId)?.name ||
+          String(m.filialname || detailsObj.storeName || "");
+
+        // from/to store resolution
+        let fromStore =
+          detailsObj.fromStore ?? detailsObj.fromFilialId ?? undefined;
+        let toStore = detailsObj.toStore ?? detailsObj.toFilialId ?? undefined;
+        if (typeof fromStore === "string") {
+          const f = filialOptions.find(
+            (ff) => String(ff.id) === String(fromStore),
+          );
+          if (f) fromStore = f.name;
+        }
+        if (typeof toStore === "string") {
+          const f = filialOptions.find(
+            (ff) => String(ff.id) === String(toStore),
+          );
+          if (f) toStore = f.name;
+        }
+
+        // resolve party and display labels
+        const rawParty = String(detailsObj.party || m.party || "");
+        // normalize partyType / partytype / party_type across variants
+        const partyTypeVal =
+          detailsObj.partyType ??
+          detailsObj.partytype ??
+          detailsObj.party_type ??
+          m.partyType ??
+          m.partytype ??
+          m.party_type ??
+          null;
+        let partyDisplay = rawParty || ""; // e.g., Supplier, Client, Other Filial, Discarded
+        // normalize common values
+        const rp = rawParty.toLowerCase();
+        if (rp.includes("supplier")) partyDisplay = "Supplier";
+        else if (rp.includes("client") || rp.includes("customer"))
+          partyDisplay = "Client";
+        else if (rp.includes("filial") || rp.includes("other"))
+          partyDisplay = "Transfer";
+        else if (rp.includes("discard")) partyDisplay = "Discarded";
+
+        // if this movement type is a transfer, label it explicitly as Transfer
+        if (type === "transfer") {
+          partyDisplay = "Transfer";
+        }
+
+        // detect implicit transfers: some APIs return stock_in/out but include filial party info
+        const reasonLower = String(detailsObj.reason || "").toLowerCase();
+        const filialIdVal =
+          detailsObj.filialId ??
+          detailsObj.filialid ??
+          detailsObj.filial_id ??
+          m.filialId ??
+          m.filialid ??
+          m.filial_id ??
+          null;
+        const isImplicitTransfer =
+          reasonLower.includes("transfer") ||
+          (rp.includes("filial") && filialIdVal && partyTypeVal);
+        if (isImplicitTransfer) {
+          partyDisplay = "Transfer";
+          // if both partyType and filialId present, map filialId -> toStore and partyType -> fromStore
+          try {
+            if (filialIdVal && partyTypeVal) {
+              const dest = filialOptions.find(
+                (f) => String(f.id) === String(filialIdVal),
+              );
+              const src = filialOptions.find(
+                (f) => String(f.id) === String(partyTypeVal),
+              );
+              if (dest) toStore = dest.name;
+              else toStore = String(filialIdVal);
+              if (src) fromStore = src.name;
+              else fromStore = String(partyTypeVal);
+            }
+          } catch (e) {
+            /* ignore */
+          }
+        }
+
+        // resolve party name (partyType may be an id for client/filial)
+        let partyName: string | undefined;
+        if (partyTypeVal) {
+          const pt = String(partyTypeVal);
+          const c = clientOptions.find(
+            (c) => String(c.id) === pt || String(c.name) === pt,
+          );
+          if (c) partyName = c.name;
+          else {
+            const f = filialOptions.find(
+              (f) => String(f.id) === pt || String(f.name) === pt,
+            );
+            if (f) partyName = f.name;
+            else partyName = pt;
+          }
+        }
+
+        // if no explicit partyName, deduce from stores or fields
+        if (!partyName) {
+          if (fromStore && partyDisplay === "Transfer")
+            partyName = fromStore as string;
+          if (toStore && partyDisplay === "Transfer")
+            partyName = toStore as string;
+        }
+
+        return {
+          id: String(m.reference || m.id || idx),
+          productId: String(m.productId || ""),
+          productName,
+          type,
+          quantity: Number(detailsObj.quantity ?? m.quantity ?? 0),
+          reason: String(detailsObj.reason || m.reason || ""),
+          notes: String(detailsObj.notes || m.notes || ""),
+          performedBy: String(m.userName || m.username || m.performedBy || ""),
+          performedById: String(
+            m.ph_user_id || m.userId || m.user_id || "",
+          ) || undefined,
+          date,
+          time,
+          ts: isNaN(created.getTime()) ? null : created.getTime(),
+          previousQuantity: Number(
+            m.previousQuantity || m.previousquantity || 0,
+          ),
+          newQuantity: Number(m.newQuantity || m.newquantity || 0),
+          storeId,
+          storeName,
+          fromStore,
+          toStore,
+          party: partyDisplay,
+          partyName,
+          reference: String(m.reference || ""),
+        } as StockMovement;
+      });
+
+      setStockMovements(mapped);
+      return mapped.length;
+    } catch (e) {
+      console.error("Failed to load movements", e);
+      toast({
+        title: "Error",
+        description: "Failed to load stock movements",
+        variant: "destructive",
+      });
+      return 0;
+    }
+  };
+
+  const supplierOptions = useMemo(() => {
+    if (!selectedProduct) return [] as string[];
+    const set = new Set<string>();
+
+    const addFromValue = (val: any) => {
+      if (!val && val !== 0) return;
+      if (Array.isArray(val)) {
+        val.forEach((v) => {
+          if (v) set.add(String(v));
+        });
+        return;
+      }
+      const s = String(val || "").trim();
+      if (!s) return;
+      // split comma separated
+      if (s.includes(",")) {
+        s.split(",")
+          .map((x) => x.trim())
+          .filter(Boolean)
+          .forEach((v) => set.add(v));
+      } else {
+        set.add(s);
+      }
+    };
+
+    addFromValue(selectedProduct.suppliers ?? selectedProduct.supplier);
+
+    stockMovements
+      .filter((m) => m.productId === selectedProduct.id)
+      .forEach((m) => {
+        addFromValue((m as any).supplier ?? (m as any).suppliers);
+      });
+
+    return Array.from(set);
+  }, [selectedProduct, stockMovements]);
+
+  useEffect(() => {
+    if (!isStockInDialogOpen) return;
+    if (stockFromType === "supplier") {
+      setStockReason("Purchase");
+    } else if (stockFromType === "customer_return") {
+      setStockReason("Return");
+    } else {
+      setStockReason("");
+    }
+  }, [isStockInDialogOpen, stockFromType]);
+
+  useEffect(() => {
+    if (!isStockOutDialogOpen) return;
+    if (stockToType === "client") {
+      setStockReason("Sale");
+    } else if (stockToType === "other_filial") {
+      setStockReason("Transfer");
+    } else if (stockToType === "discarded") {
+      const reason =
+        discardReason === "Other" ? discardOther.trim() : discardReason.trim();
+      setStockReason(reason);
+    } else {
+      setStockReason("");
+    }
+  }, [isStockOutDialogOpen, stockToType, discardReason, discardOther]);
+
+  useEffect(() => {
+    if (!isStockOutDialogOpen) return;
+    if (
+      stockToType === "other_filial" &&
+      stockTo &&
+      stockTo === stockLocation
+    ) {
+      setStockTo("");
+    }
+  }, [isStockOutDialogOpen, stockLocation, stockToType]);
+
+  useEffect(() => {
+    let mounted = true;
+    const load = async () => {
+      try {
+        const filialRes = await fetch(`${API_BASE}/filials`, {
+          headers: {
+            ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+          },
+        });
+        const filialJson = await filialRes.json().catch(() => null);
+        if (
+          filialRes.ok &&
+          filialJson?.ok &&
+          Array.isArray(filialJson.result)
+        ) {
+          const mapped = filialJson.result.map((f: any) => ({
+            id: String(f.id),
+            name: String(f.name),
+            type:
+              String(f.type || f.filialType || "").toLowerCase() || undefined,
+          }));
+          if (mounted) setFilialOptions(mapped);
+        }
+      } catch {}
+      try {
+        const clientsRes = await fetch(`${API_BASE}/clients`, {
+          headers: {
+            ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+          },
+        });
+        const clientsJson = await clientsRes.json().catch(() => null);
+        if (
+          clientsRes.ok &&
+          clientsJson?.ok &&
+          Array.isArray(clientsJson.result)
+        ) {
+          const mapped = clientsJson.result.map((c: any) => ({
+            id: String(c.id),
+            name: String(c.userName || c.name),
+          }));
+          if (mounted) setClientOptions(mapped);
+        }
+      } catch {}
+    };
+    load();
+    return () => {
+      mounted = false;
+    };
+  }, [accessToken]);
+
+  useEffect(() => {
+    if (!filialOptions.length) return;
+    setProducts((prev) =>
+      prev.map((p) => ({
+        ...p,
+        stores: (p.stores || []).map((s) => ({
+          ...s,
+          storeName:
+            filialOptions.find((f) => f.id === s.storeId)?.name ||
+            s.storeName ||
+            s.storeId,
+        })),
+      })),
+    );
+  }, [filialOptions]);
+
+  useEffect(() => {
+    if (!selectedProduct) return;
+    const latest = products.find((p) => p.id === selectedProduct.id);
+    if (latest && latest !== selectedProduct) setSelectedProduct(latest);
+  }, [products, selectedProduct?.id]);
+
+  const filteredProducts = products.filter((product) => {
+    const matchesSearch =
+      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.sku.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory =
+      categoryFilter === "all" || product.category === categoryFilter;
+    const matchesStatus =
+      statusFilter === "all" || product.status === statusFilter;
+    return matchesSearch && matchesCategory && matchesStatus;
+  });
+
+  const managerFilialId =
+    authUser?.role === "manager" ? (authUser as any).filialId : null;
+
+  const filteredHistory = warehouseHistory.filter((history: any) => {
+    const matchesFilter =
+      historyFilter === "all" || history.action === historyFilter;
+    const matchesFilial = (() => {
+      if (!managerFilialId) return true;
+      const performerId = history.performedById;
+      if (!performerId) return false;
+      const fid = usersFilialMap[performerId];
+      return fid ? String(fid) === String(managerFilialId) : false;
+    })();
+    return matchesFilter && matchesFilial;
+  });
+
+  const filteredMovements = stockMovements.filter((m: any) => {
+    if (!managerFilialId) return true;
+    const performerId = m.performedById;
+    if (!performerId) return false;
+    const fid = usersFilialMap[performerId];
+    return fid ? String(fid) === String(managerFilialId) : false;
+  });
+
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case "in-stock":
+        return (
+          <Badge variant="default" className="bg-green-100 text-green-800">
+            In Stock
+          </Badge>
+        );
+      case "low-stock":
+        return (
+          <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">
+            Low Stock
+          </Badge>
+        );
+      case "out-of-stock":
+        return <Badge variant="destructive">Out of Stock</Badge>;
+      case "discontinued":
+        return (
+          <Badge variant="outline" className="bg-gray-100 text-gray-800">
+            Discontinued
+          </Badge>
+        );
+      default:
+        return <Badge variant="outline">Unknown</Badge>;
+    }
+  };
+
+  const getMovementTypeBadge = (type: string) => {
+    switch (type) {
+      case "stock_in":
+        return (
+          <Badge variant="default" className="bg-green-100 text-green-800">
+            Stock In
+          </Badge>
+        );
+      case "stock_out":
+        return (
+          <Badge variant="secondary" className="bg-blue-100 text-blue-800">
+            Stock Out
+          </Badge>
+        );
+      case "adjustment":
+        return (
+          <Badge variant="outline" className="bg-orange-100 text-orange-800">
+            Adjustment
+          </Badge>
+        );
+      default:
+        return <Badge variant="outline">Unknown</Badge>;
+    }
+  };
+
+  const getActionBadge = (action: string) => {
+    switch (action) {
+      case "create":
+        return (
+          <Badge variant="default" className="bg-green-100 text-green-800">
+            Created
+          </Badge>
+        );
+      case "edit":
+        return (
+          <Badge variant="secondary" className="bg-blue-100 text-blue-800">
+            Edited
+          </Badge>
+        );
+      case "delete":
+        return <Badge variant="destructive">Deleted</Badge>;
+      case "stock_in":
+        return (
+          <Badge variant="default" className="bg-green-100 text-green-800">
+            Stock In
+          </Badge>
+        );
+      case "stock_out":
+        return (
+          <Badge variant="secondary" className="bg-blue-100 text-blue-800">
+            Stock Out
+          </Badge>
+        );
+      case "transfer":
+        return (
+          <Badge variant="outline" className="bg-blue-100 text-blue-800">
+            Transfer
+          </Badge>
+        );
+      case "adjustment":
+        return (
+          <Badge variant="outline" className="bg-orange-100 text-orange-800">
+            Adjustment
+          </Badge>
+        );
+      default:
+        return <Badge variant="outline">Unknown</Badge>;
+    }
+  };
+
+  useEffect(() => {
+    // Use the unified fetchStockMovementsFromApi to load movements so formatting stays consistent
+    let mounted = true;
+    const load = async () => {
+      if (!mounted) return;
+      await fetchStockMovementsFromApi();
+    };
+    load();
+    return () => {
+      mounted = false;
+    };
+  }, [accessToken, filialOptions, clientOptions]);
+
+  const calculateStatus = (
+    quantity: number,
+    minStock: number,
+  ): Product["status"] => {
+    if (quantity === 0) return "out-of-stock";
+    if (quantity <= minStock) return "low-stock";
+    return "in-stock";
+  };
+
+  const addStockMovement = (
+    productId: string,
+    type: "stock_in" | "stock_out" | "adjustment",
+    quantity: number,
+    reason: string,
+    notes: string | undefined,
+    storeName: string,
+  ) => {
+    const product = products.find((p) => p.id === productId);
+    if (!product) return;
+
+    const movement: StockMovement = {
+      id: Date.now().toString(),
+      productId,
+      productName: product.name,
+      type,
+      quantity,
+      reason,
+      notes,
+      performedBy: "Current User",
+      date: new Date().toISOString().split("T")[0],
+      time: new Date().toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+      previousQuantity: product.quantity,
+      newQuantity:
+        type === "stock_out"
+          ? product.quantity - quantity
+          : product.quantity + quantity,
+      storeId: "store1",
+      storeName,
+      reference: `${type.toUpperCase()}-${Date.now()}`,
+    };
+
+    setStockMovements([movement, ...stockMovements]);
+
+    const historyEntry: WarehouseHistory = {
+      id: Date.now().toString() + "_history",
+      action: type,
+      entityType: "stock",
+      entityId: productId,
+      entityName: product.name,
+      description: `${type === "stock_in" ? "Added" : type === "stock_out" ? "Removed" : "Adjusted"} ${quantity} units - ${reason}`,
+      performedBy: "Current User",
+      date: new Date().toISOString().split("T")[0],
+      time: new Date().toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+      details: {
+        quantity,
+        reason,
+        notes,
+        storeName,
+        reference: `${type.toUpperCase()}-${Date.now()}`,
+      },
+    };
+
+    setWarehouseHistory([historyEntry, ...warehouseHistory]);
+  };
+
+  const handleStockIn = async () => {
+    if (
+      !selectedProduct ||
+      stockQuantity <= 0 ||
+      !stockReason.trim() ||
+      !stockLocation.trim() ||
+      !stockFromType.trim() ||
+      !stockFrom.trim()
+    ) {
+      toast({
+        title: "Error",
+        description: "Please fill in all required fields",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const partyMap: Record<string, string> = {
+        supplier: "Supplier",
+        other_filial: "Other Filial",
+        customer_return: "Return from Customer",
+      };
+      const originName =
+        stockFromType === "other_filial"
+          ? filialOptions.find((f) => f.id === stockFrom)?.name || stockFrom
+          : stockFrom;
+      const detailedNotesIn = stockNotes.trim();
+
+      const payload = {
+        quantity: stockQuantity,
+        reason: stockReason,
+        filialId: stockLocation,
+        party: partyMap[stockFromType] || stockFromType,
+        partyType: stockFrom,
+        notes: detailedNotesIn,
+      };
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+      };
+      if (accessToken) headers["Authorization"] = `Bearer ${accessToken}`;
+      const res = await fetch(`${API_BASE}/movement/${selectedProduct.id}`, {
+        method: "POST",
+        headers,
+        body: JSON.stringify(payload),
+      });
+      const json = await res.json().catch(() => null as any);
+      if (!res.ok || !json?.ok || !json?.result) {
+        throw new Error(
+          json?.message || json?.error || "Failed to add stock movement",
+        );
+      }
+      const r = json.result as any;
+      // detect error wrapper returned inside result
+      if (
+        r &&
+        ((typeof r.status === "number" && r.status >= 400) ||
+          (r.response && (r.response.message || r.response.localCode)))
+      ) {
+        const msg =
+          r.response?.message || r.message || "Failed to add stock movement";
+        throw new Error(msg);
+      }
+      await fetchProductsFromApi();
+
+      const movement: StockMovement = {
+        id: String(r.id),
+        productId: String(r.productId),
+        productName: String(r.productName || selectedProduct.name),
+        type: (r.type as any) || "stock_in",
+        quantity: Number(r.quantity),
+        reason: String(r.reason),
+        notes: detailedNotesIn || undefined,
+        performedBy: String(r.performedBy || "Current User"),
+        date: r.date
+          ? String(r.date).split("T")[0]
+          : new Date().toISOString().split("T")[0],
+        time: new Date(r.date || Date.now()).toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+        previousQuantity: Number(
+          r.previousQuantity ?? selectedProduct.quantity,
+        ),
+        newQuantity: Number(
+          r.newQuantity ?? selectedProduct.quantity + stockQuantity,
+        ),
+        storeId: String(r.storeId || ""),
+        storeName: String(r.storeName || ""),
+        supplier: stockFromType === "supplier" ? originName : undefined,
+        customer: stockFromType === "customer_return" ? originName : undefined,
+        fromStore: stockFromType === "other_filial" ? originName : undefined,
+        reference: String(
+          r.reference ||
+            `${(((r.type as any) || "stock_in") as string).toUpperCase()}-${Date.now()}`,
+        ),
+      };
+      setStockMovements((prev) => [movement, ...prev]);
+
+      const historyEntry: WarehouseHistory = {
+        id: `${Date.now()}_history`,
+        action: movement.type,
+        entityType: "stock",
+        entityId: movement.productId,
+        entityName: movement.productName,
+        description: `${movement.type === "stock_in" ? "Added" : movement.type === "stock_out" ? "Removed" : "Adjusted"} ${movement.quantity} units - ${movement.reason}`,
+        performedBy: movement.performedBy,
+        date: movement.date,
+        time: movement.time,
+        details: {
+          quantity: movement.quantity,
+          reason: movement.reason,
+          notes: movement.notes,
+          storeName: movement.storeName,
+          supplier: stockFromType === "supplier" ? originName : undefined,
+          customer:
+            stockFromType === "customer_return" ? originName : undefined,
+          reference:
+            r.reference || `${movement.type.toUpperCase()}-${Date.now()}`,
+        },
+      };
+      setWarehouseHistory((prev) => [historyEntry, ...prev]);
+
+      toast({
+        title: "Stock Added",
+        description: `Added ${movement.quantity} units to ${movement.productName}`,
+      });
+    } catch (e: any) {
+      toast({
+        title: "Error",
+        description: e?.message || "Failed to add stock",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setStockQuantity(0);
+    setStockReason("");
+    setStockNotes("");
+    setStockLocation("");
+    setStockFrom("");
+    setStockFromType("");
+
+    setIsStockInDialogOpen(false);
+    setSelectedProduct(null);
+  };
+
+  const handleStockOut = async () => {
+    if (
+      !selectedProduct ||
+      stockQuantity <= 0 ||
+      !stockReason.trim() ||
+      !stockLocation.trim() ||
+      !stockToType.trim() ||
+      !stockTo.trim()
+    ) {
+      toast({
+        title: "Error",
+        description: "Please fill in all required fields",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (stockQuantity > selectedProduct.quantity) {
+      toast({
+        title: "Error",
+        description: "Cannot remove more stock than available",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const partyMap: Record<string, string> = {
+        client: "Client",
+        other_filial: "Other Filial",
+        discarded: "Discarded",
+      };
+      const destinationName =
+        stockToType === "other_filial"
+          ? filialOptions.find((f) => f.id === stockTo)?.name || stockTo
+          : stockToType === "client"
+            ? clientOptions.find((c) => c.id === stockTo)?.name || stockTo
+            : stockTo;
+      const notesOut = stockNotes.trim();
+
+      const payload = {
+        quantity: stockQuantity,
+        reason: stockReason,
+        filialId: stockLocation,
+        party: partyMap[stockToType] || stockToType,
+        partyType: stockTo,
+        notes: notesOut,
+      };
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+      };
+      if (accessToken) headers["Authorization"] = `Bearer ${accessToken}`;
+      const res = await fetch(
+        `${API_BASE}/movement/out/${selectedProduct.id}`,
+        {
+          method: "POST",
+          headers,
+          body: JSON.stringify(payload),
+        },
+      );
+      const json = await res.json().catch(() => null as any);
+      if (!res.ok || !json?.ok || !json?.result) {
+        throw new Error(
+          json?.message || json?.error || "Failed to add stock movement",
+        );
+      }
+      const r = json.result as any;
+      // detect error wrapper returned inside result
+      if (
+        r &&
+        ((typeof r.status === "number" && r.status >= 400) ||
+          (r.response && (r.response.message || r.response.localCode)))
+      ) {
+        const msg =
+          r.response?.message || r.message || "Failed to add stock movement";
+        throw new Error(msg);
+      }
+      await fetchProductsFromApi();
+
+      const movement: StockMovement = {
+        id: String(r.id),
+        productId: String(r.productId),
+        productName: String(r.productName || selectedProduct.name),
+        type: (r.type as any) || "stock_out",
+        quantity: Number(r.quantity),
+        reason: String(r.reason),
+        notes: notesOut || undefined,
+        performedBy: String(r.performedBy || "Current User"),
+        date: r.date
+          ? String(r.date).split("T")[0]
+          : new Date().toISOString().split("T")[0],
+        time: new Date(r.date || Date.now()).toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+        previousQuantity: Number(
+          r.previousQuantity ?? selectedProduct.quantity,
+        ),
+        newQuantity: Number(
+          r.newQuantity ??
+            Math.max(0, selectedProduct.quantity - stockQuantity),
+        ),
+        storeId: String(r.storeId || ""),
+        storeName: String(r.storeName || ""),
+        customer: stockToType === "client" ? destinationName : undefined,
+        toStore: stockToType === "other_filial" ? destinationName : undefined,
+        reference: String(
+          r.reference ||
+            `${(((r.type as any) || "stock_out") as string).toUpperCase()}-${Date.now()}`,
+        ),
+      };
+      setStockMovements((prev) => [movement, ...prev]);
+
+      const historyEntry: WarehouseHistory = {
+        id: `${Date.now()}_history`,
+        action: movement.type,
+        entityType: "stock",
+        entityId: movement.productId,
+        entityName: movement.productName,
+        description: `${movement.type === "stock_in" ? "Added" : movement.type === "stock_out" ? "Removed" : "Adjusted"} ${movement.quantity} units - ${movement.reason}`,
+        performedBy: movement.performedBy,
+        date: movement.date,
+        time: movement.time,
+        details: {
+          quantity: movement.quantity,
+          reason: movement.reason,
+          notes: movement.notes,
+          storeName: movement.storeName,
+          customer: stockToType === "client" ? destinationName : undefined,
+          reference:
+            r.reference || `${movement.type.toUpperCase()}-${Date.now()}`,
+        },
+      };
+      setWarehouseHistory((prev) => [historyEntry, ...prev]);
+
+      toast({
+        title: "Stock Removed",
+        description: `Removed ${movement.quantity} units from ${movement.productName}`,
+      });
+    } catch (e: any) {
+      toast({
+        title: "Error",
+        description: e?.message || "Failed to remove stock",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setStockQuantity(0);
+    setStockReason("");
+    setStockNotes("");
+    setStockLocation("");
+    setStockTo("");
+    setStockToType("");
+    setDiscardReason("");
+    setDiscardOther("");
+
+    setIsStockOutDialogOpen(false);
+    setSelectedProduct(null);
+  };
+
+  const addProduct = async () => {
+    if (!newProduct.name || !newProduct.category || !newProduct.sku) {
+      toast({
+        title: "Error",
+        description: "Please fill in all required fields (Name, Category, SKU)",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const payload: any = {
+        name: newProduct.name!,
+        description: newProduct.description || "",
+        brand: newProduct.brand || "",
+        sku: newProduct.sku!,
+        minStock: newProduct.minStock || 0,
+        maxStock: newProduct.maxStock || 0,
+        costPrice: newProduct.costPrice || 0,
+        sellingPrice: newProduct.sellingPrice || 0,
+        // send supplier as a string
+        supplier:
+          newProduct.suppliers && newProduct.suppliers.length
+            ? newProduct.suppliers.join(", ")
+            : newProduct.supplier
+              ? String(newProduct.supplier)
+              : "",
+        location: newProduct.location || "",
+        expiryDate: newProduct.expiryDate || null,
+        categoryId: categoryNameToId(newProduct.category || ""),
+      };
+
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+      };
+      if (accessToken) headers["Authorization"] = `Bearer ${accessToken}`;
+
+      const res = await fetch(`${API_BASE}/products`, {
+        method: "POST",
+        headers,
+        body: JSON.stringify(payload),
+      });
+      const json = await res.json().catch(() => null as any);
+      if (!res.ok || (json && json.ok === false)) {
+        throw new Error(
+          (json && (json.message || json.error)) || "Failed to add product",
+        );
+      }
+
+      const r = (json && json.result) || {};
+      const statusText = String(r.status || "").toLowerCase();
+      const statusFromApi: Product["status"] = statusText.includes("out")
+        ? "out-of-stock"
+        : statusText.includes("low")
+          ? "low-stock"
+          : statusText.includes("discontinued")
+            ? "discontinued"
+            : statusText
+              ? "in-stock"
+              : calculateStatus(
+                  newProduct.quantity || 0,
+                  newProduct.minStock || 0,
+                );
+
+      const product: Product = {
+        id: String(r.id || Date.now()),
+        name: newProduct.name!,
+        category: newProduct.category!,
+        brand: newProduct.brand || "",
+        sku: newProduct.sku!,
+        description: newProduct.description || "",
+        quantity: newProduct.quantity || 0,
+        stores: [],
+        minStock: newProduct.minStock || 0,
+        maxStock: newProduct.maxStock || 0,
+        costPrice: newProduct.costPrice || 0,
+        sellingPrice: newProduct.sellingPrice || 0,
+        supplier:
+          newProduct.suppliers && newProduct.suppliers.length
+            ? newProduct.suppliers.join(", ")
+            : newProduct.supplier || "",
+        suppliers:
+          newProduct.suppliers && newProduct.suppliers.length
+            ? newProduct.suppliers
+            : [],
+        location: newProduct.location || "",
+        expiryDate: newProduct.expiryDate || "",
+        status: statusFromApi,
+        tags: newProduct.tags || [],
+        createdAt: (r.createdAt
+          ? String(r.createdAt)
+          : new Date().toISOString()
+        ).split("T")[0],
+        updatedAt: (r.updatedAt
+          ? String(r.updatedAt)
+          : new Date().toISOString()
+        ).split("T")[0],
+      };
+
+      await fetchProductsFromApi();
+
+      const historyEntry: WarehouseHistory = {
+        id: Date.now().toString() + "_history",
+        action: "create",
+        entityType: "product",
+        entityId: product.id,
+        entityName: product.name,
+        description: `Created new product: ${product.name}`,
+        performedBy: "Current User",
+        date: new Date().toISOString().split("T")[0],
+        time: new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+        details: {
+          category: product.category,
+          brand: product.brand,
+          sku: product.sku,
+        },
+      };
+
+      setWarehouseHistory((prev) => [historyEntry, ...prev]);
+
+      setNewProduct({
+        name: "",
+        category: "",
+        brand: "",
+        sku: "",
+        description: "",
+        quantity: 0,
+        minStock: 0,
+        maxStock: 0,
+        costPrice: 0,
+        sellingPrice: 0,
+        supplier: "",
+        location: "",
+        expiryDate: "",
+        tags: [],
+        status: "in-stock",
+      });
+      setIsAddDialogOpen(false);
+
+      toast({
+        title: "Product added",
+        description: `${product.name} has been added to inventory.`,
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Something went wrong",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const editProduct = async () => {
+    if (
+      !editingProduct ||
+      !newProduct.name ||
+      !newProduct.category ||
+      !newProduct.sku
+    ) {
+      toast({
+        title: "Error",
+        description: "Please fill in all required fields (Name, Category, SKU)",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const updatedProduct: Product = {
+      ...editingProduct,
+      name: newProduct.name!,
+      category: newProduct.category!,
+      brand: newProduct.brand || "",
+      sku: newProduct.sku!,
+      description: newProduct.description || "",
+      quantity: newProduct.quantity || 0,
+      minStock: newProduct.minStock || 0,
+      maxStock: newProduct.maxStock || 0,
+      costPrice: newProduct.costPrice || 0,
+      sellingPrice: newProduct.sellingPrice || 0,
+      supplier: newProduct.supplier || "",
+      suppliers:
+        newProduct.suppliers && newProduct.suppliers.length
+          ? newProduct.suppliers
+          : editingProduct.suppliers
+            ? editingProduct.suppliers
+            : editingProduct.supplier
+              ? String(editingProduct.supplier)
+                  .split(",")
+                  .map((x) => x.trim())
+                  .filter(Boolean)
+              : [],
+      location: newProduct.location || "",
+      tags: newProduct.tags || [],
+      status: calculateStatus(
+        newProduct.quantity || 0,
+        newProduct.minStock || 0,
+      ),
+      updatedAt: new Date().toISOString().split("T")[0],
+    };
+
+    const statusForApi =
+      updatedProduct.status === "in-stock"
+        ? "In stock"
+        : updatedProduct.status === "low-stock"
+          ? "Low stock"
+          : updatedProduct.status === "out-of-stock"
+            ? "Out of stock"
+            : "Discontinued";
+
+    try {
+      const payload = {
+        name: updatedProduct.name,
+        description: updatedProduct.description,
+        brand: updatedProduct.brand,
+        sku: updatedProduct.sku,
+        minStock: updatedProduct.minStock,
+        maxStock: updatedProduct.maxStock,
+        costPrice: updatedProduct.costPrice,
+        sellingPrice: updatedProduct.sellingPrice,
+        supplier:
+          newProduct.suppliers && newProduct.suppliers.length
+            ? newProduct.suppliers
+            : updatedProduct.suppliers && updatedProduct.suppliers.length
+              ? updatedProduct.suppliers
+              : updatedProduct.supplier
+                ? String(updatedProduct.supplier)
+                    .split(",")
+                    .map((s) => s.trim())
+                    .filter(Boolean)
+                : [],
+        location: updatedProduct.location,
+        expiryDate: newProduct.expiryDate || null,
+        status: statusForApi,
+        categoryId: categoryNameToId(updatedProduct.category),
+      };
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+      };
+      if (accessToken) headers["Authorization"] = `Bearer ${accessToken}`;
+      const res = await fetch(`${API_BASE}/products/${editingProduct.id}`, {
+        method: "PUT",
+        headers,
+        body: JSON.stringify(payload),
+      });
+      const json = await res.json().catch(() => null as any);
+      if (!res.ok || (json && json.ok === false)) {
+        throw new Error(
+          (json && (json.message || json.error)) || "Failed to update product",
+        );
+      }
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error?.message || "Failed to update product",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    await fetchProductsFromApi();
+
+    const historyEntry: WarehouseHistory = {
+      id: Date.now().toString() + "_history",
+      action: "edit",
+      entityType: "product",
+      entityId: editingProduct.id,
+      entityName: updatedProduct.name,
+      description: `Updated product: ${updatedProduct.name}`,
+      performedBy: "Current User",
+      date: new Date().toISOString().split("T")[0],
+      time: new Date().toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+      details: { updatedFields: newProduct },
+    };
+
+    setWarehouseHistory([historyEntry, ...warehouseHistory]);
+
+    setNewProduct({
+      name: "",
+      category: "",
+      brand: "",
+      sku: "",
+      description: "",
+      quantity: 0,
+      minStock: 0,
+      maxStock: 0,
+      costPrice: 0,
+      sellingPrice: 0,
+      supplier: "",
+      location: "",
+      expiryDate: "",
+      tags: [],
+      status: "in-stock",
+    });
+    setEditingProduct(null);
+    setIsEditDialogOpen(false);
+
+    toast({
+      title: "Product updated",
+      description: `${updatedProduct.name} has been updated successfully.`,
+    });
+  };
+
+  const deleteProduct = async (productId: string) => {
+    const product = products.find((p) => p.id === productId);
+    if (!product) return;
+
+    try {
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+      };
+      if (accessToken) headers["Authorization"] = `Bearer ${accessToken}`;
+      const res = await fetch(`${API_BASE}/products/${productId}`, {
+        method: "DELETE",
+        headers,
+      });
+      const json = await res.json().catch(() => null as any);
+      if (!res.ok || (json && json.ok === false)) {
+        throw new Error(
+          (json && (json.message || json.error)) || "Failed to delete product",
+        );
+      }
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error?.message || "Failed to delete product",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    await fetchProductsFromApi();
+
+    const historyEntry: WarehouseHistory = {
+      id: Date.now().toString() + "_history",
+      action: "delete",
+      entityType: "product",
+      entityId: productId,
+      entityName: product.name,
+      description: `Deleted product: ${product.name}`,
+      performedBy: "Current User",
+      date: new Date().toISOString().split("T")[0],
+      time: new Date().toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+      details: { deletedProduct: product },
+    };
+
+    setWarehouseHistory([historyEntry, ...warehouseHistory]);
+
+    toast({
+      title: "Product deleted",
+      description: `${product.name} has been removed from inventory.`,
+    });
+  };
+
+  const openStockDialog = (type: "in" | "out") => {
+    setStockActionType(type);
+    setIsProductSelectionOpen(true);
+  };
+
+  const selectProductForStock = (product: Product) => {
+    setSelectedProduct(product);
+    setIsProductSelectionOpen(false);
+    if (stockActionType === "in") {
+      setIsStockInDialogOpen(true);
+    } else {
+      setIsStockOutDialogOpen(true);
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">
+            Warehouse Management
+          </h1>
+          <p className="text-muted-foreground">
+            Manage inventory, stock movements, and track warehouse activities
+          </p>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex items-center gap-3">
+          <Button
+            variant="outline"
+            className="bg-green-50 hover:bg-green-100 text-green-700 border-green-200"
+            onClick={() => openStockDialog("in")}
+          >
+            <ArrowUp className="mr-2 h-4 w-4" />
+            Stock In
+          </Button>
+
+          <Button
+            variant="outline"
+            className="bg-red-50 hover:bg-red-100 text-red-700 border-red-200"
+            onClick={() => openStockDialog("out")}
+          >
+            <ArrowDown className="mr-2 h-4 w-4" />
+            Stock Out
+          </Button>
+
+          <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+            <DialogTrigger asChild>
+              <Button>
+                <Plus className="mr-2 h-4 w-4" />
+                Add Product
+              </Button>
+            </DialogTrigger>
+            <DialogContent
+              className="max-w-2xl"
+              onPointerDownOutside={(e) => e.preventDefault()}
+              onEscapeKeyDown={(e) => e.preventDefault()}
+            >
+              <DialogHeader>
+                <DialogTitle>Add New Product</DialogTitle>
+                <DialogDescription>
+                  Create a new product in your inventory system.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="name">Product Name *</Label>
+                    <Input
+                      id="name"
+                      placeholder="iPhone 15 Pro"
+                      value={newProduct.name}
+                      onChange={(e) =>
+                        setNewProduct({ ...newProduct, name: e.target.value })
+                      }
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="sku">SKU *</Label>
+                    <Input
+                      id="sku"
+                      placeholder="APL-IP15P-128"
+                      value={newProduct.sku}
+                      onChange={(e) =>
+                        setNewProduct({ ...newProduct, sku: e.target.value })
+                      }
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="category">Category *</Label>
+                    <Select
+                      value={newProduct.category}
+                      onValueChange={(value) =>
+                        setNewProduct({ ...newProduct, category: value })
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select category" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Smartphones">Smartphones</SelectItem>
+                        <SelectItem value="Laptops">Laptops</SelectItem>
+                        <SelectItem value="Tablets">Tablets</SelectItem>
+                        <SelectItem value="Accessories">Accessories</SelectItem>
+                        <SelectItem value="Footwear">Footwear</SelectItem>
+                        <SelectItem value="Clothing">Clothing</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="brand">Brand</Label>
+                    <Input
+                      id="brand"
+                      placeholder="Apple"
+                      value={newProduct.brand}
+                      onChange={(e) =>
+                        setNewProduct({ ...newProduct, brand: e.target.value })
+                      }
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="description">Description</Label>
+                  <Textarea
+                    id="description"
+                    placeholder="Product description"
+                    value={newProduct.description}
+                    onChange={(e) =>
+                      setNewProduct({
+                        ...newProduct,
+                        description: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="minStock">Min Stock</Label>
+                    <Input
+                      id="minStock"
+                      type="number"
+                      min="0"
+                      value={newProduct.minStock}
+                      onChange={(e) =>
+                        setNewProduct({
+                          ...newProduct,
+                          minStock: parseInt(e.target.value) || 0,
+                        })
+                      }
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="maxStock">Max Stock</Label>
+                    <Input
+                      id="maxStock"
+                      type="number"
+                      min="0"
+                      value={newProduct.maxStock}
+                      onChange={(e) =>
+                        setNewProduct({
+                          ...newProduct,
+                          maxStock: parseInt(e.target.value) || 0,
+                        })
+                      }
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="costPrice">Cost Price ($)</Label>
+                    <Input
+                      id="costPrice"
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      value={newProduct.costPrice}
+                      onChange={(e) =>
+                        setNewProduct({
+                          ...newProduct,
+                          costPrice: parseFloat(e.target.value) || 0,
+                        })
+                      }
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="sellingPrice">Selling Price ($)</Label>
+                    <Input
+                      id="sellingPrice"
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      value={newProduct.sellingPrice}
+                      onChange={(e) =>
+                        setNewProduct({
+                          ...newProduct,
+                          sellingPrice: parseFloat(e.target.value) || 0,
+                        })
+                      }
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="supplier">Supplier(s)</Label>
+                    <div className="flex flex-col">
+                      <div className="flex flex-wrap gap-2 mb-2">
+                        {(newProduct.suppliers || []).map((s, i) => (
+                          <span
+                            key={i}
+                            className="inline-flex items-center gap-2 rounded-full bg-muted px-3 py-1 text-sm"
+                          >
+                            <span>{s}</span>
+                            <button
+                              type="button"
+                              className="text-xs text-muted-foreground"
+                              onClick={() => {
+                                const copy = (
+                                  newProduct.suppliers || []
+                                ).slice();
+                                copy.splice(i, 1);
+                                setNewProduct({
+                                  ...newProduct,
+                                  suppliers: copy,
+                                });
+                              }}
+                            >
+                              ×
+                            </button>
+                          </span>
+                        ))}
+                      </div>
+                      <div className="flex gap-2">
+                        <Input
+                          id="supplier"
+                          placeholder="Add supplier and press Enter"
+                          value={supplierInput}
+                          onChange={(e) => setSupplierInput(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                              e.preventDefault();
+                              const v = supplierInput.trim();
+                              if (!v) return;
+                              setNewProduct({
+                                ...newProduct,
+                                suppliers: Array.from(
+                                  new Set([...(newProduct.suppliers || []), v]),
+                                ),
+                              });
+                              setSupplierInput("");
+                            }
+                          }}
+                        />
+                        <Button
+                          variant="default"
+                          onClick={() => {
+                            const v = supplierInput.trim();
+                            if (!v) return;
+                            setNewProduct({
+                              ...newProduct,
+                              suppliers: Array.from(
+                                new Set([...(newProduct.suppliers || []), v]),
+                              ),
+                            });
+                            setSupplierInput("");
+                          }}
+                        >
+                          Add
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="location">Location</Label>
+                    <Input
+                      id="location"
+                      placeholder="A1-B2"
+                      value={newProduct.location}
+                      onChange={(e) =>
+                        setNewProduct({
+                          ...newProduct,
+                          location: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="expiryDate">Expiry Date</Label>
+                  <Input
+                    id="expiryDate"
+                    type="date"
+                    value={newProduct.expiryDate || ""}
+                    onChange={(e) =>
+                      setNewProduct({
+                        ...newProduct,
+                        expiryDate: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+                <div className="flex gap-2">
+                  <Button className="flex-1" onClick={addProduct}>
+                    Add Product
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => setIsAddDialogOpen(false)}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+        </div>
+      </div>
+
+      {/* Product Selection Dialog */}
+      <Dialog
+        open={isProductSelectionOpen}
+        onOpenChange={setIsProductSelectionOpen}
+      >
+        <DialogContent
+          className="max-w-md min-h-[420px]"
+          onPointerDownOutside={(e) => e.preventDefault()}
+          onEscapeKeyDown={(e) => e.preventDefault()}
+        >
+          <DialogHeader>
+            <DialogTitle>
+              Select Product for Stock {stockActionType === "in" ? "In" : "Out"}
+            </DialogTitle>
+            <DialogDescription>
+              Choose a product to {stockActionType === "in" ? "add" : "remove"}{" "}
+              stock
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-6">
+            <div className="relative">
+              <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search products..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-8"
+              />
+            </div>
+            <div className="max-h-60 overflow-y-auto space-y-2 mt-3 min-h-[180px]">
+              {filteredProducts.map((product) => (
+                <Button
+                  key={product.id}
+                  variant="outline"
+                  className="w-full justify-start h-auto p-3 text-left focus-visible:outline-none focus-visible:ring-0"
+                  onClick={() => selectProductForStock(product)}
+                >
+                  <div className="flex-1">
+                    <div className="font-medium">{product.name}</div>
+                    <div className="text-sm text-muted-foreground">
+                      {product.sku} • Current stock: {product.quantity}
+                    </div>
+                  </div>
+                </Button>
+              ))}
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Summary Cards */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">
+              Total Products
+            </CardTitle>
+            <Package className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{products.length}</div>
+            <p className="text-xs text-muted-foreground">
+              {products.filter((p) => p.status === "in-stock").length} in stock
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">
+              Low Stock Alerts
+            </CardTitle>
+            <AlertTriangle className="h-4 w-4 text-yellow-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-yellow-600">
+              {products.filter((p) => p.status === "low-stock").length}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Need immediate attention
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Out of Stock</CardTitle>
+            <TrendingDown className="h-4 w-4 text-red-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-red-600">
+              {products.filter((p) => p.status === "out-of-stock").length}
+            </div>
+            <p className="text-xs text-muted-foreground">Require restocking</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Value</CardTitle>
+            <TrendingUp className="h-4 w-4 text-green-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-green-600">
+              $
+              {products
+                .reduce((sum, p) => sum + p.sellingPrice, 0)
+                .toLocaleString()}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Current inventory value
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
+      <Tabs defaultValue="inventory" className="space-y-4">
+        <TabsList>
+          <TabsTrigger value="inventory">Inventory</TabsTrigger>
+          <TabsTrigger value="movements">Stock Movements</TabsTrigger>
+          <TabsTrigger value="history">Warehouse History</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="inventory" className="space-y-4">
+          {/* Product List */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Product Inventory</CardTitle>
+              <div className="flex gap-4">
+                <div className="relative flex-1">
+                  <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Search products..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-8"
+                  />
+                </div>
+                <Select
+                  value={categoryFilter}
+                  onValueChange={setCategoryFilter}
+                >
+                  <SelectTrigger className="w-[150px]">
+                    <Filter className="mr-2 h-4 w-4" />
+                    <SelectValue placeholder="Category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Categories</SelectItem>
+                    <SelectItem value="Smartphones">Smartphones</SelectItem>
+                    <SelectItem value="Laptops">Laptops</SelectItem>
+                    <SelectItem value="Tablets">Tablets</SelectItem>
+                    <SelectItem value="Accessories">Accessories</SelectItem>
+                    <SelectItem value="Footwear">Footwear</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Select value={statusFilter} onValueChange={setStatusFilter}>
+                  <SelectTrigger className="w-[130px]">
+                    <SelectValue placeholder="Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Status</SelectItem>
+                    <SelectItem value="in-stock">In Stock</SelectItem>
+                    <SelectItem value="low-stock">Low Stock</SelectItem>
+                    <SelectItem value="out-of-stock">Out of Stock</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Product</TableHead>
+                    <TableHead>SKU</TableHead>
+                    <TableHead>Category</TableHead>
+                    <TableHead>Stock</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Value</TableHead>
+                    <TableHead>Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredProducts.map((product) => (
+                    <TableRow key={product.id}>
+                      <TableCell>
+                        <div>
+                          <div className="font-medium">{product.name}</div>
+                          <div className="text-sm text-muted-foreground">
+                            {product.brand}
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="font-mono text-sm">{product.sku}</div>
+                      </TableCell>
+                      <TableCell>{product.category}</TableCell>
+                      <TableCell>
+                        <div className="font-medium">{product.quantity}</div>
+                        <div className="text-xs text-muted-foreground">
+                          Min: {product.minStock} | Max: {product.maxStock}
+                        </div>
+                      </TableCell>
+                      <TableCell>{getStatusBadge(product.status)}</TableCell>
+                      <TableCell>
+                        <div className="font-medium">
+                          ${product.sellingPrice.toLocaleString()}
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          @${product.costPrice}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex gap-1">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              setSelectedProduct(product);
+                              setIsViewDialogOpen(true);
+                            }}
+                          >
+                            <Eye className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              setEditingProduct(product);
+                              setNewProduct({
+                                name: product.name,
+                                category: product.category,
+                                brand: product.brand,
+                                sku: product.sku,
+                                description: product.description,
+                                quantity: product.quantity,
+                                minStock: product.minStock,
+                                maxStock: product.maxStock,
+                                costPrice: product.costPrice,
+                                sellingPrice: product.sellingPrice,
+                                supplier: product.supplier,
+                                suppliers: product.supplier
+                                  ? String(product.supplier)
+                                      .split(",")
+                                      .map((p) => p.trim())
+                                      .filter(Boolean)
+                                  : [],
+                                location: product.location,
+                                expiryDate: product.expiryDate,
+                                tags: product.tags,
+                                status: product.status,
+                              });
+                              setIsEditDialogOpen(true);
+                            }}
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button variant="outline" size="sm">
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </AlertDialogTrigger>
+
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>
+                                  Delete product
+                                </AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  Are you sure you want to delete "
+                                  {product.name}"? This action cannot be undone.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction
+                                  className={buttonVariants({
+                                    variant: "destructive",
+                                  })}
+                                  onClick={() => deleteProduct(product.id)}
+                                >
+                                  Delete
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="movements" className="space-y-4">
+          {/* Stock Movements */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Stock Movements</CardTitle>
+              <CardDescription>
+                Track all stock in, stock out, and adjustment activities
+              </CardDescription>
+              <div className="flex items-center gap-2">
+                <input
+                  id="movementFrom"
+                  type="date"
+                  value={movementFrom || ""}
+                  onChange={(e) => setMovementFrom(e.target.value || null)}
+                  className="h-9 rounded-md border px-2"
+                />
+                <input
+                  id="movementTo"
+                  type="date"
+                  value={movementTo || ""}
+                  onChange={(e) => setMovementTo(e.target.value || null)}
+                  className="h-9 rounded-md border px-2"
+                />
+                <Button
+                  variant="ghost"
+                  onClick={async () => {
+                    setMovementFrom(null);
+                    setMovementTo(null);
+                    setAppliedMovementFrom(null);
+                    setAppliedMovementTo(null);
+                    await fetchStockMovementsFromApi();
+                    await fetchWarehouseHistoriesFromApi();
+                  }}
+                >
+                  Clear
+                </Button>
+                <Button
+                  variant="default"
+                  onClick={async () => {
+                    setAppliedMovementFrom(movementFrom);
+                    setAppliedMovementTo(movementTo);
+                    await fetchStockMovementsFromApi(movementFrom, movementTo);
+                  }}
+                >
+                  Apply
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Date & Time</TableHead>
+                    <TableHead>Product</TableHead>
+                    <TableHead>Type</TableHead>
+                    <TableHead>Store/Location</TableHead>
+                    <TableHead>Quantity</TableHead>
+                    <TableHead>Details</TableHead>
+                    <TableHead>Reference</TableHead>
+                    <TableHead>Stock Change</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredMovements.map((movement) => (
+                    <TableRow key={movement.id}>
+                      <TableCell>
+                        <div>
+                          <div className="font-medium">{movement.date}</div>
+                          <div className="text-sm text-muted-foreground">
+                            {movement.time}
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="font-medium">
+                          {movement.productName}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        {getMovementTypeBadge(movement.type)}
+                      </TableCell>
+                      <TableCell>
+                        <div className="text-sm">
+                          <div className="font-medium">
+                            {movement.storeName}
+                          </div>
+                          {movement.type === "transfer" &&
+                            movement.fromStore &&
+                            movement.toStore && (
+                              <div className="text-xs text-muted-foreground">
+                                {movement.toStore} → {movement.fromStore}
+                              </div>
+                            )}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div
+                          className={`font-medium ${
+                            movement.type === "stock_in"
+                              ? "text-green-600"
+                              : movement.type === "stock_out"
+                                ? "text-red-600"
+                                : movement.type === "transfer"
+                                  ? "text-blue-600"
+                                  : "text-orange-600"
+                          }`}
+                        >
+                          {movement.type === "stock_in"
+                            ? "+"
+                            : movement.type === "stock_out"
+                              ? "-"
+                              : movement.type === "transfer"
+                                ? "↔"
+                                : "±"}
+                          {movement.quantity}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="">
+                          <div className="font-medium">
+                            {movement.type === "stock_in"
+                              ? movement.partyName ||
+                                movement.fromStore ||
+                                "From"
+                              : movement.party || movement.reason || "Details"}
+                          </div>
+
+                          {/* Directional info and reason */}
+                          <div className="text-xs text-muted-foreground mt-1">
+                            {movement.type === "transfer" &&
+                              movement.fromStore &&
+                              movement.toStore && (
+                                <>
+                                  From: {movement.fromStore}
+                                  <br />
+                                  To: {movement.toStore}
+                                </>
+                              )}
+
+                            {movement.type === "stock_in" && (
+                              <>
+                                {movement.partyName && (
+                                  <span>From: {movement.partyName}</span>
+                                )}
+                                {!movement.partyName && movement.fromStore && (
+                                  <span>From: {movement.fromStore}</span>
+                                )}
+                                {!movement.partyName &&
+                                  !movement.fromStore &&
+                                  movement.reason && (
+                                    <span>Reason: {movement.reason}</span>
+                                  )}
+
+                                {movement.reason &&
+                                  String(movement.reason)
+                                    .toLowerCase()
+                                    .includes("transfer") && (
+                                    <>
+                                      <br />
+                                      Reason: Transfer
+                                    </>
+                                  )}
+                              </>
+                            )}
+
+                            {movement.type === "stock_out" && (
+                              <>
+                                {movement.partyName ? (
+                                  <span>To: {movement.partyName}</span>
+                                ) : movement.toStore ? (
+                                  <span>To: {movement.toStore}</span>
+                                ) : null}
+                                {movement.reason &&
+                                  String(movement.reason)
+                                    .toLowerCase()
+                                    .includes("discard") && (
+                                    <>
+                                      <br />
+                                      Reason: {movement.reason}
+                                    </>
+                                  )}
+                              </>
+                            )}
+                          </div>
+
+                          {/* Notes */}
+                          {movement.notes && (
+                            <div className="text-xs text-muted-foreground mt-1">
+                              Notes: {movement.notes}
+                            </div>
+                          )}
+
+                          {/* Performed by */}
+                          <div className="text-xs text-muted-foreground mt-1">
+                            By: {movement.performedBy}
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="text-sm font-mono">
+                          {movement.reference || "—"}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="text-sm font-mono">
+                          {movement.previousQuantity} → {movement.newQuantity}
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="history" className="space-y-4">
+          {/* Warehouse History */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <History className="h-5 w-5" />
+                Warehouse History
+              </CardTitle>
+              <div className="flex gap-4 items-center">
+                <Select value={historyFilter} onValueChange={setHistoryFilter}>
+                  <SelectTrigger className="w-[150px]">
+                    <Filter className="mr-2 h-4 w-4" />
+                    <SelectValue placeholder="Action" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Actions</SelectItem>
+                    <SelectItem value="create">Created</SelectItem>
+                    <SelectItem value="edit">Edited</SelectItem>
+                    <SelectItem value="delete">Deleted</SelectItem>
+                    <SelectItem value="stock_in">Stock In</SelectItem>
+                    <SelectItem value="stock_out">Stock Out</SelectItem>
+                    <SelectItem value="transfer">Transfers</SelectItem>
+                    <SelectItem value="adjustment">Adjustments</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <div className="flex items-center gap-2">
+                  <input
+                    id="historyFrom"
+                    type="date"
+                    value={historyFrom || ""}
+                    onChange={(e) => setHistoryFrom(e.target.value || null)}
+                    className="h-9 rounded-md border px-2"
+                  />
+                  <input
+                    id="historyTo"
+                    type="date"
+                    value={historyTo || ""}
+                    onChange={(e) => setHistoryTo(e.target.value || null)}
+                    className="h-9 rounded-md border px-2"
+                  />
+                  <Button
+                    variant="ghost"
+                    onClick={async () => {
+                      setHistoryFrom(null);
+                      setHistoryTo(null);
+                      setAppliedHistoryFrom(null);
+                      setAppliedHistoryTo(null);
+                      await fetchWarehouseHistoriesFromApi();
+                      await fetchStockMovementsFromApi();
+                    }}
+                  >
+                    Clear
+                  </Button>
+                  <Button
+                    variant="default"
+                    onClick={async () => {
+                      setAppliedHistoryFrom(historyFrom);
+                      setAppliedHistoryTo(historyTo);
+                      await fetchWarehouseHistoriesFromApi(
+                        historyFrom,
+                        historyTo,
+                      );
+                    }}
+                  >
+                    Apply
+                  </Button>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Date & Time</TableHead>
+                    <TableHead>Action</TableHead>
+                    <TableHead>Entity</TableHead>
+                    <TableHead>Description</TableHead>
+                    <TableHead>Store/Details</TableHead>
+                    <TableHead>Reference</TableHead>
+                    <TableHead>Performed By</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredHistory.map((history) => (
+                    <TableRow key={history.id}>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <Calendar className="h-4 w-4 text-muted-foreground" />
+                          <div>
+                            <div className="font-medium">{history.date}</div>
+                            <div className="text-sm text-muted-foreground">
+                              {history.time}
+                            </div>
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>{getActionBadge(history.action)}</TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          {history.entityType === "product" ? (
+                            <Package2 className="h-4 w-4" />
+                          ) : (
+                            <Package className="h-4 w-4" />
+                          )}
+                          <div>
+                            <div className="font-medium">
+                              {history.entityName}
+                            </div>
+                            <div className="text-sm text-muted-foreground capitalize">
+                              {history.entityType}
+                            </div>
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="text-sm">{history.description}</div>
+                        {history.details?.notes && (
+                          <div className="text-xs text-muted-foreground mt-1">
+                            {history.details.notes}
+                          </div>
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        <div className="text-sm">
+                          {/* Show store information for stock movements */}
+                          {(history.action === "stock_in" ||
+                            history.action === "stock_out" ||
+                            history.action === "transfer" ||
+                            history.action === "adjustment") && (
+                            <div>
+                              {/* If party indicates other filial, show filialId name and "from → to" */}
+                              {history.details?.party &&
+                              String(history.details.party)
+                                .toLowerCase()
+                                .includes("filial") &&
+                              history.details?.filialId &&
+                              history.details?.partyType ? (
+                                (() => {
+                                  const destId = String(
+                                    history.details.filialId,
+                                  );
+                                  const srcId = String(
+                                    history.details.partyType,
+                                  );
+                                  const dest =
+                                    filialOptions.find(
+                                      (f) => String(f.id) === destId,
+                                    ) || null;
+                                  const src =
+                                    filialOptions.find(
+                                      (f) => String(f.id) === srcId,
+                                    ) || null;
+                                  const destName = dest ? dest.name : destId;
+                                  const srcName = src ? src.name : srcId;
+                                  return (
+                                    <div>
+                                      <div className="font-medium">
+                                        {destName}
+                                      </div>
+                                      <div className="text-xs text-muted-foreground">
+                                        {destName} → {srcName}
+                                      </div>
+                                    </div>
+                                  );
+                                })()
+                              ) : (
+                                // Default behavior
+                                <>
+                                  {history.details?.storeName ? (
+                                    <div className="font-medium">
+                                      {history.details.storeName}
+                                    </div>
+                                  ) : history.details?.party ? (
+                                    <div className="font-medium">
+                                      {history.details.party}
+                                      {history.details.partyType
+                                        ? ` • ${history.details.partyType}`
+                                        : ""}
+                                    </div>
+                                  ) : null}
+
+                                  {history.action === "transfer" &&
+                                    history.details?.fromStore &&
+                                    history.details?.toStore && (
+                                      <div className="text-xs text-muted-foreground">
+                                        {history.details.toStore.name} →{" "}
+                                        {history.details.fromStore.name}
+                                      </div>
+                                    )}
+
+                                  {/* Show party and partyType in history (do not show Qty) */}
+                                  {history.details?.party &&
+                                  history.details?.partyType ? (
+                                    <div className="text-xs text-muted-foreground">
+                                      {history.details.party}:{" "}
+                                      {(() => {
+                                        const pt = String(
+                                          history.details.partyType,
+                                        );
+                                        // Prefer client lookup first (partyType may be client id even if party says Other Filial)
+                                        const c = clientOptions.find(
+                                          (c) =>
+                                            String(c.id) === pt ||
+                                            String(c.name) === pt,
+                                        );
+                                        if (c) return c.name;
+                                        const f = filialOptions.find(
+                                          (f) =>
+                                            String(f.id) === pt ||
+                                            String(f.name) === pt,
+                                        );
+                                        return f ? f.name : pt;
+                                      })()}
+                                    </div>
+                                  ) : history.details?.party ? (
+                                    <div className="text-xs text-muted-foreground">
+                                      {history.details.party}
+                                    </div>
+                                  ) : history.details?.partyType ? (
+                                    <div className="text-xs text-muted-foreground">
+                                      {(() => {
+                                        const pt = String(
+                                          history.details.partyType,
+                                        );
+                                        // Prefer client lookup first
+                                        const c = clientOptions.find(
+                                          (c) =>
+                                            String(c.id) === pt ||
+                                            String(c.name) === pt,
+                                        );
+                                        if (c) return c.name;
+                                        const f = filialOptions.find(
+                                          (f) =>
+                                            String(f.id) === pt ||
+                                            String(f.name) === pt,
+                                        );
+                                        return f ? f.name : pt;
+                                      })()}
+                                    </div>
+                                  ) : null}
+                                </>
+                              )}
+                            </div>
+                          )}
+
+                          {/* Show product details for product operations */}
+                          {history.action === "create" && history.details && (
+                            <div className="text-xs text-muted-foreground">
+                              Category: {history.details.category}
+                              {history.details.brand &&
+                                ` | Brand: ${history.details.brand}`}
+                            </div>
+                          )}
+                          {history.action === "edit" &&
+                            history.details?.updatedFields && (
+                              <div className="text-xs text-muted-foreground">
+                                Updated fields available
+                              </div>
+                            )}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="text-sm font-mono">
+                          {history.details?.reference || "—"}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <User className="h-4 w-4 text-muted-foreground" />
+                          <span className="text-sm">{history.performedBy}</span>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+
+      {/* Edit Product Dialog */}
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <DialogContent
+          className="max-w-2xl"
+          onPointerDownOutside={(e) => e.preventDefault()}
+          onEscapeKeyDown={(e) => e.preventDefault()}
+        >
+          <DialogHeader>
+            <DialogTitle>Edit Product</DialogTitle>
+            <DialogDescription>
+              Update product information in your inventory system.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="editName">Product Name *</Label>
+                <Input
+                  id="editName"
+                  placeholder="iPhone 15 Pro"
+                  value={newProduct.name}
+                  onChange={(e) =>
+                    setNewProduct({ ...newProduct, name: e.target.value })
+                  }
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="editSku">SKU *</Label>
+                <Input
+                  id="editSku"
+                  placeholder="APL-IP15P-128"
+                  value={newProduct.sku}
+                  onChange={(e) =>
+                    setNewProduct({ ...newProduct, sku: e.target.value })
+                  }
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="editCategory">Category *</Label>
+                <Select
+                  value={newProduct.category}
+                  onValueChange={(value) =>
+                    setNewProduct({ ...newProduct, category: value })
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Smartphones">Smartphones</SelectItem>
+                    <SelectItem value="Laptops">Laptops</SelectItem>
+                    <SelectItem value="Tablets">Tablets</SelectItem>
+                    <SelectItem value="Accessories">Accessories</SelectItem>
+                    <SelectItem value="Footwear">Footwear</SelectItem>
+                    <SelectItem value="Clothing">Clothing</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="editBrand">Brand</Label>
+                <Input
+                  id="editBrand"
+                  placeholder="Apple"
+                  value={newProduct.brand}
+                  onChange={(e) =>
+                    setNewProduct({ ...newProduct, brand: e.target.value })
+                  }
+                />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="editDescription">Description</Label>
+              <Textarea
+                id="editDescription"
+                placeholder="Product description"
+                value={newProduct.description}
+                onChange={(e) =>
+                  setNewProduct({ ...newProduct, description: e.target.value })
+                }
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="editMinStock">Min Stock</Label>
+                <Input
+                  id="editMinStock"
+                  type="number"
+                  min="0"
+                  value={newProduct.minStock}
+                  onChange={(e) =>
+                    setNewProduct({
+                      ...newProduct,
+                      minStock: parseInt(e.target.value) || 0,
+                    })
+                  }
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="editMaxStock">Max Stock</Label>
+                <Input
+                  id="editMaxStock"
+                  type="number"
+                  min="0"
+                  value={newProduct.maxStock}
+                  onChange={(e) =>
+                    setNewProduct({
+                      ...newProduct,
+                      maxStock: parseInt(e.target.value) || 0,
+                    })
+                  }
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="editCostPrice">Cost Price ($)</Label>
+                <Input
+                  id="editCostPrice"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={newProduct.costPrice}
+                  onChange={(e) =>
+                    setNewProduct({
+                      ...newProduct,
+                      costPrice: parseFloat(e.target.value) || 0,
+                    })
+                  }
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="editSellingPrice">Selling Price ($)</Label>
+                <Input
+                  id="editSellingPrice"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={newProduct.sellingPrice}
+                  onChange={(e) =>
+                    setNewProduct({
+                      ...newProduct,
+                      sellingPrice: parseFloat(e.target.value) || 0,
+                    })
+                  }
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="editSupplier">Supplier(s)</Label>
+                <div className="flex flex-col">
+                  <div className="flex flex-wrap gap-2 mb-2">
+                    {(newProduct.suppliers || []).map((s, i) => (
+                      <span
+                        key={i}
+                        className="inline-flex items-center gap-2 rounded-full bg-muted px-3 py-1 text-sm"
+                      >
+                        <span>{s}</span>
+                        <button
+                          type="button"
+                          className="text-xs text-muted-foreground"
+                          onClick={() => {
+                            const copy = (newProduct.suppliers || []).slice();
+                            copy.splice(i, 1);
+                            setNewProduct({ ...newProduct, suppliers: copy });
+                          }}
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
+                  </div>
+                  <div className="flex gap-2">
+                    <Input
+                      id="editSupplier"
+                      placeholder="Add supplier and press Enter"
+                      value={editSupplierInput}
+                      onChange={(e) => setEditSupplierInput(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          const v = editSupplierInput.trim();
+                          if (!v) return;
+                          setNewProduct({
+                            ...newProduct,
+                            suppliers: Array.from(
+                              new Set([...(newProduct.suppliers || []), v]),
+                            ),
+                          });
+                          setEditSupplierInput("");
+                        }
+                      }}
+                    />
+                    <Button
+                      variant="default"
+                      onClick={() => {
+                        const v = editSupplierInput.trim();
+                        if (!v) return;
+                        setNewProduct({
+                          ...newProduct,
+                          suppliers: Array.from(
+                            new Set([...(newProduct.suppliers || []), v]),
+                          ),
+                        });
+                        setEditSupplierInput("");
+                      }}
+                    >
+                      Add
+                    </Button>
+                  </div>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="editLocation">Location</Label>
+                <Input
+                  id="editLocation"
+                  placeholder="A1-B2"
+                  value={newProduct.location}
+                  onChange={(e) =>
+                    setNewProduct({ ...newProduct, location: e.target.value })
+                  }
+                />
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <Button className="flex-1" onClick={editProduct}>
+                Update Product
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setIsEditDialogOpen(false);
+                  setEditingProduct(null);
+                }}
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Stock In Dialog */}
+      <Dialog open={isStockInDialogOpen} onOpenChange={setIsStockInDialogOpen}>
+        <DialogContent
+          className="max-w-md min-h-[420px]"
+          onPointerDownOutside={(e) => e.preventDefault()}
+          onEscapeKeyDown={(e) => e.preventDefault()}
+        >
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <ArrowUp className="h-5 w-5 text-green-600" />
+              Stock In
+            </DialogTitle>
+            <DialogDescription>
+              Add stock for {selectedProduct?.name}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="stockInLocation">Location *</Label>
+              <Select value={stockLocation} onValueChange={setStockLocation}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select filial/location" />
+                </SelectTrigger>
+                <SelectContent>
+                  {(stockFromType === "other_filial"
+                    ? filialOptions.filter((f) => f.id !== stockFrom)
+                    : filialOptions
+                  ).map((f) => (
+                    <SelectItem key={f.id} value={f.id}>
+                      {f.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="stockInQuantity">Quantity to Add *</Label>
+              <Input
+                id="stockInQuantity"
+                type="number"
+                min="1"
+                value={stockQuantity}
+                onChange={(e) =>
+                  setStockQuantity(parseInt(e.target.value) || 0)
+                }
+                placeholder="Enter quantity"
+              />
+            </div>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="stockFromType">From (Origin) *</Label>
+                <Select value={stockFromType} onValueChange={setStockFromType}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select origin type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="supplier">Supplier</SelectItem>
+                    <SelectItem value="customer_return">
+                      Return from Customer
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {stockFromType && (
+                <div className="space-y-2">
+                  <Label htmlFor="stockFrom">
+                    {stockFromType === "supplier" && "Supplier Name *"}
+                    {stockFromType === "other_filial" && "Filial/Branch Name *"}
+                    {stockFromType === "customer_return" && "Customer Name *"}
+                  </Label>
+                  {stockFromType === "supplier" && (
+                    <Select value={stockFrom} onValueChange={setStockFrom}>
+                      <SelectTrigger>
+                        <SelectValue
+                          placeholder={
+                            supplierOptions.length
+                              ? "Choose supplier"
+                              : "No suppliers found"
+                          }
+                        />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {supplierOptions.map((s) => (
+                          <SelectItem key={s} value={s}>
+                            {s}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                  {stockFromType === "other_filial" && (
+                    <Select value={stockFrom} onValueChange={setStockFrom}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select filial/branch" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {filialOptions
+                          .filter((f) => f.id !== stockLocation)
+                          .map((f) => (
+                            <SelectItem key={f.id} value={f.id}>
+                              {f.name}
+                            </SelectItem>
+                          ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                  {stockFromType === "customer_return" && (
+                    <Select value={stockFrom} onValueChange={setStockFrom}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select customer" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {clientOptions.map((c) => (
+                          <SelectItem key={c.id} value={c.id}>
+                            {c.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                </div>
+              )}
+
+              <div className="grid grid-cols-1 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="stockInReason">Reason *</Label>
+                  <Select
+                    value={stockReason}
+                    onValueChange={setStockReason}
+                    disabled={
+                      stockFromType === "supplier" ||
+                      stockFromType === "customer_return"
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select reason" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Purchase">Purchase</SelectItem>
+                      <SelectItem value="Return">Return</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="stockInNotes">Notes (Optional)</Label>
+              <Textarea
+                id="stockInNotes"
+                value={stockNotes}
+                onChange={(e) => setStockNotes(e.target.value)}
+                placeholder="Additional notes..."
+                rows={3}
+              />
+            </div>
+            {selectedProduct && (
+              <div className="p-2 bg-muted rounded-lg">
+                <div className="text-sm text-muted-foreground">
+                  Current Stock:{" "}
+                  <span className="font-medium">
+                    {selectedProduct.quantity}
+                  </span>
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  New Stock:{" "}
+                  <span className="font-medium">
+                    {selectedProduct.quantity + stockQuantity}
+                  </span>
+                </div>
+              </div>
+            )}
+            <div className="flex gap-2">
+              <Button className="flex-1" onClick={handleStockIn}>
+                <ArrowUp className="mr-2 h-4 w-4" />
+                Add Stock
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setIsStockInDialogOpen(false);
+                  setStockQuantity(0);
+                  setStockReason("");
+                  setStockNotes("");
+                  setStockLocation("");
+                  setStockFrom("");
+                  setStockFromType("");
+                  setSelectedProduct(null);
+                }}
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Stock Out Dialog */}
+      <Dialog
+        open={isStockOutDialogOpen}
+        onOpenChange={setIsStockOutDialogOpen}
+      >
+        <DialogContent
+          className="max-w-md min-h-[420px]"
+          onPointerDownOutside={(e) => e.preventDefault()}
+          onEscapeKeyDown={(e) => e.preventDefault()}
+        >
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <ArrowDown className="h-5 w-5 text-red-600" />
+              Stock Out
+            </DialogTitle>
+            <DialogDescription>
+              Remove stock for {selectedProduct?.name}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="stockOutLocation">Location *</Label>
+              <Select value={stockLocation} onValueChange={setStockLocation}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select location" />
+                </SelectTrigger>
+                <SelectContent>
+                  {filialOptions.map((f) => (
+                    <SelectItem key={f.id} value={f.id}>
+                      {f.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="stockOutQuantity">Quantity to Remove *</Label>
+              <Input
+                id="stockOutQuantity"
+                type="number"
+                min="1"
+                max={selectedProduct?.quantity || 0}
+                value={stockQuantity}
+                onChange={(e) =>
+                  setStockQuantity(parseInt(e.target.value) || 0)
+                }
+                placeholder="Enter quantity"
+              />
+            </div>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="stockToType">To (Destination) *</Label>
+                <Select value={stockToType} onValueChange={setStockToType}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select destination type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="client">Client</SelectItem>
+                    <SelectItem value="other_filial">Other Filial</SelectItem>
+                    <SelectItem value="discarded">Discarded</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {stockToType && (
+                <div className="space-y-2">
+                  <Label htmlFor="stockTo">
+                    {stockToType === "client" && "Client Name *"}
+                    {stockToType === "other_filial" && "Filial/Branch Name *"}
+                  </Label>
+                  {stockToType === "client" && (
+                    <Select value={stockTo} onValueChange={setStockTo}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select client" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {clientOptions.map((c) => (
+                          <SelectItem key={c.id} value={c.id}>
+                            {c.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                  {stockToType === "other_filial" && (
+                    <Select value={stockTo} onValueChange={setStockTo}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select filial/branch" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {filialOptions
+                          .filter((f) => f.id !== stockLocation)
+                          .map((f) => (
+                            <SelectItem key={f.id} value={f.id}>
+                              {f.name}
+                            </SelectItem>
+                          ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                  {stockToType === "discarded" && (
+                    <div className="space-y-2">
+                      <Label htmlFor="discardReason">Discard Reason *</Label>
+                      <Select
+                        value={discardReason}
+                        onValueChange={(v) => {
+                          setDiscardReason(v);
+                          if (v !== "Other") {
+                            setDiscardOther("");
+                            setStockTo(v);
+                          } else {
+                            setStockTo("");
+                          }
+                        }}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select reason" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Expired">Expired</SelectItem>
+                          <SelectItem value="Broken">Broken</SelectItem>
+                          <SelectItem value="Lost">Lost</SelectItem>
+                          <SelectItem value="Other">Other</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      {discardReason === "Other" && (
+                        <Input
+                          id="discardOther"
+                          value={discardOther}
+                          onChange={(e) => {
+                            setDiscardOther(e.target.value);
+                            setStockTo(e.target.value);
+                          }}
+                          placeholder="Write reason"
+                        />
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              <div className="grid grid-cols-1 gap-3">
+                <div className="space-y-2">
+                  <Label htmlFor="stockOutReason">Reason *</Label>
+                  <Input
+                    id="stockOutReason"
+                    value={stockReason}
+                    readOnly
+                    placeholder="Reason"
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="stockOutNotes">Notes (Optional)</Label>
+              <Textarea
+                id="stockOutNotes"
+                value={stockNotes}
+                onChange={(e) => setStockNotes(e.target.value)}
+                placeholder="Additional notes..."
+                rows={2}
+                className="text-sm"
+              />
+            </div>
+            {selectedProduct && (
+              <div className="p-2 bg-muted rounded-lg">
+                <div className="text-sm text-muted-foreground">
+                  Current Stock:{" "}
+                  <span className="font-medium">
+                    {selectedProduct.quantity}
+                  </span>
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  Remaining Stock:{" "}
+                  <span className="font-medium">
+                    {Math.max(0, selectedProduct.quantity - stockQuantity)}
+                  </span>
+                </div>
+                {stockQuantity > selectedProduct.quantity && (
+                  <div className="text-sm text-red-600 mt-1">
+                    ⚠️ Cannot remove more than available stock
+                  </div>
+                )}
+              </div>
+            )}
+            <div className="flex gap-2">
+              <Button className="flex-1" onClick={handleStockOut}>
+                <ArrowDown className="mr-2 h-4 w-4" />
+                Remove Stock
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setIsStockOutDialogOpen(false);
+                  setStockQuantity(0);
+                  setStockReason("");
+                  setStockNotes("");
+                  setStockLocation("");
+                  setStockTo("");
+                  setStockToType("");
+                  setDiscardReason("");
+                  setDiscardOther("");
+                  setSelectedProduct(null);
+                }}
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* View Product Dialog */}
+      <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
+        <DialogContent
+          className="max-w-xl max-h-[85vh] overflow-y-auto"
+          onPointerDownOutside={(e) => e.preventDefault()}
+          onEscapeKeyDown={(e) => e.preventDefault()}
+        >
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Package className="h-5 w-5" />
+              Product Details
+            </DialogTitle>
+            <DialogDescription>
+              Complete product information and inventory status
+            </DialogDescription>
+          </DialogHeader>
+          {selectedProduct && (
+            <DetailCard
+              title={selectedProduct.name}
+              subtitle="Complete product information and inventory status"
+              left={[
+                {
+                  label: "SKU",
+                  value: (
+                    <div className="font-mono text-sm">
+                      {selectedProduct.sku}
+                    </div>
+                  ),
+                },
+                { label: "Category", value: selectedProduct.category },
+                {
+                  label: "Suppliers",
+                  value: (
+                    <div className="flex flex-wrap gap-2">
+                      {selectedProduct.suppliers &&
+                      selectedProduct.suppliers.length > 0 ? (
+                        selectedProduct.suppliers.map((s, i) => (
+                          <span
+                            key={i}
+                            className="inline-flex items-center rounded-full bg-muted px-3 py-1 text-sm"
+                          >
+                            {s}
+                          </span>
+                        ))
+                      ) : selectedProduct.supplier ? (
+                        <div className="text-sm">
+                          {selectedProduct.supplier}
+                        </div>
+                      ) : (
+                        <div className="text-sm text-muted-foreground">—</div>
+                      )}
+                    </div>
+                  ),
+                },
+              ]}
+              right={[
+                {
+                  label: "Description",
+                  value: selectedProduct.description || "—",
+                },
+                { label: "Location", value: selectedProduct.location || "N/A" },
+              ]}
+              stats={[
+                { label: "Total Stock", value: selectedProduct.quantity },
+                { label: "Min Stock", value: selectedProduct.minStock },
+                { label: "Max Stock", value: selectedProduct.maxStock },
+              ]}
+            >
+              {/* children: store distribution + prices */}
+
+              <div className="mb-3">
+                <div className="text-xs text-muted-foreground mb-2 flex items-center gap-1">
+                  <Package2 className="h-3 w-3" />
+                  Store Distribution
+                </div>
+                <div className="space-y-2">
+                  {selectedProduct.stores.length > 0 ? (
+                    selectedProduct.stores.map((store) => {
+                      const fi = filialOptions.find(
+                        (f) => f.id === store.storeId,
+                      );
+                      const storeType = fi?.type
+                        ? fi.type.charAt(0).toUpperCase() + fi.type.slice(1)
+                        : "Unknown";
+                      const typeColor =
+                        fi?.type === "warehouse"
+                          ? "text-blue-600"
+                          : fi?.type === "retail"
+                            ? "text-green-600"
+                            : fi?.type === "online"
+                              ? "text-purple-600"
+                              : "text-gray-600";
+                      return (
+                        <div
+                          key={store.storeId}
+                          className="flex items-center justify-between py-2 px-2 bg-background/80 rounded-sm"
+                        >
+                          <div className="flex-1 min-w-0">
+                            <div className="text-sm font-medium truncate">
+                              {filialOptions.find((f) => f.id === store.storeId)
+                                ?.name ||
+                                store.storeName ||
+                                store.storeId}
+                            </div>
+                            <div className="text-xs text-muted-foreground truncate">
+                              {store.location}
+                            </div>
+                          </div>
+                          <div className="text-right flex items-center gap-2">
+                            <div
+                              className={`text-xs px-1 py-0.5 rounded bg-muted/50 ${typeColor}`}
+                            >
+                              {storeType}
+                            </div>
+                            <div className="text-sm font-bold min-w-[2rem]">
+                              {store.quantity}
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })
+                  ) : (
+                    <div className="text-center text-muted-foreground italic py-4">
+                      No stock distribution data available
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <div className="text-xs text-muted-foreground">
+                    Cost Price
+                  </div>
+                  <div className="text-sm font-semibold">
+                    ${selectedProduct.costPrice}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-xs text-muted-foreground">
+                    Selling Price
+                  </div>
+                  <div className="text-sm font-semibold text-green-600">
+                    ${selectedProduct.sellingPrice}
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3 text-xs text-muted-foreground border-t pt-3 mt-3">
+                <div className="space-y-1">
+                  <div>📍 {selectedProduct.location || "N/A"}</div>
+                  <div>📅 Created: {selectedProduct.createdAt}</div>
+                </div>
+                <div className="space-y-1">
+                  <div>🔄 Updated: {selectedProduct.updatedAt}</div>
+                  <div>
+                    💰 Profit:{" "}
+                    <span className="font-medium text-green-600">
+                      {selectedProduct.sellingPrice > 0
+                        ? (
+                            ((selectedProduct.sellingPrice -
+                              selectedProduct.costPrice) /
+                              selectedProduct.sellingPrice) *
+                            100
+                          ).toFixed(1)
+                        : 0}
+                      %
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </DetailCard>
+          )}
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
