@@ -2970,7 +2970,7 @@ export default function Warehouse() {
                               ? movement.partyName ||
                                 movement.fromStore ||
                                 t("warehouse.from")
-                              : movement.party || movement.reason || "Details"}
+                              : movement.party || movement.reason || t("warehouse.details")}
                           </div>
 
                           {/* Directional info and reason */}
@@ -2979,24 +2979,24 @@ export default function Warehouse() {
                               movement.fromStore &&
                               movement.toStore && (
                                 <>
-                                  From: {movement.fromStore}
+                                  {t("warehouse.from")}: {movement.fromStore}
                                   <br />
-                                  To: {movement.toStore}
+                                  {t("warehouse.to")}: {movement.toStore}
                                 </>
                               )}
 
                             {movement.type === "stock_in" && (
                               <>
                                 {movement.partyName && (
-                                  <span>From: {movement.partyName}</span>
+                                  <span>{t("warehouse.from")}: {movement.partyName}</span>
                                 )}
                                 {!movement.partyName && movement.fromStore && (
-                                  <span>From: {movement.fromStore}</span>
+                                  <span>{t("warehouse.from")}: {movement.fromStore}</span>
                                 )}
                                 {!movement.partyName &&
                                   !movement.fromStore &&
                                   movement.reason && (
-                                    <span>Reason: {movement.reason}</span>
+                                    <span>{t("warehouse.reason")}: {movement.reason}</span>
                                   )}
 
                                 {movement.reason &&
@@ -3005,7 +3005,7 @@ export default function Warehouse() {
                                     .includes("transfer") && (
                                     <>
                                       <br />
-                                      Reason: Transfer
+                                      {t("warehouse.reason")}: {t("warehouse.transfer")}
                                     </>
                                   )}
                               </>
@@ -3014,9 +3014,9 @@ export default function Warehouse() {
                             {movement.type === "stock_out" && (
                               <>
                                 {movement.partyName ? (
-                                  <span>To: {movement.partyName}</span>
+                                  <span>{t("warehouse.to")}: {movement.partyName}</span>
                                 ) : movement.toStore ? (
-                                  <span>To: {movement.toStore}</span>
+                                  <span>{t("warehouse.to")}: {movement.toStore}</span>
                                 ) : null}
                                 {movement.reason &&
                                   String(movement.reason)
@@ -3024,7 +3024,7 @@ export default function Warehouse() {
                                     .includes("discard") && (
                                     <>
                                       <br />
-                                      Reason: {movement.reason}
+                                      {t("warehouse.reason")}: {movement.reason}
                                     </>
                                   )}
                               </>
@@ -3034,13 +3034,13 @@ export default function Warehouse() {
                           {/* Notes */}
                           {movement.notes && (
                             <div className="text-xs text-muted-foreground mt-1">
-                              Notes: {movement.notes}
+                              {t("warehouse.notes")}: {movement.notes}
                             </div>
                           )}
 
                           {/* Performed by */}
                           <div className="text-xs text-muted-foreground mt-1">
-                            By: {movement.performedBy}
+                            {t("warehouse.by")}: {movement.performedBy}
                           </div>
                         </div>
                       </TableCell>
