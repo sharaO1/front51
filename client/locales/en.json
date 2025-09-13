@@ -661,7 +661,12 @@
     "sales_details_title": "Sales details",
     "sales_history_for": "Sales history for",
     "sales_label": "Sales",
-    "not_marked": "Not marked"
+    "not_marked": "Not marked",
+    "commission": "Commission",
+    "monthly_sales_target": "Monthly sales target",
+    "sales_performance_header": "Sales performance",
+    "sales_performance_subtitle": "Daily sales by employee",
+    "no_position": "No position"
   },
   "settings": {
     "title": "Settings",
