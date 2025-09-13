@@ -2307,15 +2307,15 @@ export default function Warehouse() {
               onEscapeKeyDown={(e) => e.preventDefault()}
             >
               <DialogHeader>
-                <DialogTitle>Add New Product</DialogTitle>
+                <DialogTitle>{t("warehouse.add_new_product")}</DialogTitle>
                 <DialogDescription>
-                  Create a new product in your inventory system.
+                  {t("warehouse.enter_product_details")}
                 </DialogDescription>
               </DialogHeader>
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="name">Product Name *</Label>
+                    <Label htmlFor="name">{t("warehouse.product_name")} *</Label>
                     <Input
                       id="name"
                       placeholder="iPhone 15 Pro"
@@ -2339,7 +2339,7 @@ export default function Warehouse() {
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="category">Category *</Label>
+                    <Label htmlFor="category">{t("warehouse.category")} *</Label>
                     <Select
                       value={newProduct.category}
                       onValueChange={(value) =>
@@ -2360,7 +2360,7 @@ export default function Warehouse() {
                     </Select>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="brand">Brand</Label>
+                    <Label htmlFor="brand">{t("warehouse.brand")}</Label>
                     <Input
                       id="brand"
                       placeholder="Apple"
@@ -2372,7 +2372,7 @@ export default function Warehouse() {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="description">Description</Label>
+                  <Label htmlFor="description">{t("common.description")}</Label>
                   <Textarea
                     id="description"
                     placeholder="Product description"
@@ -2387,7 +2387,7 @@ export default function Warehouse() {
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="minStock">Min Stock</Label>
+                    <Label htmlFor="minStock">{t("warehouse.min_stock")}</Label>
                     <Input
                       id="minStock"
                       type="number"
@@ -2402,7 +2402,7 @@ export default function Warehouse() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="maxStock">Max Stock</Label>
+                    <Label htmlFor="maxStock">{t("warehouse.max_stock")}</Label>
                     <Input
                       id="maxStock"
                       type="number"
@@ -2419,7 +2419,7 @@ export default function Warehouse() {
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="costPrice">Cost Price ($)</Label>
+                    <Label htmlFor="costPrice">{t("warehouse.cost_price")}</Label>
                     <Input
                       id="costPrice"
                       type="number"
@@ -2435,7 +2435,7 @@ export default function Warehouse() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="sellingPrice">Selling Price ($)</Label>
+                    <Label htmlFor="sellingPrice">{t("warehouse.selling_price")}</Label>
                     <Input
                       id="sellingPrice"
                       type="number"
@@ -2453,7 +2453,7 @@ export default function Warehouse() {
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="supplier">Supplier(s)</Label>
+                    <Label htmlFor="supplier">{t("warehouse.suppliers")}</Label>
                     <div className="flex flex-col">
                       <div className="flex flex-wrap gap-2 mb-2">
                         {(newProduct.suppliers || []).map((s, i) => (
@@ -2522,7 +2522,7 @@ export default function Warehouse() {
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="location">Location</Label>
+                    <Label htmlFor="location">{t("warehouse.location")}</Label>
                     <Input
                       id="location"
                       placeholder="A1-B2"
@@ -2537,7 +2537,7 @@ export default function Warehouse() {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="expiryDate">Expiry Date</Label>
+                  <Label htmlFor="expiryDate">{t("warehouse.expiry_date")}</Label>
                   <Input
                     id="expiryDate"
                     type="date"
@@ -3401,15 +3401,15 @@ export default function Warehouse() {
           onEscapeKeyDown={(e) => e.preventDefault()}
         >
           <DialogHeader>
-            <DialogTitle>Edit Product</DialogTitle>
+            <DialogTitle>{t("warehouse.edit_product")}</DialogTitle>
             <DialogDescription>
-              Update product information in your inventory system.
+              {t("warehouse.update_product_info")}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="editName">Product Name *</Label>
+                <Label htmlFor="editName">{t("warehouse.product_name")} *</Label>
                 <Input
                   id="editName"
                   placeholder="iPhone 15 Pro"
@@ -3433,7 +3433,7 @@ export default function Warehouse() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="editCategory">Category *</Label>
+                <Label htmlFor="editCategory">{t("warehouse.category")} *</Label>
                 <Select
                   value={newProduct.category}
                   onValueChange={(value) =>
@@ -3454,7 +3454,7 @@ export default function Warehouse() {
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="editBrand">Brand</Label>
+                <Label htmlFor="editBrand">{t("warehouse.brand")}</Label>
                 <Input
                   id="editBrand"
                   placeholder="Apple"
@@ -3466,7 +3466,7 @@ export default function Warehouse() {
               </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="editDescription">Description</Label>
+              <Label htmlFor="editDescription">{t("common.description")}</Label>
               <Textarea
                 id="editDescription"
                 placeholder="Product description"
@@ -3478,7 +3478,7 @@ export default function Warehouse() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="editMinStock">Min Stock</Label>
+                <Label htmlFor="editMinStock">{t("warehouse.min_stock")}</Label>
                 <Input
                   id="editMinStock"
                   type="number"
@@ -3493,7 +3493,7 @@ export default function Warehouse() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="editMaxStock">Max Stock</Label>
+                <Label htmlFor="editMaxStock">{t("warehouse.max_stock")}</Label>
                 <Input
                   id="editMaxStock"
                   type="number"
@@ -3510,7 +3510,7 @@ export default function Warehouse() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="editCostPrice">Cost Price ($)</Label>
+                <Label htmlFor="editCostPrice">{t("warehouse.cost_price")}</Label>
                 <Input
                   id="editCostPrice"
                   type="number"
@@ -3526,7 +3526,7 @@ export default function Warehouse() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="editSellingPrice">Selling Price ($)</Label>
+                <Label htmlFor="editSellingPrice">{t("warehouse.selling_price")}</Label>
                 <Input
                   id="editSellingPrice"
                   type="number"
@@ -3544,7 +3544,7 @@ export default function Warehouse() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="editSupplier">Supplier(s)</Label>
+                <Label htmlFor="editSupplier">{t("warehouse.suppliers")}</Label>
                 <div className="flex flex-col">
                   <div className="flex flex-wrap gap-2 mb-2">
                     {(newProduct.suppliers || []).map((s, i) => (
