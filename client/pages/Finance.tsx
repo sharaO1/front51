@@ -1171,7 +1171,7 @@ ${data.transactions
                   <div className="flex-1">
                     <div className="font-medium">{t("finance.export_excel_title")}</div>
                     <div className="text-xs text-muted-foreground">
-                      Detailed transactions and analytics
+                      {t("finance.export_excel_desc")}
                     </div>
                   </div>
                 </DropdownMenuItem>
