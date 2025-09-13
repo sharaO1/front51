@@ -1016,11 +1016,11 @@ export default function Sales() {
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead>Product</TableHead>
-                        <TableHead>Qty</TableHead>
-                        <TableHead>Unit Price</TableHead>
-                        <TableHead>Discount</TableHead>
-                        <TableHead>Total</TableHead>
+                        <TableHead>{t("sales.product_name")}</TableHead>
+                        <TableHead>{t("sales.qty")}</TableHead>
+                        <TableHead>{t("sales.unit_price")}</TableHead>
+                        <TableHead>{t("sales.discount")}</TableHead>
+                        <TableHead>{t("common.total")}</TableHead>
                         <TableHead>Action</TableHead>
                       </TableRow>
                     </TableHeader>
@@ -1484,10 +1484,10 @@ export default function Sales() {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Receipt className="h-5 w-5" />
-              Invoice Details: {selectedInvoice?.invoiceNumber}
+              {t("sales.invoice_details")}: {selectedInvoice?.invoiceNumber}
             </DialogTitle>
             <DialogDescription>
-              Complete invoice information and items breakdown
+              {t("sales.complete_invoice_info")}
             </DialogDescription>
           </DialogHeader>
           {selectedInvoice && (
@@ -1495,23 +1495,23 @@ export default function Sales() {
               {/* Invoice Header */}
               <div className="grid grid-cols-2 gap-6 p-4 bg-muted rounded-lg">
                 <div>
-                  <h3 className="font-semibold mb-2">Invoice Information</h3>
+                  <h3 className="font-semibold mb-2">{t("sales.invoice_information")}</h3>
                   <div className="space-y-1 text-sm">
-                    <div>Invoice #: {selectedInvoice.invoiceNumber}</div>
-                    <div>Date: {selectedInvoice.date}</div>
-                    <div>Status: {getStatusBadge(selectedInvoice.status)}</div>
+                    <div>{t("sales.invoice_number")}: {selectedInvoice.invoiceNumber}</div>
+                    <div>{t("common.date")}: {selectedInvoice.date}</div>
+                    <div>{t("common.status")}: {getStatusBadge(selectedInvoice.status)}</div>
                   </div>
                 </div>
                 <div>
-                  <h3 className="font-semibold mb-2">Client Information</h3>
+                  <h3 className="font-semibold mb-2">{t("sales.client_information")}</h3>
                   <div className="space-y-1 text-sm">
                     <div>{selectedInvoice.clientName}</div>
                     <div>{selectedInvoice.clientEmail}</div>
                     <div className="capitalize">
-                      {selectedInvoice.clientType} Customer
+                      {t(`clients.${selectedInvoice.clientType}`)}
                     </div>
                     <div className="capitalize">
-                      Payment: {selectedInvoice.paymentMethod.replace("_", " ")}
+                      {t("sales.payment")}: {t(`sales.${selectedInvoice.paymentMethod}`)}
                     </div>
                   </div>
                 </div>
@@ -1520,7 +1520,7 @@ export default function Sales() {
               {/* Employee Information */}
               {selectedInvoice.employeeName && (
                 <div className="p-4 bg-blue-50 rounded-lg">
-                  <h3 className="font-semibold mb-2">Sales Employee</h3>
+                  <h3 className="font-semibold mb-2">{t("employees.sales_team")}</h3>
                   <div className="text-sm">{selectedInvoice.employeeName}</div>
                 </div>
               )}
@@ -1531,11 +1531,11 @@ export default function Sales() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Product</TableHead>
-                      <TableHead>Qty</TableHead>
-                      <TableHead>Unit Price</TableHead>
-                      <TableHead>Discount</TableHead>
-                      <TableHead>Total</TableHead>
+                      <TableHead>{t("sales.product_name")}</TableHead>
+                      <TableHead>{t("sales.qty")}</TableHead>
+                      <TableHead>{t("sales.unit_price")}</TableHead>
+                      <TableHead>{t("sales.discount")}</TableHead>
+                      <TableHead>{t("common.total")}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -1578,7 +1578,7 @@ export default function Sales() {
               {/* Notes */}
               {selectedInvoice.notes && (
                 <div>
-                  <h3 className="font-semibold mb-2">Notes</h3>
+                  <h3 className="font-semibold mb-2">{t("common.notes")}</h3>
                   <p className="text-sm text-muted-foreground">
                     {selectedInvoice.notes}
                   </p>
@@ -1589,25 +1589,23 @@ export default function Sales() {
               {selectedInvoice.status === "cancelled" &&
                 selectedInvoice.cancellationReason && (
                   <div className="border rounded-lg p-4 bg-red-50">
-                    <h3 className="font-semibold mb-2 text-red-800">
-                      Cancellation Details
-                    </h3>
+                    <h3 className="font-semibold mb-2 text-red-800">{t("sales.cancellation_details")}</h3>
                     <div className="space-y-2 text-sm">
                       <div>
-                        <span className="font-medium">Reason:</span>
+                        <span className="font-medium">{t("sales.reason")}:</span>
                         <p className="text-red-700 mt-1">
                           {selectedInvoice.cancellationReason}
                         </p>
                       </div>
                       {selectedInvoice.cancelledBy && (
                         <div>
-                          <span className="font-medium">Cancelled by:</span>{" "}
+                          <span className="font-medium">{t("sales.cancelled_by")}:</span>{" "}
                           {selectedInvoice.cancelledBy}
                         </div>
                       )}
                       {selectedInvoice.cancelledDate && (
                         <div>
-                          <span className="font-medium">Cancelled on:</span>{" "}
+                          <span className="font-medium">{t("sales.cancelled_on")}:</span>{" "}
                           {selectedInvoice.cancelledDate}
                         </div>
                       )}
@@ -1681,13 +1679,13 @@ Generated on: ${new Date().toLocaleString()}
                     downloadPDF();
 
                     toast({
-                      title: "Invoice Downloaded",
-                      description: `Invoice ${selectedInvoice.invoiceNumber} has been downloaded as a PDF.`,
+                      title: t("sales.toast.invoice_downloaded_title"),
+                      description: t("sales.toast.invoice_downloaded_desc_number", { number: selectedInvoice.invoiceNumber }),
                     });
                   }}
                 >
                   <Download className="mr-2 h-4 w-4" />
-                  Download PDF
+                  {t("sales.download_pdf")}
                 </Button>
                 {selectedInvoice.status !== "cancelled" &&
                   selectedInvoice.status !== "paid" && (
