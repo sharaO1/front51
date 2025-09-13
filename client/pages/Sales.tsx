@@ -745,7 +745,7 @@ export default function Sales() {
           </DialogTrigger>
           <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle>Create New Invoice</DialogTitle>
+              <DialogTitle>{t("sales.create_new_invoice")}</DialogTitle>
               <DialogDescription>
                 Generate a new sales invoice with items, taxes, and client
                 information.
