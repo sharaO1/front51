@@ -109,14 +109,14 @@ export default function UserManagement() {
     const success = await updateUserRole(userId, newRole);
     if (success) {
       toast({
-        title: "Role Updated",
-        description: `User role has been updated to ${newRole.replace("_", " ")}`,
+        title: t("admin.users.toast.role_updated_title"),
+        description: t("admin.users.toast.role_updated_desc", { role: t(`roles.labels.${newRole}`) || newRole.replace("_", " ") }),
       });
       setIsRoleDialogOpen(false);
     } else {
       toast({
-        title: "Error",
-        description: "Failed to update user role",
+        title: t("admin.users.toast.error"),
+        description: t("admin.users.toast.load_failed"),
         variant: "destructive",
       });
     }
@@ -129,13 +129,13 @@ export default function UserManagement() {
     const success = await updateUserStatus(userId, status);
     if (success) {
       toast({
-        title: "Status Updated",
-        description: `User status has been updated to ${status}`,
+        title: t("admin.users.toast.status_updated_title"),
+        description: t("admin.users.toast.status_updated_desc", { status: t(`status.${status}`) || status }),
       });
     } else {
       toast({
-        title: "Error",
-        description: "Failed to update user status",
+        title: t("admin.users.toast.error"),
+        description: t("admin.users.toast.load_failed"),
         variant: "destructive",
       });
     }
@@ -162,7 +162,7 @@ export default function UserManagement() {
     return (
       <Badge variant="outline" className={variants[status]}>
         {getStatusIcon(status)}
-        <span className="ml-1 capitalize">{status}</span>
+        <span className="ml-1">{t(`status.${status}`)}</span>
       </Badge>
     );
   };
@@ -287,7 +287,7 @@ export default function UserManagement() {
                 <div className="relative flex-1 max-w-sm">
                   <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                   <Input
-                    placeholder="Search users..."
+                    placeholder={t("admin.users.search_placeholder")}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="pl-8"
@@ -300,11 +300,11 @@ export default function UserManagement() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>User</TableHead>
-                      <TableHead>Role</TableHead>
-                      <TableHead>Department</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead className="text-right">Actions</TableHead>
+                      <TableHead>{t("admin.users.table.user")}</TableHead>
+                      <TableHead>{t("admin.users.table.role")}</TableHead>
+                      <TableHead>{t("admin.users.table.department")}</TableHead>
+                      <TableHead>{t("admin.users.table.status")}</TableHead>
+                      <TableHead className="text-right">{t("admin.users.table.actions")}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -349,7 +349,7 @@ export default function UserManagement() {
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
-                              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                              <DropdownMenuLabel>{t("admin.users.menu.actions")}</DropdownMenuLabel>
                               <DropdownMenuItem
                                 onClick={() => {
                                   setSelectedUser(user);
@@ -357,7 +357,7 @@ export default function UserManagement() {
                                 }}
                               >
                                 <Eye className="mr-2 h-4 w-4" />
-                                View Permissions
+                                {t("admin.users.menu.view_permissions")}
                               </DropdownMenuItem>
 
                               {canManageUser(user.id, user.role) && (
@@ -369,7 +369,7 @@ export default function UserManagement() {
                                     }}
                                   >
                                     <Edit className="mr-2 h-4 w-4" />
-                                    Change Role
+                                    {t("admin.users.menu.change_role")}
                                   </DropdownMenuItem>
                                   <DropdownMenuSeparator />
 
@@ -384,7 +384,7 @@ export default function UserManagement() {
                                         }
                                       >
                                         <UserX className="mr-2 h-4 w-4" />
-                                        Deactivate
+                                        {t("admin.users.menu.deactivate")}
                                       </DropdownMenuItem>
                                       <DropdownMenuItem
                                         onClick={() =>
@@ -396,7 +396,7 @@ export default function UserManagement() {
                                         className="text-red-600"
                                       >
                                         <Ban className="mr-2 h-4 w-4" />
-                                        Suspend
+                                        {t("admin.users.menu.suspend")}
                                       </DropdownMenuItem>
                                     </>
                                   )}
@@ -409,7 +409,7 @@ export default function UserManagement() {
                                       className="text-green-600"
                                     >
                                       <UserCheck className="mr-2 h-4 w-4" />
-                                      Activate
+                                      {t("admin.users.menu.activate")}
                                     </DropdownMenuItem>
                                   )}
                                 </>
@@ -429,10 +429,9 @@ export default function UserManagement() {
           <Dialog open={isRoleDialogOpen} onOpenChange={setIsRoleDialogOpen}>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Change User Role</DialogTitle>
+                <DialogTitle>{t("admin.users.dialogs.change_role.title")}</DialogTitle>
                 <DialogDescription>
-                  Update the role for {selectedUser?.name}. This will
-                  immediately change their permissions.
+                  {t("admin.users.dialogs.change_role.desc_prefix")} {selectedUser?.name}. {t("admin.users.dialogs.change_role.desc_suffix")}
                 </DialogDescription>
               </DialogHeader>
 
@@ -461,7 +460,7 @@ export default function UserManagement() {
                   </div>
 
                   <div>
-                    <label className="text-sm font-medium">New Role</label>
+                    <label className="text-sm font-medium">{t("admin.users.dialogs.change_role.new_role")}</label>
                     <div className="mt-2">
                       <RoleSelector
                         currentRole={selectedUser.role}
@@ -477,9 +476,7 @@ export default function UserManagement() {
                   <div className="flex items-start gap-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
                     <AlertCircle className="h-4 w-4 text-amber-600 mt-0.5" />
                     <div className="text-sm text-amber-800">
-                      <strong>Warning:</strong> Changing a user's role will
-                      immediately update their permissions and may affect their
-                      access to parts of the system.
+                      <strong>{t("admin.users.dialogs.warning.title")}</strong> {t("admin.users.dialogs.warning.message")}
                     </div>
                   </div>
                 </div>
@@ -494,9 +491,9 @@ export default function UserManagement() {
           >
             <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
               <DialogHeader>
-                <DialogTitle>User Permissions</DialogTitle>
+                <DialogTitle>{t("admin.users.dialogs.permissions.title")}</DialogTitle>
                 <DialogDescription>
-                  Detailed permissions for {selectedUser?.name}
+                  {t("admin.users.dialogs.permissions.desc_prefix")} {selectedUser?.name}
                 </DialogDescription>
               </DialogHeader>
 
