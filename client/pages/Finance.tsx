@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import {
   Card,
@@ -229,19 +229,19 @@ const mockGoals: FinancialGoal[] = [
   },
 ];
 
-const cashFlowData = [
-  { month: "Jan", income: 1, expenses: 2, profit: 3 },
-  { month: "Feb", income: 4, expenses: 5, profit: 6 },
-  { month: "Mar", income: 8, expenses: 8, profit: 90 },
-  { month: "Apr", income: 12, expenses: 11, profit: 12 },
-  { month: "May", income: 160, expenses: 14, profit: 15 },
-  { month: "Jun", income: 20, expenses: 17, profit: 18 },
-  { month: "Jul", income: 24, expenses: 200, profit: 21 },
-  { month: "Aug", income: 280, expenses: 23, profit: 24 },
-  { month: "Sep", income: 32, expenses: 26, profit: 27 },
-  { month: "Okt", income: 36, expenses: 290, profit: 30 },
-  { month: "Nov", income: 40, expenses: 32, profit: 33 },
-  { month: "Dec", income: 44, expenses: 35, profit: 360 },
+const CASH_FLOW_BASE = [
+  { monthIndex: 0, income: 1, expenses: 2, profit: 3 },
+  { monthIndex: 1, income: 4, expenses: 5, profit: 6 },
+  { monthIndex: 2, income: 8, expenses: 8, profit: 90 },
+  { monthIndex: 3, income: 12, expenses: 11, profit: 12 },
+  { monthIndex: 4, income: 160, expenses: 14, profit: 15 },
+  { monthIndex: 5, income: 20, expenses: 17, profit: 18 },
+  { monthIndex: 6, income: 24, expenses: 200, profit: 21 },
+  { monthIndex: 7, income: 280, expenses: 23, profit: 24 },
+  { monthIndex: 8, income: 32, expenses: 26, profit: 27 },
+  { monthIndex: 9, income: 36, expenses: 290, profit: 30 },
+  { monthIndex: 10, income: 40, expenses: 32, profit: 33 },
+  { monthIndex: 11, income: 44, expenses: 35, profit: 360 },
 ];
 
 const mockLoans: LoanRecord[] = [
@@ -353,7 +353,16 @@ export default function Finance() {
     {},
   );
   const [clientsMap, setClientsMap] = useState<Record<string, string>>({});
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+
+  const cashFlowData = useMemo(() =>
+    CASH_FLOW_BASE.map((item) => ({
+      ...item,
+      month: new Intl.DateTimeFormat(i18n.language || "en", {
+        month: "short",
+      }).format(new Date(2020, item.monthIndex, 1)),
+    })),
+  [i18n.language]);
 
   useEffect(() => {
     let mounted = true;
@@ -1595,7 +1604,7 @@ ${data.transactions
                               : "bg-red-100 text-red-800"
                           }
                         >
-                          {transaction.type === "income" ? "Income" : "Expense"}
+                          {transaction.type === "income" ? t("finance.income") : t("finance.expense")}
                         </Badge>
                       </TableCell>
                       <TableCell>
@@ -1811,13 +1820,13 @@ ${data.transactions
                     </div>
                     <div className="flex gap-2">
                       <Button className="flex-1" onClick={addLoan}>
-                        Save
+                        {t("common.save")}
                       </Button>
                       <Button
                         variant="outline"
                         onClick={() => setIsAddLoanOpen(false)}
                       >
-                        Cancel
+                        {t("common.cancel")}
                       </Button>
                     </div>
                   </div>
@@ -1834,8 +1843,8 @@ ${data.transactions
                     <TableHead>{t("warehouse.quantity")}</TableHead>
                     <TableHead>{t("finance.party")}</TableHead>
                     <TableHead>{t("sales.due_date")}</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Actions</TableHead>
+                    <TableHead>{t("common.status")}</TableHead>
+                    <TableHead>{t("common.actions")}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -2446,7 +2455,7 @@ ${data.transactions
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="edit-goalTitle">Goal Title</Label>
+              <Label htmlFor="edit-goalTitle">{t("finance.goal_title")}</Label>
               <Input
                 id="edit-goalTitle"
                 value={newGoal.title}
@@ -2457,7 +2466,7 @@ ${data.transactions
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="edit-targetAmount">Target Amount ($)</Label>
+                <Label htmlFor="edit-targetAmount">{t("finance.target_amount")}</Label>
                 <Input
                   id="edit-targetAmount"
                   type="number"
@@ -2471,7 +2480,7 @@ ${data.transactions
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="edit-currentAmount">Current Amount ($)</Label>
+                <Label htmlFor="edit-currentAmount">{t("finance.current_amount")}</Label>
                 <Input
                   id="edit-currentAmount"
                   type="number"
@@ -2487,7 +2496,7 @@ ${data.transactions
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="edit-deadline">Deadline</Label>
+                <Label htmlFor="edit-deadline">{t("dashboard.deadline")}</Label>
                 <Input
                   id="edit-deadline"
                   type="date"
@@ -2498,7 +2507,7 @@ ${data.transactions
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="edit-goalCategory">Category</Label>
+                <Label htmlFor="edit-goalCategory">{t("warehouse.category")}</Label>
                 <Input
                   id="edit-goalCategory"
                   value={newGoal.category}
