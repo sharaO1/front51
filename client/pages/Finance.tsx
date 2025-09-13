@@ -1181,7 +1181,7 @@ ${data.transactions
                 >
                   <FileSpreadsheet className="mr-2 h-4 w-4" />
                   <div className="flex-1">
-                    <div className="font-medium">CSV Transaction Data</div>
+                    <div className="font-medium">{t("finance.export_csv_title")}</div>
                     <div className="text-xs text-muted-foreground">
                       Raw transaction data for analysis
                     </div>
