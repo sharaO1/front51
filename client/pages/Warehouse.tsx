@@ -2315,7 +2315,9 @@ export default function Warehouse() {
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="name">{t("warehouse.product_name")} *</Label>
+                    <Label htmlFor="name">
+                      {t("warehouse.product_name")} *
+                    </Label>
                     <Input
                       id="name"
                       placeholder={t("warehouse.enter_product_name")}
@@ -2339,7 +2341,9 @@ export default function Warehouse() {
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="category">{t("warehouse.category")} *</Label>
+                    <Label htmlFor="category">
+                      {t("warehouse.category")} *
+                    </Label>
                     <Select
                       value={newProduct.category}
                       onValueChange={(value) =>
@@ -2347,7 +2351,9 @@ export default function Warehouse() {
                       }
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder={t("warehouse.select_category")} />
+                        <SelectValue
+                          placeholder={t("warehouse.select_category")}
+                        />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="Smartphones">Smartphones</SelectItem>
@@ -2419,7 +2425,9 @@ export default function Warehouse() {
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="costPrice">{t("warehouse.cost_price")}</Label>
+                    <Label htmlFor="costPrice">
+                      {t("warehouse.cost_price")}
+                    </Label>
                     <Input
                       id="costPrice"
                       type="number"
@@ -2435,7 +2443,9 @@ export default function Warehouse() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="sellingPrice">{t("warehouse.selling_price")}</Label>
+                    <Label htmlFor="sellingPrice">
+                      {t("warehouse.selling_price")}
+                    </Label>
                     <Input
                       id="sellingPrice"
                       type="number"
@@ -2537,7 +2547,9 @@ export default function Warehouse() {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="expiryDate">{t("warehouse.expiry_date")}</Label>
+                  <Label htmlFor="expiryDate">
+                    {t("warehouse.expiry_date")}
+                  </Label>
                   <Input
                     id="expiryDate"
                     type="date"
@@ -2578,9 +2590,7 @@ export default function Warehouse() {
           onEscapeKeyDown={(e) => e.preventDefault()}
         >
           <DialogHeader>
-            <DialogTitle>
-              {t("warehouse.select_product")}
-            </DialogTitle>
+            <DialogTitle>{t("warehouse.select_product")}</DialogTitle>
             <DialogDescription>
               {t("warehouse.choose_product")}
             </DialogDescription>
@@ -2606,7 +2616,8 @@ export default function Warehouse() {
                   <div className="flex-1">
                     <div className="font-medium">{product.name}</div>
                     <div className="text-sm text-muted-foreground">
-                      {product.sku} • {t("warehouse.current_stock")}: {product.quantity}
+                      {product.sku} • {t("warehouse.current_stock")}:{" "}
+                      {product.quantity}
                     </div>
                   </div>
                 </Button>
@@ -3409,7 +3420,9 @@ export default function Warehouse() {
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="editName">{t("warehouse.product_name")} *</Label>
+                <Label htmlFor="editName">
+                  {t("warehouse.product_name")} *
+                </Label>
                 <Input
                   id="editName"
                   placeholder={t("warehouse.enter_product_name")}
@@ -3433,7 +3446,9 @@ export default function Warehouse() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="editCategory">{t("warehouse.category")} *</Label>
+                <Label htmlFor="editCategory">
+                  {t("warehouse.category")} *
+                </Label>
                 <Select
                   value={newProduct.category}
                   onValueChange={(value) =>
@@ -3510,7 +3525,9 @@ export default function Warehouse() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="editCostPrice">{t("warehouse.cost_price")}</Label>
+                <Label htmlFor="editCostPrice">
+                  {t("warehouse.cost_price")}
+                </Label>
                 <Input
                   id="editCostPrice"
                   type="number"
@@ -3526,7 +3543,9 @@ export default function Warehouse() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="editSellingPrice">{t("warehouse.selling_price")}</Label>
+                <Label htmlFor="editSellingPrice">
+                  {t("warehouse.selling_price")}
+                </Label>
                 <Input
                   id="editSellingPrice"
                   type="number"
