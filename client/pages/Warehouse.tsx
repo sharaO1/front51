@@ -2759,13 +2759,13 @@ export default function Warehouse() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Product</TableHead>
-                    <TableHead>SKU</TableHead>
-                    <TableHead>Category</TableHead>
-                    <TableHead>Stock</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Value</TableHead>
-                    <TableHead>Actions</TableHead>
+                    <TableHead>{t("warehouse.product_name")}</TableHead>
+                    <TableHead>{t("warehouse.sku")}</TableHead>
+                    <TableHead>{t("warehouse.category")}</TableHead>
+                    <TableHead>{t("warehouse.quantity")}</TableHead>
+                    <TableHead>{t("common.status")}</TableHead>
+                    <TableHead>{t("warehouse.value")}</TableHead>
+                    <TableHead>{t("common.actions")}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -2940,7 +2940,7 @@ export default function Warehouse() {
                 <TableHeader>
                   <TableRow>
                     <TableHead>Date & Time</TableHead>
-                    <TableHead>Product</TableHead>
+                    <TableHead>{t("warehouse.product_name")}</TableHead>
                     <TableHead>Type</TableHead>
                     <TableHead>Store/Location</TableHead>
                     <TableHead>Quantity</TableHead>
