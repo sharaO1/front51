@@ -46,7 +46,6 @@ import {
   Filter,
   Phone,
   Mail,
-  MapPin,
   CreditCard,
   AlertTriangle,
   Eye,
@@ -70,6 +69,10 @@ interface Client {
 
 import { API_BASE } from "@/lib/api";
 
+type SortKey = "name" | "type" | "currentDebt" | "status" | "totalPurchases";
+
+type SortOrder = "asc" | "desc";
+
 export default function Clients() {
   const { t } = useTranslation();
   const [clients, setClients] = useState<Client[]>([]);
@@ -91,6 +94,9 @@ export default function Clients() {
   });
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);
+
+  const [sortKey, setSortKey] = useState<SortKey>("name");
+  const [sortOrder, setSortOrder] = useState<SortOrder>("asc");
 
   useEffect(() => {
     const fetchClients = async () => {
@@ -133,30 +139,63 @@ export default function Clients() {
       client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       client.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
       client.phone.includes(searchTerm);
-    const matchesType = typeFilter === "all" || client.type === typeFilter;
+    const matchesType = typeFilter === "all" || client.type === (typeFilter as Client["type"]);
     const matchesStatus =
-      statusFilter === "all" || client.status === statusFilter;
+      statusFilter === "all" || client.status === (statusFilter as Client["status"]);
     return matchesSearch && matchesType && matchesStatus;
   });
+
+  const statusOrder: Record<Client["status"], number> = {
+    active: 0,
+    inactive: 1,
+    overdue: 2,
+  };
+
+  const sortedClients = [...filteredClients].sort((a, b) => {
+    const dir = sortOrder === "asc" ? 1 : -1;
+    switch (sortKey) {
+      case "name":
+        return a.name.localeCompare(b.name) * dir;
+      case "type":
+        return a.type.localeCompare(b.type) * dir;
+      case "currentDebt":
+        return (a.currentDebt - b.currentDebt) * dir;
+      case "status":
+        return (statusOrder[a.status] - statusOrder[b.status]) * dir;
+      case "totalPurchases":
+        return (a.totalPurchases - b.totalPurchases) * dir;
+      default:
+        return 0;
+    }
+  });
+
+  const handleSort = (key: SortKey) => {
+    if (sortKey === key) {
+      setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
+    } else {
+      setSortKey(key);
+      setSortOrder("asc");
+    }
+  };
 
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "active":
         return (
           <Badge variant="default" className="bg-green-100 text-green-800">
-            Active
+            {t("status.active")}
           </Badge>
         );
       case "inactive":
         return (
           <Badge variant="secondary" className="bg-gray-100 text-gray-800">
-            Inactive
+            {t("status.inactive")}
           </Badge>
         );
       case "overdue":
-        return <Badge variant="destructive">Overdue</Badge>;
+        return <Badge variant="destructive">{t("status.overdue")}</Badge>;
       default:
-        return <Badge variant="outline">Unknown</Badge>;
+        return <Badge variant="outline">{t("warehouse.unknown")}</Badge>;
     }
   };
 
@@ -168,7 +207,7 @@ export default function Clients() {
             variant="outline"
             className="bg-blue-50 text-blue-700 border-blue-200"
           >
-            Retail
+            {t("clients.retail")}
           </Badge>
         );
       case "wholesale":
@@ -177,7 +216,7 @@ export default function Clients() {
             variant="outline"
             className="bg-purple-50 text-purple-700 border-purple-200"
           >
-            Wholesale
+            {t("clients.wholesale")}
           </Badge>
         );
       case "distributor":
@@ -186,19 +225,19 @@ export default function Clients() {
             variant="outline"
             className="bg-orange-50 text-orange-700 border-orange-200"
           >
-            Distributor
+            {t("clients.distributor")}
           </Badge>
         );
       default:
-        return <Badge variant="outline">Unknown</Badge>;
+        return <Badge variant="outline">{t("warehouse.unknown")}</Badge>;
     }
   };
 
   const handleAddClient = async () => {
     if (!newClient.name || !newClient.email || !newClient.phone) {
       toast({
-        title: "Error",
-        description: "Please fill in all required fields",
+        title: t("common.error"),
+        description: t("clients.required_fields_error"),
         variant: "destructive",
       });
       return;
@@ -233,10 +272,7 @@ export default function Clients() {
         email: result.email,
         phone: result.phone,
         address: result.address || "",
-        type: result.type.toLowerCase() as
-          | "retail"
-          | "wholesale"
-          | "distributor",
+        type: result.type.toLowerCase() as "retail" | "wholesale" | "distributor",
         creditLimit: result.creditLimit,
         currentDebt: result.currentDebt,
         status: result.status.toLowerCase() as "active" | "inactive",
@@ -258,13 +294,13 @@ export default function Clients() {
       setIsAddDialogOpen(false);
 
       toast({
-        title: "Client added",
-        description: `${client.name} has been added successfully.`,
+        title: t("clients.toast.added_title"),
+        description: t("clients.toast.added_desc", { name: client.name }),
       });
     } catch (error: any) {
       toast({
-        title: "Error",
-        description: error.message || "Something went wrong",
+        title: t("common.error"),
+        description: error?.message || t("common.error"),
         variant: "destructive",
       });
     }
@@ -302,10 +338,7 @@ export default function Clients() {
         email: result.email,
         phone: result.phone,
         address: result.address || "",
-        type: result.type.toLowerCase() as
-          | "retail"
-          | "wholesale"
-          | "distributor",
+        type: result.type.toLowerCase() as "retail" | "wholesale" | "distributor",
         creditLimit: result.creditLimit,
         currentDebt: result.currentDebt,
         status: result.status.toLowerCase() as "active" | "inactive",
@@ -322,13 +355,13 @@ export default function Clients() {
       setSelectedClient(null);
 
       toast({
-        title: "Client updated",
-        description: `${updatedClient.name} has been updated successfully.`,
+        title: t("clients.toast.updated_title"),
+        description: t("clients.toast.updated_desc", { name: updatedClient.name }),
       });
     } catch (error: any) {
       toast({
-        title: "Error",
-        description: error.message || "Something went wrong",
+        title: t("common.error"),
+        description: error?.message || t("common.error"),
         variant: "destructive",
       });
     }
@@ -348,13 +381,13 @@ export default function Clients() {
       setClients((prev) => prev.filter((c) => c.id !== clientId));
 
       toast({
-        title: "Client deleted",
-        description: "Client has been removed from the system.",
+        title: t("clients.toast.deleted_title"),
+        description: t("clients.toast.deleted_desc"),
       });
     } catch (error: any) {
       toast({
-        title: "Error",
-        description: error.message || "Something went wrong",
+        title: t("common.error"),
+        description: error?.message || t("common.error"),
         variant: "destructive",
       });
     }
@@ -362,10 +395,15 @@ export default function Clients() {
 
   const sendReminder = (client: Client) => {
     toast({
-      title: "Reminder sent",
-      description: `Payment reminder sent to ${client.name} via email and SMS.`,
+      title: t("clients.toast.reminder_title"),
+      description: `${t("clients.toast.reminder_desc_prefix")} ${client.name} ${t(
+        "clients.toast.reminder_desc_suffix",
+      )}`,
     });
   };
+
+  const headerSortIndicator = (key: SortKey) =>
+    sortKey === key ? (sortOrder === "asc" ? " ▲" : " ▼") : "";
 
   return (
     <div className="space-y-6">
@@ -415,7 +453,7 @@ export default function Clients() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="phone">{t("clients.phone_number")} *</Label>
+                <Label htmlFor="phone">{t("common.phone")} *</Label>
                 <Input
                   id="phone"
                   placeholder={t("clients.phone_number")}
@@ -520,8 +558,7 @@ export default function Clients() {
           <CardContent>
             <div className="text-2xl font-bold">{clients.length}</div>
             <p className="text-xs text-muted-foreground">
-              {clients.filter((c) => c.status === "active").length}{" "}
-              {t("status.active")}
+              {clients.filter((c) => c.status === "active").length} {t("status.active")}
             </p>
           </CardContent>
         </Card>
@@ -535,10 +572,7 @@ export default function Clients() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              $
-              {clients
-                .reduce((sum, c) => sum + c.currentDebt, 0)
-                .toLocaleString()}
+              ${clients.reduce((sum, c) => sum + c.currentDebt, 0).toLocaleString()}
             </div>
             <p className="text-xs text-muted-foreground">
               {t("clients.across_all_clients")}
@@ -572,10 +606,7 @@ export default function Clients() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              $
-              {clients
-                .reduce((sum, c) => sum + c.totalPurchases, 0)
-                .toLocaleString()}
+              ${clients.reduce((sum, c) => sum + c.totalPurchases, 0).toLocaleString()}
             </div>
             <p className="text-xs text-muted-foreground">
               {t("clients.all_time_revenue")}
@@ -606,12 +637,8 @@ export default function Clients() {
               <SelectContent>
                 <SelectItem value="all">{t("clients.all_types")}</SelectItem>
                 <SelectItem value="retail">{t("clients.retail")}</SelectItem>
-                <SelectItem value="wholesale">
-                  {t("clients.wholesale")}
-                </SelectItem>
-                <SelectItem value="distributor">
-                  {t("clients.distributor")}
-                </SelectItem>
+                <SelectItem value="wholesale">{t("clients.wholesale")}</SelectItem>
+                <SelectItem value="distributor">{t("clients.distributor")}</SelectItem>
               </SelectContent>
             </Select>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
@@ -620,9 +647,9 @@ export default function Clients() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">{t("clients.all_status")}</SelectItem>
-                <SelectItem value="active">Active</SelectItem>
-                <SelectItem value="inactive">Inactive</SelectItem>
-                <SelectItem value="overdue">Overdue</SelectItem>
+                <SelectItem value="active">{t("status.active")}</SelectItem>
+                <SelectItem value="inactive">{t("status.inactive")}</SelectItem>
+                <SelectItem value="overdue">{t("status.overdue")}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -631,23 +658,54 @@ export default function Clients() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>{t("clients.client")}</TableHead>
-                <TableHead>{t("clients.type")}</TableHead>
+                <TableHead aria-sort={sortKey === "name" ? sortOrder : undefined}>
+                  <button
+                    type="button"
+                    className="inline-flex items-center gap-1"
+                    onClick={() => handleSort("name")}
+                  >
+                    {t("clients.client")}<span>{headerSortIndicator("name")}</span>
+                  </button>
+                </TableHead>
+                <TableHead aria-sort={sortKey === "type" ? sortOrder : undefined}>
+                  <button
+                    type="button"
+                    className="inline-flex items-center gap-1"
+                    onClick={() => handleSort("type")}
+                  >
+                    {t("clients.type")}<span>{headerSortIndicator("type")}</span>
+                  </button>
+                </TableHead>
                 <TableHead>{t("clients.contact")}</TableHead>
-                <TableHead>{t("clients.debt")}</TableHead>
-                <TableHead>{t("common.status")}</TableHead>
+                <TableHead aria-sort={sortKey === "currentDebt" ? sortOrder : undefined}>
+                  <button
+                    type="button"
+                    className="inline-flex items-center gap-1"
+                    onClick={() => handleSort("currentDebt")}
+                  >
+                    {t("clients.debt")}<span>{headerSortIndicator("currentDebt")}</span>
+                  </button>
+                </TableHead>
+                <TableHead aria-sort={sortKey === "status" ? sortOrder : undefined}>
+                  <button
+                    type="button"
+                    className="inline-flex items-center gap-1"
+                    onClick={() => handleSort("status")}
+                  >
+                    {t("common.status")}<span>{headerSortIndicator("status")}</span>
+                  </button>
+                </TableHead>
                 <TableHead>{t("common.actions")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredClients.map((client) => (
+              {sortedClients.map((client) => (
                 <TableRow key={client.id}>
                   <TableCell>
                     <div>
                       <div className="font-medium">{client.name}</div>
                       <div className="text-sm text-muted-foreground">
-                        {t("common.total")}: $
-                        {client.totalPurchases.toLocaleString()}
+                        {t("common.total")}: ${client.totalPurchases.toLocaleString()}
                       </div>
                     </div>
                   </TableCell>
@@ -670,8 +728,7 @@ export default function Clients() {
                         ${client.currentDebt.toLocaleString()}
                       </div>
                       <div className="text-sm text-muted-foreground">
-                        {t("clients.credit_limit")}: $
-                        {client.creditLimit.toLocaleString()}
+                        {t("clients.credit_limit")}: ${client.creditLimit.toLocaleString()}
                       </div>
                     </div>
                   </TableCell>
@@ -729,49 +786,49 @@ export default function Clients() {
       <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Client Details</DialogTitle>
+            <DialogTitle>{t("clients.client_details")}</DialogTitle>
             <DialogDescription>
-              Complete information for {selectedClient?.name}
+              {t("clients.complete_information")} {selectedClient?.name}
             </DialogDescription>
           </DialogHeader>
           {selectedClient && (
             <DetailCard
               title={selectedClient.name}
-              subtitle={`Complete information for ${selectedClient.name}`}
+              subtitle={`${t("clients.complete_information")} ${selectedClient.name}`}
               left={[
-                { label: "Type", value: getTypeBadge(selectedClient.type) },
-                { label: "Email", value: selectedClient.email || "-" },
-                { label: "Address", value: selectedClient.address || "-" },
+                { label: t("clients.type"), value: getTypeBadge(selectedClient.type) },
+                { label: t("common.email"), value: selectedClient.email || "-" },
+                { label: t("common.address"), value: selectedClient.address || "-" },
                 {
-                  label: "Last Purchase",
-                  value: selectedClient.lastPurchase || "Never",
+                  label: t("clients.last_purchase"),
+                  value: selectedClient.lastPurchase || t("clients.never"),
                 },
               ]}
               right={[
-                { label: "Phone", value: selectedClient.phone || "-" },
+                { label: t("common.phone"), value: selectedClient.phone || "-" },
                 {
-                  label: "Credit Limit",
+                  label: t("clients.credit_limit"),
                   value: `$${selectedClient.creditLimit.toLocaleString()}`,
                 },
                 {
-                  label: "Current Debt",
+                  label: t("clients.current_debt"),
                   value: `$${selectedClient.currentDebt.toLocaleString()}`,
                 },
                 {
-                  label: "Total Purchases",
+                  label: t("clients.total_purchases"),
                   value: `$${selectedClient.totalPurchases.toLocaleString()}`,
                 },
               ]}
               actions={
                 <Button onClick={() => setIsViewDialogOpen(false)}>
-                  Close
+                  {t("common.close")}
                 </Button>
               }
             >
               <div>
-                <div className="text-xs text-muted-foreground mb-1">Notes</div>
+                <div className="text-xs text-muted-foreground mb-1">{t("common.notes")}</div>
                 <div className="text-sm">
-                  {selectedClient.notes || "No notes"}
+                  {selectedClient.notes || t("clients.no_notes")}
                 </div>
               </div>
             </DetailCard>
@@ -783,15 +840,15 @@ export default function Clients() {
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
         <DialogContent className="max-w-sm">
           <DialogHeader>
-            <DialogTitle>Edit Client</DialogTitle>
+            <DialogTitle>{t("clients.edit_client")}</DialogTitle>
             <DialogDescription>
-              Update client information and settings.
+              {t("clients.update_client_info")}
             </DialogDescription>
           </DialogHeader>
           {selectedClient && (
             <div className="space-y-3">
               <div className="space-y-2">
-                <Label htmlFor="editName">Name / Company</Label>
+                <Label htmlFor="editName">{t("clients.company_name")}</Label>
                 <Input
                   id="editName"
                   value={selectedClient.name}
@@ -804,7 +861,7 @@ export default function Clients() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="editPhone">Phone</Label>
+                <Label htmlFor="editPhone">{t("common.phone")}</Label>
                 <Input
                   id="editPhone"
                   value={selectedClient.phone}
@@ -818,7 +875,7 @@ export default function Clients() {
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-2">
-                  <Label htmlFor="editType">Type</Label>
+                  <Label htmlFor="editType">{t("clients.client_type")}</Label>
                   <Select
                     value={selectedClient.type}
                     onValueChange={(value) =>
@@ -845,7 +902,7 @@ export default function Clients() {
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="editStatus">Status</Label>
+                  <Label htmlFor="editStatus">{t("common.status")}</Label>
                   <Select
                     value={selectedClient.status}
                     onValueChange={(value) =>
@@ -859,16 +916,16 @@ export default function Clients() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="active">Active</SelectItem>
-                      <SelectItem value="inactive">Inactive</SelectItem>
-                      <SelectItem value="overdue">Overdue</SelectItem>
+                      <SelectItem value="active">{t("status.active")}</SelectItem>
+                      <SelectItem value="inactive">{t("status.inactive")}</SelectItem>
+                      <SelectItem value="overdue">{t("status.overdue")}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-2">
-                  <Label htmlFor="editCreditLimit">Credit Limit</Label>
+                  <Label htmlFor="editCreditLimit">{t("clients.credit_limit")}</Label>
                   <Input
                     id="editCreditLimit"
                     type="number"
@@ -882,7 +939,7 @@ export default function Clients() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="editDebt">Current Debt</Label>
+                  <Label htmlFor="editDebt">{t("clients.current_debt")}</Label>
                   <Input
                     id="editDebt"
                     type="number"
@@ -897,7 +954,7 @@ export default function Clients() {
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="editNotes">Notes</Label>
+                <Label htmlFor="editNotes">{t("common.notes")}</Label>
                 <Textarea
                   id="editNotes"
                   value={selectedClient.notes}
@@ -912,13 +969,13 @@ export default function Clients() {
               </div>
               <div className="flex gap-2">
                 <Button className="flex-1" onClick={handleEditClient}>
-                  Update Client
+                  {t("clients.update_client")}
                 </Button>
                 <Button
                   variant="outline"
                   onClick={() => setIsEditDialogOpen(false)}
                 >
-                  Cancel
+                  {t("common.cancel")}
                 </Button>
               </div>
             </div>
