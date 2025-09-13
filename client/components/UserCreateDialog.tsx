@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import RoleBadge, { RoleSelector } from "@/components/ui/role-badge";
+import { useTranslation } from "react-i18next";
 import { useToast } from "@/hooks/use-toast";
 import { joinApi } from "@/lib/api";
 import { useAuthStore } from "@/stores/authStore";
@@ -70,6 +71,7 @@ export default function UserCreateDialog({
 
   const { currentUser, isHigherRole } = useRBACStore();
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   const availableRoles: Role[] = currentUser
     ? ([
@@ -92,8 +94,8 @@ export default function UserCreateDialog({
     }
     setFormData((prev) => ({ ...prev, password }));
     toast({
-      title: "Password Generated",
-      description: "A secure password has been generated automatically",
+      title: t("admin.users.toast.password_generated_title"),
+      description: t("admin.users.toast.password_generated_desc"),
     });
   };
 
@@ -108,9 +110,8 @@ export default function UserCreateDialog({
       !formData.filialId
     ) {
       toast({
-        title: "Error",
-        description:
-          "Please fill in all required fields including first and last name and work location",
+        title: t("admin.users.toast.error"),
+        description: t("admin.users.create.validation.required_fields"),
         variant: "destructive",
       });
       return;
@@ -118,8 +119,8 @@ export default function UserCreateDialog({
 
     if (formData.password.length < 6) {
       toast({
-        title: "Error",
-        description: "Password must be at least 6 characters long",
+        title: t("admin.users.toast.error"),
+        description: t("admin.users.create.validation.password_min"),
         variant: "destructive",
       });
       return;
@@ -132,8 +133,8 @@ export default function UserCreateDialog({
       const { accessToken } = useAuthStore.getState();
       if (!accessToken) {
         toast({
-          title: "Not authenticated",
-          description: "Please log in to add users.",
+          title: t("admin.users.toast.not_authenticated_title"),
+          description: t("admin.users.toast.not_authenticated_desc"),
           variant: "destructive",
         });
         return;
@@ -174,8 +175,8 @@ export default function UserCreateDialog({
 
       const fullName = `${firstName} ${lastName}`.trim();
       toast({
-        title: "User Created Successfully",
-        description: `${fullName} has been added to the system with ${formData.role} role`,
+        title: t("admin.users.toast.created_success_title"),
+        description: t("admin.users.toast.created_success_desc", { name: fullName, role: t(`roles.labels.${formData.role}`) }),
       });
 
       setFormData({
@@ -193,9 +194,8 @@ export default function UserCreateDialog({
       onUserCreated?.();
     } catch (error: any) {
       toast({
-        title: "Error",
-        description:
-          error?.message || "Failed to create user. Please try again.",
+        title: t("admin.users.toast.error"),
+        description: error?.message || t("admin.users.toast.create_failed_fallback"),
         variant: "destructive",
       });
     } finally {
