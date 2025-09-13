@@ -1527,7 +1527,7 @@ ${data.transactions
                           </div>
                           {transaction.performedBy && (
                             <div className="text-sm text-muted-foreground">
-                              Performed by:{" "}
+                              {t("finance.performed_by")}:{" "}
                               {getPerformedByDisplay(transaction.performedBy)}
                             </div>
                           )}
