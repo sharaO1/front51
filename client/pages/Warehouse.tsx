@@ -2852,7 +2852,7 @@ export default function Warehouse() {
             <CardHeader>
               <CardTitle>{t("warehouse.stock_movements")}</CardTitle>
               <CardDescription>
-                Track all stock in, stock out, and adjustment activities
+                {t("warehouse.track_all_activities")}
               </CardDescription>
               <div className="flex items-center gap-2">
                 <input
