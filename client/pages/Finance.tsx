@@ -1145,7 +1145,9 @@ ${data.transactions
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-80">
-              <DropdownMenuLabel>{t("finance.export_financial_report")}</DropdownMenuLabel>
+              <DropdownMenuLabel>
+                {t("finance.export_financial_report")}
+              </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <div className="p-2 space-y-1">
                 <div className="text-xs text-muted-foreground mb-2">
@@ -1157,7 +1159,9 @@ ${data.transactions
                 >
                   <FileSpreadsheet className="mr-2 h-4 w-4" />
                   <div className="flex-1">
-                    <div className="font-medium">{t("finance.export_pdf_title")}</div>
+                    <div className="font-medium">
+                      {t("finance.export_pdf_title")}
+                    </div>
                     <div className="text-xs text-muted-foreground">
                       {t("finance.export_pdf_desc")}
                     </div>
@@ -1169,7 +1173,9 @@ ${data.transactions
                 >
                   <FileSpreadsheet className="mr-2 h-4 w-4" />
                   <div className="flex-1">
-                    <div className="font-medium">{t("finance.export_excel_title")}</div>
+                    <div className="font-medium">
+                      {t("finance.export_excel_title")}
+                    </div>
                     <div className="text-xs text-muted-foreground">
                       {t("finance.export_excel_desc")}
                     </div>
@@ -1181,7 +1187,9 @@ ${data.transactions
                 >
                   <FileSpreadsheet className="mr-2 h-4 w-4" />
                   <div className="flex-1">
-                    <div className="font-medium">{t("finance.export_csv_title")}</div>
+                    <div className="font-medium">
+                      {t("finance.export_csv_title")}
+                    </div>
                     <div className="text-xs text-muted-foreground">
                       {t("finance.export_csv_desc")}
                     </div>
@@ -1194,7 +1202,9 @@ ${data.transactions
                 >
                   <Download className="mr-2 h-4 w-4" />
                   <div className="flex-1">
-                    <div className="font-medium">{t("finance.export_transactions_title")}</div>
+                    <div className="font-medium">
+                      {t("finance.export_transactions_title")}
+                    </div>
                     <div className="text-xs text-muted-foreground">
                       {t("finance.export_transactions_desc")}
                     </div>
@@ -1250,8 +1260,12 @@ ${data.transactions
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="income">{t("finance.income")}</SelectItem>
-                      <SelectItem value="expense">{t("finance.expense")}</SelectItem>
+                      <SelectItem value="income">
+                        {t("finance.income")}
+                      </SelectItem>
+                      <SelectItem value="expense">
+                        {t("finance.expense")}
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -1466,9 +1480,15 @@ ${data.transactions
                     <SelectValue placeholder={t("common.type")} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">{t("finance.all_types")}</SelectItem>
-                    <SelectItem value="income">{t("finance.income")}</SelectItem>
-                    <SelectItem value="expense">{t("finance.expense")}</SelectItem>
+                    <SelectItem value="all">
+                      {t("finance.all_types")}
+                    </SelectItem>
+                    <SelectItem value="income">
+                      {t("finance.income")}
+                    </SelectItem>
+                    <SelectItem value="expense">
+                      {t("finance.expense")}
+                    </SelectItem>
                   </SelectContent>
                 </Select>
                 <Select
@@ -1479,7 +1499,9 @@ ${data.transactions
                     <SelectValue placeholder={t("common.category")} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">{t("finance.all_categories")}</SelectItem>
+                    <SelectItem value="all">
+                      {t("finance.all_categories")}
+                    </SelectItem>
                     <SelectItem value="Sales Revenue">Sales Revenue</SelectItem>
                     <SelectItem value="Office Supplies">
                       Office Supplies
@@ -2161,7 +2183,9 @@ ${data.transactions
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="income">{t("finance.income")}</SelectItem>
-                  <SelectItem value="expense">{t("finance.expense")}</SelectItem>
+                  <SelectItem value="expense">
+                    {t("finance.expense")}
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
