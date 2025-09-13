@@ -71,6 +71,7 @@ interface Client {
 import { API_BASE } from "@/lib/api";
 
 export default function Clients() {
+  const { t } = useTranslation();
   const [clients, setClients] = useState<Client[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
