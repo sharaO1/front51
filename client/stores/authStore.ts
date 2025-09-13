@@ -30,7 +30,6 @@ interface AuthState {
   updateUserAvatar: (avatarUrl: string) => void;
 }
 
-
 function mapBackendRole(role: string): Role {
   const normalized = role?.toLowerCase();
   switch (normalized) {
@@ -127,7 +126,12 @@ export const useAuthStore = create<AuthState>()(
             phone: null,
             location: u.filialName ?? null,
             filialId:
-              u.filialId ?? u.filialID ?? u.storeId ?? u.branchId ?? u.locationId ?? null,
+              u.filialId ??
+              u.filialID ??
+              u.storeId ??
+              u.branchId ??
+              u.locationId ??
+              null,
           };
 
           set({
