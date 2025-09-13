@@ -117,25 +117,25 @@ export default function RoleManagement() {
                 </div>
                 <CardTitle className="flex items-center justify-between">
                   <span className="capitalize text-lg">
-                    {role.replace('_', ' ')}
+                    {t(`roles.labels.${role}`)}
                   </span>
                 </CardTitle>
                 <CardDescription className="text-xs">
-                  {getRoleDescription(role)}
+                  {t(`roles.descriptions.${role}`)}
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Permissions:</span>
+                    <span className="text-muted-foreground">{t('admin.roles.stats.permissions')}:</span>
                     <Badge variant="secondary">{stats.totalPermissions}</Badge>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Resources:</span>
+                    <span className="text-muted-foreground">{t('admin.roles.stats.resources')}:</span>
                     <Badge variant="secondary">{stats.resourceCount}</Badge>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Subordinates:</span>
+                    <span className="text-muted-foreground">{t('admin.roles.stats.subordinates')}:</span>
                     <Badge variant="secondary">{stats.subordinates}</Badge>
                   </div>
                 </div>
@@ -155,16 +155,16 @@ export default function RoleManagement() {
               </div>
               <div>
                 <CardTitle className="flex items-center gap-2">
-                  <span className="capitalize">{selectedRole.replace('_', ' ')}</span>
+                  <span className="capitalize">{t(`roles.labels.${selectedRole}`)}</span>
                   <RoleBadge role={selectedRole} size="sm" />
                 </CardTitle>
                 <CardDescription>
-                  {getRoleDescription(selectedRole)}
+                  {t(`roles.descriptions.${selectedRole}`)}
                 </CardDescription>
               </div>
             </div>
             <div className="text-right">
-              <div className="text-sm text-muted-foreground">Total Permissions</div>
+              <div className="text-sm text-muted-foreground">{t('admin.roles.total_permissions')}</div>
               <div className="text-2xl font-bold">{getRoleStats(selectedRole).totalPermissions}</div>
             </div>
           </div>
