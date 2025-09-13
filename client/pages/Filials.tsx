@@ -310,15 +310,6 @@ export default function Filials() {
     }));
   }, [users]);
 
-  // Ensure users are loaded so we can compute staff counts per filial
-  useEffect(() => {
-    (async () => {
-      try {
-        await loadUsers();
-      } catch {}
-    })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   useEffect(() => {
     let mounted = true;
