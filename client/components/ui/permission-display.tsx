@@ -142,7 +142,7 @@ export default function PermissionDisplay({
                       </CardTitle>
                     </div>
                     <Badge variant="secondary" className="text-xs">
-                      {allActions.length} permissions
+                      {allActions.length} {t('rbac.common.permissions')}
                     </Badge>
                   </div>
                 </CardHeader>
