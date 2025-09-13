@@ -52,6 +52,7 @@ import DetailCard from "@/components/DetailCard";
 import { useMemo, useEffect } from "react";
 import { useAuthStore } from "@/stores/authStore";
 import { API_BASE } from "@/lib/api";
+import { useTranslation } from "react-i18next";
 import {
   Plus,
   Search,
@@ -604,6 +605,7 @@ export default function Warehouse() {
   const { toast } = useToast();
   const accessToken = useAuthStore((s) => s.accessToken);
   const authUser = useAuthStore((s) => s.user);
+  const { t } = useTranslation();
 
   const fetchProductsFromApi = async () => {
     try {
@@ -2248,10 +2250,10 @@ export default function Warehouse() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">
-            Warehouse Management
+            {t("warehouse.title")}
           </h1>
           <p className="text-muted-foreground">
-            Manage inventory, stock movements, and track warehouse activities
+            {t("warehouse.subtitle")}
           </p>
         </div>
 
@@ -2666,16 +2668,16 @@ export default function Warehouse() {
 
       <Tabs defaultValue="inventory" className="space-y-4">
         <TabsList>
-          <TabsTrigger value="inventory">Inventory</TabsTrigger>
-          <TabsTrigger value="movements">Stock Movements</TabsTrigger>
-          <TabsTrigger value="history">Warehouse History</TabsTrigger>
+          <TabsTrigger value="inventory">{t("warehouse.inventory")}</TabsTrigger>
+          <TabsTrigger value="movements">{t("warehouse.stock_movements")}</TabsTrigger>
+          <TabsTrigger value="history">{t("warehouse.history")}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="inventory" className="space-y-4">
           {/* Product List */}
           <Card>
             <CardHeader>
-              <CardTitle>Product Inventory</CardTitle>
+              <CardTitle>{t("warehouse.product_inventory")}</CardTitle>
               <div className="flex gap-4">
                 <div className="relative flex-1">
                   <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -2848,7 +2850,7 @@ export default function Warehouse() {
           {/* Stock Movements */}
           <Card>
             <CardHeader>
-              <CardTitle>Stock Movements</CardTitle>
+              <CardTitle>{t("warehouse.stock_movements")}</CardTitle>
               <CardDescription>
                 Track all stock in, stock out, and adjustment activities
               </CardDescription>
@@ -3066,7 +3068,7 @@ export default function Warehouse() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <History className="h-5 w-5" />
-                Warehouse History
+                {t("warehouse.history")}
               </CardTitle>
               <div className="flex gap-4 items-center">
                 <Select value={historyFilter} onValueChange={setHistoryFilter}>
@@ -4146,7 +4148,7 @@ export default function Warehouse() {
               <div className="grid grid-cols-2 gap-3 text-xs text-muted-foreground border-t pt-3 mt-3">
                 <div className="space-y-1">
                   <div>📍 {selectedProduct.location || "N/A"}</div>
-                  <div>📅 Created: {selectedProduct.createdAt}</div>
+                  <div>�� Created: {selectedProduct.createdAt}</div>
                 </div>
                 <div className="space-y-1">
                   <div>🔄 Updated: {selectedProduct.updatedAt}</div>
