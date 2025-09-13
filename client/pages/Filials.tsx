@@ -582,7 +582,7 @@ export default function Filials() {
             {t("filials.title")}
           </h1>
           <p className="text-muted-foreground">
-            Manage your branches, warehouses, and store locations
+            {t("filials.subtitle")}
           </p>
         </div>
 
@@ -1010,36 +1010,36 @@ export default function Filials() {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Building2 className="h-5 w-5" />
-              Filial Details
+              {t("filials.details.title")}
             </DialogTitle>
             <DialogDescription>
-              Complete information about this location
+              {t("filials.details.subtitle")}
             </DialogDescription>
           </DialogHeader>
           {selectedFilial && (
             <DetailCard
               title={selectedFilial.name}
-              subtitle="Complete information about this location"
+              subtitle={t("filials.details.subtitle") }
               left={[
-                { label: "Type", value: getTypeBadge(selectedFilial.type) },
+                { label: t("filials.type"), value: getTypeBadge(selectedFilial.type) },
                 {
-                  label: "Address",
+                  label: t("common.address"),
                   value: `${selectedFilial.address}, ${selectedFilial.city}, ${selectedFilial.country}`,
                 },
               ]}
               right={[
                 {
-                  label: "Status",
+                  label: t("common.status"),
                   value: getStatusBadge(selectedFilial.status),
                 },
                 {
-                  label: "Contact",
+                  label: t("filials.contact"),
                   value: (
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">
                         <User className="h-4 w-4 text-muted-foreground" />
                         <span className="text-sm">
-                          Manager: {getManagerDisplay(selectedFilial.manager)}
+                          {t("filials.manager")}: {getManagerDisplay(selectedFilial.manager)}
                         </span>
                       </div>
                       {selectedFilial.phone && (
@@ -1069,11 +1069,11 @@ export default function Filials() {
             >
               <div>
                 <div className="text-xs text-muted-foreground mb-2">
-                  Products in this filial
+                  {t("filials.products_in_filial")}
                 </div>
                 {isFilialProductsLoading ? (
                   <div className="text-sm text-muted-foreground">
-                    Loading...
+                    {t("filials.loading")}
                   </div>
                 ) : filialProductsError ? (
                   <div className="text-sm text-destructive">
@@ -1081,17 +1081,17 @@ export default function Filials() {
                   </div>
                 ) : filialProducts.length === 0 ? (
                   <div className="text-sm text-muted-foreground">
-                    No products found in this filial.
+                    {t("filials.no_products")}
                   </div>
                 ) : (
                   <div className="overflow-x-auto">
                     <Table>
                       <TableHeader>
                         <TableRow>
-                          <TableHead>Product</TableHead>
-                          <TableHead>SKU</TableHead>
-                          <TableHead>Price</TableHead>
-                          <TableHead>Quantity</TableHead>
+                            <TableHead>{t("filials.product")}</TableHead>
+                          <TableHead>{t("filials.sku")}</TableHead>
+                          <TableHead>{t("filials.price")}</TableHead>
+                          <TableHead>{t("filials.quantity")}</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -1116,8 +1116,8 @@ export default function Filials() {
               </div>
 
               <div className="grid grid-cols-2 gap-3 text-xs text-muted-foreground border-t pt-3 mt-3">
-                <div>���� Created: {selectedFilial.createdAt}</div>
-                <div>🔄 Updated: {selectedFilial.updatedAt}</div>
+                <div>📅 {t("filials.created")}: {selectedFilial.createdAt}</div>
+                <div>🔄 {t("filials.updated")}: {selectedFilial.updatedAt}</div>
               </div>
             </DetailCard>
           )}
