@@ -77,6 +77,7 @@ export default function UserManagement() {
   const [isRoleDialogOpen, setIsRoleDialogOpen] = useState(false);
   const [isPermissionDialogOpen, setIsPermissionDialogOpen] = useState(false);
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   useEffect(() => {
     (async () => {
