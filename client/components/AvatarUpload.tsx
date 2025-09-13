@@ -142,13 +142,20 @@ export default function AvatarUpload({
 
       let data: any = null;
       const ct = res.headers.get("content-type") || "";
-      if (ct.includes("application/json")) data = await res.json().catch(() => null);
+      if (ct.includes("application/json"))
+        data = await res.json().catch(() => null);
       else data = await res.text().catch(() => "");
 
       const candidate =
         (data && typeof data === "object" && (data.url || data.avatarUrl)) ||
-        (data && typeof data === "object" && data.result && (data.result.url || data.result.avatarUrl)) ||
-        (data && typeof data === "object" && typeof data.result === "string" && data.result) ||
+        (data &&
+          typeof data === "object" &&
+          data.result &&
+          (data.result.url || data.result.avatarUrl)) ||
+        (data &&
+          typeof data === "object" &&
+          typeof data.result === "string" &&
+          data.result) ||
         (typeof data === "string" ? data : null);
 
       const uploadedUrl = toAbs(candidate) || candidate || null;
@@ -166,7 +173,8 @@ export default function AvatarUpload({
     } catch (error: any) {
       toast({
         title: "Upload failed",
-        description: error?.message || "Failed to upload avatar. Please try again.",
+        description:
+          error?.message || "Failed to upload avatar. Please try again.",
         variant: "destructive",
       });
     } finally {
