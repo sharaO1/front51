@@ -808,7 +808,8 @@
     "half_day": "Half Day",
     "on_leave": "On Leave",
     "terminated": "Terminated",
-    "suspended": "Suspended"
+    "suspended": "Suspended",
+    "on_break": "On Break"
   },
   "roles": {
     "labels": {
