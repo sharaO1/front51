@@ -272,7 +272,7 @@ export default function Filials() {
       await loadUsers().catch(() => {});
       if (!mounted) return;
       const managers = (users || [])
-        .filter((u) => u.role === "manager" && u.status !== "suspended")
+        .filter((u) => u.role === "manager" && u.status === "active")
         .map((u) => ({ id: String(u.id), name: String(u.name || u.email || u.id) }));
       setManagerOptions(managers);
       setManagerNames((prev) => ({
