@@ -371,34 +371,27 @@ export default function Clients() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">
-            Client Management
-          </h1>
-          <p className="text-muted-foreground">
-            Manage customer relationships and accounts
-          </p>
+          <h1 className="text-3xl font-bold tracking-tight">{t("clients.title")}</h1>
+          <p className="text-muted-foreground">{t("clients.subtitle")}</p>
         </div>
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
           <DialogTrigger asChild>
             <Button>
               <Plus className="mr-2 h-4 w-4" />
-              Add Client
+              {t("clients.add_client")}
             </Button>
           </DialogTrigger>
           <DialogContent className="max-w-md">
             <DialogHeader>
-              <DialogTitle>Add New Client</DialogTitle>
-              <DialogDescription>
-                Create a new client profile with contact and business
-                information.
-              </DialogDescription>
+              <DialogTitle>{t("clients.add_new_client")}</DialogTitle>
+              <DialogDescription>{t("clients.create_client_profile")}</DialogDescription>
             </DialogHeader>
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="name">Full Name / Company Name *</Label>
+                <Label htmlFor="name">{t("clients.company_name")} *</Label>
                 <Input
                   id="name"
-                  placeholder="Enter client name"
+                  placeholder={t("clients.enter_client_name")}
                   value={newClient.name}
                   onChange={(e) =>
                     setNewClient({ ...newClient, name: e.target.value })
@@ -406,11 +399,11 @@ export default function Clients() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="email">Email Address *</Label>
+                <Label htmlFor="email">{t("common.email")} *</Label>
                 <Input
                   id="email"
                   type="email"
-                  placeholder="client@email.com"
+                  placeholder={t("clients.client_email")}
                   value={newClient.email}
                   onChange={(e) =>
                     setNewClient({ ...newClient, email: e.target.value })
@@ -418,10 +411,10 @@ export default function Clients() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="phone">Phone Number *</Label>
+                <Label htmlFor="phone">{t("clients.phone_number")} *</Label>
                 <Input
                   id="phone"
-                  placeholder="+1 (555) 123-4567"
+                  placeholder={t("clients.phone_number")}
                   value={newClient.phone}
                   onChange={(e) =>
                     setNewClient({ ...newClient, phone: e.target.value })
@@ -429,10 +422,10 @@ export default function Clients() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="address">Address</Label>
+                <Label htmlFor="address">{t("common.address")}</Label>
                 <Textarea
                   id="address"
-                  placeholder="Full address"
+                  placeholder={t("clients.full_address")}
                   value={newClient.address}
                   onChange={(e) =>
                     setNewClient({ ...newClient, address: e.target.value })
@@ -442,7 +435,7 @@ export default function Clients() {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="type">Client Type</Label>
+                  <Label htmlFor="type">{t("clients.client_type")}</Label>
                   <Select
                     value={newClient.type}
                     onValueChange={(value) =>
@@ -453,14 +446,14 @@ export default function Clients() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="retail">Retail</SelectItem>
-                      <SelectItem value="wholesale">Wholesale</SelectItem>
-                      <SelectItem value="distributor">Distributor</SelectItem>
+                      <SelectItem value="retail">{t("clients.retail")}</SelectItem>
+                      <SelectItem value="wholesale">{t("clients.wholesale")}</SelectItem>
+                      <SelectItem value="distributor">{t("clients.distributor")}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="creditLimit">Credit Limit ($)</Label>
+                  <Label htmlFor="creditLimit">{t("clients.credit_limit")}</Label>
                   <Input
                     id="creditLimit"
                     type="number"
@@ -476,10 +469,10 @@ export default function Clients() {
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="notes">Notes</Label>
+                <Label htmlFor="notes">{t("common.notes")}</Label>
                 <Textarea
                   id="notes"
-                  placeholder="Additional notes about the client"
+                  placeholder={t("clients.additional_notes")}
                   value={newClient.notes}
                   onChange={(e) =>
                     setNewClient({ ...newClient, notes: e.target.value })
@@ -489,13 +482,13 @@ export default function Clients() {
               </div>
               <div className="flex gap-2">
                 <Button className="flex-1" onClick={handleAddClient}>
-                  Add Client
+                  {t("clients.add_client")}
                 </Button>
                 <Button
                   variant="outline"
                   onClick={() => setIsAddDialogOpen(false)}
                 >
-                  Cancel
+                  {t("common.cancel")}
                 </Button>
               </div>
             </div>
@@ -576,7 +569,7 @@ export default function Clients() {
             <div className="relative flex-1">
               <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search clients..."
+                placeholder={t("clients.search_clients")}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-8"
@@ -589,9 +582,9 @@ export default function Clients() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Types</SelectItem>
-                <SelectItem value="retail">Retail</SelectItem>
-                <SelectItem value="wholesale">Wholesale</SelectItem>
-                <SelectItem value="distributor">Distributor</SelectItem>
+                <SelectItem value="retail">{t("clients.retail")}</SelectItem>
+                <SelectItem value="wholesale">{t("clients.wholesale")}</SelectItem>
+                <SelectItem value="distributor">{t("clients.distributor")}</SelectItem>
               </SelectContent>
             </Select>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
@@ -810,9 +803,9 @@ export default function Clients() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="retail">Retail</SelectItem>
-                      <SelectItem value="wholesale">Wholesale</SelectItem>
-                      <SelectItem value="distributor">Distributor</SelectItem>
+                      <SelectItem value="retail">{t("clients.retail")}</SelectItem>
+                      <SelectItem value="wholesale">{t("clients.wholesale")}</SelectItem>
+                      <SelectItem value="distributor">{t("clients.distributor")}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
