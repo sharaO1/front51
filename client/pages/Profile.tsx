@@ -146,7 +146,11 @@ export default function Profile() {
                     {t("profile.department")}
                   </p>
                   <p className="text-sm text-blue-700">
-                    {user.department ? t(`departments.${user.department}`, { defaultValue: user.department }) : t("profile.not_specified")}
+                    {user.department
+                      ? t(`departments.${user.department}`, {
+                          defaultValue: user.department,
+                        })
+                      : t("profile.not_specified")}
                   </p>
                 </div>
               </div>
@@ -240,7 +244,10 @@ export default function Profile() {
                       onChange={(e) => {
                         const parts = (formData.name || "").split(" ");
                         const last = parts.slice(1).join(" ");
-                        setFormData({ ...formData, name: `${e.target.value} ${last}`.trim() });
+                        setFormData({
+                          ...formData,
+                          name: `${e.target.value} ${last}`.trim(),
+                        });
                       }}
                       disabled={!isEditing}
                       className={`pl-10 h-11 ${
@@ -254,10 +261,16 @@ export default function Profile() {
                   <div className="relative">
                     <Input
                       id="lastName"
-                      value={(formData.name || "").split(" ").slice(1).join(" ")}
+                      value={(formData.name || "")
+                        .split(" ")
+                        .slice(1)
+                        .join(" ")}
                       onChange={(e) => {
                         const first = (formData.name || "").split(" ")[0] || "";
-                        setFormData({ ...formData, name: `${first} ${e.target.value}`.trim() });
+                        setFormData({
+                          ...formData,
+                          name: `${first} ${e.target.value}`.trim(),
+                        });
                       }}
                       disabled={!isEditing}
                       className={`h-11 ${
