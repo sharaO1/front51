@@ -355,14 +355,16 @@ export default function Finance() {
   const [clientsMap, setClientsMap] = useState<Record<string, string>>({});
   const { t, i18n } = useTranslation();
 
-  const cashFlowData = useMemo(() =>
-    CASH_FLOW_BASE.map((item) => ({
-      ...item,
-      month: new Intl.DateTimeFormat(i18n.language || "en", {
-        month: "short",
-      }).format(new Date(2020, item.monthIndex, 1)),
-    })),
-  [i18n.language]);
+  const cashFlowData = useMemo(
+    () =>
+      CASH_FLOW_BASE.map((item) => ({
+        ...item,
+        month: new Intl.DateTimeFormat(i18n.language || "en", {
+          month: "short",
+        }).format(new Date(2020, item.monthIndex, 1)),
+      })),
+    [i18n.language],
+  );
 
   useEffect(() => {
     let mounted = true;
@@ -1604,7 +1606,9 @@ ${data.transactions
                               : "bg-red-100 text-red-800"
                           }
                         >
-                          {transaction.type === "income" ? t("finance.income") : t("finance.expense")}
+                          {transaction.type === "income"
+                            ? t("finance.income")
+                            : t("finance.expense")}
                         </Badge>
                       </TableCell>
                       <TableCell>
@@ -2466,7 +2470,9 @@ ${data.transactions
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="edit-targetAmount">{t("finance.target_amount")}</Label>
+                <Label htmlFor="edit-targetAmount">
+                  {t("finance.target_amount")}
+                </Label>
                 <Input
                   id="edit-targetAmount"
                   type="number"
@@ -2480,7 +2486,9 @@ ${data.transactions
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="edit-currentAmount">{t("finance.current_amount")}</Label>
+                <Label htmlFor="edit-currentAmount">
+                  {t("finance.current_amount")}
+                </Label>
                 <Input
                   id="edit-currentAmount"
                   type="number"
@@ -2507,7 +2515,9 @@ ${data.transactions
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="edit-goalCategory">{t("warehouse.category")}</Label>
+                <Label htmlFor="edit-goalCategory">
+                  {t("warehouse.category")}
+                </Label>
                 <Input
                   id="edit-goalCategory"
                   value={newGoal.category}
