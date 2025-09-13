@@ -2281,7 +2281,7 @@ export default function Warehouse() {
             <DialogTrigger asChild>
               <Button>
                 <Plus className="mr-2 h-4 w-4" />
-                Add Product
+                {t("warehouse.add_product")}
               </Button>
             </DialogTrigger>
             <DialogContent
@@ -2535,7 +2535,7 @@ export default function Warehouse() {
                 </div>
                 <div className="flex gap-2">
                   <Button className="flex-1" onClick={addProduct}>
-                    Add Product
+                    {t("warehouse.add_product")}
                   </Button>
                   <Button
                     variant="outline"
