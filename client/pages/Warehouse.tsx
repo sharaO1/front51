@@ -1384,21 +1384,21 @@ export default function Warehouse() {
       case "in-stock":
         return (
           <Badge variant="default" className="bg-green-100 text-green-800">
-            In Stock
+            {t("warehouse.in_stock")}
           </Badge>
         );
       case "low-stock":
         return (
           <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">
-            Low Stock
+            {t("warehouse.low_stock")}
           </Badge>
         );
       case "out-of-stock":
-        return <Badge variant="destructive">Out of Stock</Badge>;
+        return <Badge variant="destructive">{t("warehouse.out_of_stock")}</Badge>;
       case "discontinued":
         return (
           <Badge variant="outline" className="bg-gray-100 text-gray-800">
-            Discontinued
+            {t("warehouse.discontinued")}
           </Badge>
         );
       default:
@@ -1436,17 +1436,17 @@ export default function Warehouse() {
       case "create":
         return (
           <Badge variant="default" className="bg-green-100 text-green-800">
-            Created
+            {t("warehouse.actions.created")}
           </Badge>
         );
       case "edit":
         return (
           <Badge variant="secondary" className="bg-blue-100 text-blue-800">
-            Edited
+            {t("warehouse.actions.edited")}
           </Badge>
         );
       case "delete":
-        return <Badge variant="destructive">Deleted</Badge>;
+        return <Badge variant="destructive">{t("warehouse.actions.deleted")}</Badge>;
       case "stock_in":
         return (
           <Badge variant="default" className="bg-green-100 text-green-800">
@@ -1462,7 +1462,7 @@ export default function Warehouse() {
       case "transfer":
         return (
           <Badge variant="outline" className="bg-blue-100 text-blue-800">
-            Transfer
+            {t("warehouse.transfer")}
           </Badge>
         );
       case "adjustment":
