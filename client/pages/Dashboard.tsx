@@ -16,44 +16,12 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
-  LineChart,
-  Line,
   PieChart,
   Pie,
   Cell,
 } from "recharts";
-import {
-  Package,
-  Users,
-  DollarSign,
-  TrendingUp,
-  AlertTriangle,
-  ShoppingCart,
-  Search,
-  Filter,
-  Download,
-  FileSpreadsheet,
-  Calendar,
-  ChevronDown,
-  MessageCircle,
-} from "lucide-react";
+import { Package, Users, DollarSign, TrendingUp, AlertTriangle, ShoppingCart, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
 import {
   Table,
@@ -64,7 +32,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import RBACDemo from "@/components/RBACDemo";
 import UserCredentials from "@/components/UserCredentials";
 import { useAuthStore } from "@/stores/authStore";
 import { API_BASE } from "@/lib/api";
@@ -81,68 +48,8 @@ const salesData = [
   { name: "Jun", sales: 2390, profit: 3800 },
 ];
 
-const productCategories = [
-  { name: "Electronics", value: 400, color: "#0088FE" },
-  { name: "Clothing", value: 300, color: "#00C49F" },
-  { name: "Food", value: 300, color: "#FFBB28" },
-  { name: "Books", value: 200, color: "#FF8042" },
-];
 
-const lowStockItems = [
-  { name: "iPhone 15 Pro", stock: 5, minRequired: 20 },
-  { name: "Samsung Galaxy S24", stock: 3, minRequired: 15 },
-  { name: "MacBook Air M3", stock: 2, minRequired: 10 },
-];
 
-interface RecentActivity {
-  id: string;
-  type: "sale" | "client" | "product" | "payment";
-  description: string;
-  amount?: number;
-  time: string;
-  status: "success" | "pending" | "failed";
-}
-
-const recentActivities: RecentActivity[] = [
-  {
-    id: "1",
-    type: "sale",
-    description: "New invoice created for Tech Solutions Ltd",
-    amount: 14903.01,
-    time: "2 hours ago",
-    status: "success",
-  },
-  {
-    id: "2",
-    type: "payment",
-    description: "Payment received from John Smith",
-    amount: 975.42,
-    time: "4 hours ago",
-    status: "success",
-  },
-  {
-    id: "3",
-    type: "client",
-    description: "New client registered: ABC Corp",
-    time: "6 hours ago",
-    status: "success",
-  },
-  {
-    id: "4",
-    type: "product",
-    description: "Low stock alert: iPhone 15 Pro (5 remaining)",
-    time: "8 hours ago",
-    status: "pending",
-  },
-  {
-    id: "5",
-    type: "payment",
-    description: "Payment overdue from Global Distributors Inc",
-    amount: 11583.75,
-    time: "1 day ago",
-    status: "failed",
-  },
-];
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -155,9 +62,6 @@ export default function Dashboard() {
       navigate("/dashboard", { replace: true });
     }
   }, [openChat, navigate]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [dateFilter, setDateFilter] = useState("7");
-  const [activityFilter, setActivityFilter] = useState("all");
   const { toast } = useToast();
   const { t } = useTranslation();
   const { user } = useAuthStore();
@@ -179,6 +83,9 @@ export default function Dashboard() {
   );
   const [lowStockDynamic, setLowStockDynamic] = useState<
     { name: string; stock: number; minRequired: number }[]
+  >([]);
+  const [categoryDist, setCategoryDist] = useState<
+    { name: string; value: number; color: string }[]
   >([]);
 
   useEffect(() => {
@@ -229,6 +136,31 @@ export default function Dashboard() {
           : clients;
 
         setTotalProducts(scopedProducts.length);
+
+        // build product categories distribution
+        const categoryMap = new Map<string, number>();
+        for (const p of scopedProducts) {
+          const cat = String(
+            p.category || p.categoryName || p.type || p.group || "Other",
+          );
+          categoryMap.set(cat, (categoryMap.get(cat) || 0) + 1);
+        }
+        const palette = [
+          "#0088FE",
+          "#00C49F",
+          "#FFBB28",
+          "#FF8042",
+          "#A78BFA",
+          "#34D399",
+          "#F472B6",
+          "#F43F5E",
+          "#06B6D4",
+          "#84CC16",
+        ];
+        const computed = Array.from(categoryMap.entries()).map(
+          ([name, value], i) => ({ name, value, color: palette[i % palette.length] }),
+        );
+        setCategoryDist(computed);
         const monthAgo = Date.now() - 30 * 24 * 3600 * 1000;
         setNewProductsThisMonth(
           scopedProducts.filter((p: any) => {
@@ -437,14 +369,6 @@ export default function Dashboard() {
     };
   }, []);
 
-  const filteredActivities = recentActivities.filter((activity) => {
-    const matchesSearch = activity.description
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase());
-    const matchesActivity =
-      activityFilter === "all" || activity.type === activityFilter;
-    return matchesSearch && matchesActivity;
-  });
 
   const exportReport = (format: "pdf" | "excel" | "csv") => {
     // Generate comprehensive report data
@@ -635,41 +559,6 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
     return csv;
   };
 
-  const getActivityIcon = (type: string) => {
-    switch (type) {
-      case "sale":
-        return <ShoppingCart className="h-4 w-4" />;
-      case "client":
-        return <Users className="h-4 w-4" />;
-      case "product":
-        return <Package className="h-4 w-4" />;
-      case "payment":
-        return <DollarSign className="h-4 w-4" />;
-      default:
-        return <AlertTriangle className="h-4 w-4" />;
-    }
-  };
-
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case "success":
-        return (
-          <Badge variant="default" className="bg-green-100 text-green-800">
-            Success
-          </Badge>
-        );
-      case "pending":
-        return (
-          <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">
-            Pending
-          </Badge>
-        );
-      case "failed":
-        return <Badge variant="destructive">Failed</Badge>;
-      default:
-        return <Badge variant="outline">Unknown</Badge>;
-    }
-  };
 
   return (
     <div className="space-y-8 animate-fade-in">
@@ -681,78 +570,6 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
           <p className="text-muted-foreground text-lg">
             {t("dashboard.subtitle")}
           </p>
-        </div>
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-          <Select value={dateFilter} onValueChange={setDateFilter}>
-            <SelectTrigger className="w-full sm:w-[140px] h-10 border-gray-200 hover:border-gray-300 transition-colors">
-              <Calendar className="mr-2 h-4 w-4 text-gray-500" />
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="1">{t("dashboard.today")}</SelectItem>
-              <SelectItem value="7">7 {t("dashboard.days")}</SelectItem>
-              <SelectItem value="30">30 {t("dashboard.days")}</SelectItem>
-              <SelectItem value="90">90 {t("dashboard.days")}</SelectItem>
-            </SelectContent>
-          </Select>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                className="h-10 border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-all duration-200"
-              >
-                <Download className="mr-2 h-4 w-4" />
-                Export
-                <ChevronDown className="ml-2 h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-80">
-              <DropdownMenuLabel>Export Dashboard Report</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <div className="p-2 space-y-1">
-                <div className="text-xs text-muted-foreground mb-2">
-                  Comprehensive report including sales data, analytics, alerts,
-                  and performance metrics for the last {dateFilter} days.
-                </div>
-                <DropdownMenuItem
-                  onClick={() => exportReport("pdf")}
-                  className="cursor-pointer"
-                >
-                  <FileSpreadsheet className="mr-2 h-4 w-4" />
-                  <div className="flex-1">
-                    <div className="font-medium">PDF Report</div>
-                    <div className="text-xs text-muted-foreground">
-                      Executive summary with charts and insights
-                    </div>
-                  </div>
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => exportReport("excel")}
-                  className="cursor-pointer"
-                >
-                  <FileSpreadsheet className="mr-2 h-4 w-4" />
-                  <div className="flex-1">
-                    <div className="font-medium">Excel Workbook</div>
-                    <div className="text-xs text-muted-foreground">
-                      Detailed data with multiple sheets
-                    </div>
-                  </div>
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => exportReport("csv")}
-                  className="cursor-pointer"
-                >
-                  <FileSpreadsheet className="mr-2 h-4 w-4" />
-                  <div className="flex-1">
-                    <div className="font-medium">CSV Data</div>
-                    <div className="text-xs text-muted-foreground">
-                      Raw data for external analysis
-                    </div>
-                  </div>
-                </DropdownMenuItem>
-              </div>
-            </DropdownMenuContent>
-          </DropdownMenu>
         </div>
       </div>
 
@@ -770,7 +587,7 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
           </CardHeader>
           <CardContent className="pt-0 relative z-10">
             <div className="text-3xl font-bold text-gray-900 mb-2 tracking-tight">
-              $45,231.89
+              {salesSummary ? `$${salesSummary.totals.revenue.toLocaleString()}` : "—"}
             </div>
             <div className="flex items-center gap-2">
               <div className="flex items-center gap-1">
@@ -947,7 +764,7 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
                 <Pie
-                  data={productCategories}
+                  data={categoryDist}
                   cx="50%"
                   cy="50%"
                   labelLine={false}
@@ -958,7 +775,7 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
                   fill="#8884d8"
                   dataKey="value"
                 >
-                  {productCategories.map((entry, index) => (
+                  {categoryDist.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Pie>
@@ -969,84 +786,7 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
         </Card>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
-        {/* Recent Activity */}
-        <Card className="col-span-1">
-          <CardHeader>
-            <CardTitle className="flex items-center justify-between">
-              {t("dashboard.recent_activity")}
-              <div className="flex items-center gap-2">
-                <div className="relative">
-                  <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    placeholder={t("dashboard.search_activities")}
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-8 h-8 w-48"
-                  />
-                </div>
-                <Select
-                  value={activityFilter}
-                  onValueChange={setActivityFilter}
-                >
-                  <SelectTrigger className="w-[100px] h-8">
-                    <Filter className="mr-2 h-3 w-3" />
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">{t("dashboard.all")}</SelectItem>
-                    <SelectItem value="sale">
-                      {t("navigation.sales")}
-                    </SelectItem>
-                    <SelectItem value="payment">
-                      {t("dashboard.payments")}
-                    </SelectItem>
-                    <SelectItem value="client">
-                      {t("navigation.clients")}
-                    </SelectItem>
-                    <SelectItem value="product">
-                      {t("dashboard.products")}
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </CardTitle>
-            <CardDescription>
-              {t("dashboard.latest_activities")}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="max-h-80 overflow-y-auto">
-            <div className="space-y-3">
-              {filteredActivities.map((activity) => (
-                <div
-                  key={activity.id}
-                  className="flex items-start gap-3 p-3 border rounded-lg hover:bg-muted/50 transition-colors"
-                >
-                  <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center mt-0.5">
-                    {getActivityIcon(activity.type)}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium">
-                      {activity.description}
-                    </p>
-                    <div className="flex items-center gap-2 mt-1">
-                      <span className="text-xs text-muted-foreground">
-                        {activity.time}
-                      </span>
-                      {activity.amount && (
-                        <span className="text-xs font-medium">
-                          ${activity.amount.toLocaleString()}
-                        </span>
-                      )}
-                      {getStatusBadge(activity.status)}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
+      <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-1">
         {/* Low Stock Alert */}
         <Card className="col-span-1">
           <CardHeader>
