@@ -792,20 +792,20 @@ export default function Filials() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Filials</CardTitle>
+            <CardTitle className="text-sm font-medium">{t("filials.total_filials")}</CardTitle>
             <Building2 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{filials.length}</div>
             <p className="text-xs text-muted-foreground">
-              {filials.filter((f) => f.status === "active").length} active
+              {filials.filter((f) => f.status === "active").length} {t("filials.statuses.active")}
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Retail Stores</CardTitle>
+            <CardTitle className="text-sm font-medium">{t("filials.retail_stores")}</CardTitle>
             <Store className="h-4 w-4 text-green-500" />
           </CardHeader>
           <CardContent>
@@ -813,27 +813,27 @@ export default function Filials() {
               {filials.filter((f) => f.type === "retail").length}
             </div>
             <p className="text-xs text-muted-foreground">
-              Customer-facing locations
+              {t("filials.customer_facing_locations")}
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Warehouses</CardTitle>
+            <CardTitle className="text-sm font-medium">{t("filials.warehouses")}</CardTitle>
             <Building2 className="h-4 w-4 text-blue-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-blue-600">
               {filials.filter((f) => f.type === "warehouse").length}
             </div>
-            <p className="text-xs text-muted-foreground">Storage facilities</p>
+            <p className="text-xs text-muted-foreground">{t("filials.storage_facilities")}</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Staff</CardTitle>
+            <CardTitle className="text-sm font-medium">{t("filials.total_staff")}</CardTitle>
             <User className="h-4 w-4 text-purple-500" />
           </CardHeader>
           <CardContent>
@@ -841,7 +841,7 @@ export default function Filials() {
               {filials.reduce((sum, f) => sum + f.currentStaff, 0)}
             </div>
             <p className="text-xs text-muted-foreground">
-              Across all locations
+              {t("filials.across_all_locations")}
             </p>
           </CardContent>
         </Card>
@@ -850,12 +850,12 @@ export default function Filials() {
       {/* Filials List */}
       <Card>
         <CardHeader>
-          <CardTitle>Filials & Branches</CardTitle>
+          <CardTitle>{t("filials.list_title")}</CardTitle>
           <div className="flex gap-4">
             <div className="relative flex-1">
               <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search filials..."
+                placeholder={t("filials.search_placeholder")}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-8"
@@ -863,13 +863,13 @@ export default function Filials() {
             </div>
             <Select value={typeFilter} onValueChange={setTypeFilter}>
               <SelectTrigger className="w-[130px]">
-                <SelectValue placeholder="Type" />
+                <SelectValue placeholder={t("filials.type")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Types</SelectItem>
+                <SelectItem value="all">{t("filials.all_types")}</SelectItem>
                 <SelectItem value="warehouse">{t("filials.types.warehouse")}</SelectItem>
-                <SelectItem value="retail">Retail</SelectItem>
-                <SelectItem value="online">Online</SelectItem>
+                <SelectItem value="retail">{t("filials.types.retail")}</SelectItem>
+                <SelectItem value="online">{t("filials.types.online")}</SelectItem>
               </SelectContent>
             </Select>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
@@ -888,20 +888,20 @@ export default function Filials() {
         <CardContent>
           {loading && (
             <div className="text-sm text-muted-foreground">
-              Loading filials...
+              {t("filials.loading")}
             </div>
           )}
           {error && <div className="text-sm text-red-600 mb-3">{error}</div>}
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Name & Location</TableHead>
-                <TableHead>Type</TableHead>
-                <TableHead>Manager</TableHead>
-                <TableHead>Staff</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Contact</TableHead>
-                <TableHead>Actions</TableHead>
+                <TableHead>{t("filials.headers.name_location")}</TableHead>
+                <TableHead>{t("filials.type")}</TableHead>
+                <TableHead>{t("filials.manager")}</TableHead>
+                <TableHead>{t("filials.headers.staff")}</TableHead>
+                <TableHead>{t("common.status")}</TableHead>
+                <TableHead>{t("filials.contact")}</TableHead>
+                <TableHead>{t("common.actions")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -1116,7 +1116,7 @@ export default function Filials() {
               </div>
 
               <div className="grid grid-cols-2 gap-3 text-xs text-muted-foreground border-t pt-3 mt-3">
-                <div>📅 Created: {selectedFilial.createdAt}</div>
+                <div>���� Created: {selectedFilial.createdAt}</div>
                 <div>🔄 Updated: {selectedFilial.updatedAt}</div>
               </div>
             </DetailCard>
