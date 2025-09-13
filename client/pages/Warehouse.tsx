@@ -1699,8 +1699,8 @@ export default function Warehouse() {
       setWarehouseHistory((prev) => [historyEntry, ...prev]);
 
       toast({
-        title: "Stock Added",
-        description: `Added ${movement.quantity} units to ${movement.productName}`,
+        title: t("warehouse.toast.stock_added_title"),
+        description: t("warehouse.toast.stock_added_desc", { quantity: movement.quantity, name: movement.productName }),
       });
     } catch (e: any) {
       toast({
@@ -1742,7 +1742,7 @@ export default function Warehouse() {
     if (stockQuantity > selectedProduct.quantity) {
       toast({
         title: t("common.error"),
-        description: "Cannot remove more stock than available",
+        description: t("warehouse.cannot_remove_more_than_available"),
         variant: "destructive",
       });
       return;
@@ -1858,8 +1858,8 @@ export default function Warehouse() {
       setWarehouseHistory((prev) => [historyEntry, ...prev]);
 
       toast({
-        title: "Stock Removed",
-        description: `Removed ${movement.quantity} units from ${movement.productName}`,
+        title: t("warehouse.toast.stock_removed_title"),
+        description: t("warehouse.toast.stock_removed_desc", { quantity: movement.quantity, name: movement.productName }),
       });
     } catch (e: any) {
       toast({
@@ -2847,12 +2847,11 @@ export default function Warehouse() {
                             <AlertDialogContent>
                               <AlertDialogHeader>
                                 <AlertDialogTitle>
-                                  Delete product
+                                  {t("warehouse.delete_product_title")}
                                 </AlertDialogTitle>
                                 <AlertDialogDescription>
-                                  Are you sure you want to delete "
-                                  {product.name}"? This action cannot be undone.
-                                </AlertDialogDescription>
+                                  {t("warehouse.delete_product_confirm", { name: product.name })}
+                                  {product.name}                                </AlertDialogDescription>
                               </AlertDialogHeader>
                               <AlertDialogFooter>
                                 <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
@@ -2862,7 +2861,7 @@ export default function Warehouse() {
                                   })}
                                   onClick={() => deleteProduct(product.id)}
                                 >
-                                  Delete
+                                  {t("common.delete")}
                                 </AlertDialogAction>
                               </AlertDialogFooter>
                             </AlertDialogContent>
