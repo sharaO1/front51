@@ -5,7 +5,7 @@
     "delete": "Удалить",
     "save": "Сохранить",
     "cancel": "Отменить",
-    "close": "Закрыть",
+    "close": "Закр��ть",
     "search": "Поиск",
     "filter": "Фильтр",
     "export": "Экспорт",
@@ -91,7 +91,7 @@
   },
   "dashboard": {
     "title": "Панель управления",
-    "subtitle": "Обзор бизнеса и ключевые показатели",
+    "subtitle": "��бзор бизнеса и ключевые показатели",
     "total_revenue": "Общий доход",
     "products": "Товары",
     "active_clients": "Активные клиенты",
@@ -138,7 +138,7 @@
     "deadline": "Крайний срок"
   },
   "warehouse": {
-    "title": "Управление складом",
+    "title": "Уп��авление складом",
     "subtitle": "Управляйте запасами, перемещениями и отслеживайте складские операции",
     "add_product": "Добавить товар",
     "total_products": "Всего товаров",
@@ -210,7 +210,9 @@
       "stock_added_title": "Запасы добавлены",
       "stock_added_desc": "Добавлено {{quantity}} ед. к {{name}}",
       "stock_removed_title": "Запасы списаны",
-      "stock_removed_desc": "Списано {{quantity}} ед. с {{name}}"
+      "stock_removed_desc": "Списано {{quantity}} ед. с {{name}}",
+      "product_updated_title": "Товар обновлен",
+      "product_updated_desc": "{{name}} успешно обновлен."
     },
     "max_stock": "Максимальный запас",
     "cost_price": "Себестоимость ($)",
@@ -273,7 +275,7 @@
     "to_destination": "Куда (назначение)",
     "delete_product_title": "Удалить товар",
     "delete_product_confirm": "Вы уверены, что хотите удалить \"{{name}}\"? Это действие нельзя отменить.",
-    "current_inventory_value": "Текущая стоимость запасов",
+    "current_inventory_value": "Тек��щая стоимость запасов",
     "need_immediate_attention": "Требуют немедленного внимания",
     "require_restocking": "Требуется пополнение",
     "value": "Стоимость",
@@ -283,7 +285,17 @@
     "entity": "Сущность",
     "store_details": "Магазин/Детали",
     "performed_by": "Кем выполнено",
-    "updated_fields_available": "Доступны обновленные поля"
+    "updated_fields_available": "Доступны обновленные поля",
+    "sale": "Продажа",
+    "required_fields_error": "Пожалуйста, заполните все обязательные поля",
+    "history_text": {
+      "added_units": "Добавлено {{count}} ед. - {{reason}}",
+      "removed_units": "Списано {{count}} ед. - {{reason}}",
+      "adjusted_units": "Скорректировано {{count}} ед. - {{reason}}",
+      "created_product": "Создан новый товар: {{name}}",
+      "updated_product": "Обновлен товар: {{name}}",
+      "deleted_product": "Удален товар: {{name}}"
+    }
   },
   "clients": {
     "title": "Управление клиентами",
@@ -303,7 +315,7 @@
     "type": "Тип",
     "across_all_clients": "По всем клиентам",
     "clients_need_followup": "Клиенты нуждаются в наблюдении",
-    "all_time_revenue": "Доход за все время",
+    "all_time_revenue": "Доход за все в��емя",
     "add_new_client": "Добавить нового клиента",
     "create_client_profile": "Создайте новый профиль клиента с контактной и деловой информацией.",
     "company_name": "Полное имя / Название компании",
@@ -324,7 +336,7 @@
   "filials": {
     "title": "Управление филиалами",
     "subtitle": "Управляйте своими филиалами, складами и магазинами",
-    "add_filial": "Добавить филиал",
+    "add_filial": "Добавить фил��ал",
     "add_new_filial": "Добавить новый филиал",
     "add_description": "Создайте новый филиал, склад или магазин.",
     "placeholders": {
@@ -355,7 +367,7 @@
       "inactive": "Неактивно",
       "maintenance": "Техническое обслуживание"
     },
-    "capacity": "Вместимость",
+    "capacity": "Вместимост��",
     "current_staff": "Текущий персонал",
     "opening_hours": "Часы работы",
     "city": "Город",
@@ -480,7 +492,7 @@
     "add_new_transaction": "Добавить новую транзакцию",
     "record_transaction": "Записать новую транзакцию дохода или расхода.",
     "transaction_type": "Тип транзакции",
-    "transaction_description": "Описание транзакции",
+    "transaction_description": "Опис��ние транзакции",
     "reports_analytics": "Отчеты и аналитика",
     "financial_goals": "Финансовые цели",
     "cash_flow_trend": "Тренд денежного потока",
@@ -574,7 +586,7 @@
   },
   "settings": {
     "title": "Настройки",
-    "subtitle": "Настройте предпочтения прил��жения и системные настройки",
+    "subtitle": "Наст��ойте предпочтения прил��жения и системные настройки",
     "general": "Общие",
     "notifications": "Уведомления",
     "security": "Безопасность",
@@ -594,7 +606,7 @@
     "language": "Язык",
     "save_localization": "Сохранить локализацию",
     "appearance": "Внешний вид",
-    "customize_look_feel": "Настройте внешний вид вашего приложения",
+    "customize_look_feel": "Настройте внешний вид вашег�� приложения",
     "dark_mode": "Темный режим",
     "switch_themes": "Переключение между светлой и темной темами",
     "notification_channels": "Каналы уведомлений",
@@ -655,7 +667,7 @@
     "danger_zone": "Опасная зона",
     "delete_all_backups": "Удалить все резервные копии",
     "account_information": "Информация об аккаунте",
-    "manage_personal_details": "Управляйте своими личными данными",
+    "manage_personal_details": "Управляйте своими л��чными данными",
     "edit_profile": "Редактировать профиль",
     "subscription_billing": "Подписка и выставление счетов",
     "manage_subscription": "Управляйте подпиской и платежными данными",

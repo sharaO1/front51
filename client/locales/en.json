@@ -210,7 +210,9 @@
       "stock_added_title": "Stock Added",
       "stock_added_desc": "Added {{quantity}} units to {{name}}",
       "stock_removed_title": "Stock Removed",
-      "stock_removed_desc": "Removed {{quantity}} units from {{name}}"
+      "stock_removed_desc": "Removed {{quantity}} units from {{name}}",
+      "product_updated_title": "Product updated",
+      "product_updated_desc": "{{name}} has been updated successfully."
     },
     "max_stock": "Max Stock",
     "cost_price": "Cost Price ($)",
@@ -283,7 +285,17 @@
     "entity": "Entity",
     "store_details": "Store/Details",
     "performed_by": "Performed By",
-    "updated_fields_available": "Updated fields available"
+    "updated_fields_available": "Updated fields available",
+    "sale": "Sale",
+    "required_fields_error": "Please fill in all required fields",
+    "history_text": {
+      "added_units": "Added {{count}} units - {{reason}}",
+      "removed_units": "Removed {{count}} units - {{reason}}",
+      "adjusted_units": "Adjusted {{count}} units - {{reason}}",
+      "created_product": "Created new product: {{name}}",
+      "updated_product": "Updated product: {{name}}",
+      "deleted_product": "Deleted product: {{name}}"
+    }
   },
   "clients": {
     "title": "Client Management",
