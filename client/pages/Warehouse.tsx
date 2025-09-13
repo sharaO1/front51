@@ -3074,17 +3074,17 @@ export default function Warehouse() {
                 <Select value={historyFilter} onValueChange={setHistoryFilter}>
                   <SelectTrigger className="w-[150px]">
                     <Filter className="mr-2 h-4 w-4" />
-                    <SelectValue placeholder="Action" />
+                    <SelectValue placeholder={t("warehouse.action")} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">All Actions</SelectItem>
-                    <SelectItem value="create">Created</SelectItem>
-                    <SelectItem value="edit">Edited</SelectItem>
-                    <SelectItem value="delete">Deleted</SelectItem>
+                    <SelectItem value="all">{t("warehouse.all_actions")}</SelectItem>
+                    <SelectItem value="create">{t("warehouse.actions.created")}</SelectItem>
+                    <SelectItem value="edit">{t("warehouse.actions.edited")}</SelectItem>
+                    <SelectItem value="delete">{t("warehouse.actions.deleted")}</SelectItem>
                     <SelectItem value="stock_in">Stock In</SelectItem>
                     <SelectItem value="stock_out">Stock Out</SelectItem>
-                    <SelectItem value="transfer">Transfers</SelectItem>
-                    <SelectItem value="adjustment">Adjustments</SelectItem>
+                    <SelectItem value="transfer">{t("warehouse.transfers")}</SelectItem>
+                    <SelectItem value="adjustment">{t("warehouse.adjustments")}</SelectItem>
                   </SelectContent>
                 </Select>
 
@@ -4148,7 +4148,7 @@ export default function Warehouse() {
               <div className="grid grid-cols-2 gap-3 text-xs text-muted-foreground border-t pt-3 mt-3">
                 <div className="space-y-1">
                   <div>📍 {selectedProduct.location || "N/A"}</div>
-                  <div>�� Created: {selectedProduct.createdAt}</div>
+                  <div>📅 Created: {selectedProduct.createdAt}</div>
                 </div>
                 <div className="space-y-1">
                   <div>🔄 Updated: {selectedProduct.updatedAt}</div>
