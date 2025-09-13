@@ -269,13 +269,10 @@ export default function Filials() {
     let mounted = true;
     const ensureManagers = async () => {
       if (!(isAddDialogOpen || isEditDialogOpen)) return;
-
-      // Load from User Management (RBAC store)
       await loadUsers().catch(() => {});
       const userManagers = (users || [])
         .filter((u) => u.role === "manager")
         .map((u) => ({ id: String(u.id), name: String(u.name || u.email || u.id) }));
-
       if (!mounted) return;
       setManagerOptions(userManagers);
       setManagerNames((prev) => ({
@@ -288,6 +285,18 @@ export default function Filials() {
       mounted = false;
     };
   }, [isAddDialogOpen, isEditDialogOpen, loadUsers, users]);
+
+  // Keep manager options in sync with RBAC users even outside the dialogs
+  useEffect(() => {
+    const userManagers = (users || [])
+      .filter((u) => u.role === "manager")
+      .map((u) => ({ id: String(u.id), name: String(u.name || u.email || u.id) }));
+    setManagerOptions(userManagers);
+    setManagerNames((prev) => ({
+      ...prev,
+      ...Object.fromEntries(userManagers.map((m) => [m.id, m.name])),
+    }));
+  }, [users]);
 
   useEffect(() => {
     let mounted = true;
