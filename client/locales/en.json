@@ -143,6 +143,7 @@
     "add_product": "Add Product",
     "total_products": "Total Products",
     "low_stock_items": "Low Stock Items",
+    "low_stock_alerts": "Low Stock Alerts",
     "out_of_stock": "Out of Stock",
     "total_value": "Total Value",
     "product_inventory": "Product Inventory",
@@ -187,6 +188,7 @@
     "notes": "Notes",
     "by": "By",
     "action": "Action",
+    "type": "Type",
     "all_actions": "All Actions",
     "actions": {
       "created": "Created",
