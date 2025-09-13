@@ -2516,7 +2516,7 @@ export default function Warehouse() {
                             setSupplierInput("");
                           }}
                         >
-                          Add
+                          {t("common.add")}
                         </Button>
                       </div>
                     </div>
@@ -2579,11 +2579,10 @@ export default function Warehouse() {
         >
           <DialogHeader>
             <DialogTitle>
-              Select Product for Stock {stockActionType === "in" ? "In" : "Out"}
+              {t("warehouse.select_product")}
             </DialogTitle>
             <DialogDescription>
-              Choose a product to {stockActionType === "in" ? "add" : "remove"}{" "}
-              stock
+              {t("warehouse.choose_product")}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-6">
@@ -3603,7 +3602,7 @@ export default function Warehouse() {
                         setEditSupplierInput("");
                       }}
                     >
-                      Add
+                      {t("common.add")}
                     </Button>
                   </div>
                 </div>
