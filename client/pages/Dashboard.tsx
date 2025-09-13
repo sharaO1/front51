@@ -101,7 +101,9 @@ export default function Dashboard() {
     let mounted = true;
     const loadCounts = async () => {
       try {
-        const headers: Record<string, string> = { "Content-Type": "application/json" };
+        const headers: Record<string, string> = {
+          "Content-Type": "application/json",
+        };
         if (accessToken) headers.Authorization = `Bearer ${accessToken}`;
         const [prodRes, clientsRes] = await Promise.all([
           fetch(`${API_BASE}/products`, { headers }),
@@ -400,7 +402,9 @@ export default function Dashboard() {
     let cancelled = false;
     (async () => {
       try {
-        const headers: Record<string, string> = { "Content-Type": "application/json" };
+        const headers: Record<string, string> = {
+          "Content-Type": "application/json",
+        };
         if (accessToken) headers.Authorization = `Bearer ${accessToken}`;
         const res = await fetch(`${API_BASE}/transactions`, { headers });
         const json = await res.json().catch(() => null as any);
@@ -410,18 +414,29 @@ export default function Dashboard() {
 
         // If manager, scope by filial using performedBy -> user -> filialId mapping
         let scoped = tx as any[];
-        const managerFilialId = user?.role === "manager" ? (user as any).filialId : null;
+        const managerFilialId =
+          user?.role === "manager" ? (user as any).filialId : null;
         if (managerFilialId) {
-          const userIds = Array.from(new Set(tx.map((t: any) => t.userId).filter(Boolean)));
+          const userIds = Array.from(
+            new Set(tx.map((t: any) => t.userId).filter(Boolean)),
+          );
           const usersFilial: Record<string, string> = {};
           await Promise.all(
             userIds.map(async (id: string) => {
               try {
-                const uRes = await fetch(`${API_BASE}/users/${encodeURIComponent(id)}`, { headers });
+                const uRes = await fetch(
+                  `${API_BASE}/users/${encodeURIComponent(id)}`,
+                  { headers },
+                );
                 const uJson = await uRes.json().catch(() => null as any);
                 if (uRes.ok && uJson?.ok && uJson.result) {
                   const u = uJson.result;
-                  const fid = u.filialId ?? u.filialID ?? u.storeId ?? u.branchId ?? u.locationId;
+                  const fid =
+                    u.filialId ??
+                    u.filialID ??
+                    u.storeId ??
+                    u.branchId ??
+                    u.locationId;
                   if (fid) usersFilial[id] = String(fid);
                 }
               } catch {}
@@ -436,7 +451,11 @@ export default function Dashboard() {
         }
 
         const revenue = scoped
-          .filter((t: any) => (t.type === "income" || t.kind === "income") && (t.status ?? "completed") === "completed")
+          .filter(
+            (t: any) =>
+              (t.type === "income" || t.kind === "income") &&
+              (t.status ?? "completed") === "completed",
+          )
           .reduce((sum: number, t: any) => sum + (Number(t.amount) || 0), 0);
         if (!cancelled) setTotalRevenue(revenue);
       } catch {}
