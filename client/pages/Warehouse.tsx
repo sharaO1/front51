@@ -3660,7 +3660,7 @@ export default function Warehouse() {
                 }}
               >
                 {t("common.cancel")}
-                  </Button>
+              </Button>
             </div>
           </div>
         </DialogContent>
@@ -3877,7 +3877,7 @@ export default function Warehouse() {
                 }}
               >
                 {t("common.cancel")}
-                  </Button>
+              </Button>
             </div>
           </div>
         </DialogContent>
@@ -4125,7 +4125,7 @@ export default function Warehouse() {
                 }}
               >
                 {t("common.cancel")}
-                  </Button>
+              </Button>
             </div>
           </div>
         </DialogContent>
