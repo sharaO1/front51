@@ -3627,7 +3627,7 @@ export default function Warehouse() {
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="editLocation">Location</Label>
+                <Label htmlFor="editLocation">{t("warehouse.location")}</Label>
                 <Input
                   id="editLocation"
                   placeholder="A1-B2"
@@ -4075,28 +4075,28 @@ export default function Warehouse() {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Package className="h-5 w-5" />
-              Product Details
+              {t("warehouse.product_details")}
             </DialogTitle>
             <DialogDescription>
-              Complete product information and inventory status
+              {t("warehouse.product_details_desc")}
             </DialogDescription>
           </DialogHeader>
           {selectedProduct && (
             <DetailCard
               title={selectedProduct.name}
-              subtitle="Complete product information and inventory status"
+              subtitle={t("warehouse.product_details_desc")}
               left={[
                 {
-                  label: "SKU",
+                  label: t("warehouse.sku"),
                   value: (
                     <div className="font-mono text-sm">
                       {selectedProduct.sku}
                     </div>
                   ),
                 },
-                { label: "Category", value: selectedProduct.category },
+                { label: t("warehouse.category"), value: selectedProduct.category },
                 {
-                  label: "Suppliers",
+                  label: t("warehouse.suppliers"),
                   value: (
                     <div className="flex flex-wrap gap-2">
                       {selectedProduct.suppliers &&
@@ -4122,15 +4122,15 @@ export default function Warehouse() {
               ]}
               right={[
                 {
-                  label: "Description",
+                  label: t("common.description"),
                   value: selectedProduct.description || "—",
                 },
-                { label: "Location", value: selectedProduct.location || "N/A" },
+                { label: t("warehouse.location"), value: selectedProduct.location || "N/A" },
               ]}
               stats={[
-                { label: "Total Stock", value: selectedProduct.quantity },
-                { label: "Min Stock", value: selectedProduct.minStock },
-                { label: "Max Stock", value: selectedProduct.maxStock },
+                { label: t("warehouse.total_stock"), value: selectedProduct.quantity },
+                { label: t("warehouse.min_stock"), value: selectedProduct.minStock },
+                { label: t("warehouse.max_stock"), value: selectedProduct.maxStock },
               ]}
             >
               {/* children: store distribution + prices */}
@@ -4138,7 +4138,7 @@ export default function Warehouse() {
               <div className="mb-3">
                 <div className="text-xs text-muted-foreground mb-2 flex items-center gap-1">
                   <Package2 className="h-3 w-3" />
-                  Store Distribution
+                  {t("warehouse.store_distribution")}
                 </div>
                 <div className="space-y-2">
                   {selectedProduct.stores.length > 0 ? (
@@ -4148,7 +4148,7 @@ export default function Warehouse() {
                       );
                       const storeType = fi?.type
                         ? fi.type.charAt(0).toUpperCase() + fi.type.slice(1)
-                        : "Unknown";
+                        : t("warehouse.unknown");
                       const typeColor =
                         fi?.type === "warehouse"
                           ? "text-blue-600"
@@ -4188,7 +4188,7 @@ export default function Warehouse() {
                     })
                   ) : (
                     <div className="text-center text-muted-foreground italic py-4">
-                      No stock distribution data available
+                      {t("warehouse.no_stock_distribution")}
                     </div>
                   )}
                 </div>
@@ -4197,7 +4197,7 @@ export default function Warehouse() {
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <div className="text-xs text-muted-foreground">
-                    Cost Price
+                    {t("warehouse.cost_price_label")}
                   </div>
                   <div className="text-sm font-semibold">
                     ${selectedProduct.costPrice}
@@ -4205,7 +4205,7 @@ export default function Warehouse() {
                 </div>
                 <div>
                   <div className="text-xs text-muted-foreground">
-                    Selling Price
+                    {t("warehouse.selling_price_label")}
                   </div>
                   <div className="text-sm font-semibold text-green-600">
                     ${selectedProduct.sellingPrice}
@@ -4216,12 +4216,12 @@ export default function Warehouse() {
               <div className="grid grid-cols-2 gap-3 text-xs text-muted-foreground border-t pt-3 mt-3">
                 <div className="space-y-1">
                   <div>📍 {selectedProduct.location || "N/A"}</div>
-                  <div>📅 Created: {selectedProduct.createdAt}</div>
+                  <div>📅 {t("warehouse.created")}: {selectedProduct.createdAt}</div>
                 </div>
                 <div className="space-y-1">
-                  <div>🔄 Updated: {selectedProduct.updatedAt}</div>
+                  <div>🔄 {t("warehouse.updated")}: {selectedProduct.updatedAt}</div>
                   <div>
-                    💰 Profit:{" "}
+                    💰 {t("warehouse.profit")}:{" "}
                     <span className="font-medium text-green-600">
                       {selectedProduct.sellingPrice > 0
                         ? (
