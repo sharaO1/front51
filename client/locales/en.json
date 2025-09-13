@@ -83,7 +83,8 @@
     "sales": "Sales",
     "finance": "Finance",
     "employees": "Employees",
-    "settings": "Settings"
+    "settings": "Settings",
+    "filials": "Filials"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -200,6 +201,9 @@
     "last_purchase": "Last Purchase",
     "never": "Never",
     "no_notes": "No notes"
+  },
+  "filials": {
+    "title": "Filials Management"
   },
   "sales": {
     "title": "Sales Management",
