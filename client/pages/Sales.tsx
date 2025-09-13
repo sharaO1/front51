@@ -1229,13 +1229,13 @@ export default function Sales() {
       {/* Invoices List */}
       <Card>
         <CardHeader>
-          <CardTitle>Sales Invoices</CardTitle>
+          <CardTitle>{t("sales.sales_invoices")}</CardTitle>
           <div className="space-y-4">
             <div className="flex gap-4">
               <div className="relative flex-1">
                 <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
-                  placeholder="Search invoices..."
+                  placeholder={t("sales.search_invoices")}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-8"
@@ -1244,30 +1244,30 @@ export default function Sales() {
               <Select value={statusFilter} onValueChange={setStatusFilter}>
                 <SelectTrigger className="w-[150px]">
                   <Filter className="mr-2 h-4 w-4" />
-                  <SelectValue placeholder="Status" />
+                  <SelectValue placeholder={t("common.status")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Status</SelectItem>
-                  <SelectItem value="draft">Draft</SelectItem>
-                  <SelectItem value="sent">Sent</SelectItem>
-                  <SelectItem value="paid">Paid</SelectItem>
-                  <SelectItem value="overdue">Overdue</SelectItem>
-                  <SelectItem value="cancelled">Cancelled</SelectItem>
+                  <SelectItem value="all">{t("employees.all_status")}</SelectItem>
+                  <SelectItem value="draft">{t("status.draft")}</SelectItem>
+                  <SelectItem value="sent">{t("status.sent")}</SelectItem>
+                  <SelectItem value="paid">{t("status.paid")}</SelectItem>
+                  <SelectItem value="overdue">{t("status.overdue")}</SelectItem>
+                  <SelectItem value="cancelled">{t("status.cancelled")}</SelectItem>
                 </SelectContent>
               </Select>
               <Select value={dateFilter} onValueChange={setDateFilter}>
                 <SelectTrigger className="w-[150px]">
                   <Calendar className="mr-2 h-4 w-4" />
-                  <SelectValue placeholder="Date Range" />
+                  <SelectValue placeholder={t("sales.date_range")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Dates</SelectItem>
-                  <SelectItem value="today">Today</SelectItem>
-                  <SelectItem value="yesterday">Yesterday</SelectItem>
-                  <SelectItem value="this_week">This Week</SelectItem>
-                  <SelectItem value="this_month">This Month</SelectItem>
-                  <SelectItem value="last_month">Last Month</SelectItem>
-                  <SelectItem value="custom">Custom Range</SelectItem>
+                  <SelectItem value="all">{t("sales.all_dates")}</SelectItem>
+                  <SelectItem value="today">{t("sales.today")}</SelectItem>
+                  <SelectItem value="yesterday">{t("sales.yesterday")}</SelectItem>
+                  <SelectItem value="this_week">{t("sales.this_week")}</SelectItem>
+                  <SelectItem value="this_month">{t("sales.this_month")}</SelectItem>
+                  <SelectItem value="last_month">{t("sales.last_month")}</SelectItem>
+                  <SelectItem value="custom">{t("sales.custom_range")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -1276,9 +1276,7 @@ export default function Sales() {
             {dateFilter === "custom" && (
               <div className="flex gap-4 items-center p-4 bg-muted rounded-lg">
                 <div className="flex items-center gap-2">
-                  <Label htmlFor="startDate" className="text-sm font-medium">
-                    From:
-                  </Label>
+                  <Label htmlFor="startDate" className="text-sm font-medium">{t("sales.from")}:</Label>
                   <Input
                     id="startDate"
                     type="date"
@@ -1288,9 +1286,7 @@ export default function Sales() {
                   />
                 </div>
                 <div className="flex items-center gap-2">
-                  <Label htmlFor="endDate" className="text-sm font-medium">
-                    To:
-                  </Label>
+                  <Label htmlFor="endDate" className="text-sm font-medium">{t("sales.to")}:</Label>
                   <Input
                     id="endDate"
                     type="date"
