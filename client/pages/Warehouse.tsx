@@ -3868,8 +3868,8 @@ export default function Warehouse() {
                       <SelectValue placeholder={t("warehouse.select_reason")} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="Purchase">Purchase</SelectItem>
-                      <SelectItem value="Return">Return</SelectItem>
+                      <SelectItem value="Purchase">{t("warehouse.purchase")}</SelectItem>
+                      <SelectItem value="Return">{t("warehouse.return")}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
