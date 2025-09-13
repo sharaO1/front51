@@ -747,8 +747,7 @@ export default function Sales() {
             <DialogHeader>
               <DialogTitle>{t("sales.create_new_invoice")}</DialogTitle>
               <DialogDescription>
-                Generate a new sales invoice with items, taxes, and client
-                information.
+                {t("sales.generate_invoice")}
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-6">
