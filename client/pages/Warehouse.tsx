@@ -569,7 +569,7 @@ export default function Warehouse() {
   const [historyFrom, setHistoryFrom] = useState<string | null>(null);
   const [historyTo, setHistoryTo] = useState<string | null>(null);
 
-  // Applied filters (only updated when user clicks Apply)
+  // Applied filters (only updated when user clicks {t("common.apply")})
   const [appliedMovementFrom, setAppliedMovementFrom] = useState<string | null>(
     null,
   );
@@ -2734,7 +2734,7 @@ export default function Warehouse() {
                     <SelectValue placeholder={t("warehouse.category")} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">All Categories</SelectItem>
+                    <SelectItem value="all">{t("warehouse.all_categories")}</SelectItem>
                     <SelectItem value="Smartphones">Smartphones</SelectItem>
                     <SelectItem value="Laptops">Laptops</SelectItem>
                     <SelectItem value="Tablets">Tablets</SelectItem>
@@ -2921,7 +2921,7 @@ export default function Warehouse() {
                     await fetchWarehouseHistoriesFromApi();
                   }}
                 >
-                  Clear
+                  {t("common.clear")}
                 </Button>
                 <Button
                   variant="default"
@@ -2931,7 +2931,7 @@ export default function Warehouse() {
                     await fetchStockMovementsFromApi(movementFrom, movementTo);
                   }}
                 >
-                  Apply
+                  {t("common.apply")}
                 </Button>
               </div>
             </CardHeader>
@@ -3184,7 +3184,7 @@ export default function Warehouse() {
                       await fetchStockMovementsFromApi();
                     }}
                   >
-                    Clear
+                    {t("common.clear")}
                   </Button>
                   <Button
                     variant="default"
@@ -3197,7 +3197,7 @@ export default function Warehouse() {
                       );
                     }}
                   >
-                    Apply
+                    {t("common.apply")}
                   </Button>
                 </div>
               </div>
@@ -3381,9 +3381,9 @@ export default function Warehouse() {
                           {/* Show product details for product operations */}
                           {history.action === "create" && history.details && (
                             <div className="text-xs text-muted-foreground">
-                              Category: {history.details.category}
+                              {t("warehouse.category")}: {history.details.category}
                               {history.details.brand &&
-                                ` | Brand: ${history.details.brand}`}
+                                ` | ${t("warehouse.brand")}: ${history.details.brand}`}
                             </div>
                           )}
                           {history.action === "edit" &&
@@ -3732,9 +3732,9 @@ export default function Warehouse() {
                     />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="supplier">Supplier</SelectItem>
+                    <SelectItem value="supplier">{t("warehouse.supplier")}</SelectItem>
                     <SelectItem value="customer_return">
-                      Return from Customer
+                      {t("warehouse.customer_return")}
                     </SelectItem>
                   </SelectContent>
                 </Select>
@@ -3759,8 +3759,8 @@ export default function Warehouse() {
                         <SelectValue
                           placeholder={
                             supplierOptions.length
-                              ? "Choose supplier"
-                              : "No suppliers found"
+                              ? t("warehouse.choose_supplier")
+                              : t("warehouse.no_suppliers_found")
                           }
                         />
                       </SelectTrigger>
@@ -3810,7 +3810,7 @@ export default function Warehouse() {
 
               <div className="grid grid-cols-1 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="stockInReason">Reason *</Label>
+                  <Label htmlFor="stockInReason">{t("warehouse.reason")} *</Label>
                   <Select
                     value={stockReason}
                     onValueChange={setStockReason}
@@ -3976,7 +3976,7 @@ export default function Warehouse() {
                   {stockToType === "client" && (
                     <Select value={stockTo} onValueChange={setStockTo}>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select client" />
+                        <SelectValue placeholder={t("sales.client_name")} />
                       </SelectTrigger>
                       <SelectContent>
                         {clientOptions.map((c) => (
@@ -4060,7 +4060,7 @@ export default function Warehouse() {
 
               <div className="grid grid-cols-1 gap-3">
                 <div className="space-y-2">
-                  <Label htmlFor="stockOutReason">Reason *</Label>
+                  <Label htmlFor="stockOutReason">{t("warehouse.reason")} *</Label>
                   <Input
                     id="stockOutReason"
                     value={stockReason}
@@ -4227,9 +4227,7 @@ export default function Warehouse() {
                       const fi = filialOptions.find(
                         (f) => f.id === store.storeId,
                       );
-                      const storeType = fi?.type
-                        ? fi.type.charAt(0).toUpperCase() + fi.type.slice(1)
-                        : t("warehouse.unknown");
+                      const storeType = fi?.type ? t(`filials.types.${fi.type}`) : t("warehouse.unknown");
                       const typeColor =
                         fi?.type === "warehouse"
                           ? "text-blue-600"
