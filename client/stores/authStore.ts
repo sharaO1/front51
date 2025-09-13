@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { Role } from "@shared/rbac";
 import { jwtDecode } from "jwt-decode";
+import { API_BASE, joinApi } from "@/lib/api";
 
 interface User {
   id: string;
@@ -29,7 +30,6 @@ interface AuthState {
   updateUserAvatar: (avatarUrl: string) => void;
 }
 
-const API_BASE = "http://localhost:5002/api";
 
 function mapBackendRole(role: string): Role {
   const normalized = role?.toLowerCase();
@@ -75,7 +75,7 @@ export const useAuthStore = create<AuthState>()(
         try {
           set({ isLoading: true });
 
-          const res = await fetch(`${API_BASE}/auth/sign-in`, {
+          const res = await fetch(joinApi("/auth/sign-in"), {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, password }),
@@ -99,7 +99,7 @@ export const useAuthStore = create<AuthState>()(
             return false;
           }
 
-          const userRes = await fetch(`${API_BASE}/users/${userId}`, {
+          const userRes = await fetch(joinApi(`/users/${userId}`), {
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${accessToken}`,
