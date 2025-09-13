@@ -500,20 +500,20 @@ export default function Clients() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Clients</CardTitle>
+            <CardTitle className="text-sm font-medium">{t("clients.total_clients")}</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{clients.length}</div>
             <p className="text-xs text-muted-foreground">
-              {clients.filter((c) => c.status === "active").length} active
+              {clients.filter((c) => c.status === "active").length} {t("status.active")}
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Debt</CardTitle>
+            <CardTitle className="text-sm font-medium">{t("clients.total_debt")}</CardTitle>
             <CreditCard className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -523,15 +523,13 @@ export default function Clients() {
                 .reduce((sum, c) => sum + c.currentDebt, 0)
                 .toLocaleString()}
             </div>
-            <p className="text-xs text-muted-foreground">Across all clients</p>
+            <p className="text-xs text-muted-foreground">{t("clients.across_all_clients")}</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Overdue Payments
-            </CardTitle>
+            <CardTitle className="text-sm font-medium">{t("clients.overdue_payments")}</CardTitle>
             <AlertTriangle className="h-4 w-4 text-red-500" />
           </CardHeader>
           <CardContent>
@@ -539,14 +537,14 @@ export default function Clients() {
               {clients.filter((c) => c.status === "overdue").length}
             </div>
             <p className="text-xs text-muted-foreground">
-              Clients need follow-up
+              {t("clients.clients_need_followup")}
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Sales</CardTitle>
+            <CardTitle className="text-sm font-medium">{t("dashboard.total_sales")}</CardTitle>
             <CreditCard className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -556,7 +554,7 @@ export default function Clients() {
                 .reduce((sum, c) => sum + c.totalPurchases, 0)
                 .toLocaleString()}
             </div>
-            <p className="text-xs text-muted-foreground">All-time revenue</p>
+            <p className="text-xs text-muted-foreground">{t("clients.all_time_revenue")}</p>
           </CardContent>
         </Card>
       </div>
@@ -564,7 +562,7 @@ export default function Clients() {
       {/* Filters and Search */}
       <Card>
         <CardHeader>
-          <CardTitle>Client Directory</CardTitle>
+          <CardTitle>{t("clients.client_directory")}</CardTitle>
           <div className="flex gap-4">
             <div className="relative flex-1">
               <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -578,10 +576,10 @@ export default function Clients() {
             <Select value={typeFilter} onValueChange={setTypeFilter}>
               <SelectTrigger className="w-[150px]">
                 <Filter className="mr-2 h-4 w-4" />
-                <SelectValue placeholder="Type" />
+                <SelectValue placeholder={t("clients.type")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Types</SelectItem>
+                <SelectItem value="all">{t("clients.all_types")}</SelectItem>
                 <SelectItem value="retail">{t("clients.retail")}</SelectItem>
                 <SelectItem value="wholesale">{t("clients.wholesale")}</SelectItem>
                 <SelectItem value="distributor">{t("clients.distributor")}</SelectItem>
@@ -589,10 +587,10 @@ export default function Clients() {
             </Select>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger className="w-[150px]">
-                <SelectValue placeholder="Status" />
+                <SelectValue placeholder={t("common.status")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
+                <SelectItem value="all">{t("clients.all_status")}</SelectItem>
                 <SelectItem value="active">Active</SelectItem>
                 <SelectItem value="inactive">Inactive</SelectItem>
                 <SelectItem value="overdue">Overdue</SelectItem>
@@ -604,12 +602,12 @@ export default function Clients() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Client</TableHead>
-                <TableHead>Type</TableHead>
-                <TableHead>Contact</TableHead>
-                <TableHead>Debt</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Actions</TableHead>
+                <TableHead>{t("clients.client")}</TableHead>
+                <TableHead>{t("clients.type")}</TableHead>
+                <TableHead>{t("clients.contact")}</TableHead>
+                <TableHead>{t("clients.debt")}</TableHead>
+                <TableHead>{t("common.status")}</TableHead>
+                <TableHead>{t("common.actions")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -619,7 +617,7 @@ export default function Clients() {
                     <div>
                       <div className="font-medium">{client.name}</div>
                       <div className="text-sm text-muted-foreground">
-                        Total: ${client.totalPurchases.toLocaleString()}
+                        {t("common.total")}: ${client.totalPurchases.toLocaleString()}
                       </div>
                     </div>
                   </TableCell>
@@ -642,7 +640,7 @@ export default function Clients() {
                         ${client.currentDebt.toLocaleString()}
                       </div>
                       <div className="text-sm text-muted-foreground">
-                        Limit: ${client.creditLimit.toLocaleString()}
+                        {t("clients.credit_limit")}: ${client.creditLimit.toLocaleString()}
                       </div>
                     </div>
                   </TableCell>
