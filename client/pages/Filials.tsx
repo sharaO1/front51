@@ -37,7 +37,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { useAuthStore } from "@/stores/authStore";
 import { useRBACStore } from "@/stores/rbacStore";
-import { API_BASE, joinApi } from "@/lib/api";
+import { API_BASE } from "@/lib/api";
 import {
   Plus,
   Search,
