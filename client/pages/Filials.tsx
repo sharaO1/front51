@@ -1063,9 +1063,9 @@ export default function Filials() {
                 },
               ]}
               stats={[
-                { label: "Current Staff", value: selectedFilial.currentStaff },
-                { label: "Capacity", value: selectedFilial.capacity || "N/A" },
-              ]}
+  { label: t("filials.current_staff"), value: selectedFilial.currentStaff },
+  { label: t("filials.capacity"), value: selectedFilial.capacity || t("filials.na") },
+]}
             >
               <div>
                 <div className="text-xs text-muted-foreground mb-2">
