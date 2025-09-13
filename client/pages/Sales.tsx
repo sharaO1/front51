@@ -733,12 +733,8 @@ export default function Sales() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">
-            Sales Management
-          </h1>
-          <p className="text-muted-foreground">
-            Create invoices and manage sales transactions
-          </p>
+          <h1 className="text-3xl font-bold tracking-tight">{t("sales.title")}</h1>
+          <p className="text-muted-foreground">{t("sales.subtitle")}</p>
         </div>
         <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
           <DialogTrigger asChild>
