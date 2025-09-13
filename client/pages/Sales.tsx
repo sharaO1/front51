@@ -733,7 +733,9 @@ export default function Sales() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">{t("sales.title")}</h1>
+          <h1 className="text-3xl font-bold tracking-tight">
+            {t("sales.title")}
+          </h1>
           <p className="text-muted-foreground">{t("sales.subtitle")}</p>
         </div>
         <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
@@ -762,7 +764,9 @@ export default function Sales() {
                     onChange={() => setUseExistingClient(true)}
                     className="h-4 w-4"
                   />
-                  <Label htmlFor="existing-client">{t("sales.select_existing_client")}</Label>
+                  <Label htmlFor="existing-client">
+                    {t("sales.select_existing_client")}
+                  </Label>
                   <input
                     type="radio"
                     id="new-client"
@@ -771,7 +775,9 @@ export default function Sales() {
                     onChange={() => setUseExistingClient(false)}
                     className="h-4 w-4 ml-4"
                   />
-                  <Label htmlFor="new-client">{t("sales.enter_new_client")}</Label>
+                  <Label htmlFor="new-client">
+                    {t("sales.enter_new_client")}
+                  </Label>
 
                   <label className="ml-4 flex items-center space-x-2 text-sm">
                     <input
@@ -789,7 +795,9 @@ export default function Sales() {
                   <div className="grid grid-cols-1 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="client">
-                        {forBorrow ? `${t("sales.select_client")} *` : t("sales.select_client")}
+                        {forBorrow
+                          ? `${t("sales.select_client")} *`
+                          : t("sales.select_client")}
                       </Label>
                       <Select
                         value={newInvoice.clientId || ""}
@@ -832,7 +840,9 @@ export default function Sales() {
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2 col-span-2">
                       <Label htmlFor="clientName">
-                        {forBorrow ? `${t("sales.client_name")} *` : t("sales.client_name")}
+                        {forBorrow
+                          ? `${t("sales.client_name")} *`
+                          : t("sales.client_name")}
                       </Label>
                       <Input
                         id="clientName"
@@ -1164,7 +1174,9 @@ export default function Sales() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t("sales.total_invoices")}</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              {t("sales.total_invoices")}
+            </CardTitle>
             <Receipt className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -1177,7 +1189,9 @@ export default function Sales() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t("sales.total_revenue")}</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              {t("sales.total_revenue")}
+            </CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -1188,13 +1202,17 @@ export default function Sales() {
                 .reduce((sum, i) => sum + i.total, 0)
                 .toLocaleString()}
             </div>
-            <p className="text-xs text-muted-foreground">{t("sales.from_paid_invoices")}</p>
+            <p className="text-xs text-muted-foreground">
+              {t("sales.from_paid_invoices")}
+            </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t("sales.pending_amount")}</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              {t("sales.pending_amount")}
+            </CardTitle>
             <Calculator className="h-4 w-4 text-yellow-500" />
           </CardHeader>
           <CardContent>
@@ -1205,20 +1223,26 @@ export default function Sales() {
                 .reduce((sum, i) => sum + i.total, 0)
                 .toLocaleString()}
             </div>
-            <p className="text-xs text-muted-foreground">{t("sales.awaiting_payment")}</p>
+            <p className="text-xs text-muted-foreground">
+              {t("sales.awaiting_payment")}
+            </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t("status.cancelled")}</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              {t("status.cancelled")}
+            </CardTitle>
             <X className="h-4 w-4 text-red-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
               {invoices.filter((i) => i.status === "cancelled").length}
             </div>
-            <p className="text-xs text-muted-foreground">{t("sales.cancelled_invoices")}</p>
+            <p className="text-xs text-muted-foreground">
+              {t("sales.cancelled_invoices")}
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -1244,12 +1268,16 @@ export default function Sales() {
                   <SelectValue placeholder={t("common.status")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">{t("employees.all_status")}</SelectItem>
+                  <SelectItem value="all">
+                    {t("employees.all_status")}
+                  </SelectItem>
                   <SelectItem value="draft">{t("status.draft")}</SelectItem>
                   <SelectItem value="sent">{t("status.sent")}</SelectItem>
                   <SelectItem value="paid">{t("status.paid")}</SelectItem>
                   <SelectItem value="overdue">{t("status.overdue")}</SelectItem>
-                  <SelectItem value="cancelled">{t("status.cancelled")}</SelectItem>
+                  <SelectItem value="cancelled">
+                    {t("status.cancelled")}
+                  </SelectItem>
                 </SelectContent>
               </Select>
               <Select value={dateFilter} onValueChange={setDateFilter}>
@@ -1260,11 +1288,21 @@ export default function Sales() {
                 <SelectContent>
                   <SelectItem value="all">{t("sales.all_dates")}</SelectItem>
                   <SelectItem value="today">{t("sales.today")}</SelectItem>
-                  <SelectItem value="yesterday">{t("sales.yesterday")}</SelectItem>
-                  <SelectItem value="this_week">{t("sales.this_week")}</SelectItem>
-                  <SelectItem value="this_month">{t("sales.this_month")}</SelectItem>
-                  <SelectItem value="last_month">{t("sales.last_month")}</SelectItem>
-                  <SelectItem value="custom">{t("sales.custom_range")}</SelectItem>
+                  <SelectItem value="yesterday">
+                    {t("sales.yesterday")}
+                  </SelectItem>
+                  <SelectItem value="this_week">
+                    {t("sales.this_week")}
+                  </SelectItem>
+                  <SelectItem value="this_month">
+                    {t("sales.this_month")}
+                  </SelectItem>
+                  <SelectItem value="last_month">
+                    {t("sales.last_month")}
+                  </SelectItem>
+                  <SelectItem value="custom">
+                    {t("sales.custom_range")}
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -1273,7 +1311,9 @@ export default function Sales() {
             {dateFilter === "custom" && (
               <div className="flex gap-4 items-center p-4 bg-muted rounded-lg">
                 <div className="flex items-center gap-2">
-                  <Label htmlFor="startDate" className="text-sm font-medium">{t("sales.from")}:</Label>
+                  <Label htmlFor="startDate" className="text-sm font-medium">
+                    {t("sales.from")}:
+                  </Label>
                   <Input
                     id="startDate"
                     type="date"
@@ -1283,7 +1323,9 @@ export default function Sales() {
                   />
                 </div>
                 <div className="flex items-center gap-2">
-                  <Label htmlFor="endDate" className="text-sm font-medium">{t("sales.to")}:</Label>
+                  <Label htmlFor="endDate" className="text-sm font-medium">
+                    {t("sales.to")}:
+                  </Label>
                   <Input
                     id="endDate"
                     type="date"
@@ -1300,7 +1342,7 @@ export default function Sales() {
                     setStartDate("");
                     setEndDate("");
                   }}
->
+                >
                   {t("common.clear")}
                 </Button>
               </div>
@@ -1309,7 +1351,10 @@ export default function Sales() {
             {/* Results Summary */}
             <div className="flex items-center justify-between text-sm text-muted-foreground">
               <span>
-                {t("sales.showing_invoices", { count: filteredInvoices.length, total: invoices.length })}
+                {t("sales.showing_invoices", {
+                  count: filteredInvoices.length,
+                  total: invoices.length,
+                })}
                 {dateFilter !== "all" && (
                   <span className="ml-2 px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">
                     {dateFilter === "custom" && startDate && endDate
@@ -1490,15 +1535,27 @@ export default function Sales() {
               {/* Invoice Header */}
               <div className="grid grid-cols-2 gap-6 p-4 bg-muted rounded-lg">
                 <div>
-                  <h3 className="font-semibold mb-2">{t("sales.invoice_information")}</h3>
+                  <h3 className="font-semibold mb-2">
+                    {t("sales.invoice_information")}
+                  </h3>
                   <div className="space-y-1 text-sm">
-                    <div>{t("sales.invoice_number")}: {selectedInvoice.invoiceNumber}</div>
-                    <div>{t("common.date")}: {selectedInvoice.date}</div>
-                    <div>{t("common.status")}: {getStatusBadge(selectedInvoice.status)}</div>
+                    <div>
+                      {t("sales.invoice_number")}:{" "}
+                      {selectedInvoice.invoiceNumber}
+                    </div>
+                    <div>
+                      {t("common.date")}: {selectedInvoice.date}
+                    </div>
+                    <div>
+                      {t("common.status")}:{" "}
+                      {getStatusBadge(selectedInvoice.status)}
+                    </div>
                   </div>
                 </div>
                 <div>
-                  <h3 className="font-semibold mb-2">{t("sales.client_information")}</h3>
+                  <h3 className="font-semibold mb-2">
+                    {t("sales.client_information")}
+                  </h3>
                   <div className="space-y-1 text-sm">
                     <div>{selectedInvoice.clientName}</div>
                     <div>{selectedInvoice.clientEmail}</div>
@@ -1506,7 +1563,8 @@ export default function Sales() {
                       {t(`clients.${selectedInvoice.clientType}`)}
                     </div>
                     <div className="capitalize">
-                      {t("sales.payment")}: {t(`sales.${selectedInvoice.paymentMethod}`)}
+                      {t("sales.payment")}:{" "}
+                      {t(`sales.${selectedInvoice.paymentMethod}`)}
                     </div>
                   </div>
                 </div>
@@ -1515,7 +1573,9 @@ export default function Sales() {
               {/* Employee Information */}
               {selectedInvoice.employeeName && (
                 <div className="p-4 bg-blue-50 rounded-lg">
-                  <h3 className="font-semibold mb-2">{t("employees.sales_team")}</h3>
+                  <h3 className="font-semibold mb-2">
+                    {t("employees.sales_team")}
+                  </h3>
                   <div className="text-sm">{selectedInvoice.employeeName}</div>
                 </div>
               )}
@@ -1584,23 +1644,31 @@ export default function Sales() {
               {selectedInvoice.status === "cancelled" &&
                 selectedInvoice.cancellationReason && (
                   <div className="border rounded-lg p-4 bg-red-50">
-                    <h3 className="font-semibold mb-2 text-red-800">{t("sales.cancellation_details")}</h3>
+                    <h3 className="font-semibold mb-2 text-red-800">
+                      {t("sales.cancellation_details")}
+                    </h3>
                     <div className="space-y-2 text-sm">
                       <div>
-                        <span className="font-medium">{t("sales.reason")}:</span>
+                        <span className="font-medium">
+                          {t("sales.reason")}:
+                        </span>
                         <p className="text-red-700 mt-1">
                           {selectedInvoice.cancellationReason}
                         </p>
                       </div>
                       {selectedInvoice.cancelledBy && (
                         <div>
-                          <span className="font-medium">{t("sales.cancelled_by")}:</span>{" "}
+                          <span className="font-medium">
+                            {t("sales.cancelled_by")}:
+                          </span>{" "}
                           {selectedInvoice.cancelledBy}
                         </div>
                       )}
                       {selectedInvoice.cancelledDate && (
                         <div>
-                          <span className="font-medium">{t("sales.cancelled_on")}:</span>{" "}
+                          <span className="font-medium">
+                            {t("sales.cancelled_on")}:
+                          </span>{" "}
                           {selectedInvoice.cancelledDate}
                         </div>
                       )}
@@ -1675,7 +1743,10 @@ Generated on: ${new Date().toLocaleString()}
 
                     toast({
                       title: t("sales.toast.invoice_downloaded_title"),
-                      description: t("sales.toast.invoice_downloaded_desc_number", { number: selectedInvoice.invoiceNumber }),
+                      description: t(
+                        "sales.toast.invoice_downloaded_desc_number",
+                        { number: selectedInvoice.invoiceNumber },
+                      ),
                     });
                   }}
                 >
@@ -1716,11 +1787,17 @@ Generated on: ${new Date().toLocaleString()}
               <AlertTriangle className="h-5 w-5 text-red-500" />
               {t("sales.cancel_invoice")}
             </DialogTitle>
-            <DialogDescription>{t("sales.cancel_invoice_desc", { number: invoiceToCancel?.invoiceNumber })}</DialogDescription>
+            <DialogDescription>
+              {t("sales.cancel_invoice_desc", {
+                number: invoiceToCancel?.invoiceNumber,
+              })}
+            </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="cancellationReason">{t("sales.cancellation_reason_required")}</Label>
+              <Label htmlFor="cancellationReason">
+                {t("sales.cancellation_reason_required")}
+              </Label>
               <Textarea
                 id="cancellationReason"
                 placeholder={t("sales.cancellation_reason_placeholder")}
