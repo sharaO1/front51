@@ -93,7 +93,7 @@ export default function PermissionDisplay({
         {Object.entries(groupedPermissions).map(([resource, resourcePermissions]) => (
           <div key={resource} className="flex items-center gap-2 flex-wrap">
             <Badge variant="outline" className="font-medium">
-              {resourceLabels[resource as Resource]}
+              {labelForResource(t, resource as Resource)}
             </Badge>
             <div className="flex gap-1 flex-wrap">
               {resourcePermissions.flatMap(p => p.actions).map((action, index) => {
@@ -138,7 +138,7 @@ export default function PermissionDisplay({
                         <ChevronRight className="h-4 w-4" />
                       )}
                       <CardTitle className="text-sm font-medium">
-                        {resourceLabels[resource as Resource]}
+                        {labelForResource(t, resource as Resource)}
                       </CardTitle>
                     </div>
                     <Badge variant="secondary" className="text-xs">
