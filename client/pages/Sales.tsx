@@ -1324,7 +1324,7 @@ export default function Sales() {
                 )}
               </span>
               <span>
-                Total Value: $
+                {t("sales.total_value")}: $
                 {filteredInvoices
                   .reduce((sum, inv) => sum + inv.total, 0)
                   .toLocaleString()}
