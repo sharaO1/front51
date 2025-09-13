@@ -559,25 +559,25 @@ export default function Employees() {
       case "active":
         return (
           <Badge variant="default" className="bg-green-100 text-green-800">
-            Active
+            {t("status.active")}
           </Badge>
         );
       case "inactive":
         return (
           <Badge variant="secondary" className="bg-gray-100 text-gray-800">
-            Inactive
+            {t("status.inactive")}
           </Badge>
         );
       case "terminated":
-        return <Badge variant="destructive">Terminated</Badge>;
+        return <Badge variant="destructive">{t("status.terminated")}</Badge>;
       case "on_leave":
         return (
           <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">
-            On Leave
+            {t("status.on_leave")}
           </Badge>
         );
       default:
-        return <Badge variant="outline">Unknown</Badge>;
+        return <Badge variant="outline">{t("common.unknown")}</Badge>;
     }
   };
 
@@ -586,7 +586,7 @@ export default function Employees() {
       case "admin":
         return (
           <Badge variant="default" className="bg-purple-100 text-purple-800">
-            Admin
+            {t("roles.labels.admin")}
           </Badge>
         );
       case "manager":
@@ -595,7 +595,7 @@ export default function Employees() {
             variant="outline"
             className="bg-blue-50 text-blue-700 border-blue-200"
           >
-            Manager
+            {t("roles.labels.manager")}
           </Badge>
         );
       case "worker":
@@ -604,7 +604,7 @@ export default function Employees() {
             variant="outline"
             className="bg-gray-50 text-gray-700 border-gray-200"
           >
-            Employee
+            {t("employees.employee_role")}
           </Badge>
         );
       case "intern":
@@ -613,11 +613,11 @@ export default function Employees() {
             variant="outline"
             className="bg-orange-50 text-orange-700 border-orange-200"
           >
-            Intern
+            {t("employees.intern")}
           </Badge>
         );
       default:
-        return <Badge variant="outline">Unknown</Badge>;
+        return <Badge variant="outline">{t("common.unknown")}</Badge>;
     }
   };
 
