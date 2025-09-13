@@ -39,7 +39,10 @@
     "amount": "Amount",
     "total": "Total",
     "description": "Description",
-    "notes": "Notes"
+    "notes": "Notes",
+    "required_fields_error": "Please fill in all required fields",
+    "updated": "Updated",
+    "unknown": "Unknown"
   },
   "auth": {
     "login": "Login",
