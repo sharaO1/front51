@@ -154,7 +154,7 @@ export default function MobileEmployeeCard({
               <DropdownMenuContent align="end">
                 <DropdownMenuItem onClick={() => onView(employee)}>
                   <Eye className="mr-2 h-4 w-4" />
-                  View Details
+                  {t("common.view")}
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => onEdit(employee)}>
                   <Edit className="mr-2 h-4 w-4" />
