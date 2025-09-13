@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/card";
 import { useAuthStore } from "@/stores/authStore";
 import { useToast } from "@/hooks/use-toast";
-import UserCredentials from "@/components/UserCredentials";
 import { Eye, EyeOff, Package, Loader2, Lock, Mail } from "lucide-react";
 
 export default function Login() {
@@ -52,21 +51,10 @@ export default function Login() {
     }
   };
 
-  const handleCredentialSelect = (
-    selectedEmail: string,
-    selectedPassword: string,
-  ) => {
-    setEmail(selectedEmail);
-    setPassword(selectedPassword);
-    toast({
-      title: "Credentials Filled",
-      description: "Demo credentials have been filled in the form",
-    });
-  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-blue-50 p-4 animate-fade-in">
-      <div className="w-full max-w-4xl">
+      <div className="w-full max-w-md">
         {/* Logo and Brand */}
         <div className="flex items-center justify-center gap-2 mb-8 animate-slide-in">
           <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 group">
@@ -80,7 +68,7 @@ export default function Login() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div>
           {/* Login Form */}
           <Card className="shadow-xl border-0 backdrop-blur-sm bg-white/80 hover:shadow-2xl transition-all duration-500 animate-slide-in group">
             <CardHeader className="space-y-1 text-center pb-6">
@@ -105,7 +93,8 @@ export default function Login() {
                     <Input
                       id="email"
                       type="email"
-                      placeholder="admin@businesspro.com"
+                      placeholder="you@example.com"
+                      autoComplete="username"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       className="h-12 pl-10 border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-300 hover:border-gray-300"
@@ -126,6 +115,7 @@ export default function Login() {
                       id="password"
                       type={showPassword ? "text" : "password"}
                       placeholder="Enter your password"
+                      autoComplete="current-password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       className="h-12 pl-10 pr-12 border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-300 hover:border-gray-300"
@@ -146,21 +136,6 @@ export default function Login() {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between pt-2">
-                  <div className="flex items-center space-x-2">
-                    <input
-                      id="remember"
-                      type="checkbox"
-                      className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 focus:ring-2 transition-all duration-200"
-                    />
-                    <Label
-                      htmlFor="remember"
-                      className="text-sm text-gray-600 cursor-pointer hover:text-gray-800 transition-colors"
-                    >
-                      Remember me
-                    </Label>
-                  </div>
-                </div>
 
                 <Button
                   type="submit"
@@ -199,10 +174,6 @@ export default function Login() {
             </CardContent>
           </Card>
 
-          {/* User Credentials */}
-          <div className="animate-slide-in" style={{ animationDelay: "0.2s" }}>
-            <UserCredentials onCredentialSelect={handleCredentialSelect} />
-          </div>
         </div>
       </div>
     </div>
