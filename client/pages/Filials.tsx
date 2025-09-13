@@ -289,7 +289,6 @@ export default function Filials() {
     };
   }, [isAddDialogOpen, isEditDialogOpen, loadUsers, users]);
 
-
   // Keep manager options in sync with RBAC users even outside the dialogs
   useEffect(() => {
     const userManagers = (users || [])
@@ -304,7 +303,6 @@ export default function Filials() {
       ...Object.fromEntries(userManagers.map((m) => [m.id, m.name])),
     }));
   }, [users]);
-
 
   useEffect(() => {
     let mounted = true;
@@ -382,9 +380,16 @@ export default function Filials() {
     if (!Array.isArray(filials) || filials.length === 0) return;
 
     const normalize = (v: any) =>
-      typeof v === "string" ? v.trim().toLowerCase() : String(v ?? "").trim().toLowerCase();
+      typeof v === "string"
+        ? v.trim().toLowerCase()
+        : String(v ?? "")
+            .trim()
+            .toLowerCase();
 
-    const applyCounts = (idCount: Record<string, number>, nameCount: Record<string, number>) => {
+    const applyCounts = (
+      idCount: Record<string, number>,
+      nameCount: Record<string, number>,
+    ) => {
       let changed = false;
       const updated = filials.map((f) => {
         const byId = idCount[String(f.id)] || 0;
@@ -404,7 +409,13 @@ export default function Filials() {
       const idCount: Record<string, number> = {};
       const nameCount: Record<string, number> = {};
       for (const u of arr) {
-        const fid = u?.filialId ?? u?.filialID ?? u?.storeId ?? u?.branchId ?? u?.locationId ?? undefined;
+        const fid =
+          u?.filialId ??
+          u?.filialID ??
+          u?.storeId ??
+          u?.branchId ??
+          u?.locationId ??
+          undefined;
         const fname =
           u?.filialName ??
           u?.location ??
@@ -413,8 +424,11 @@ export default function Filials() {
           u?.branchName ??
           (typeof u?.filial === "object" ? u?.filial?.name : u?.filial) ??
           undefined;
-        if (fid != null && fid !== "") idCount[String(fid)] = (idCount[String(fid)] || 0) + 1;
-        if (fname) nameCount[normalize(String(fname))] = (nameCount[normalize(String(fname))] || 0) + 1;
+        if (fid != null && fid !== "")
+          idCount[String(fid)] = (idCount[String(fid)] || 0) + 1;
+        if (fname)
+          nameCount[normalize(String(fname))] =
+            (nameCount[normalize(String(fname))] || 0) + 1;
       }
       return { idCount, nameCount };
     };
@@ -429,11 +443,16 @@ export default function Filials() {
 
       // 2) Fallback: employees (/workers)
       try {
-        const headers: Record<string, string> = { "Content-Type": "application/json" };
+        const headers: Record<string, string> = {
+          "Content-Type": "application/json",
+        };
         if (accessToken) headers.Authorization = `Bearer ${accessToken}`;
-        const data = await apiFetch<any>("/workers", { headers }).catch(() => null);
+        const data = await apiFetch<any>("/workers", { headers }).catch(
+          () => null,
+        );
         const list: any[] =
-          (data && Array.isArray(data.result) && data.result) || (Array.isArray(data) ? data : []);
+          (data && Array.isArray(data.result) && data.result) ||
+          (Array.isArray(data) ? data : []);
         if (list.length) {
           const { idCount, nameCount } = buildFromArray(list);
           applyCounts(idCount, nameCount);
