@@ -1309,16 +1309,11 @@ export default function Filials() {
                   <SelectContent>
                     {managerOptions
                       .filter((m) => {
-                        const used = new Set(
-                          filials
-                            .filter((f) => f.id !== (editingFilial?.id || ""))
-                            .map((f) => f.manager)
-                            .filter((v) => isIdLike(v)),
-                        );
-                        return (
-                          !used.has(m.id) ||
-                          String(editingFilial?.manager) === m.id
-                        );
+                        const used = getAssignedManagerIds();
+                        // Exclude the current editing filial's manager from the used set
+                        const currentId = resolveManagerId(editingFilial?.manager || "");
+                        if (currentId) used.delete(currentId);
+                        return !used.has(m.id) || m.id === currentId;
                       })
                       .map((m) => (
                         <SelectItem key={m.id} value={m.id}>
