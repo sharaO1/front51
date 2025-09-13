@@ -188,6 +188,7 @@ export default function Filials() {
   const [selectedFilial, setSelectedFilial] = useState<Filial | null>(null);
   const [editingFilial, setEditingFilial] = useState<Filial | null>(null);
   const [managerNames, setManagerNames] = useState<Record<string, string>>({});
+  const [managerOptions, setManagerOptions] = useState<{ id: string; name: string }[]>([]);
 
   // Products that belong to the selected filial
   const [filialProducts, setFilialProducts] = useState<FilialProduct[]>([]);
@@ -258,6 +259,37 @@ export default function Filials() {
       mounted = false;
     };
   }, [isViewDialogOpen, selectedFilial?.id, accessToken]);
+
+  // Load available managers when dialogs are open
+  useEffect(() => {
+    let mounted = true;
+    const loadManagers = async () => {
+      try {
+        const res = await fetch(`${API_BASE}/admin/users`, {
+          headers: {
+            ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+          },
+        });
+        const json = await res.json().catch(() => null);
+        const list = (json?.data || json?.result || []) as any[];
+        const managers = list
+          .filter((u) => String(u.role || '').toLowerCase() === 'manager')
+          .map((u) => ({ id: String(u.id), name: String(u.name || u.fullName || u.email || u.username || u.id) }));
+        if (!mounted) return;
+        setManagerOptions(managers);
+        setManagerNames((prev) => ({
+          ...prev,
+          ...Object.fromEntries(managers.map((m) => [m.id, m.name])),
+        }));
+      } catch {
+        if (mounted) setManagerOptions([]);
+      }
+    };
+    if (isAddDialogOpen || isEditDialogOpen) loadManagers();
+    return () => {
+      mounted = false;
+    };
+  }, [isAddDialogOpen, isEditDialogOpen, accessToken]);
 
   useEffect(() => {
     let mounted = true;
@@ -697,16 +729,30 @@ export default function Filials() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="manager">{t("filials.manager")} *</Label>
-                <Input
-                  id="manager"
-                  placeholder="John Smith"
+                <Select
                   value={newFilial.manager}
-                  onChange={(e) =>
-                    setNewFilial({ ...newFilial, manager: e.target.value })
-                  }
-                />
+                  onValueChange={(value) => setNewFilial({ ...newFilial, manager: value })}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder={t("filials.select_manager")} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {managerOptions
+                      .filter((m) => {
+                        const used = new Set(
+                          filials.map((f) => f.manager).filter((v) => isIdLike(v)),
+                        );
+                        return !used.has(m.id);
+                      })
+                      .map((m) => (
+                        <SelectItem key={m.id} value={m.id}>
+                          {m.name}
+                        </SelectItem>
+                      ))}
+                  </SelectContent>
+                </Select>
               </div>
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="status">{t("common.status")}</Label>
                   <Select
@@ -740,22 +786,6 @@ export default function Filials() {
                       setNewFilial({
                         ...newFilial,
                         capacity: parseInt(e.target.value) || 0,
-                      })
-                    }
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="currentStaff">{t("filials.current_staff")}</Label>
-                  <Input
-                    id="currentStaff"
-                    type="number"
-                    min="0"
-                    placeholder={t("filials.placeholders.current_staff")}
-                    value={newFilial.currentStaff}
-                    onChange={(e) =>
-                      setNewFilial({
-                        ...newFilial,
-                        currentStaff: parseInt(e.target.value) || 0,
                       })
                     }
                   />
@@ -1192,14 +1222,31 @@ export default function Filials() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="editManager">{t("filials.manager")} *</Label>
-                <Input
-                  id="editManager"
-                  placeholder="John Smith"
+                <Select
                   value={newFilial.manager}
-                  onChange={(e) =>
-                    setNewFilial({ ...newFilial, manager: e.target.value })
-                  }
-                />
+                  onValueChange={(value) => setNewFilial({ ...newFilial, manager: value })}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder={t("filials.select_manager")} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {managerOptions
+                      .filter((m) => {
+                        const used = new Set(
+                          filials
+                            .filter((f) => f.id !== (editingFilial?.id || ''))
+                            .map((f) => f.manager)
+                            .filter((v) => isIdLike(v)),
+                        );
+                        return !used.has(m.id) || String(editingFilial?.manager) === m.id;
+                      })
+                      .map((m) => (
+                        <SelectItem key={m.id} value={m.id}>
+                          {m.name}
+                        </SelectItem>
+                      ))}
+                  </SelectContent>
+                </Select>
               </div>
             </div>
             <div className="flex gap-2">
