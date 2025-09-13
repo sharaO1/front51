@@ -257,33 +257,33 @@ export default function RoleManagement() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">Resources Accessible</CardTitle>
+                    <CardTitle className="text-sm font-medium">{t('admin.roles.analytics.resources_accessible')}</CardTitle>
                     <Settings className="h-4 w-4 text-muted-foreground" />
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold">{getRoleStats(selectedRole).resourceCount}</div>
                     <p className="text-xs text-muted-foreground">
-                      out of {Object.keys(ROLE_PERMISSIONS).length} total resources
+                      {t('admin.roles.analytics.of_total_resources', { count: Object.keys(ROLE_PERMISSIONS).length })}
                     </p>
                   </CardContent>
                 </Card>
 
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">Total Actions</CardTitle>
+                    <CardTitle className="text-sm font-medium">{t('admin.roles.analytics.total_actions')}</CardTitle>
                     <Eye className="h-4 w-4 text-muted-foreground" />
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold">{getRoleStats(selectedRole).totalPermissions}</div>
                     <p className="text-xs text-muted-foreground">
-                      across all accessible resources
+                      {t('admin.roles.analytics.across_resources')}
                     </p>
                   </CardContent>
                 </Card>
 
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">Hierarchy Level</CardTitle>
+                    <CardTitle className="text-sm font-medium">{t('admin.roles.analytics.hierarchy_level')}</CardTitle>
                     <GitBranch className="h-4 w-4 text-muted-foreground" />
                   </CardHeader>
                   <CardContent>
@@ -291,7 +291,7 @@ export default function RoleManagement() {
                       {roles.indexOf(selectedRole) + 1}
                     </div>
                     <p className="text-xs text-muted-foreground">
-                      of {roles.length} total roles
+                      {t('admin.roles.analytics.of_total_roles', { count: roles.length })}
                     </p>
                   </CardContent>
                 </Card>
@@ -300,9 +300,9 @@ export default function RoleManagement() {
               {/* Permission Breakdown */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Permission Breakdown</CardTitle>
+                  <CardTitle>{t('admin.roles.permission_breakdown.title')}</CardTitle>
                   <CardDescription>
-                    Detailed analysis of permissions by action type
+                    {t('admin.roles.permission_breakdown.description')}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -336,9 +336,9 @@ export default function RoleManagement() {
       <Dialog open={isComparisonOpen} onOpenChange={setIsComparisonOpen}>
         <DialogContent className="max-w-6xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Role Comparison</DialogTitle>
+            <DialogTitle>{t('admin.roles.role_comparison.title')}</DialogTitle>
             <DialogDescription>
-              Compare permissions and capabilities across different roles
+              {t('admin.roles.role_comparison.description')}
             </DialogDescription>
           </DialogHeader>
           
