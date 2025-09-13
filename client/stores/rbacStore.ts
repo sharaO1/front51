@@ -328,8 +328,16 @@ export const useRBACStore = create<RBACState>()(
               role,
               permissions: ROLE_PERMISSIONS[role],
               department: u.department || undefined,
-              filialId: u.filialId ?? u.filialID ?? u.storeId ?? u.branchId ?? undefined,
-              filialName: u.filialName || undefined,
+              filialId: u.filialId ?? u.filialID ?? u.storeId ?? u.branchId ?? u.locationId ?? undefined,
+              filialName:
+                (typeof u.filialName === "string" && u.filialName) ||
+                (typeof u.location === "string" && u.location) ||
+                (typeof u.locationName === "string" && u.locationName) ||
+                (typeof u.storeName === "string" && u.storeName) ||
+                (typeof u.branchName === "string" && u.branchName) ||
+                (typeof u.filial === "string" && u.filial) ||
+                (u.filial && typeof u.filial === "object" && (u.filial.name || u.filial.title)) ||
+                undefined,
               avatar: pickAvatar(u),
               status:
                 (u.status?.toLowerCase?.() as RBACUser["status"]) || "active",
