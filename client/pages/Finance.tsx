@@ -1224,7 +1224,7 @@ ${data.transactions
             <DialogTrigger asChild>
               <Button>
                 <Plus className="mr-2 h-4 w-4" />
-                Add Transaction
+                {t("finance.add_transaction")}
               </Button>
             </DialogTrigger>
             <DialogContent className="max-w-md">
