@@ -380,34 +380,34 @@ export default function Sales() {
       case "draft":
         return (
           <Badge variant="secondary" className="bg-gray-100 text-gray-800">
-            Draft
+            {t("status.draft")}
           </Badge>
         );
       case "sent":
         return (
           <Badge variant="default" className="bg-blue-100 text-blue-800">
-            Sent
+            {t("status.sent")}
           </Badge>
         );
       case "paid":
         return (
           <Badge variant="default" className="bg-green-100 text-green-800">
-            Paid
+            {t("status.paid")}
           </Badge>
         );
       case "overdue":
-        return <Badge variant="destructive">Overdue</Badge>;
+        return <Badge variant="destructive">{t("status.overdue")}</Badge>;
       case "cancelled":
         return (
           <Badge
             variant="outline"
             className="bg-red-50 text-red-700 border-red-200"
           >
-            Cancelled
+            {t("status.cancelled")}
           </Badge>
         );
       default:
-        return <Badge variant="outline">Unknown</Badge>;
+        return <Badge variant="outline">{t("common.unknown")}</Badge>;
     }
   };
 
