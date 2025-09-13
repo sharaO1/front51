@@ -158,7 +158,7 @@ export default function MobileEmployeeCard({
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => onEdit(employee)}>
                   <Edit className="mr-2 h-4 w-4" />
-                  Edit
+                  {t("common.edit")}
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => onDelete(employee.id)}
