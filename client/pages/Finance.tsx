@@ -583,19 +583,19 @@ export default function Finance() {
       case "completed":
         return (
           <Badge variant="default" className="bg-green-100 text-green-800">
-            Completed
+            {t("status.completed")}
           </Badge>
         );
       case "pending":
         return (
           <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">
-            Pending
+            {t("status.pending")}
           </Badge>
         );
       case "cancelled":
-        return <Badge variant="destructive">Cancelled</Badge>;
+        return <Badge variant="destructive">{t("status.cancelled")}</Badge>;
       default:
-        return <Badge variant="outline">Unknown</Badge>;
+        return <Badge variant="outline">{t("common.unknown")}</Badge>;
     }
   };
 
@@ -604,17 +604,17 @@ export default function Finance() {
       case "active":
         return (
           <Badge variant="secondary" className="bg-blue-100 text-blue-800">
-            Active
+            {t("status.active")}
           </Badge>
         );
       case "returned":
         return (
           <Badge variant="default" className="bg-green-100 text-green-800">
-            Returned
+            {t("status.returned")}
           </Badge>
         );
       case "overdue":
-        return <Badge variant="destructive">Overdue</Badge>;
+        return <Badge variant="destructive">{t("status.overdue")}</Badge>;
     }
   };
 
@@ -623,23 +623,23 @@ export default function Finance() {
       case "on_track":
         return (
           <Badge variant="default" className="bg-green-100 text-green-800">
-            On Track
+            {t("status.on_track")}
           </Badge>
         );
       case "behind":
         return (
           <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">
-            Behind
+            {t("status.behind")}
           </Badge>
         );
       case "achieved":
         return (
           <Badge variant="default" className="bg-blue-100 text-blue-800">
-            Achieved
+            {t("status.achieved")}
           </Badge>
         );
       default:
-        return <Badge variant="outline">Unknown</Badge>;
+        return <Badge variant="outline">{t("common.unknown")}</Badge>;
     }
   };
 
