@@ -781,7 +781,7 @@ export default function Sales() {
                       onChange={(e) => setForBorrow(e.target.checked)}
                       className="h-4 w-4"
                     />
-                    <span>For Borrow (items to be returned)</span>
+                    <span>{t("sales.for_borrow")}</span>
                   </label>
                 </div>
 
