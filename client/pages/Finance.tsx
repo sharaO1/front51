@@ -1145,8 +1145,7 @@ ${data.transactions
               <DropdownMenuSeparator />
               <div className="p-2 space-y-1">
                 <div className="text-xs text-muted-foreground mb-2">
-                  Comprehensive financial report including transactions, cash
-                  flow analysis, expense breakdown, and goal tracking.
+                  {t("finance.reports_analytics")}
                 </div>
                 <DropdownMenuItem
                   onClick={() => exportFinanceReport("pdf")}
