@@ -172,9 +172,9 @@ export default function RoleManagement() {
         <CardContent>
           <Tabs defaultValue="permissions" className="w-full">
             <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="permissions">Permissions</TabsTrigger>
-              <TabsTrigger value="hierarchy">Hierarchy</TabsTrigger>
-              <TabsTrigger value="analytics">Analytics</TabsTrigger>
+              <TabsTrigger value="permissions">{t('admin.roles.tabs.permissions')}</TabsTrigger>
+              <TabsTrigger value="hierarchy">{t('admin.roles.tabs.hierarchy')}</TabsTrigger>
+              <TabsTrigger value="analytics">{t('admin.roles.tabs.analytics')}</TabsTrigger>
             </TabsList>
 
             <TabsContent value="permissions" className="space-y-4">
@@ -188,10 +188,10 @@ export default function RoleManagement() {
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2 text-lg">
                       <GitBranch className="h-5 w-5" />
-                      Can Manage
+                      {t('admin.roles.hierarchy.can_manage')}
                     </CardTitle>
                     <CardDescription>
-                      Roles that {selectedRole.replace('_', ' ')} can manage or oversee
+                      {t('admin.roles.hierarchy.can_manage_desc', { role: t(`roles.labels.${selectedRole}`) })}
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
@@ -201,14 +201,14 @@ export default function RoleManagement() {
                           <div key={subordinateRole} className="flex items-center justify-between p-3 border rounded-lg">
                             <RoleBadge role={subordinateRole} />
                             <div className="text-sm text-muted-foreground">
-                              {getRoleStats(subordinateRole).totalPermissions} permissions
+                              {getRoleStats(subordinateRole).totalPermissions} {t('rbac.common.permissions')}
                             </div>
                           </div>
                         ))}
                       </div>
                     ) : (
                       <div className="text-center py-8 text-muted-foreground">
-                        This role cannot manage other roles
+                        {t('admin.roles.hierarchy.none_can_manage')}
                       </div>
                     )}
                   </CardContent>
@@ -219,10 +219,10 @@ export default function RoleManagement() {
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2 text-lg">
                       <Users className="h-5 w-5" />
-                      Managed By
+                      {t('admin.roles.hierarchy.managed_by')}
                     </CardTitle>
                     <CardDescription>
-                      Roles that can manage or oversee {selectedRole.replace('_', ' ')}
+                      {t('admin.roles.hierarchy.managed_by_desc', { role: t(`roles.labels.${selectedRole}`) })}
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
@@ -237,14 +237,14 @@ export default function RoleManagement() {
                             <div key={managingRole} className="flex items-center justify-between p-3 border rounded-lg">
                               <RoleBadge role={managingRole} />
                               <div className="text-sm text-muted-foreground">
-                                {getRoleStats(managingRole).totalPermissions} permissions
+                                {getRoleStats(managingRole).totalPermissions} {t('rbac.common.permissions')}
                               </div>
                             </div>
                           ))}
                         </div>
                       ) : (
                         <div className="text-center py-8 text-muted-foreground">
-                          This role is not managed by any other role
+                          {t('admin.roles.hierarchy.none_managed_by')}
                         </div>
                       );
                     })()}
