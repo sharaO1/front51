@@ -1236,7 +1236,7 @@ ${data.transactions
               </DialogHeader>
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="type">Transaction Type</Label>
+                  <Label htmlFor="type">{t("finance.transaction_type")}</Label>
                   <Select
                     value={newTransaction.type}
                     onValueChange={(value) =>
