@@ -595,9 +595,9 @@ export default function Filials() {
           </DialogTrigger>
           <DialogContent className="max-w-2xl">
             <DialogHeader>
-              <DialogTitle>Add New Filial</DialogTitle>
+              <DialogTitle>{t("filials.add_new_filial")}</DialogTitle>
               <DialogDescription>
-                Create a new branch, warehouse, or store location.
+                {t("filials.add_description")}
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4">
