@@ -37,7 +37,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { useAuthStore } from "@/stores/authStore";
 import { useRBACStore } from "@/stores/rbacStore";
-import { API_BASE } from "@/lib/api";
+import { API_BASE, apiFetch } from "@/lib/api";
 import {
   Plus,
   Search,
@@ -377,34 +377,16 @@ export default function Filials() {
     };
   }, [accessToken]);
 
-  // Recompute each filial's currentStaff from users' filial assignments (no network calls)
+  // Recompute each filial's currentStaff from users' filial assignments; fallback to /workers when users unavailable
   useEffect(() => {
     if (!Array.isArray(filials) || filials.length === 0) return;
-    if (!Array.isArray(users) || users.length === 0) return;
 
     const normalize = (v: any) =>
       typeof v === "string" ? v.trim().toLowerCase() : String(v ?? "").trim().toLowerCase();
 
-    const idCount: Record<string, number> = {};
-    const nameCount: Record<string, number> = {};
-
-    for (const u of users) {
-      const fid = (u as any).filialId ?? (u as any).filialID ?? (u as any).storeId ?? (u as any).branchId ?? (u as any).locationId ?? undefined;
-      const fname =
-        (u as any).filialName ??
-        (u as any).location ??
-        (u as any).locationName ??
-        (u as any).storeName ??
-        (u as any).branchName ??
-        (typeof (u as any).filial === "object" ? (u as any).filial?.name : (u as any).filial) ??
-        undefined;
-      if (fid != null && fid !== "") idCount[String(fid)] = (idCount[String(fid)] || 0) + 1;
-      if (fname) nameCount[normalize(String(fname))] = (nameCount[normalize(String(fname))] || 0) + 1;
-    }
-
-    setFilials((prev) => {
+    const applyCounts = (idCount: Record<string, number>, nameCount: Record<string, number>) => {
       let changed = false;
-      const updated = prev.map((f) => {
+      const updated = filials.map((f) => {
         const byId = idCount[String(f.id)] || 0;
         const byName = nameCount[normalize(f.name)] || 0;
         const nextCount = byId || byName;
@@ -414,9 +396,57 @@ export default function Filials() {
         }
         return f;
       });
-      return changed ? updated : prev;
-    });
-  }, [users, filials]);
+      if (changed) setFilials(updated);
+      return updated.some((f) => f.currentStaff > 0);
+    };
+
+    const buildFromArray = (arr: any[]) => {
+      const idCount: Record<string, number> = {};
+      const nameCount: Record<string, number> = {};
+      for (const u of arr) {
+        const fid = u?.filialId ?? u?.filialID ?? u?.storeId ?? u?.branchId ?? u?.locationId ?? undefined;
+        const fname =
+          u?.filialName ??
+          u?.location ??
+          u?.locationName ??
+          u?.storeName ??
+          u?.branchName ??
+          (typeof u?.filial === "object" ? u?.filial?.name : u?.filial) ??
+          undefined;
+        if (fid != null && fid !== "") idCount[String(fid)] = (idCount[String(fid)] || 0) + 1;
+        if (fname) nameCount[normalize(String(fname))] = (nameCount[normalize(String(fname))] || 0) + 1;
+      }
+      return { idCount, nameCount };
+    };
+
+    const run = async () => {
+      // 1) Try users (User Management)
+      if (Array.isArray(users) && users.length > 0) {
+        const { idCount, nameCount } = buildFromArray(users as any[]);
+        const ok = applyCounts(idCount, nameCount);
+        if (ok) return;
+      }
+
+      // 2) Fallback: employees (/workers)
+      try {
+        const headers: Record<string, string> = { "Content-Type": "application/json" };
+        if (accessToken) headers.Authorization = `Bearer ${accessToken}`;
+        const data = await apiFetch<any>("/workers", { headers }).catch(() => null);
+        const list: any[] =
+          (data && Array.isArray(data.result) && data.result) || (Array.isArray(data) ? data : []);
+        if (list.length) {
+          const { idCount, nameCount } = buildFromArray(list);
+          applyCounts(idCount, nameCount);
+        }
+      } catch {
+        // ignore network errors silently
+      }
+    };
+
+    // Only fetch when counts are zero or users are empty
+    const allZero = filials.every((f) => !f.currentStaff);
+    if (allZero) run();
+  }, [users, filials, accessToken]);
 
   const isIdLike = (v: string) =>
     typeof v === "string" &&
