@@ -1352,7 +1352,7 @@ ${data.transactions
                 </div>
                 <div className="flex gap-2">
                   <Button className="flex-1" onClick={addTransaction}>
-                    Add Transaction
+                    {t("finance.add_transaction")}
                   </Button>
                   <Button
                     variant="outline"
@@ -1361,7 +1361,7 @@ ${data.transactions
                       setIsAddTransactionOpen(false);
                     }}
                   >
-                    Cancel
+                    {t("common.cancel")}
                   </Button>
                 </div>
               </div>
@@ -1881,7 +1881,7 @@ ${data.transactions
                     <XAxis dataKey="month" />
                     <YAxis />
                     <Tooltip />
-                    <Legend />
+                    <Legend formatter={(v) => (v === "income" ? t("finance.income") : v === "expenses" ? t("finance.expenses") : t("finance.profit"))} />
                     <Line
                       type="monotone"
                       dataKey="income"
@@ -1953,7 +1953,7 @@ ${data.transactions
                   <XAxis dataKey="month" />
                   <YAxis />
                   <Tooltip />
-                  <Legend />
+                  <Legend formatter={(v) => (v === "income" ? t("finance.income") : v === "expenses" ? t("finance.expenses") : t("finance.profit"))} />
                   <Bar dataKey="income" fill="#22c55e" />
                   <Bar dataKey="expenses" fill="#ef4444" />
                   <Bar dataKey="profit" fill="#3b82f6" />
@@ -1978,19 +1978,19 @@ ${data.transactions
               <DialogTrigger asChild>
                 <Button>
                   <Plus className="mr-2 h-4 w-4" />
-                  Add Goal
+                  {t("finance.create_financial_goal")}
                 </Button>
               </DialogTrigger>
               <DialogContent className="max-w-md">
                 <DialogHeader>
-                  <DialogTitle>Create Financial Goal</DialogTitle>
+                  <DialogTitle>{t("finance.create_financial_goal")}</DialogTitle>
                   <DialogDescription>
-                    Set a new financial target to track your progress.
+                    {t("finance.set_financial_target")}
                   </DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="goalTitle">Goal Title</Label>
+                    <Label htmlFor="goalTitle">{t("finance.goal_title")}</Label>
                     <Input
                       id="goalTitle"
                       placeholder="e.g., Q2 Revenue Target"
@@ -2002,7 +2002,7 @@ ${data.transactions
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="targetAmount">Target Amount ($)</Label>
+                      <Label htmlFor="targetAmount">{t("finance.target_amount")}</Label>
                       <Input
                         id="targetAmount"
                         type="number"
@@ -2017,7 +2017,7 @@ ${data.transactions
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="currentAmount">Current Amount ($)</Label>
+                      <Label htmlFor="currentAmount">{t("finance.current_amount")}</Label>
                       <Input
                         id="currentAmount"
                         type="number"
@@ -2034,7 +2034,7 @@ ${data.transactions
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="deadline">Deadline</Label>
+                      <Label htmlFor="deadline">{t("dashboard.deadline")}</Label>
                       <Input
                         id="deadline"
                         type="date"
@@ -2045,7 +2045,7 @@ ${data.transactions
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="goalCategory">Category</Label>
+                      <Label htmlFor="goalCategory">{t("warehouse.category")}</Label>
                       <Input
                         id="goalCategory"
                         placeholder="e.g., Revenue, Savings, Capital"
@@ -2058,7 +2058,7 @@ ${data.transactions
                   </div>
                   <div className="flex gap-2">
                     <Button className="flex-1" onClick={addGoal}>
-                      Create Goal
+                      {t("finance.create_goal")}
                     </Button>
                     <Button
                       variant="outline"
@@ -2067,7 +2067,7 @@ ${data.transactions
                         setIsAddGoalOpen(false);
                       }}
                     >
-                      Cancel
+                      {t("common.cancel")}
                     </Button>
                   </div>
                 </div>
@@ -2108,13 +2108,13 @@ ${data.transactions
                     </div>
                     <div className="flex justify-between">
                       <div>
-                        <p className="text-sm text-muted-foreground">Current</p>
+                        <p className="text-sm text-muted-foreground">{t("dashboard.current")}</p>
                         <p className="font-semibold">
                           ${goal.currentAmount.toLocaleString()}
                         </p>
                       </div>
                       <div className="text-right">
-                        <p className="text-sm text-muted-foreground">Target</p>
+                        <p className="text-sm text-muted-foreground">{t("finance.target")}</p>
                         <p className="font-semibold">
                           ${goal.targetAmount.toLocaleString()}
                         </p>
@@ -2122,7 +2122,7 @@ ${data.transactions
                     </div>
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
                       <Calendar className="h-4 w-4" />
-                      Deadline: {goal.deadline}
+                      {t("dashboard.deadline")}: {goal.deadline}
                     </div>
                     <div className="flex gap-1 mt-4">
                       <Button
@@ -2157,14 +2157,14 @@ ${data.transactions
       >
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>Edit Transaction</DialogTitle>
+            <DialogTitle>{t("finance.edit_transaction")}</DialogTitle>
             <DialogDescription>
-              Only category and description can be edited.
+              {t("finance.edit_transaction_note")}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="edit-type">Transaction Type</Label>
+              <Label htmlFor="edit-type">{t("finance.transaction_type")}</Label>
               <Select
                 disabled
                 value={newTransaction.type}
@@ -2184,7 +2184,7 @@ ${data.transactions
               </Select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="edit-category">Category</Label>
+              <Label htmlFor="edit-category">{t("warehouse.category")}</Label>
               <Input
                 id="edit-category"
                 value={newTransaction.category}
@@ -2197,7 +2197,7 @@ ${data.transactions
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="edit-description">Description</Label>
+              <Label htmlFor="edit-description">{t("common.description")}</Label>
               <Input
                 id="edit-description"
                 value={newTransaction.description}
@@ -2211,7 +2211,7 @@ ${data.transactions
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="edit-amount">Amount ($)</Label>
+                <Label htmlFor="edit-amount">{t("finance.amount_label")}</Label>
                 <Input
                   id="edit-amount"
                   type="number"
@@ -2226,7 +2226,7 @@ ${data.transactions
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="edit-paymentMethod">Payment Method</Label>
+                <Label htmlFor="edit-paymentMethod">{t("sales.payment_method")}</Label>
                 <Select
                   disabled
                   value={newTransaction.paymentMethod}
@@ -2252,20 +2252,19 @@ ${data.transactions
             <div className="flex gap-2">
               <AlertDialog>
                 <AlertDialogTrigger asChild>
-                  <Button className="flex-1">Update Transaction</Button>
+                  <Button className="flex-1">{t("finance.update_transaction")}</Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
-                    <AlertDialogTitle>Confirm update</AlertDialogTitle>
+                    <AlertDialogTitle>{t("finance.confirm_update_title")}</AlertDialogTitle>
                     <AlertDialogDescription>
-                      This will update category and description for this
-                      transaction.
+                      {t("finance.confirm_update_desc")}
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
                     <AlertDialogAction onClick={updateTransaction}>
-                      Confirm
+                      {t("common.confirm")}
                     </AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>
@@ -2278,7 +2277,7 @@ ${data.transactions
                   setSelectedTransaction(null);
                 }}
               >
-                Cancel
+                {t("common.cancel")}
               </Button>
             </div>
           </div>
@@ -2292,7 +2291,7 @@ ${data.transactions
       >
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>Transaction Details</DialogTitle>
+            <DialogTitle>{t("finance.transaction_details")}</DialogTitle>
           </DialogHeader>
           {selectedTransaction && (
             <DetailCard
@@ -2300,7 +2299,7 @@ ${data.transactions
               subtitle={`${selectedTransaction.category} • ${selectedTransaction.date}`}
               left={[
                 {
-                  label: "Payment Method",
+                  label: t("sales.payment_method"),
                   value: (
                     <div className="capitalize">
                       {selectedTransaction.paymentMethod.replace("_", " ")}
@@ -2308,13 +2307,13 @@ ${data.transactions
                   ),
                 },
                 {
-                  label: "Status",
+                  label: t("common.status"),
                   value: getStatusBadge(selectedTransaction.status),
                 },
               ]}
               right={[
                 {
-                  label: "Performed By",
+                  label: t("finance.performed_by"),
                   value:
                     getPerformedByDisplay(selectedTransaction.performedBy) ||
                     "-",
@@ -2338,7 +2337,7 @@ ${data.transactions
               ]}
               stats={[
                 {
-                  label: "Amount",
+                  label: t("common.amount"),
                   value: `${selectedTransaction.type === "income" ? "+" : "-"}$${selectedTransaction.amount.toLocaleString()}`,
                 },
               ]}
@@ -2351,8 +2350,8 @@ ${data.transactions
       <Dialog open={isEditGoalOpen} onOpenChange={setIsEditGoalOpen}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>Edit Financial Goal</DialogTitle>
-            <DialogDescription>Update the goal information.</DialogDescription>
+            <DialogTitle>{t("finance.edit_financial_goal")}</DialogTitle>
+            <DialogDescription>{t("finance.update_goal_desc")}</DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
@@ -2420,7 +2419,7 @@ ${data.transactions
             </div>
             <div className="flex gap-2">
               <Button className="flex-1" onClick={updateGoal}>
-                Update Goal
+                {t("finance.update_goal")}
               </Button>
               <Button
                 variant="outline"
@@ -2430,7 +2429,7 @@ ${data.transactions
                   setSelectedGoal(null);
                 }}
               >
-                Cancel
+                {t("common.cancel")}
               </Button>
             </div>
           </div>
