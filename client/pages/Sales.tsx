@@ -809,7 +809,7 @@ export default function Sales() {
                         }}
                       >
                         <SelectTrigger>
-                          <SelectValue placeholder="Choose a client" />
+                          <SelectValue placeholder={t("sales.choose_client")} />
                         </SelectTrigger>
                         <SelectContent>
                           {clients.map((client) => (
