@@ -1145,7 +1145,7 @@ ${data.transactions
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-80">
-              <DropdownMenuLabel>Export Financial Report</DropdownMenuLabel>
+              <DropdownMenuLabel>{t("finance.export_financial_report")}</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <div className="p-2 space-y-1">
                 <div className="text-xs text-muted-foreground mb-2">
