@@ -1466,7 +1466,7 @@ ${data.transactions
                     <SelectValue placeholder={t("common.type")} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">All Types</SelectItem>
+                    <SelectItem value="all">{t("finance.all_types")}</SelectItem>
                     <SelectItem value="income">Income</SelectItem>
                     <SelectItem value="expense">Expense</SelectItem>
                   </SelectContent>
