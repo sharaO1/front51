@@ -1052,6 +1052,7 @@ export default function Filials() {
                         size="sm"
                         onClick={() => {
                           setEditingFilial(filial);
+                          const mappedManagerId = resolveManagerId(filial.manager) || filial.manager;
                           setNewFilial({
                             name: filial.name,
                             type: filial.type,
@@ -1060,7 +1061,7 @@ export default function Filials() {
                             country: filial.country,
                             phone: filial.phone,
                             email: filial.email,
-                            manager: filial.manager,
+                            manager: mappedManagerId,
                             status: filial.status,
                             openingHours: filial.openingHours,
                             capacity: filial.capacity,
