@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { useAuthStore } from "@/stores/authStore";
+import { useTranslation } from "react-i18next";
 import { API_BASE, joinApi, getErrorMessageFromResponse } from "@/lib/api";
 import { Upload, Camera, X, User } from "lucide-react";
 import {
@@ -43,6 +44,7 @@ export default function AvatarUpload({
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
+  const { t } = useTranslation();
   const accessToken = useAuthStore((s) => s.accessToken);
 
   const sizeClasses = {
@@ -211,7 +213,7 @@ export default function AvatarUpload({
         <DialogTrigger asChild>
           <Button variant="outline" size="sm">
             <Camera className="h-4 w-4 mr-2" />
-            Change Avatar
+            {t("profile.change_avatar")}
           </Button>
         </DialogTrigger>
 
