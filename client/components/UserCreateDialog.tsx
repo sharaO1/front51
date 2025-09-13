@@ -263,16 +263,16 @@ export default function UserCreateDialog({
         {trigger || (
           <Button className="flex items-center gap-2">
             <Plus className="h-4 w-4" />
-            Add User
+            {t("admin.users.create.add_user_btn")}
           </Button>
         )}
       </DialogTrigger>
 
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Create New User</DialogTitle>
+          <DialogTitle>{t("admin.users.create.title")}</DialogTitle>
           <DialogDescription>
-            Add a new user to the system with specific role and permissions
+            {t("admin.users.create.description")}
           </DialogDescription>
         </DialogHeader>
 
@@ -283,32 +283,32 @@ export default function UserCreateDialog({
         >
           {/* Basic Information */}
           <div className="space-y-4">
-            <h3 className="text-lg font-medium">Basic Information</h3>
+            <h3 className="text-lg font-medium">{t("admin.users.create.sections.basic_info")}</h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="firstName" className="flex items-center gap-2">
                   <User className="h-4 w-4" />
-                  First Name *
+                  {t("admin.users.create.labels.first_name")} *
                 </Label>
                 <Input
                   id="firstName"
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
-                  placeholder="John"
+                  placeholder={t("admin.users.create.placeholders.first_name")}
                   required
                 />
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="lastName" className="flex items-center gap-2">
-                  Last Name *
+                  {t("admin.users.create.labels.last_name")} *
                 </Label>
                 <Input
                   id="lastName"
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
-                  placeholder="Doe"
+                  placeholder={t("admin.users.create.placeholders.last_name")}
                   required
                 />
               </div>
@@ -316,7 +316,7 @@ export default function UserCreateDialog({
               <div className="space-y-2">
                 <Label htmlFor="email" className="flex items-center gap-2">
                   <Mail className="h-4 w-4" />
-                  Email Address *
+                  {t("admin.users.create.labels.email_address")} *
                 </Label>
                 <Input
                   id="email"
@@ -325,7 +325,7 @@ export default function UserCreateDialog({
                   onChange={(e) =>
                     setFormData((prev) => ({ ...prev, email: e.target.value }))
                   }
-                  placeholder="john@company.com"
+                  placeholder={t("admin.users.create.placeholders.email")}
                   required
                 />
               </div>
@@ -334,7 +334,7 @@ export default function UserCreateDialog({
             <div className="space-y-2">
               <Label htmlFor="password" className="flex items-center gap-2">
                 <Lock className="h-4 w-4" />
-                Password *
+                {t("admin.users.create.labels.password")} *
               </Label>
               <div className="flex gap-2">
                 <div className="relative flex-1">
@@ -348,7 +348,7 @@ export default function UserCreateDialog({
                         password: e.target.value,
                       }))
                     }
-                    placeholder="Enter secure password"
+                    placeholder={t("admin.users.create.placeholders.password")}
                     required
                     minLength={6}
                   />
@@ -372,23 +372,22 @@ export default function UserCreateDialog({
                   onClick={generatePassword}
                   className="whitespace-nowrap"
                 >
-                  Generate
+                  {t("admin.users.create.generate")}
                 </Button>
               </div>
               <p className="text-xs text-muted-foreground">
-                Minimum 6 characters. Use the generate button for a secure
-                password.
+                {t("admin.users.create.password_hint")}
               </p>
             </div>
           </div>
 
           {/* Role and Permissions */}
           <div className="space-y-4">
-            <h3 className="text-lg font-medium">Role and Access</h3>
+            <h3 className="text-lg font-medium">{t("admin.users.create.sections.role_access")}</h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label>User Role</Label>
+                <Label>{t("admin.users.create.labels.user_role")}</Label>
                 <RoleSelector
                   currentRole={formData.role}
                   onRoleChange={(role) =>
@@ -398,14 +397,14 @@ export default function UserCreateDialog({
                   className="w-full"
                 />
                 <p className="text-xs text-muted-foreground">
-                  Role determines what the user can access and modify
+                  {t("admin.users.create.role_hint")}
                 </p>
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="department" className="flex items-center gap-2">
                   <Building className="h-4 w-4" />
-                  Department
+                  {t("admin.users.create.labels.department")}
                 </Label>
                 <Select
                   value={formData.department}
@@ -414,15 +413,15 @@ export default function UserCreateDialog({
                   }
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select department" />
+                    <SelectValue placeholder={t("admin.users.create.placeholders.select_department")} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="sales">Sales</SelectItem>
-                    <SelectItem value="marketing">Marketing</SelectItem>
-                    <SelectItem value="finance">Finance</SelectItem>
-                    <SelectItem value="hr">Human Resources</SelectItem>
-                    <SelectItem value="it">IT</SelectItem>
-                    <SelectItem value="operations">Operations</SelectItem>
+                    <SelectItem value="sales">{t("departments.sales")}</SelectItem>
+                    <SelectItem value="marketing">{t("departments.marketing")}</SelectItem>
+                    <SelectItem value="finance">{t("departments.finance")}</SelectItem>
+                    <SelectItem value="hr">{t("departments.hr")}</SelectItem>
+                    <SelectItem value="it">{t("departments.it")}</SelectItem>
+                    <SelectItem value="operations">{t("departments.operations")}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -431,7 +430,7 @@ export default function UserCreateDialog({
             <div className="space-y-2">
               <Label htmlFor="filial" className="flex items-center gap-2">
                 <Building2 className="h-4 w-4" />
-                Work Location (Filial) *
+                {t("admin.users.create.labels.work_location")} *
               </Label>
               <Select
                 value={formData.filialId}
@@ -444,8 +443,8 @@ export default function UserCreateDialog({
                   <SelectValue
                     placeholder={
                       loadingFilials
-                        ? "Loading filials..."
-                        : "Select work location"
+                        ? t("filials.loading")
+                        : t("admin.users.create.placeholders.select_work_location")
                     }
                   />
                 </SelectTrigger>
@@ -458,22 +457,17 @@ export default function UserCreateDialog({
                 </SelectContent>
               </Select>
               <p className="text-xs text-muted-foreground">
-                Choose the primary location where this user will work
+                {t("admin.users.create.location_hint")}
               </p>
             </div>
 
             {/* Role Preview */}
             <div className="p-4 bg-muted rounded-lg">
-              <h4 className="font-medium mb-2">Role Permissions Preview</h4>
+              <h4 className="font-medium mb-2">{t("admin.users.create.sections.permissions_preview")}</h4>
               <div className="text-sm text-muted-foreground">
                 <RoleBadge role={formData.role} className="mb-2" />
                 <p>
-                  {ROLE_PERMISSIONS[formData.role]?.length || 0} permissions
-                  across{" "}
-                  {new Set(
-                    ROLE_PERMISSIONS[formData.role]?.map((p) => p.resource),
-                  ).size || 0}{" "}
-                  resources
+                  {t("admin.users.create.permissions_summary", { count: ROLE_PERMISSIONS[formData.role]?.length || 0, resources: new Set(ROLE_PERMISSIONS[formData.role]?.map((p) => p.resource)).size || 0 })}
                 </p>
               </div>
             </div>
@@ -481,14 +475,14 @@ export default function UserCreateDialog({
 
           {/* Additional Notes */}
           <div className="space-y-2">
-            <Label htmlFor="notes">Additional Notes</Label>
+            <Label htmlFor="notes">{t("admin.users.create.labels.additional_notes")}</Label>
             <Textarea
               id="notes"
               value={formData.notes}
               onChange={(e) =>
                 setFormData((prev) => ({ ...prev, notes: e.target.value }))
               }
-              placeholder="Any additional information about this user..."
+              placeholder={t("admin.users.create.placeholders.additional_notes")}
               rows={3}
             />
           </div>
@@ -497,9 +491,7 @@ export default function UserCreateDialog({
           <div className="flex items-start gap-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
             <AlertCircle className="h-4 w-4 text-amber-600 mt-0.5" />
             <div className="text-sm text-amber-800">
-              <strong>Security Notice:</strong> The user will receive these
-              credentials and be able to log in immediately. Make sure to share
-              the password securely.
+              <strong>{t("admin.users.create.security_notice_title")}</strong> {t("admin.users.create.security_notice_message")}
             </div>
           </div>
         </form>
@@ -511,7 +503,7 @@ export default function UserCreateDialog({
             onClick={() => setIsOpen(false)}
             disabled={isLoading}
           >
-            Cancel
+            {t("common.cancel")}
           </Button>
           <Button
             type="submit"
@@ -522,12 +514,12 @@ export default function UserCreateDialog({
             {isLoading ? (
               <>
                 <div className="h-4 w-4 animate-spin rounded-full border-2 border-transparent border-t-current" />
-                Creating...
+                {t("admin.users.create.creating")}
               </>
             ) : (
               <>
                 <Plus className="h-4 w-4" />
-                Create User
+                {t("admin.users.create.create_user")}
               </>
             )}
           </Button>
