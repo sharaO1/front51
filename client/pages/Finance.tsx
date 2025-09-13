@@ -1136,7 +1136,7 @@ ${data.transactions
             <DropdownMenuTrigger asChild>
               <Button variant="outline">
                 <Download className="mr-2 h-4 w-4" />
-                Export Report
+                {t("dashboard.export_report")}
                 <ChevronDown className="ml-2 h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
@@ -1365,7 +1365,7 @@ ${data.transactions
               ${totalIncome.toLocaleString()}
             </div>
             <p className="text-xs text-muted-foreground">
-              +12.5% from last month
+              +12.5% {t("dashboard.from_last_month")}
             </p>
           </CardContent>
         </Card>
@@ -1373,7 +1373,7 @@ ${data.transactions
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              Total Expenses
+              {t("finance.total_expenses")}
             </CardTitle>
             <ArrowDownCircle className="h-4 w-4 text-red-600" />
           </CardHeader>
@@ -1389,7 +1389,7 @@ ${data.transactions
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Net Profit</CardTitle>
+            <CardTitle className="text-sm font-medium">{t("finance.net_profit")}</CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -1399,7 +1399,7 @@ ${data.transactions
               ${netProfit.toLocaleString()}
             </div>
             <p className="text-xs text-muted-foreground">
-              {profitMargin.toFixed(1)}% profit margin
+              {profitMargin.toFixed(1)}% {t("finance.profit_margin")}
             </p>
           </CardContent>
         </Card>
@@ -1407,7 +1407,7 @@ ${data.transactions
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              Pending Transactions
+              {t("finance.pending_transactions")}
             </CardTitle>
             <Calculator className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
@@ -1415,17 +1415,17 @@ ${data.transactions
             <div className="text-2xl font-bold">
               {transactions.filter((t) => t.status === "pending").length}
             </div>
-            <p className="text-xs text-muted-foreground">Awaiting completion</p>
+            <p className="text-xs text-muted-foreground">{t("finance.awaiting_completion")}</p>
           </CardContent>
         </Card>
       </div>
 
       <Tabs defaultValue="transactions" className="space-y-4">
         <TabsList>
-          <TabsTrigger value="transactions">Transactions</TabsTrigger>
-          <TabsTrigger value="debts">Debts & Lends</TabsTrigger>
-          <TabsTrigger value="reports">Reports & Analytics</TabsTrigger>
-          <TabsTrigger value="goals">Financial Goals</TabsTrigger>
+          <TabsTrigger value="transactions">{t("finance.transactions")}</TabsTrigger>
+          <TabsTrigger value="debts">{t("finance.debts_lends")}</TabsTrigger>
+          <TabsTrigger value="reports">{t("finance.reports_analytics")}</TabsTrigger>
+          <TabsTrigger value="goals">{t("finance.financial_goals")}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="transactions" className="space-y-4">
@@ -1474,15 +1474,15 @@ ${data.transactions
                 <Select value={timeFilter} onValueChange={setTimeFilter}>
                   <SelectTrigger className="w-[150px]">
                     <Clock className="mr-2 h-4 w-4" />
-                    <SelectValue placeholder="Time" />
+                    <SelectValue placeholder={t("common.date_time")} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">All Time</SelectItem>
-                    <SelectItem value="hour">Last Hour</SelectItem>
-                    <SelectItem value="day">Last Day</SelectItem>
-                    <SelectItem value="week">Last Week</SelectItem>
-                    <SelectItem value="month">Last Month</SelectItem>
-                    <SelectItem value="year">Last Year</SelectItem>
+                    <SelectItem value="all">{t("finance.all_time")}</SelectItem>
+                    <SelectItem value="hour">{t("finance.last_hour")}</SelectItem>
+                    <SelectItem value="day">{t("finance.last_day")}</SelectItem>
+                    <SelectItem value="week">{t("finance.last_week")}</SelectItem>
+                    <SelectItem value="month">{t("finance.last_month")}</SelectItem>
+                    <SelectItem value="year">{t("finance.last_year")}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -1491,13 +1491,13 @@ ${data.transactions
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Type</TableHead>
-                    <TableHead>Category</TableHead>
-                    <TableHead>Description</TableHead>
-                    <TableHead>Amount</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Actions</TableHead>
+                    <TableHead>{t("common.date")}</TableHead>
+                    <TableHead>{t("clients.type")}</TableHead>
+                    <TableHead>{t("warehouse.category")}</TableHead>
+                    <TableHead>{t("common.description")}</TableHead>
+                    <TableHead>{t("common.amount")}</TableHead>
+                    <TableHead>{t("common.status")}</TableHead>
+                    <TableHead>{t("common.actions")}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
