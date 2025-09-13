@@ -203,7 +203,88 @@
     "no_notes": "No notes"
   },
   "filials": {
-    "title": "Filials Management"
+    "title": "Filials Management",
+    "subtitle": "Manage your branches, warehouses, and store locations",
+    "add_filial": "Add Filial",
+    "add_new_filial": "Add New Filial",
+    "add_description": "Create a new branch, warehouse, or store location.",
+    "placeholders": {
+      "store_name": "Downtown Store",
+      "street_address": "Street address",
+      "city": "Tashkent",
+      "country": "Uzbekistan",
+      "phone": "+998 71 123 4567",
+      "email": "store@company.uz",
+      "capacity": "500",
+      "current_staff": "5",
+      "opening_hours": "09:00 - 18:00"
+    },
+    "type": "Type",
+    "select_type": "Select type",
+    "select_status": "Select status",
+    "types": {
+      "warehouse": "Warehouse",
+      "retail_store": "Retail Store",
+      "online_center": "Online Center",
+      "retail": "Retail",
+      "online": "Online"
+    },
+    "manager": "Manager",
+    "statuses": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "maintenance": "Maintenance"
+    },
+    "capacity": "Capacity",
+    "current_staff": "Current Staff",
+    "opening_hours": "Opening Hours",
+    "total_filials": "Total Filials",
+    "retail_stores": "Retail Stores",
+    "customer_facing_locations": "Customer-facing locations",
+    "warehouses": "Warehouses",
+    "storage_facilities": "Storage facilities",
+    "total_staff": "Total Staff",
+    "across_all_locations": "Across all locations",
+    "list_title": "Filials & Branches",
+    "search_placeholder": "Search filials...",
+    "all_types": "All Types",
+    "all_status": "All Status",
+    "headers": {
+      "name_location": "Name & Location",
+      "staff": "Staff"
+    },
+    "contact": "Contact",
+    "loading": "Loading filials...",
+    "details": {
+      "title": "Filial Details",
+      "subtitle": "Complete information about this location"
+    },
+    "products_in_filial": "Products in this filial",
+    "no_products": "No products found in this filial.",
+    "product": "Product",
+    "sku": "SKU",
+    "price": "Price",
+    "quantity": "Quantity",
+    "created": "Created",
+    "updated": "Updated",
+    "edit_filial": "Edit Filial",
+    "edit_description": "Update filial information.",
+    "update_filial": "Update Filial",
+    "required_fields_error": "Please fill in all required fields",
+    "toast": {
+      "added_title": "Filial added",
+      "added_desc": "{{name}} has been added successfully.",
+      "updated_title": "Filial updated",
+      "updated_desc": "{{name}} has been updated successfully.",
+      "deleted_title": "Filial deleted",
+      "deleted_desc": "{{name}} has been removed."
+    },
+    "errors": {
+      "load_products": "Failed to load filial products",
+      "load_filials": "Failed to load filials"
+    },
+    "na": "N/A",
+    "unknown": "Unknown"
   },
   "sales": {
     "title": "Sales Management",
