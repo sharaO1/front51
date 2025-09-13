@@ -2043,10 +2043,10 @@ ${data.timeEntries
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">All Status</SelectItem>
-                      <SelectItem value="active">Active</SelectItem>
-                      <SelectItem value="inactive">Inactive</SelectItem>
-                      <SelectItem value="on_leave">On Leave</SelectItem>
-                      <SelectItem value="terminated">Terminated</SelectItem>
+                      <SelectItem value="active">{t("status.active")}</SelectItem>
+                      <SelectItem value="inactive">{t("status.inactive")}</SelectItem>
+                      <SelectItem value="on_leave">{t("status.on_leave")}</SelectItem>
+                      <SelectItem value="terminated">{t("status.terminated")}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -2847,10 +2847,10 @@ ${data.timeEntries
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="active">Active</SelectItem>
-                    <SelectItem value="inactive">Inactive</SelectItem>
-                    <SelectItem value="on_leave">On Leave</SelectItem>
-                    <SelectItem value="terminated">Terminated</SelectItem>
+                    <SelectItem value="active">{t("status.active")}</SelectItem>
+                    <SelectItem value="inactive">{t("status.inactive")}</SelectItem>
+                    <SelectItem value="on_leave">{t("status.on_leave")}</SelectItem>
+                    <SelectItem value="terminated">{t("status.terminated")}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
