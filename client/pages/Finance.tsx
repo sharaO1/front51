@@ -1476,7 +1476,7 @@ ${data.transactions
                   onValueChange={setCategoryFilter}
                 >
                   <SelectTrigger className="w-[150px]">
-                    <SelectValue placeholder="Category" />
+                    <SelectValue placeholder={t("common.category")} />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Categories</SelectItem>
