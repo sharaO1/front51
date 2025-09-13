@@ -477,6 +477,25 @@ export default function Finance() {
     if (!performedBy) return "";
     return usersMap[performedBy] || performedBy;
   };
+
+  const translateCategory = (name: string) => {
+    switch (name) {
+      case "Sales Revenue":
+        return t("finance.sales_revenue");
+      case "Office Supplies":
+        return t("finance.office_supplies");
+      case "Marketing":
+        return t("finance.marketing");
+      case "Utilities":
+        return t("finance.utilities");
+      case "Equipment":
+        return t("finance.equipment");
+      case "Travel":
+        return t("finance.travel");
+      default:
+        return name;
+    }
+  };
   const [searchTerm, setSearchTerm] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
