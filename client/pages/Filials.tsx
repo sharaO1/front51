@@ -357,6 +357,27 @@ export default function Filials() {
     v.length >= 6;
   const getManagerDisplay = (v: string) => managerNames[v] || v;
 
+  // Resolve a stored manager value (id or name) to a manager user id if possible
+  const resolveManagerId = (value: string | undefined | null) => {
+    if (!value) return undefined;
+    const str = String(value).trim();
+    if (isIdLike(str)) return str;
+    const match = managerOptions.find(
+      (m) => m.name.trim().toLowerCase() === str.toLowerCase(),
+    );
+    return match?.id;
+  };
+
+  // Build a set of assigned manager ids across all filials
+  const getAssignedManagerIds = () => {
+    const set = new Set<string>();
+    for (const f of filials) {
+      const id = resolveManagerId(f.manager);
+      if (id) set.add(id);
+    }
+    return set;
+  };
+
   useEffect(() => {
     const ids = Array.from(
       new Set(
