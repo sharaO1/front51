@@ -53,6 +53,7 @@ import {
   Calendar,
 } from "lucide-react";
 import DetailCard from "@/components/DetailCard";
+import { useTranslation } from "react-i18next";
 
 interface Filial {
   id: string;
@@ -174,6 +175,7 @@ const mockFilials: Filial[] = [
 
 export default function Filials() {
   const [filials, setFilials] = useState<Filial[]>(mockFilials);
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const accessToken = useAuthStore((s) => s.accessToken);
@@ -577,7 +579,7 @@ export default function Filials() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">
-            Filials Management
+            {t("filials.title")}
           </h1>
           <p className="text-muted-foreground">
             Manage your branches, warehouses, and store locations
