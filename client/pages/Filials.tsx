@@ -391,61 +391,77 @@ export default function Filials() {
     };
   }, [accessToken]);
 
-  // Recompute each filial's currentStaff from users' filial assignments
+  // Recompute each filial's currentStaff from users' filial assignments; fallback to employees (/workers)
   useEffect(() => {
     if (!Array.isArray(filials) || filials.length === 0) return;
-    if (!Array.isArray(users) || users.length === 0) {
-      // If users not loaded, ensure counts are zeroed for consistency
-      setFilials((prev) => prev.map((f) => (f.currentStaff !== 0 ? { ...f, currentStaff: 0 } : f)));
-      return;
-    }
 
     const normalize = (v: any) =>
       typeof v === "string" ? v.trim().toLowerCase() : String(v ?? "").trim().toLowerCase();
-    const idCount: Record<string, number> = {};
-    const nameCount: Record<string, number> = {};
 
-    for (const u of users) {
-      const fid =
-        (u as any).filialId ??
-        (u as any).filialID ??
-        (u as any).storeId ??
-        (u as any).branchId ??
-        (u as any).locationId ??
-        undefined;
-      const fname =
-        (u as any).filialName ??
-        (u as any).location ??
-        (u as any).locationName ??
-        (u as any).storeName ??
-        (u as any).branchName ??
-        (typeof (u as any).filial === "object" ? (u as any).filial?.name : (u as any).filial) ??
-        undefined;
-      if (fid) {
-        const key = String(fid);
-        idCount[key] = (idCount[key] || 0) + 1;
-      }
-      if (fname) {
-        const key = normalize(String(fname));
-        nameCount[key] = (nameCount[key] || 0) + 1;
-      }
-    }
-
-    setFilials((prev) => {
+    const applyCounts = (idCount: Record<string, number>, nameCount: Record<string, number>) => {
       let changed = false;
-      const updated = prev.map((f) => {
+      let anyPositive = false;
+      const updated = filials.map((f) => {
         const byId = idCount[String(f.id)] || 0;
         const byName = nameCount[normalize(f.name)] || 0;
         const nextCount = byId || byName;
+        if (nextCount > 0) anyPositive = true;
         if (nextCount !== f.currentStaff) {
           changed = true;
           return { ...f, currentStaff: nextCount };
         }
         return f;
       });
-      return changed ? updated : prev;
-    });
-  }, [users, filials]);
+      if (changed) setFilials(updated);
+      return anyPositive;
+    };
+
+    const buildFromArray = (arr: any[]) => {
+      const idCount: Record<string, number> = {};
+      const nameCount: Record<string, number> = {};
+      for (const u of arr) {
+        const fid = u?.filialId ?? u?.filialID ?? u?.storeId ?? u?.branchId ?? u?.locationId ?? undefined;
+        const fname =
+          u?.filialName ??
+          u?.location ??
+          u?.locationName ??
+          u?.storeName ??
+          u?.branchName ??
+          (typeof u?.filial === "object" ? u?.filial?.name : u?.filial) ??
+          undefined;
+        if (fid != null && fid !== "") idCount[String(fid)] = (idCount[String(fid)] || 0) + 1;
+        if (fname) nameCount[normalize(String(fname))] = (nameCount[normalize(String(fname))] || 0) + 1;
+      }
+      return { idCount, nameCount };
+    };
+
+    const run = async () => {
+      // If we have users, try them first
+      if (Array.isArray(users) && users.length > 0) {
+        const { idCount, nameCount } = buildFromArray(users as any[]);
+        const ok = applyCounts(idCount, nameCount);
+        if (ok) return;
+      }
+
+      // Fallback: fetch employees (/workers)
+      try {
+        const headers: Record<string, string> = { "Content-Type": "application/json" };
+        if (accessToken) headers.Authorization = `Bearer ${accessToken}`;
+        const res = await fetch(`${API_BASE}/workers`, { headers });
+        const json = await res.json().catch(() => null);
+        const list: any[] =
+          (json && Array.isArray(json.result) && json.result) || (Array.isArray(json) ? json : []);
+        if (list.length) {
+          const { idCount, nameCount } = buildFromArray(list);
+          applyCounts(idCount, nameCount);
+        }
+      } catch {
+        // ignore
+      }
+    };
+
+    run();
+  }, [users, filials, accessToken]);
 
   const isIdLike = (v: string) =>
     typeof v === "string" &&
