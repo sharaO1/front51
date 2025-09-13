@@ -264,7 +264,7 @@ export default function Filials() {
   }, [isViewDialogOpen, selectedFilial?.id, accessToken]);
 
   // Load available managers when dialogs are open (via RBAC store)
-  const { users, loadUsers } = useRBACStore();
+  const { users, loadUsers, currentUser } = useRBACStore();
   useEffect(() => {
     let mounted = true;
     const ensureManagers = async () => {
@@ -288,6 +288,12 @@ export default function Filials() {
       mounted = false;
     };
   }, [isAddDialogOpen, isEditDialogOpen, loadUsers, users]);
+
+  // When auth is ready, load users so staff counts can be computed
+  useEffect(() => {
+    if (!currentUser) return;
+    loadUsers().catch(() => {});
+  }, [currentUser, loadUsers]);
 
   // Keep manager options in sync with RBAC users even outside the dialogs
   useEffect(() => {
