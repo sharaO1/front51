@@ -1676,16 +1676,15 @@ ${data.timeEntries
             </DialogTrigger>
             <DialogContent className="max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
               <DialogHeader>
-                <DialogTitle>Add New Employee</DialogTitle>
+                <DialogTitle>{t("employees.add_new_employee")}</DialogTitle>
                 <DialogDescription>
-                  Create a new employee profile with personal and job
-                  information.
+                  {t("employees.create_employee_profile")}
                 </DialogDescription>
               </DialogHeader>
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="email">Email Address *</Label>
+                    <Label htmlFor="email">{t("auth.email_address")} *</Label>
                     <Select
                       value={selectedAccountId}
                       onValueChange={(val) => {
@@ -1704,7 +1703,7 @@ ${data.timeEntries
                       }}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="Select email (unused)" />
+                        <SelectValue placeholder={t("employees.select_email_unused")} />
                       </SelectTrigger>
                       <SelectContent>
                         {users
@@ -1720,7 +1719,7 @@ ${data.timeEntries
                     </Select>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="phone">Phone Number</Label>
+                    <Label htmlFor="phone">{t("clients.phone_number")}</Label>
                     <Input
                       id="phone"
                       placeholder="+992000000000"
@@ -1735,7 +1734,7 @@ ${data.timeEntries
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="address">Address</Label>
+                  <Label htmlFor="address">{t("common.address")}</Label>
                   <Textarea
                     id="address"
                     placeholder="123 Main St, City, State 12345"
@@ -1751,7 +1750,7 @@ ${data.timeEntries
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="position">Position</Label>
+                    <Label htmlFor="position">{t("employees.position")}</Label>
                     <Input
                       id="position"
                       placeholder="Sales Manager"
@@ -1767,7 +1766,7 @@ ${data.timeEntries
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="salary">Annual Salary ($)</Label>
+                    <Label htmlFor="salary">{t("employees.annual_salary")}</Label>
                     <Input
                       id="salary"
                       type="number"
@@ -1786,7 +1785,7 @@ ${data.timeEntries
                 {/* Sales-specific fields */}
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="commission">Commission (%)</Label>
+                    <Label htmlFor="commission">{t("employees.commission")} (%)</Label>
                     <Input
                       id="commission"
                       type="number"
@@ -1802,7 +1801,7 @@ ${data.timeEntries
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="salesTarget">
-                      Monthly Sales Target ($)
+                      {t("employees.monthly_sales_target")}
                     </Label>
                     <Input
                       id="salesTarget"
@@ -1821,7 +1820,7 @@ ${data.timeEntries
 
                 {/* Skills section */}
                 <div className="space-y-2">
-                  <Label>Skills</Label>
+                  <Label>{t("employees.skills")}</Label>
                   <div className="flex gap-2">
                     <Input
                       placeholder="Add a skill"
@@ -1863,7 +1862,7 @@ ${data.timeEntries
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="notes">Notes</Label>
+                  <Label htmlFor="notes">{t("common.notes")}</Label>
                   <Textarea
                     id="notes"
                     placeholder="Additional notes about the employee"
@@ -1876,7 +1875,7 @@ ${data.timeEntries
                 </div>
                 <div className="flex gap-2">
                   <Button className="flex-1" onClick={addEmployee}>
-                    Add Employee
+                    {t("employees.add_employee")}
                   </Button>
                   <Button
                     variant="outline"
@@ -2903,7 +2902,7 @@ ${data.timeEntries
 
             {/* Skills section for edit */}
             <div className="space-y-2">
-              <Label>Skills</Label>
+              <Label>{t("employees.skills")}</Label>
               <div className="flex gap-2">
                 <Input
                   placeholder="Add a skill"
