@@ -53,6 +53,7 @@ export default function MobileEmployeeCard({
   onDelete,
   onStatusChange,
 }: MobileEmployeeCardProps) {
+  const { t } = useTranslation();
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "active":
