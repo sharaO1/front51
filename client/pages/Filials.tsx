@@ -269,15 +269,50 @@ export default function Filials() {
     let mounted = true;
     const ensureManagers = async () => {
       if (!(isAddDialogOpen || isEditDialogOpen)) return;
+
+      // Try to load auth users (managers)
       await loadUsers().catch(() => {});
-      if (!mounted) return;
-      const managers = (users || [])
+      let userManagers = (users || [])
         .filter((u) => u.role === "manager" && u.status === "active")
         .map((u) => ({ id: String(u.id), name: String(u.name || u.email || u.id) }));
-      setManagerOptions(managers);
+
+      // Also load employees/workers and include those with manager role
+      try {
+        const { useAuthStore } = await import("@/stores/authStore");
+        const token = useAuthStore.getState().accessToken;
+        const res = await fetch(joinApi("/workers"), {
+          headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+        });
+        const json = await res.json().catch(() => null);
+        const list = Array.isArray(json?.result) ? json.result : [];
+        const workerManagers = list
+          .filter((w: any) => String(w.role || "worker").toLowerCase() === "manager")
+          .map((w: any) => ({
+            id: String(w.id),
+            name: String(
+              [w.firstName, w.lastName].filter(Boolean).join(" ") ||
+                w.name ||
+                w.email ||
+                w.employeeId ||
+                w.id,
+            ),
+          }));
+        // Merge unique by id
+        const mergedMap = new Map<string, { id: string; name: string }>();
+        [...userManagers, ...workerManagers].forEach((m) => mergedMap.set(m.id, m));
+        userManagers = Array.from(mergedMap.values());
+      } catch {
+        // ignore
+      }
+
+      if (!mounted) return;
+      setManagerOptions(userManagers);
       setManagerNames((prev) => ({
         ...prev,
-        ...Object.fromEntries(managers.map((m) => [m.id, m.name])),
+        ...Object.fromEntries(userManagers.map((m) => [m.id, m.name])),
       }));
     };
     ensureManagers();
