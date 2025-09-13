@@ -326,6 +326,7 @@ export default function Employees() {
   const [isAddSaleOpen, setIsAddSaleOpen] = useState(false);
   const [isViewSalesOpen, setIsViewSalesOpen] = useState(false);
   const [isAttendanceOpen, setIsAttendanceOpen] = useState(false);
+  const [filialOptions, setFilialOptions] = useState<{ id: string; name: string }[]>([]);
 
   // Selected items
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(
@@ -473,6 +474,46 @@ export default function Employees() {
     };
 
     loadEmployeesFromApi();
+  }, []);
+
+  useEffect(() => {
+    let mounted = true;
+    const loadFilials = async () => {
+      try {
+        const { useAuthStore } = await import("@/stores/authStore");
+        const token = useAuthStore.getState().accessToken;
+        const res = await fetch(joinApi("/filials"), {
+          headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+        });
+        if (!res.ok) return;
+        const data = await res.json();
+        const arr = Array.isArray((data as any)?.result)
+          ? (data as any).result
+          : Array.isArray(data)
+          ? (data as any)
+          : [];
+        const mapped = arr
+          .map((f: any) => {
+            const id =
+              f?.id ?? f?.filialId ?? f?.filialID ?? f?.storeId ?? f?.branchId;
+            const name =
+              f?.name ?? f?.title ?? f?.filialName ?? f?.storeName ?? id;
+            if (!id) return null;
+            return { id: String(id), name: String(name) };
+          })
+          .filter(Boolean) as { id: string; name: string }[];
+        if (mounted) setFilialOptions(mapped);
+      } catch {
+        // ignore
+      }
+    };
+    loadFilials();
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   // --- Load Mock Attendance for Selected Date ---
@@ -1051,6 +1092,12 @@ export default function Employees() {
 
   const getInitials = (firstName: string, lastName: string) => {
     return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
+  };
+
+  const getFilialName = (id?: string) => {
+    if (!id) return "";
+    const f = filialOptions.find((fi) => String(fi.id) === String(id));
+    return f?.name || id;
   };
 
   const downloadFile = (
@@ -2835,6 +2882,7 @@ ${data.timeEntries
               left={[
                 { label: "Employee ID", value: selectedEmployee.employeeId },
                 { label: "Department", value: selectedEmployee.department },
+                { label: "Filial", value: getFilialName(selectedEmployee.filialId) },
                 { label: "Hire Date", value: selectedEmployee.hireDate },
                 { label: "Email", value: selectedEmployee.email },
               ]}
