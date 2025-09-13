@@ -289,11 +289,6 @@ export default function Filials() {
     };
   }, [isAddDialogOpen, isEditDialogOpen, loadUsers, users]);
 
-  // When auth is ready, load users so staff counts can be computed
-  useEffect(() => {
-    if (!currentUser) return;
-    loadUsers().catch(() => {});
-  }, [currentUser, loadUsers]);
 
   // Keep manager options in sync with RBAC users even outside the dialogs
   useEffect(() => {
