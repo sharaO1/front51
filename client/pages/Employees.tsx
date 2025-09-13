@@ -2056,13 +2056,13 @@ ${data.timeEntries
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Employee</TableHead>
-                    <TableHead>Contact</TableHead>
-                    <TableHead>Department</TableHead>
-                    <TableHead>Role</TableHead>
-                    <TableHead>Salary</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Actions</TableHead>
+                    <TableHead>{t("employees.employee")}</TableHead>
+                    <TableHead>{t("clients.contact")}</TableHead>
+                    <TableHead>{t("employees.department")}</TableHead>
+                    <TableHead>{t("employees.role")}</TableHead>
+                    <TableHead>{t("employees.salary")}</TableHead>
+                    <TableHead>{t("common.status")}</TableHead>
+                    <TableHead>{t("common.actions")}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -2445,13 +2445,13 @@ ${data.timeEntries
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Employee</TableHead>
-                    <TableHead>Clock In</TableHead>
-                    <TableHead>Clock Out</TableHead>
-                    <TableHead>Total Hours</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Notes</TableHead>
-                    <TableHead>Actions</TableHead>
+                    <TableHead>{t("employees.employee")}</TableHead>
+                    <TableHead>{t("employees.clock_in")}</TableHead>
+                    <TableHead>{t("employees.clock_out")}</TableHead>
+                    <TableHead>{t("employees.total_hours")}</TableHead>
+                    <TableHead>{t("common.status")}</TableHead>
+                    <TableHead>{t("common.notes")}</TableHead>
+                    <TableHead>{t("common.actions")}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
