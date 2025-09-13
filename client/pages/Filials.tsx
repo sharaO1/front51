@@ -389,23 +389,23 @@ export default function Filials() {
       case "active":
         return (
           <Badge variant="default" className="bg-green-100 text-green-800">
-            Active
+            {t("filials.statuses.active")}
           </Badge>
         );
       case "inactive":
         return (
           <Badge variant="secondary" className="bg-gray-100 text-gray-800">
-            Inactive
+            {t("filials.statuses.inactive")}
           </Badge>
         );
       case "maintenance":
         return (
           <Badge variant="outline" className="bg-yellow-100 text-yellow-800">
-            Maintenance
+            {t("filials.statuses.maintenance")}
           </Badge>
         );
       default:
-        return <Badge variant="outline">Unknown</Badge>;
+        return <Badge variant="outline">{t("filials.unknown")}</Badge>;
     }
   };
 
@@ -415,25 +415,25 @@ export default function Filials() {
         return (
           <Badge variant="outline" className="bg-blue-100 text-blue-800">
             <Building2 className="w-3 h-3 mr-1" />
-            Warehouse
+            {t("filials.types.warehouse")}
           </Badge>
         );
       case "retail":
         return (
           <Badge variant="outline" className="bg-green-100 text-green-800">
             <Store className="w-3 h-3 mr-1" />
-            Retail
+            {t("filials.types.retail")}
           </Badge>
         );
       case "online":
         return (
           <Badge variant="outline" className="bg-purple-100 text-purple-800">
             <Globe className="w-3 h-3 mr-1" />
-            Online
+            {t("filials.types.online")}
           </Badge>
         );
       default:
-        return <Badge variant="outline">Unknown</Badge>;
+        return <Badge variant="outline">{t("filials.unknown")}</Badge>;
     }
   };
 
@@ -708,7 +708,7 @@ export default function Filials() {
               </div>
               <div className="grid grid-cols-3 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="status">Status</Label>
+                  <Label htmlFor="status">{t("common.status")}</Label>
                   <Select
                     value={newFilial.status}
                     onValueChange={(value) =>
@@ -729,7 +729,7 @@ export default function Filials() {
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="capacity">Capacity</Label>
+                  <Label htmlFor="capacity">{t("filials.capacity")}</Label>
                   <Input
                     id="capacity"
                     type="number"
@@ -745,7 +745,7 @@ export default function Filials() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="currentStaff">Current Staff</Label>
+                  <Label htmlFor="currentStaff">{t("filials.current_staff")}</Label>
                   <Input
                     id="currentStaff"
                     type="number"
@@ -762,7 +762,7 @@ export default function Filials() {
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="openingHours">Opening Hours</Label>
+                <Label htmlFor="openingHours">{t("filials.opening_hours")}</Label>
                 <Input
                   id="openingHours"
                   placeholder={t("filials.placeholders.opening_hours")}
@@ -877,7 +877,7 @@ export default function Filials() {
                 <SelectValue placeholder={t("common.status")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
+                <SelectItem value="all">{t("filials.all_status")}</SelectItem>
                 <SelectItem value="active">{t("filials.statuses.active")}</SelectItem>
                 <SelectItem value="inactive">{t("filials.statuses.inactive")}</SelectItem>
                 <SelectItem value="maintenance">{t("filials.statuses.maintenance")}</SelectItem>
