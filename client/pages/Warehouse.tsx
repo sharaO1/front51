@@ -2576,7 +2576,7 @@ export default function Warehouse() {
                     variant="outline"
                     onClick={() => setIsAddDialogOpen(false)}
                   >
-                    Cancel
+                    {t("common.cancel")}
                   </Button>
                 </div>
               </div>
@@ -3659,8 +3659,8 @@ export default function Warehouse() {
                   setEditingProduct(null);
                 }}
               >
-                Cancel
-              </Button>
+                {t("common.cancel")}
+                  </Button>
             </div>
           </div>
         </DialogContent>
@@ -3876,8 +3876,8 @@ export default function Warehouse() {
                   setSelectedProduct(null);
                 }}
               >
-                Cancel
-              </Button>
+                {t("common.cancel")}
+                  </Button>
             </div>
           </div>
         </DialogContent>
@@ -4124,8 +4124,8 @@ export default function Warehouse() {
                   setSelectedProduct(null);
                 }}
               >
-                Cancel
-              </Button>
+                {t("common.cancel")}
+                  </Button>
             </div>
           </div>
         </DialogContent>
