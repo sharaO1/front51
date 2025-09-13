@@ -2969,7 +2969,7 @@ export default function Warehouse() {
                             {movement.type === "stock_in"
                               ? movement.partyName ||
                                 movement.fromStore ||
-                                "From"
+                                t("warehouse.from")
                               : movement.party || movement.reason || "Details"}
                           </div>
 
