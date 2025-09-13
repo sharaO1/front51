@@ -1432,7 +1432,7 @@ ${data.transactions
           {/* Transactions */}
           <Card>
             <CardHeader>
-              <CardTitle>Transaction History</CardTitle>
+              <CardTitle>{t("finance.transaction_history")}</CardTitle>
               <div className="flex gap-4">
                 <div className="relative flex-1">
                   <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -1828,8 +1828,8 @@ ${data.transactions
           <div className="grid gap-4 md:grid-cols-2">
             <Card>
               <CardHeader>
-                <CardTitle>Cash Flow Trend</CardTitle>
-                <CardDescription>Monthly income vs expenses</CardDescription>
+                <CardTitle>{t("finance.cash_flow_trend")}</CardTitle>
+                <CardDescription>{t("finance.monthly_income_expenses")}</CardDescription>
               </CardHeader>
               <CardContent>
                 <ResponsiveContainer width="100%" height={300}>
@@ -1864,8 +1864,8 @@ ${data.transactions
 
             <Card>
               <CardHeader>
-                <CardTitle>Expense Breakdown</CardTitle>
-                <CardDescription>Expenses by category</CardDescription>
+                <CardTitle>{t("finance.expense_breakdown")}</CardTitle>
+                <CardDescription>{t("finance.expenses_by_category")}</CardDescription>
               </CardHeader>
               <CardContent>
                 <ResponsiveContainer width="100%" height={300}>
@@ -1896,9 +1896,9 @@ ${data.transactions
           {/* Monthly Comparison */}
           <Card>
             <CardHeader>
-              <CardTitle>Monthly Performance</CardTitle>
+              <CardTitle>{t("finance.monthly_performance")}</CardTitle>
               <CardDescription>
-                Income, expenses, and profit comparison
+                {t("finance.income_expenses_profit")}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -1922,9 +1922,9 @@ ${data.transactions
           {/* Financial Goals */}
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-lg font-semibold">Financial Goals</h3>
+              <h3 className="text-lg font-semibold">{t("finance.financial_goals")}</h3>
               <p className="text-sm text-muted-foreground">
-                Track your financial objectives and progress
+                {t("finance.track_financial_objectives")}
               </p>
             </div>
             <Dialog open={isAddGoalOpen} onOpenChange={setIsAddGoalOpen}>
