@@ -86,6 +86,7 @@
     "sales": "Sales",
     "finance": "Finance",
     "employees": "Employees",
+    "user_management": "User Management",
     "settings": "Settings",
     "filials": "Filials"
   },
