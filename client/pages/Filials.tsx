@@ -603,10 +603,10 @@ export default function Filials() {
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="name">Name *</Label>
+                  <Label htmlFor="name">{t("common.name")} *</Label>
                   <Input
                     id="name"
-                    placeholder="Downtown Store"
+                    placeholder={t("filials.placeholders.store_name")}
                     value={newFilial.name}
                     onChange={(e) =>
                       setNewFilial({ ...newFilial, name: e.target.value })
@@ -614,7 +614,7 @@ export default function Filials() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="type">Type *</Label>
+                  <Label htmlFor="type">{t("filials.type")} *</Label>
                   <Select
                     value={newFilial.type}
                     onValueChange={(value) =>
@@ -625,21 +625,21 @@ export default function Filials() {
                     }
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select type" />
+                      <SelectValue placeholder={t("filials.select_type")} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="warehouse">Warehouse</SelectItem>
-                      <SelectItem value="retail">Retail Store</SelectItem>
-                      <SelectItem value="online">Online Center</SelectItem>
+                      <SelectItem value="warehouse">{t("filials.types.warehouse")}</SelectItem>
+                      <SelectItem value="retail">{t("filials.types.retail_store")}</SelectItem>
+                      <SelectItem value="online">{t("filials.types.online_center")}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="address">Address *</Label>
+                <Label htmlFor="address">{t("common.address")} *</Label>
                 <Input
                   id="address"
-                  placeholder="Street address"
+                  placeholder={t("filials.placeholders.street_address")}
                   value={newFilial.address}
                   onChange={(e) =>
                     setNewFilial({ ...newFilial, address: e.target.value })
@@ -648,10 +648,10 @@ export default function Filials() {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="city">City *</Label>
+                  <Label htmlFor="city">{t("filials.city")} *</Label>
                   <Input
                     id="city"
-                    placeholder="Tashkent"
+                    placeholder={t("filials.placeholders.city")}
                     value={newFilial.city}
                     onChange={(e) =>
                       setNewFilial({ ...newFilial, city: e.target.value })
@@ -659,10 +659,10 @@ export default function Filials() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="country">Country</Label>
+                  <Label htmlFor="country">{t("filials.country")}</Label>
                   <Input
                     id="country"
-                    placeholder="Uzbekistan"
+                    placeholder={t("filials.placeholders.country")}
                     value={newFilial.country}
                     onChange={(e) =>
                       setNewFilial({ ...newFilial, country: e.target.value })
@@ -672,10 +672,10 @@ export default function Filials() {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="phone">Phone</Label>
+                  <Label htmlFor="phone">{t("common.phone")}</Label>
                   <Input
                     id="phone"
-                    placeholder="+998 71 123 4567"
+                    placeholder={t("filials.placeholders.phone")}
                     value={newFilial.phone}
                     onChange={(e) =>
                       setNewFilial({ ...newFilial, phone: e.target.value })
@@ -683,11 +683,11 @@ export default function Filials() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="email">{t("common.email")}</Label>
                   <Input
                     id="email"
                     type="email"
-                    placeholder="store@company.uz"
+                    placeholder={t("filials.placeholders.email")}
                     value={newFilial.email}
                     onChange={(e) =>
                       setNewFilial({ ...newFilial, email: e.target.value })
@@ -696,7 +696,7 @@ export default function Filials() {
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="manager">Manager *</Label>
+                <Label htmlFor="manager">{t("filials.manager")} *</Label>
                 <Input
                   id="manager"
                   placeholder="John Smith"
@@ -719,12 +719,12 @@ export default function Filials() {
                     }
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select status" />
+                      <SelectValue placeholder={t("filials.select_status")} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="active">Active</SelectItem>
-                      <SelectItem value="inactive">Inactive</SelectItem>
-                      <SelectItem value="maintenance">Maintenance</SelectItem>
+                      <SelectItem value="active">{t("filials.statuses.active")}</SelectItem>
+                      <SelectItem value="inactive">{t("filials.statuses.inactive")}</SelectItem>
+                      <SelectItem value="maintenance">{t("filials.statuses.maintenance")}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -734,7 +734,7 @@ export default function Filials() {
                     id="capacity"
                     type="number"
                     min="0"
-                    placeholder="500"
+                    placeholder={t("filials.placeholders.capacity")}
                     value={newFilial.capacity}
                     onChange={(e) =>
                       setNewFilial({
@@ -750,7 +750,7 @@ export default function Filials() {
                     id="currentStaff"
                     type="number"
                     min="0"
-                    placeholder="5"
+                    placeholder={t("filials.placeholders.current_staff")}
                     value={newFilial.currentStaff}
                     onChange={(e) =>
                       setNewFilial({
@@ -765,7 +765,7 @@ export default function Filials() {
                 <Label htmlFor="openingHours">Opening Hours</Label>
                 <Input
                   id="openingHours"
-                  placeholder="09:00 - 18:00"
+                  placeholder={t("filials.placeholders.opening_hours")}
                   value={newFilial.openingHours}
                   onChange={(e) =>
                     setNewFilial({ ...newFilial, openingHours: e.target.value })
@@ -780,7 +780,7 @@ export default function Filials() {
                   variant="outline"
                   onClick={() => setIsAddDialogOpen(false)}
                 >
-                  Cancel
+                  {t("common.cancel")}
                 </Button>
               </div>
             </div>
@@ -867,20 +867,20 @@ export default function Filials() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Types</SelectItem>
-                <SelectItem value="warehouse">Warehouse</SelectItem>
+                <SelectItem value="warehouse">{t("filials.types.warehouse")}</SelectItem>
                 <SelectItem value="retail">Retail</SelectItem>
                 <SelectItem value="online">Online</SelectItem>
               </SelectContent>
             </Select>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger className="w-[130px]">
-                <SelectValue placeholder="Status" />
+                <SelectValue placeholder={t("common.status")} />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="active">Active</SelectItem>
-                <SelectItem value="inactive">Inactive</SelectItem>
-                <SelectItem value="maintenance">Maintenance</SelectItem>
+                <SelectItem value="active">{t("filials.statuses.active")}</SelectItem>
+                <SelectItem value="inactive">{t("filials.statuses.inactive")}</SelectItem>
+                <SelectItem value="maintenance">{t("filials.statuses.maintenance")}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -1135,10 +1135,10 @@ export default function Filials() {
             {/* Same form structure as Add Dialog but with edit functionality */}
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="editName">Name *</Label>
+                <Label htmlFor="editName">{t("common.name")} *</Label>
                 <Input
                   id="editName"
-                  placeholder="Downtown Store"
+                  placeholder={t("filials.placeholders.store_name")}
                   value={newFilial.name}
                   onChange={(e) =>
                     setNewFilial({ ...newFilial, name: e.target.value })
@@ -1146,7 +1146,7 @@ export default function Filials() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="editType">Type *</Label>
+                <Label htmlFor="editType">{t("filials.type")} *</Label>
                 <Select
                   value={newFilial.type}
                   onValueChange={(value) =>
@@ -1157,21 +1157,21 @@ export default function Filials() {
                   }
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select type" />
+                    <SelectValue placeholder={t("filials.select_type")} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="warehouse">Warehouse</SelectItem>
-                    <SelectItem value="retail">Retail Store</SelectItem>
-                    <SelectItem value="online">Online Center</SelectItem>
+                    <SelectItem value="warehouse">{t("filials.types.warehouse")}</SelectItem>
+                    <SelectItem value="retail">{t("filials.types.retail_store")}</SelectItem>
+                    <SelectItem value="online">{t("filials.types.online_center")}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="editAddress">Address *</Label>
+              <Label htmlFor="editAddress">{t("common.address")} *</Label>
               <Input
                 id="editAddress"
-                placeholder="Street address"
+                placeholder={t("filials.placeholders.street_address")}
                 value={newFilial.address}
                 onChange={(e) =>
                   setNewFilial({ ...newFilial, address: e.target.value })
@@ -1180,10 +1180,10 @@ export default function Filials() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="editCity">City *</Label>
+                <Label htmlFor="editCity">{t("filials.city")} *</Label>
                 <Input
                   id="editCity"
-                  placeholder="Tashkent"
+                  placeholder={t("filials.placeholders.city")}
                   value={newFilial.city}
                   onChange={(e) =>
                     setNewFilial({ ...newFilial, city: e.target.value })
@@ -1191,7 +1191,7 @@ export default function Filials() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="editManager">Manager *</Label>
+                <Label htmlFor="editManager">{t("filials.manager")} *</Label>
                 <Input
                   id="editManager"
                   placeholder="John Smith"
@@ -1210,7 +1210,7 @@ export default function Filials() {
                 variant="outline"
                 onClick={() => setIsEditDialogOpen(false)}
               >
-                Cancel
+                {t("common.cancel")}
               </Button>
             </div>
           </div>
