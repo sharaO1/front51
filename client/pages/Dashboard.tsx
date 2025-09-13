@@ -101,9 +101,11 @@ export default function Dashboard() {
     let mounted = true;
     const loadCounts = async () => {
       try {
+        const headers: Record<string, string> = { "Content-Type": "application/json" };
+        if (accessToken) headers.Authorization = `Bearer ${accessToken}`;
         const [prodRes, clientsRes] = await Promise.all([
-          fetch(`${API_BASE}/products`),
-          fetch(`${API_BASE}/clients`),
+          fetch(`${API_BASE}/products`, { headers }),
+          fetch(`${API_BASE}/clients`, { headers }),
         ]);
         const prodJson = await prodRes.json().catch(() => null as any);
         const clientsJson = await clientsRes.json().catch(() => null as any);
