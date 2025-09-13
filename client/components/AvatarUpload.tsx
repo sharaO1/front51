@@ -116,9 +116,8 @@ export default function AvatarUpload({
 
     const doUpload = async (method: "POST" | "PUT") => {
       const form = new FormData();
+      // Backend expects a single file field named "avatar"
       form.append("avatar", selectedFile);
-      form.append("file", selectedFile);
-      form.append("photo", selectedFile);
 
       const res = await fetch(joinApi("/users/avatar"), {
         method,
@@ -129,10 +128,11 @@ export default function AvatarUpload({
     };
 
     try {
-      let res = await doUpload("POST");
+      // Try PUT first (most backends expose PUT for avatar updates)
+      let res = await doUpload("PUT");
       if (res.status === 405 || res.status === 404) {
-        // fallback to PUT if POST not allowed
-        res = await doUpload("PUT");
+        // Fallback to POST if PUT isn't supported
+        res = await doUpload("POST");
       }
 
       if (!res.ok) {
