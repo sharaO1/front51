@@ -1312,7 +1312,7 @@ export default function Sales() {
             {/* Results Summary */}
             <div className="flex items-center justify-between text-sm text-muted-foreground">
               <span>
-                Showing {filteredInvoices.length} of {invoices.length} invoices
+                {t("sales.showing_invoices", { count: filteredInvoices.length, total: invoices.length })}
                 {dateFilter !== "all" && (
                   <span className="ml-2 px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">
                     {dateFilter === "custom" && startDate && endDate
