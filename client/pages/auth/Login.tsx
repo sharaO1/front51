@@ -53,7 +53,6 @@ export default function Login() {
     }
   };
 
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-blue-50 p-4 animate-fade-in">
       <div className="w-full max-w-md">
@@ -87,7 +86,7 @@ export default function Login() {
                   <Label
                     htmlFor="email"
                     className="text-sm font-medium text-gray-700"
->
+                  >
                     {t("auth.email_address")}
                   </Label>
                   <div className="relative group">
@@ -108,7 +107,7 @@ export default function Login() {
                   <Label
                     htmlFor="password"
                     className="text-sm font-medium text-gray-700"
->
+                  >
                     {t("auth.password")}
                   </Label>
                   <div className="relative group">
@@ -138,7 +137,6 @@ export default function Login() {
                   </div>
                 </div>
 
-
                 <Button
                   type="submit"
                   className="w-full h-12 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] font-medium text-white"
@@ -147,7 +145,9 @@ export default function Login() {
                   {isLoading ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      <span className="animate-pulse">{t("auth.signing_in")}</span>
+                      <span className="animate-pulse">
+                        {t("auth.signing_in")}
+                      </span>
                     </>
                   ) : (
                     <>
@@ -164,17 +164,25 @@ export default function Login() {
                 <div className="p-4 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-lg hover:shadow-md transition-all duration-300">
                   <p className="text-sm text-amber-800">
                     <strong className="flex items-center gap-1">
-                      🔒 <span>{t("auth.secure_access_title", { defaultValue: "Secure Access" })}:</span>
+                      🔒{" "}
+                      <span>
+                        {t("auth.secure_access_title", {
+                          defaultValue: "Secure Access",
+                        })}
+                        :
+                      </span>
                     </strong>
                     <span className="mt-1 block text-amber-700">
-                      {t("auth.secure_access_message", { defaultValue: "User accounts are managed by administrators only. Contact your system administrator to request access." })}
+                      {t("auth.secure_access_message", {
+                        defaultValue:
+                          "User accounts are managed by administrators only. Contact your system administrator to request access.",
+                      })}
                     </span>
                   </p>
                 </div>
               </div>
             </CardContent>
           </Card>
-
         </div>
       </div>
     </div>

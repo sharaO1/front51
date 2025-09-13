@@ -1,11 +1,11 @@
-import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
-import LanguageDetector from 'i18next-browser-languagedetector';
+import i18n from "i18next";
+import { initReactI18next } from "react-i18next";
+import LanguageDetector from "i18next-browser-languagedetector";
 
 // Translation resources
-import en from '../locales/en.json';
-import tg from '../locales/tg.json';
-import ru from '../locales/ru.json';
+import en from "../locales/en.json";
+import tg from "../locales/tg.json";
+import ru from "../locales/ru.json";
 
 const resources = {
   en: {
@@ -24,9 +24,9 @@ i18n
   .use(initReactI18next)
   .init({
     resources,
-    supportedLngs: ['en', 'ru', 'tg'],
-    fallbackLng: 'ru',
-    load: 'languageOnly',
+    supportedLngs: ["en", "ru", "tg"],
+    fallbackLng: "ru",
+    load: "languageOnly",
     debug: false,
 
     interpolation: {
@@ -35,15 +35,15 @@ i18n
 
     detection: {
       // Use device/browser language; do not persist
-      order: ['navigator', 'htmlTag'],
+      order: ["navigator", "htmlTag"],
       caches: [],
     },
   });
 
 // Keep <html lang> in sync
-if (typeof document !== 'undefined') {
-  document.documentElement.lang = i18n.language || 'ru';
-  i18n.on('languageChanged', (lng) => {
+if (typeof document !== "undefined") {
+  document.documentElement.lang = i18n.language || "ru";
+  i18n.on("languageChanged", (lng) => {
     document.documentElement.lang = lng;
   });
 }

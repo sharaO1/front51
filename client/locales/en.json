@@ -79,7 +79,7 @@
   "navigation": {
     "dashboard": "Dashboard",
     "warehouse": "Warehouse",
-    "clients": "Clients", 
+    "clients": "Clients",
     "sales": "Sales",
     "finance": "Finance",
     "employees": "Employees",
@@ -202,7 +202,7 @@
     "no_notes": "No notes"
   },
   "sales": {
-    "title": "Sales Management", 
+    "title": "Sales Management",
     "subtitle": "Create invoices and manage sales transactions",
     "new_invoice": "New Invoice",
     "total_invoices": "Total Invoices",

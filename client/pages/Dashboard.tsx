@@ -20,7 +20,15 @@ import {
   Pie,
   Cell,
 } from "recharts";
-import { Package, Users, DollarSign, TrendingUp, AlertTriangle, ShoppingCart, MessageCircle } from "lucide-react";
+import {
+  Package,
+  Users,
+  DollarSign,
+  TrendingUp,
+  AlertTriangle,
+  ShoppingCart,
+  MessageCircle,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -47,9 +55,6 @@ const salesData = [
   { name: "May", sales: 1890, profit: 4800 },
   { name: "Jun", sales: 2390, profit: 3800 },
 ];
-
-
-
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -117,7 +122,12 @@ export default function Dashboard() {
         // Scope products/clients to manager's filial if applicable
         const inFilial = (obj: any, fid: string) => {
           if (!fid) return true;
-          const direct = obj?.filialId ?? obj?.filialID ?? obj?.storeId ?? obj?.branchId ?? obj?.locationId;
+          const direct =
+            obj?.filialId ??
+            obj?.filialID ??
+            obj?.storeId ??
+            obj?.branchId ??
+            obj?.locationId;
           if (direct) return String(direct) === String(fid);
           if (Array.isArray(obj?.filials)) {
             return obj.filials.some((f: any) => {
@@ -158,7 +168,11 @@ export default function Dashboard() {
           "#84CC16",
         ];
         const computed = Array.from(categoryMap.entries()).map(
-          ([name, value], i) => ({ name, value, color: palette[i % palette.length] }),
+          ([name, value], i) => ({
+            name,
+            value,
+            color: palette[i % palette.length],
+          }),
         );
         setCategoryDist(computed);
         const monthAgo = Date.now() - 30 * 24 * 3600 * 1000;
@@ -214,13 +228,19 @@ export default function Dashboard() {
               // possible stock fields or nested stores
               let stock: number | null = null;
 
-              if (managerFilialId && Array.isArray(p.filials) && p.filials.length) {
+              if (
+                managerFilialId &&
+                Array.isArray(p.filials) &&
+                p.filials.length
+              ) {
                 const entry = p.filials.find((f: any) => {
                   const id = f?.filialId ?? f?.id ?? f?.storeId ?? f?.branchId;
                   return id && String(id) === String(managerFilialId);
                 });
                 if (entry) {
-                  stock = Number(entry.count ?? entry.quantity ?? entry.qty ?? 0) || 0;
+                  stock =
+                    Number(entry.count ?? entry.quantity ?? entry.qty ?? 0) ||
+                    0;
                 }
               }
 
@@ -368,7 +388,6 @@ export default function Dashboard() {
       isMounted = false;
     };
   }, []);
-
 
   const exportReport = (format: "pdf" | "excel" | "csv") => {
     // Generate comprehensive report data
@@ -559,7 +578,6 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
     return csv;
   };
 
-
   return (
     <div className="space-y-8 animate-fade-in">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-border">
@@ -587,7 +605,9 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
           </CardHeader>
           <CardContent className="pt-0 relative z-10">
             <div className="text-3xl font-bold text-gray-900 mb-2 tracking-tight">
-              {salesSummary ? `$${salesSummary.totals.revenue.toLocaleString()}` : "—"}
+              {salesSummary
+                ? `$${salesSummary.totals.revenue.toLocaleString()}`
+                : "—"}
             </div>
             <div className="flex items-center gap-2">
               <div className="flex items-center gap-1">
