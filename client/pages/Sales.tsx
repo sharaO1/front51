@@ -763,9 +763,7 @@ export default function Sales() {
                     onChange={() => setUseExistingClient(true)}
                     className="h-4 w-4"
                   />
-                  <Label htmlFor="existing-client">
-                    Select existing client
-                  </Label>
+                  <Label htmlFor="existing-client">{t("sales.select_existing_client")}</Label>
                   <input
                     type="radio"
                     id="new-client"
@@ -774,7 +772,7 @@ export default function Sales() {
                     onChange={() => setUseExistingClient(false)}
                     className="h-4 w-4 ml-4"
                   />
-                  <Label htmlFor="new-client">Enter new client</Label>
+                  <Label htmlFor="new-client">{t("sales.enter_new_client")}</Label>
 
                   <label className="ml-4 flex items-center space-x-2 text-sm">
                     <input
