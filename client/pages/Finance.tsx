@@ -1169,7 +1169,7 @@ ${data.transactions
                 >
                   <FileSpreadsheet className="mr-2 h-4 w-4" />
                   <div className="flex-1">
-                    <div className="font-medium">Excel Workbook</div>
+                    <div className="font-medium">{t("finance.export_excel_title")}</div>
                     <div className="text-xs text-muted-foreground">
                       Detailed transactions and analytics
                     </div>
