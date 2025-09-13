@@ -1251,7 +1251,7 @@ ${data.transactions
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="income">{t("finance.income")}</SelectItem>
-                      <SelectItem value="expense">Expense</SelectItem>
+                      <SelectItem value="expense">{t("finance.expense")}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -1468,7 +1468,7 @@ ${data.transactions
                   <SelectContent>
                     <SelectItem value="all">{t("finance.all_types")}</SelectItem>
                     <SelectItem value="income">{t("finance.income")}</SelectItem>
-                    <SelectItem value="expense">Expense</SelectItem>
+                    <SelectItem value="expense">{t("finance.expense")}</SelectItem>
                   </SelectContent>
                 </Select>
                 <Select
@@ -2161,7 +2161,7 @@ ${data.transactions
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="income">{t("finance.income")}</SelectItem>
-                  <SelectItem value="expense">Expense</SelectItem>
+                  <SelectItem value="expense">{t("finance.expense")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
