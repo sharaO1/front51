@@ -2564,18 +2564,18 @@ ${data.timeEntries
                             variant="default"
                             className="bg-green-100 text-green-800"
                           >
-                            Present
+                            {t("status.present")}
                           </Badge>
                         )}
                         {attendance?.status === "absent" && (
-                          <Badge variant="destructive">Absent</Badge>
+                          <Badge variant="destructive">{t("status.absent")}</Badge>
                         )}
                         {attendance?.status === "late" && (
                           <Badge
                             variant="secondary"
                             className="bg-yellow-100 text-yellow-800"
                           >
-                            Late
+                            {t("status.late")}
                           </Badge>
                         )}
                         {attendance?.status === "half_day" && (
@@ -2583,7 +2583,7 @@ ${data.timeEntries
                             variant="outline"
                             className="bg-blue-50 text-blue-700"
                           >
-                            Half Day
+                            {t("status.half_day")}
                           </Badge>
                         )}
                         {attendance?.status === "on_break" && (
@@ -2591,7 +2591,7 @@ ${data.timeEntries
                             variant="outline"
                             className="bg-orange-50 text-orange-700"
                           >
-                            On Break
+                            {t("status.on_break")}
                           </Badge>
                         )}
                         {!attendance && (
@@ -2599,7 +2599,7 @@ ${data.timeEntries
                             variant="secondary"
                             className="bg-gray-100 text-gray-800"
                           >
-                            Not Marked
+                            {t("employees.not_marked")}
                           </Badge>
                         )}
                       </TableCell>
