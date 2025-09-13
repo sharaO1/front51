@@ -701,8 +701,8 @@ export default function Warehouse() {
       setProducts(mapped);
     } catch (e) {
       toast({
-        title: "Error",
-        description: "Failed to load products",
+        title: t("common.error"),
+        description: t("warehouse.errors.load_products"),
         variant: "destructive",
       });
     }
@@ -952,8 +952,8 @@ export default function Warehouse() {
     } catch (e) {
       console.error("Failed to load histories", e);
       toast({
-        title: "Error",
-        description: "Failed to load warehouse history",
+        title: t("common.error"),
+        description: t("warehouse.errors.load_history"),
         variant: "destructive",
       });
       return 0;
@@ -1190,8 +1190,8 @@ export default function Warehouse() {
     } catch (e) {
       console.error("Failed to load movements", e);
       toast({
-        title: "Error",
-        description: "Failed to load stock movements",
+        title: t("common.error"),
+        description: t("warehouse.errors.load_movements"),
         variant: "destructive",
       });
       return 0;
@@ -1570,7 +1570,7 @@ export default function Warehouse() {
       !stockFrom.trim()
     ) {
       toast({
-        title: "Error",
+        title: t("common.error"),
         description: "Please fill in all required fields",
         variant: "destructive",
       });
@@ -1689,7 +1689,7 @@ export default function Warehouse() {
       });
     } catch (e: any) {
       toast({
-        title: "Error",
+        title: t("common.error"),
         description: e?.message || "Failed to add stock",
         variant: "destructive",
       });
@@ -1717,7 +1717,7 @@ export default function Warehouse() {
       !stockTo.trim()
     ) {
       toast({
-        title: "Error",
+        title: t("common.error"),
         description: "Please fill in all required fields",
         variant: "destructive",
       });
@@ -1726,7 +1726,7 @@ export default function Warehouse() {
 
     if (stockQuantity > selectedProduct.quantity) {
       toast({
-        title: "Error",
+        title: t("common.error"),
         description: "Cannot remove more stock than available",
         variant: "destructive",
       });
@@ -1848,7 +1848,7 @@ export default function Warehouse() {
       });
     } catch (e: any) {
       toast({
-        title: "Error",
+        title: t("common.error"),
         description: e?.message || "Failed to remove stock",
         variant: "destructive",
       });
@@ -1871,7 +1871,7 @@ export default function Warehouse() {
   const addProduct = async () => {
     if (!newProduct.name || !newProduct.category || !newProduct.sku) {
       toast({
-        title: "Error",
+        title: t("common.error"),
         description: "Please fill in all required fields (Name, Category, SKU)",
         variant: "destructive",
       });
@@ -2011,12 +2011,12 @@ export default function Warehouse() {
       setIsAddDialogOpen(false);
 
       toast({
-        title: "Product added",
-        description: `${product.name} has been added to inventory.`,
+        title: t("warehouse.toast.product_added_title"),
+        description: t("warehouse.toast.product_added_desc", { name: product.name }),
       });
     } catch (error: any) {
       toast({
-        title: "Error",
+        title: t("common.error"),
         description: error.message || "Something went wrong",
         variant: "destructive",
       });
@@ -2031,7 +2031,7 @@ export default function Warehouse() {
       !newProduct.sku
     ) {
       toast({
-        title: "Error",
+        title: t("common.error"),
         description: "Please fill in all required fields (Name, Category, SKU)",
         variant: "destructive",
       });
@@ -2123,7 +2123,7 @@ export default function Warehouse() {
       }
     } catch (error: any) {
       toast({
-        title: "Error",
+        title: t("common.error"),
         description: error?.message || "Failed to update product",
         variant: "destructive",
       });
@@ -2197,7 +2197,7 @@ export default function Warehouse() {
       }
     } catch (error: any) {
       toast({
-        title: "Error",
+        title: t("common.error"),
         description: error?.message || "Failed to delete product",
         variant: "destructive",
       });
@@ -2225,8 +2225,8 @@ export default function Warehouse() {
     setWarehouseHistory([historyEntry, ...warehouseHistory]);
 
     toast({
-      title: "Product deleted",
-      description: `${product.name} has been removed from inventory.`,
+      title: t("warehouse.toast.product_deleted_title"),
+      description: t("warehouse.toast.product_deleted_desc", { name: product.name }),
     });
   };
 
