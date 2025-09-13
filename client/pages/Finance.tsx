@@ -1463,7 +1463,7 @@ ${data.transactions
                 <Select value={typeFilter} onValueChange={setTypeFilter}>
                   <SelectTrigger className="w-[130px]">
                     <Filter className="mr-2 h-4 w-4" />
-                    <SelectValue placeholder="Type" />
+                    <SelectValue placeholder={t("common.type")} />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Types</SelectItem>
