@@ -40,7 +40,6 @@ const getCandidateApiUrls = () => {
     "/api/chat",
     origin ? `${origin}/chat` : undefined,
     origin ? `${origin}/api/chat` : undefined,
-    "http://localhost:5002/api/chat",
   ].filter(Boolean) as string[];
   return Array.from(new Set(list));
 };
