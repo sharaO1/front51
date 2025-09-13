@@ -84,8 +84,8 @@ export default function UserManagement() {
       const res = await loadUsers();
       if (!res.ok) {
         toast({
-          title: "Error",
-          description: res.message || "Failed to load users",
+          title: t("admin.users.toast.error"),
+          description: res.message || t("admin.users.toast.load_failed"),
           variant: "destructive",
         });
       }
@@ -203,10 +203,10 @@ export default function UserManagement() {
                 const res = await loadUsers();
                 if (!res.ok) {
                   toast({
-                    title: "Error",
-                    description: res.message || "Failed to load users",
-                    variant: "destructive",
-                  });
+          title: t("admin.users.toast.error"),
+          description: res.message || t("admin.users.toast.load_failed"),
+          variant: "destructive",
+        });
                 }
               }}
             />
