@@ -24,16 +24,19 @@ i18n
   .use(initReactI18next)
   .init({
     resources,
-    fallbackLng: 'en',
+    supportedLngs: ['en', 'ru', 'tg'],
+    fallbackLng: 'ru',
+    load: 'languageOnly',
     debug: false,
-    
+
     interpolation: {
       escapeValue: false,
     },
-    
+
     detection: {
-      order: ['localStorage', 'navigator', 'htmlTag'],
-      caches: ['localStorage'],
+      // Use device/browser language; do not persist
+      order: ['navigator', 'htmlTag'],
+      caches: [],
     },
   });
 
