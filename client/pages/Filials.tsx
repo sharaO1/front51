@@ -304,6 +304,16 @@ export default function Filials() {
     }));
   }, [users]);
 
+  // Ensure users are loaded so we can compute staff counts per filial
+  useEffect(() => {
+    (async () => {
+      try {
+        await loadUsers();
+      } catch {}
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => {
     let mounted = true;
     const load = async () => {
@@ -367,6 +377,43 @@ export default function Filials() {
       mounted = false;
     };
   }, [accessToken]);
+
+  // Recompute each filial's currentStaff from users' filial assignments
+  useEffect(() => {
+    if (!Array.isArray(users) || users.length === 0) return;
+
+    const normalize = (s: string) => s.trim().toLowerCase();
+    const idCount: Record<string, number> = {};
+    const nameCount: Record<string, number> = {};
+
+    for (const u of users) {
+      const fid = (u as any).filialId ?? (u as any).filialID ?? (u as any).storeId ?? (u as any).branchId ?? undefined;
+      const fname = (u as any).filialName ?? (u as any).location ?? undefined;
+      if (fid) {
+        const key = String(fid);
+        idCount[key] = (idCount[key] || 0) + 1;
+      }
+      if (fname) {
+        const key = normalize(String(fname));
+        nameCount[key] = (nameCount[key] || 0) + 1;
+      }
+    }
+
+    setFilials((prev) => {
+      let changed = false;
+      const updated = prev.map((f) => {
+        const byId = idCount[String(f.id)] || 0;
+        const byName = nameCount[normalize(f.name)] || 0;
+        const nextCount = byId || byName;
+        if (nextCount !== f.currentStaff) {
+          changed = true;
+          return { ...f, currentStaff: nextCount };
+        }
+        return f;
+      });
+      return changed ? updated : prev;
+    });
+  }, [users]);
 
   const isIdLike = (v: string) =>
     typeof v === "string" &&
