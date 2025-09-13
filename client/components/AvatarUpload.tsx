@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { useAuthStore } from "@/stores/authStore";
-import { API_BASE } from "@/lib/api";
+import { API_BASE, joinApi, getErrorMessageFromResponse } from "@/lib/api";
 import { Upload, Camera, X, User } from "lucide-react";
 import {
   Dialog,
@@ -106,25 +106,54 @@ export default function AvatarUpload({
 
     setUploading(true);
 
-    try {
+    const toAbs = (url: unknown): string | null => {
+      if (typeof url !== "string" || !url) return null;
+      if (/^(https?:)?\/\//i.test(url) || url.startsWith("data:")) return url;
+      const base = API_BASE.replace(/\/?api\/?$/, "");
+      if (url.startsWith("/")) return `${base}${url}`;
+      return `${API_BASE.replace(/\/+$/, "")}/${url}`;
+    };
+
+    const doUpload = async (method: "POST" | "PUT") => {
       const form = new FormData();
       form.append("avatar", selectedFile);
       form.append("file", selectedFile);
+      form.append("photo", selectedFile);
 
-      const res = await fetch(`${API_BASE}/users/avatar`, {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
+      const res = await fetch(joinApi("/users/avatar"), {
+        method,
+        headers: { Authorization: `Bearer ${accessToken}` },
         body: form,
       });
+      return res;
+    };
 
-      const data = await res.json().catch(() => null);
-      if (!res.ok || !data?.ok || typeof data.result !== "string") {
-        throw new Error("Upload failed");
+    try {
+      let res = await doUpload("POST");
+      if (res.status === 405 || res.status === 404) {
+        // fallback to PUT if POST not allowed
+        res = await doUpload("PUT");
       }
 
-      const uploadedUrl = data.result as string;
+      if (!res.ok) {
+        const msg = await getErrorMessageFromResponse(res);
+        throw new Error(msg || "Upload failed");
+      }
+
+      let data: any = null;
+      const ct = res.headers.get("content-type") || "";
+      if (ct.includes("application/json")) data = await res.json().catch(() => null);
+      else data = await res.text().catch(() => "");
+
+      const candidate =
+        (data && typeof data === "object" && (data.url || data.avatarUrl)) ||
+        (data && typeof data === "object" && data.result && (data.result.url || data.result.avatarUrl)) ||
+        (data && typeof data === "object" && typeof data.result === "string" && data.result) ||
+        (typeof data === "string" ? data : null);
+
+      const uploadedUrl = toAbs(candidate) || candidate || null;
+      if (!uploadedUrl) throw new Error("Invalid response from server");
+
       onAvatarUpdate(uploadedUrl);
       setPreviewUrl(uploadedUrl);
 
@@ -134,10 +163,10 @@ export default function AvatarUpload({
       });
 
       setIsDialogOpen(false);
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: "Upload failed",
-        description: "Failed to upload avatar. Please try again.",
+        description: error?.message || "Failed to upload avatar. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -215,6 +244,7 @@ export default function AvatarUpload({
                 accept="image/*"
                 onChange={handleFileSelect}
                 className="hidden"
+                capture="environment"
               />
 
               {currentAvatar && (
