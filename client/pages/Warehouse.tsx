@@ -1578,7 +1578,7 @@ export default function Warehouse() {
       entityType: "stock",
       entityId: productId,
       entityName: product.name,
-      description: `${type === "stock_in" ? "Added" : type === "stock_out" ? "Removed" : "Adjusted"} ${quantity} units - ${reason}`,
+      description: t(type === "stock_in" ? "warehouse.history_text.added_units" : type === "stock_out" ? "warehouse.history_text.removed_units" : "warehouse.history_text.adjusted_units", { count: quantity, reason: formatReason(reason) }),
       performedBy: "Current User",
       date: new Date().toISOString().split("T")[0],
       time: new Date().toLocaleTimeString([], {
@@ -1608,7 +1608,7 @@ export default function Warehouse() {
     ) {
       toast({
         title: t("common.error"),
-        description: "Please fill in all required fields",
+        description: t("warehouse.required_fields_error"),
         variant: "destructive",
       });
       return;
@@ -1702,7 +1702,7 @@ export default function Warehouse() {
         entityType: "stock",
         entityId: movement.productId,
         entityName: movement.productName,
-        description: `${movement.type === "stock_in" ? "Added" : movement.type === "stock_out" ? "Removed" : "Adjusted"} ${movement.quantity} units - ${movement.reason}`,
+        description: t(movement.type === "stock_in" ? "warehouse.history_text.added_units" : movement.type === "stock_out" ? "warehouse.history_text.removed_units" : "warehouse.history_text.adjusted_units", { count: movement.quantity, reason: formatReason(movement.reason) }),
         performedBy: movement.performedBy,
         date: movement.date,
         time: movement.time,
@@ -1758,7 +1758,7 @@ export default function Warehouse() {
     ) {
       toast({
         title: t("common.error"),
-        description: "Please fill in all required fields",
+        description: t("warehouse.required_fields_error"),
         variant: "destructive",
       });
       return;
@@ -1866,7 +1866,7 @@ export default function Warehouse() {
         entityType: "stock",
         entityId: movement.productId,
         entityName: movement.productName,
-        description: `${movement.type === "stock_in" ? "Added" : movement.type === "stock_out" ? "Removed" : "Adjusted"} ${movement.quantity} units - ${movement.reason}`,
+        description: t(movement.type === "stock_in" ? "warehouse.history_text.added_units" : movement.type === "stock_out" ? "warehouse.history_text.removed_units" : "warehouse.history_text.adjusted_units", { count: movement.quantity, reason: formatReason(movement.reason) }),
         performedBy: movement.performedBy,
         date: movement.date,
         time: movement.time,
@@ -1915,7 +1915,7 @@ export default function Warehouse() {
     if (!newProduct.name || !newProduct.category || !newProduct.sku) {
       toast({
         title: t("common.error"),
-        description: "Please fill in all required fields (Name, Category, SKU)",
+        description: t("warehouse.required_fields_error"),
         variant: "destructive",
       });
       return;
@@ -2018,7 +2018,7 @@ export default function Warehouse() {
         entityType: "product",
         entityId: product.id,
         entityName: product.name,
-        description: `Created new product: ${product.name}`,
+        description: t("warehouse.history_text.created_product", { name: product.name }),
         performedBy: "Current User",
         date: new Date().toISOString().split("T")[0],
         time: new Date().toLocaleTimeString([], {
@@ -2077,7 +2077,7 @@ export default function Warehouse() {
     ) {
       toast({
         title: t("common.error"),
-        description: "Please fill in all required fields (Name, Category, SKU)",
+        description: t("warehouse.required_fields_error"),
         variant: "destructive",
       });
       return;
@@ -2183,7 +2183,7 @@ export default function Warehouse() {
       entityType: "product",
       entityId: editingProduct.id,
       entityName: updatedProduct.name,
-      description: `Updated product: ${updatedProduct.name}`,
+      description: t("warehouse.history_text.updated_product", { name: updatedProduct.name }),
       performedBy: "Current User",
       date: new Date().toISOString().split("T")[0],
       time: new Date().toLocaleTimeString([], {
@@ -2216,8 +2216,8 @@ export default function Warehouse() {
     setIsEditDialogOpen(false);
 
     toast({
-      title: "Product updated",
-      description: `${updatedProduct.name} has been updated successfully.`,
+      title: t("warehouse.toast.product_updated_title"),
+      description: t("warehouse.toast.product_updated_desc", { name: updatedProduct.name }),
     });
   };
 
@@ -2257,7 +2257,7 @@ export default function Warehouse() {
       entityType: "product",
       entityId: productId,
       entityName: product.name,
-      description: `Deleted product: ${product.name}`,
+      description: t("warehouse.history_text.deleted_product", { name: product.name }),
       performedBy: "Current User",
       date: new Date().toISOString().split("T")[0],
       time: new Date().toLocaleTimeString([], {
@@ -3084,7 +3084,7 @@ export default function Warehouse() {
                                   !movement.fromStore &&
                                   movement.reason && (
                                     <span>
-                                      {t("warehouse.reason")}: {movement.reason}
+                                      {t("warehouse.reason")}: {formatReason(movement.reason)}
                                     </span>
                                   )}
 
@@ -3118,7 +3118,7 @@ export default function Warehouse() {
                                     .includes("discard") && (
                                     <>
                                       <br />
-                                      {t("warehouse.reason")}: {movement.reason}
+                                      {t("warehouse.reason")}: {formatReason(movement.reason)}
                                     </>
                                   )}
                               </>
@@ -3347,7 +3347,7 @@ export default function Warehouse() {
                                     </div>
                                   ) : history.details?.party ? (
                                     <div className="font-medium">
-                                      {history.details.party}
+                                      {formatParty(history.details.party)}
                                       {history.details.partyType
                                         ? ` • ${history.details.partyType}`
                                         : ""}
@@ -3367,7 +3367,7 @@ export default function Warehouse() {
                                   {history.details?.party &&
                                   history.details?.partyType ? (
                                     <div className="text-xs text-muted-foreground">
-                                      {history.details.party}:{" "}
+                                      {formatParty(history.details.party)}:{" "}
                                       {(() => {
                                         const pt = String(
                                           history.details.partyType,
@@ -3389,7 +3389,7 @@ export default function Warehouse() {
                                     </div>
                                   ) : history.details?.party ? (
                                     <div className="text-xs text-muted-foreground">
-                                      {history.details.party}
+                                      {formatParty(history.details.party)}
                                     </div>
                                   ) : history.details?.partyType ? (
                                     <div className="text-xs text-muted-foreground">
@@ -3430,7 +3430,7 @@ export default function Warehouse() {
                           {history.action === "edit" &&
                             history.details?.updatedFields && (
                               <div className="text-xs text-muted-foreground">
-                                Updated fields available
+                                {t("warehouse.updated_fields_available")}
                               </div>
                             )}
                         </div>
