@@ -238,6 +238,8 @@
     "capacity": "Capacity",
     "current_staff": "Current Staff",
     "opening_hours": "Opening Hours",
+    "city": "City",
+    "country": "Country",
     "total_filials": "Total Filials",
     "retail_stores": "Retail Stores",
     "customer_facing_locations": "Customer-facing locations",
