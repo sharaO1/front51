@@ -1418,7 +1418,7 @@ ${data.timeEntries
               </DialogHeader>
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="attendanceEmployee">Employee *</Label>
+                  <Label htmlFor="attendanceEmployee">{t("employees.employee")} *</Label>
                   <Select
                     value={newAttendance.employeeId}
                     onValueChange={(value) =>
@@ -1426,7 +1426,7 @@ ${data.timeEntries
                     }
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select employee" />
+                      <SelectValue placeholder={t("employees.select_employee")} />
                     </SelectTrigger>
                     <SelectContent>
                       {employees
@@ -1442,7 +1442,7 @@ ${data.timeEntries
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="attendanceDate">Date</Label>
+                    <Label htmlFor="attendanceDate">{t("common.date")}</Label>
                     <Input
                       id="attendanceDate"
                       type="date"
@@ -1456,7 +1456,7 @@ ${data.timeEntries
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="attendanceStatus">Status</Label>
+                    <Label htmlFor="attendanceStatus">{t("common.status")}</Label>
                     <Select
                       value={newAttendance.status}
                       onValueChange={(value) =>
@@ -1470,18 +1470,18 @@ ${data.timeEntries
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="present">Present</SelectItem>
-                        <SelectItem value="absent">Absent</SelectItem>
-                        <SelectItem value="late">Late</SelectItem>
-                        <SelectItem value="half_day">Half Day</SelectItem>
-                        <SelectItem value="on_break">On Break</SelectItem>
+                        <SelectItem value="present">{t("status.present")}</SelectItem>
+                        <SelectItem value="absent">{t("status.absent")}</SelectItem>
+                        <SelectItem value="late">{t("status.late")}</SelectItem>
+                        <SelectItem value="half_day">{t("status.half_day")}</SelectItem>
+                        <SelectItem value="on_break">{t("status.on_break")}</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="clockIn">Clock In</Label>
+                    <Label htmlFor="clockIn">{t("employees.clock_in")}</Label>
                     <Input
                       id="clockIn"
                       type="time"
@@ -1495,7 +1495,7 @@ ${data.timeEntries
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="clockOut">Clock Out</Label>
+                    <Label htmlFor="clockOut">{t("employees.clock_out")}</Label>
                     <Input
                       id="clockOut"
                       type="time"
@@ -1510,10 +1510,10 @@ ${data.timeEntries
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="attendanceNotes">Notes</Label>
+                  <Label htmlFor="attendanceNotes">{t("common.notes")}</Label>
                   <Textarea
                     id="attendanceNotes"
-                    placeholder="Additional notes"
+                    placeholder={t("employees.additional_notes")}
                     value={newAttendance.notes}
                     onChange={(e) =>
                       setNewAttendance({
@@ -1561,7 +1561,7 @@ ${data.timeEntries
               </DialogHeader>
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="saleEmployee">Employee *</Label>
+                  <Label htmlFor="saleEmployee">{t("employees.employee")} *</Label>
                   <Select
                     value={newSale.employeeId}
                     onValueChange={(value) =>
@@ -1569,7 +1569,7 @@ ${data.timeEntries
                     }
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select employee" />
+                      <SelectValue placeholder={t("employees.select_employee")} />
                     </SelectTrigger>
                     <SelectContent>
                       {getSalesEmployees().map((employee) => (
@@ -1583,7 +1583,7 @@ ${data.timeEntries
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="saleDate">Date</Label>
+                    <Label htmlFor="saleDate">{t("common.date")}</Label>
                     <Input
                       id="saleDate"
                       type="date"
@@ -1594,7 +1594,7 @@ ${data.timeEntries
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="saleAmount">Amount ($) *</Label>
+                    <Label htmlFor="saleAmount">{t("employees.amount_label")} *</Label>
                     <Input
                       id="saleAmount"
                       type="number"
@@ -1611,7 +1611,7 @@ ${data.timeEntries
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="saleQuantity">Quantity</Label>
+                    <Label htmlFor="saleQuantity">{t("employees.quantity_label")}</Label>
                     <Input
                       id="saleQuantity"
                       type="number"
@@ -1626,10 +1626,10 @@ ${data.timeEntries
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="clientName">Client Name *</Label>
+                    <Label htmlFor="clientName">{t("employees.client_name_label")} *</Label>
                     <Input
                       id="clientName"
-                      placeholder="Client name"
+                      placeholder={t("employees.client_name_label")}
                       value={newSale.clientName}
                       onChange={(e) =>
                         setNewSale({ ...newSale, clientName: e.target.value })
@@ -1638,10 +1638,10 @@ ${data.timeEntries
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="saleNotes">Notes</Label>
+                  <Label htmlFor="saleNotes">{t("common.notes")}</Label>
                   <Textarea
                     id="saleNotes"
-                    placeholder="Additional sale details"
+                    placeholder={t("employees.additional_sale_details")}
                     value={newSale.notes}
                     onChange={(e) =>
                       setNewSale({ ...newSale, notes: e.target.value })
