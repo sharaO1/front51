@@ -61,7 +61,7 @@
     "admin_demo": "Админ: admin@businesspro.com / admin123",
     "manager_demo": "Модир: manager@businesspro.com / manager123",
     "signing_in": "Ворид шуда истодааст...",
-    "creating_account": "Ҳисоб эҷод шуда истодааст...",
+    "creating_account": "Ҳисоб эҷ��д шуда истодааст...",
     "check_email": "Почтаатонро санҷед",
     "reset_link_sent": "Дастурамали барқароркунии парол фиристода шуд ба",
     "send_reset_link": "Истинодро фиристонед",
@@ -83,7 +83,8 @@
     "sales": "Фурӯш",
     "finance": "Молия",
     "employees": "Кормандон",
-    "settings": "Танзимот"
+    "settings": "Танзимот",
+    "filials": "Филиалҳо"
   },
   "dashboard": {
     "title": "Лавҳаи назорат",
@@ -181,7 +182,7 @@
     "contact": "Тамос",
     "debt": "Қарз",
     "type": "Навъ",
-    "across_all_clients": "Дар байни ҳамаи муштариён",
+    "across_all_clients": "Дар байни ҳамаи муштари��н",
     "clients_need_followup": "Муштариён пайгирӣ талаб мекунанд",
     "all_time_revenue": "Даромади ҳамаи вақт",
     "add_new_client": "Муштарии нав илова кардан",
@@ -200,6 +201,9 @@
     "last_purchase": "Харидҳои охирин",
     "never": "Ҳеҷ вақт",
     "no_notes": "Қайдҳо нестанд"
+  },
+  "filials": {
+    "title": "Идоракунии филиалҳо"
   },
   "sales": {
     "title": "Идоракунии фурӯш",
@@ -221,7 +225,7 @@
     "generate_invoice": "Ҳисобфактураи нави фурӯш бо ашё, андозҳо ва маълумоти муштарӣ тавлид кунед.",
     "client_name": "Номи муштарӣ",
     "enter_client_name": "Номи муштариро ворид кунед",
-    "payment_method": "Усули пардохт",
+    "payment_method": "Усули пард��хт",
     "cash": "Нақд",
     "card": "Корт",
     "bank_transfer": "Интиқоли бонкӣ",
@@ -245,7 +249,7 @@
     "client_information": "Маълумоти муштарӣ",
     "customer": "Муштарӣ",
     "payment": "Пардохт",
-    "download_pdf": "PDF-ро боргирӣ кунед",
+    "download_pdf": "PDF-ро борги��ӣ кунед",
     "qr_code": "Рамзи QR",
     "from_paid_invoices": "Аз ҳисобфактураҳои пардохташуда",
     "awaiting_payment": "Интизори пардохт",
@@ -418,7 +422,7 @@
     "max_login_attempts": "Ҳадди аксари кӯшишҳои дохилшавӣ",
     "audit_logging": "Сабти аудит",
     "log_activities": "Ҳамаи фаъолиятҳои корбарро барои аудити амният сабт кунед",
-    "save_security": "Амниятро нигоҳ дошт",
+    "save_security": "Амниятро н��гоҳ дошт",
     "password_policy": "Сиёсати парол",
     "password_requirements": "Талабот ва сиёсатҳои парол",
     "password_expiry": "Интиҳои муддати парол (рӯз)",
@@ -435,7 +439,7 @@
     "configure_auto_backups": "Нусхабардории худкори додаҳоро конфигуратсия кунед",
     "automatic_backups": "Нусхабардорӣ-и худкор",
     "enable_scheduled": "Нусхабардории худкори банақшакашидашударо фаъол кунед",
-    "backup_frequency": "Басомади нусхабардорӣ",
+    "backup_frequency": "Басомади н��схабардорӣ",
     "backup_location": "Ҷойгоҳи нусхабардорӣ",
     "retention_period": "Муддати нигоҳдорӣ (рӯз)",
     "save_backup_settings": "Танзимоти нусхабардориро нигоҳ дошт",
@@ -451,7 +455,7 @@
     "manage_personal_details": "Тафсилоти шахсии худро идора кунед",
     "edit_profile": "Профилро таҳ��ир кунед",
     "subscription_billing": "Обуна ва ҳисобдорӣ",
-    "manage_subscription": "Обуна ва тафсилоти пардохтатонро идора кунед",
+    "manage_subscription": "Обуна ва тафсилоти пардохтатон��о идора кунед",
     "businesspro_enterprise": "БизнесПро корхона",
     "unlimited_features": "Корбарони номаҳдуд, хусусиятҳои пешрафта, дастгирии аввалиятнок",
     "per_month": "/моҳ",
