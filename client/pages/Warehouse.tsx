@@ -1423,7 +1423,7 @@ export default function Warehouse() {
       case "adjustment":
         return (
           <Badge variant="outline" className="bg-orange-100 text-orange-800">
-            Adjustment
+            {t("warehouse.adjustment")}
           </Badge>
         );
       default:
@@ -1468,7 +1468,7 @@ export default function Warehouse() {
       case "adjustment":
         return (
           <Badge variant="outline" className="bg-orange-100 text-orange-800">
-            Adjustment
+            {t("warehouse.adjustment")}
           </Badge>
         );
       default:
