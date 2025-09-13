@@ -1229,7 +1229,7 @@ ${data.transactions
             </DialogTrigger>
             <DialogContent className="max-w-md">
               <DialogHeader>
-                <DialogTitle>Add New Transaction</DialogTitle>
+                <DialogTitle>{t("finance.add_new_transaction")}</DialogTitle>
                 <DialogDescription>
                   Record a new income or expense transaction.
                 </DialogDescription>
