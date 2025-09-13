@@ -1270,10 +1270,10 @@ ${data.transactions
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="category">Category</Label>
+                  <Label htmlFor="category">{t("warehouse.category")}</Label>
                   <Input
                     id="category"
-                    placeholder="e.g., Sales Revenue, Office Supplies"
+                    placeholder={t("finance.category_placeholder")}
                     value={newTransaction.category}
                     onChange={(e) =>
                       setNewTransaction({
@@ -1284,10 +1284,10 @@ ${data.transactions
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="description">Description</Label>
+                  <Label htmlFor="description">{t("common.description")}</Label>
                   <Input
                     id="description"
-                    placeholder="Transaction description"
+                    placeholder={t("finance.transaction_description")}
                     value={newTransaction.description}
                     onChange={(e) =>
                       setNewTransaction({
@@ -1299,7 +1299,7 @@ ${data.transactions
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="amount">Amount ($)</Label>
+                    <Label htmlFor="amount">{t("finance.amount_label")}</Label>
                     <Input
                       id="amount"
                       type="number"
@@ -1314,7 +1314,7 @@ ${data.transactions
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="paymentMethod">Payment Method</Label>
+                    <Label htmlFor="paymentMethod">{t("sales.payment_method")}</Label>
                     <Select
                       value={newTransaction.paymentMethod}
                       onValueChange={(value) =>
@@ -1328,18 +1328,16 @@ ${data.transactions
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="cash">Cash</SelectItem>
-                        <SelectItem value="card">Card</SelectItem>
-                        <SelectItem value="bank_transfer">
-                          Bank Transfer
-                        </SelectItem>
-                        <SelectItem value="check">Check</SelectItem>
-                      </SelectContent>
+                      <SelectItem value="cash">{t("sales.cash")}</SelectItem>
+                      <SelectItem value="card">{t("sales.card")}</SelectItem>
+                      <SelectItem value="bank_transfer">{t("sales.bank_transfer")}</SelectItem>
+                      <SelectItem value="check">{t("finance.check")}</SelectItem>
+                    </SelectContent>
                     </Select>
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="performedBy">Performed By (Optional)</Label>
+                  <Label htmlFor="performedBy">{t("finance.performed_by_optional")}</Label>
                   <Input
                     id="performedBy"
                     placeholder="e.g., Cashier #12, Accounting"
@@ -1496,18 +1494,16 @@ ${data.transactions
                   onValueChange={setCategoryFilter}
                 >
                   <SelectTrigger className="w-[150px]">
-                    <SelectValue placeholder={t("common.category")} />
+                    <SelectValue placeholder={t("warehouse.category")} />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">
                       {t("finance.all_categories")}
                     </SelectItem>
-                    <SelectItem value="Sales Revenue">Sales Revenue</SelectItem>
-                    <SelectItem value="Office Supplies">
-                      Office Supplies
-                    </SelectItem>
-                    <SelectItem value="Marketing">Marketing</SelectItem>
-                    <SelectItem value="Utilities">Utilities</SelectItem>
+                    <SelectItem value="Sales Revenue">{t("finance.sales_revenue")}</SelectItem>
+                    <SelectItem value="Office Supplies">{t("finance.office_supplies")}</SelectItem>
+                    <SelectItem value="Marketing">{t("finance.marketing")}</SelectItem>
+                    <SelectItem value="Utilities">{t("finance.utilities")}</SelectItem>
                   </SelectContent>
                 </Select>
                 <Select value={timeFilter} onValueChange={setTimeFilter}>
@@ -1625,28 +1621,28 @@ ${data.transactions
           <Card>
             <CardHeader className="flex items-center justify-between">
               <div>
-                <CardTitle>Borrow/Lend Products</CardTitle>
+                <CardTitle>{t("finance.debts_title")}</CardTitle>
                 <CardDescription>
-                  Track product borrows and lends with due dates
+                  {t("finance.debts_subtitle")}
                 </CardDescription>
               </div>
               <Dialog open={isAddLoanOpen} onOpenChange={setIsAddLoanOpen}>
                 <DialogTrigger asChild>
                   <Button>
                     <Handshake className="mr-2 h-4 w-4" />
-                    Borrow/Lend
+                    {t("finance.borrow_lend")}
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="max-w-md">
                   <DialogHeader>
-                    <DialogTitle>Record Borrow/Lend</DialogTitle>
+                    <DialogTitle>{t("finance.record_borrow_lend")}</DialogTitle>
                     <DialogDescription>
-                      Create a new borrow or lend entry
+                      {t("finance.create_borrow_lend_desc")}
                     </DialogDescription>
                   </DialogHeader>
                   <div className="space-y-4">
                     <div className="space-y-2">
-                      <Label>Type</Label>
+                      <Label>{t("clients.type")}</Label>
                       <Select
                         value={newLoan.type}
                         onValueChange={(v) =>
@@ -1657,17 +1653,15 @@ ${data.transactions
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="borrow">
-                            Borrow (we take)
-                          </SelectItem>
-                          <SelectItem value="lend">Lend (we give)</SelectItem>
+                          <SelectItem value="borrow">{t("finance.borrow_label")}</SelectItem>
+                          <SelectItem value="lend">{t("finance.lend_label")}</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                     <div className="space-y-2">
-                      <Label>Product</Label>
+                      <Label>{t("warehouse.product")}</Label>
                       <Input
-                        placeholder="Product name"
+                        placeholder={t("warehouse.product_name")}
                         value={newLoan.productName}
                         onChange={(e) =>
                           setNewLoan({
@@ -1679,7 +1673,7 @@ ${data.transactions
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <Label>SKU (optional)</Label>
+                        <Label>{t("warehouse.sku")}</Label>
                         <Input
                           placeholder="SKU"
                           value={newLoan.sku || ""}
@@ -1689,7 +1683,7 @@ ${data.transactions
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label>Quantity</Label>
+                        <Label>{t("warehouse.quantity")}</Label>
                         <Input
                           type="number"
                           min="1"
@@ -1705,7 +1699,7 @@ ${data.transactions
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <Label>Party Type</Label>
+                        <Label>{t("finance.party_type")}</Label>
                         <Select
                           value={newLoan.partyType}
                           onValueChange={(v) =>
@@ -1716,16 +1710,16 @@ ${data.transactions
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="supplier">Supplier</SelectItem>
-                            <SelectItem value="client">Client</SelectItem>
-                            <SelectItem value="other">Other</SelectItem>
+                            <SelectItem value="supplier">{t("warehouse.supplier")}</SelectItem>
+                            <SelectItem value="client">{t("sales.client")}</SelectItem>
+                            <SelectItem value="other">{t("warehouse.other")}</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
                       <div className="space-y-2">
-                        <Label>Party Name</Label>
+                        <Label>{t("finance.party_name")}</Label>
                         <Input
-                          placeholder="Company or person"
+                          placeholder={t("finance.party_name_placeholder")}
                           value={newLoan.partyName || ""}
                           onChange={(e) =>
                             setNewLoan({
@@ -1738,7 +1732,7 @@ ${data.transactions
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <Label>Date</Label>
+                        <Label>{t("common.date")}</Label>
                         <Input
                           type="date"
                           value={newLoan.date || ""}
@@ -1748,7 +1742,7 @@ ${data.transactions
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label>Due Date</Label>
+                        <Label>{t("sales.due_date")}</Label>
                         <Input
                           type="date"
                           value={newLoan.dueDate || ""}
@@ -1759,9 +1753,9 @@ ${data.transactions
                       </div>
                     </div>
                     <div className="space-y-2">
-                      <Label>Notes</Label>
+                      <Label>{t("warehouse.notes")}</Label>
                       <Textarea
-                        placeholder="Additional details..."
+                        placeholder={t("warehouse.additional_notes_placeholder")}
                         value={newLoan.notes || ""}
                         onChange={(e) =>
                           setNewLoan({ ...newLoan, notes: e.target.value })
@@ -1787,12 +1781,12 @@ ${data.transactions
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Type</TableHead>
-                    <TableHead>Product</TableHead>
-                    <TableHead>Qty</TableHead>
-                    <TableHead>Party</TableHead>
-                    <TableHead>Due</TableHead>
+                    <TableHead>{t("common.date")}</TableHead>
+                    <TableHead>{t("clients.type")}</TableHead>
+                    <TableHead>{t("warehouse.product")}</TableHead>
+                    <TableHead>{t("warehouse.quantity")}</TableHead>
+                    <TableHead>{t("finance.party")}</TableHead>
+                    <TableHead>{t("sales.due_date")}</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead>Actions</TableHead>
                   </TableRow>
@@ -1812,7 +1806,7 @@ ${data.transactions
                               : "bg-purple-100 text-purple-800"
                           }
                         >
-                          {loan.type === "borrow" ? "Borrow" : "Lend"}
+                          {loan.type === "borrow" ? t("finance.borrow") : t("finance.lend")}
                         </Badge>
                       </TableCell>
                       <TableCell>
@@ -1863,7 +1857,7 @@ ${data.transactions
               </Table>
               {loans.length === 0 && (
                 <div className="text-sm text-muted-foreground mt-2">
-                  No borrow/lend records yet.
+                  {t("finance.no_borrow_lend")}
                 </div>
               )}
             </CardContent>
@@ -2247,11 +2241,11 @@ ${data.transactions
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="cash">Cash</SelectItem>
-                    <SelectItem value="card">Card</SelectItem>
-                    <SelectItem value="bank_transfer">Bank Transfer</SelectItem>
-                    <SelectItem value="check">Check</SelectItem>
-                  </SelectContent>
+  <SelectItem value="cash">{t("sales.cash")}</SelectItem>
+  <SelectItem value="card">{t("sales.card")}</SelectItem>
+  <SelectItem value="bank_transfer">{t("sales.bank_transfer")}</SelectItem>
+  <SelectItem value="check">{t("finance.check")}</SelectItem>
+</SelectContent>
                 </Select>
               </div>
             </div>
