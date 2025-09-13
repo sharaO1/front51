@@ -1159,7 +1159,7 @@ ${data.transactions
                   <div className="flex-1">
                     <div className="font-medium">{t("finance.export_pdf_title")}</div>
                     <div className="text-xs text-muted-foreground">
-                      Executive financial summary with charts
+                      {t("finance.export_pdf_desc")}
                     </div>
                   </div>
                 </DropdownMenuItem>
