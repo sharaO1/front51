@@ -2251,16 +2251,12 @@ ${data.timeEntries
           {/* Daily Sales Tracking */}
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-lg font-semibold">
-                Employee Sales Performance
-              </h3>
-              <p className="text-sm text-muted-foreground">
-                Track daily sales and commissions by employee
-              </p>
+              <h3 className="text-lg font-semibold">{t("employees.sales_performance_header")}</h3>
+              <p className="text-sm text-muted-foreground">{t("employees.sales_performance_subtitle")}</p>
             </div>
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
-                <Label htmlFor="salesDate">Date:</Label>
+                <Label htmlFor="salesDate">{t("common.date")}:</Label>
                 <Input
                   id="salesDate"
                   type="date"
@@ -2325,27 +2321,25 @@ ${data.timeEntries
                   <CardContent className="space-y-3">
                     <div className="grid grid-cols-2 gap-2 text-sm">
                       <div>
-                        <div className="text-muted-foreground">Sales</div>
+                        <div className="text-muted-foreground">{t("employees.sales_label")}</div>
                         <div className="font-semibold text-green-600">
                           ${dailySalesAmount.toLocaleString()}
                         </div>
                       </div>
                       <div>
-                        <div className="text-muted-foreground">Commission</div>
+                        <div className="text-muted-foreground">{t("employees.commission")}</div>
                         <div className="font-semibold text-blue-600">
                           ${dailyCommission.toFixed(2)}
                         </div>
                       </div>
                     </div>
                     <div className="text-sm">
-                      <div className="text-muted-foreground">
-                        Transactions: {salesCount}
-                      </div>
+                      <div className="text-muted-foreground">{t("employees.transactions")}: {salesCount}</div>
                     </div>
                     {employee.salesTarget && (
                       <div className="space-y-1">
                         <div className="flex justify-between text-xs">
-                          <span>Monthly Progress</span>
+                          <span>{t("employees.monthly_progress")}</span>
                           <span>{targetProgress.toFixed(1)}%</span>
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-1.5">
@@ -2371,8 +2365,8 @@ ${data.timeEntries
           {/* Sales Chart */}
           <Card>
             <CardHeader>
-              <CardTitle>Sales Performance Trend</CardTitle>
-              <CardDescription>Monthly sales by employee</CardDescription>
+              <CardTitle>{t("employees.sales_performance_trend")}</CardTitle>
+              <CardDescription>{t("employees.monthly_sales_by_employee")}</CardDescription>
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={300}>
@@ -2413,14 +2407,12 @@ ${data.timeEntries
           {/* Attendance Tracking */}
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-lg font-semibold">Employee Attendance</h3>
-              <p className="text-sm text-muted-foreground">
-                Track employee time and attendance
-              </p>
+              <h3 className="text-lg font-semibold">{t("employees.employee_attendance_header")}</h3>
+              <p className="text-sm text-muted-foreground">{t("employees.employee_attendance_subtitle")}</p>
             </div>
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
-                <Label htmlFor="attendanceDate">Date:</Label>
+                <Label htmlFor="attendanceDate">{t("common.date")}:</Label>
                 <Input
                   id="attendanceDate"
                   type="date"
@@ -2436,7 +2428,7 @@ ${data.timeEntries
           <div className="grid gap-4 md:grid-cols-4">
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm">Present Today</CardTitle>
+                <CardTitle className="text-sm">{t("employees.present_today")}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-green-600">
@@ -2446,14 +2438,12 @@ ${data.timeEntries
                     ).length
                   }
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  Employees present
-                </p>
+                <p className="text-xs text-muted-foreground">{t("employees.employees_present")}</p>
               </CardContent>
             </Card>
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm">Late Arrivals</CardTitle>
+                <CardTitle className="text-sm">{t("employees.late_arrivals")}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-yellow-600">
@@ -2463,12 +2453,12 @@ ${data.timeEntries
                     ).length
                   }
                 </div>
-                <p className="text-xs text-muted-foreground">Late employees</p>
+                <p className="text-xs text-muted-foreground">{t("employees.late_employees")}</p>
               </CardContent>
             </Card>
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm">Absent</CardTitle>
+                <CardTitle className="text-sm">{t("employees.absent_today")}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-red-600">
@@ -2479,12 +2469,12 @@ ${data.timeEntries
                     ).length
                   }
                 </div>
-                <p className="text-xs text-muted-foreground">Not present</p>
+                <p className="text-xs text-muted-foreground">{t("employees.not_present")}</p>
               </CardContent>
             </Card>
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm">Total Hours</CardTitle>
+                <CardTitle className="text-sm">{t("employees.total_hours_card")}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
@@ -2497,17 +2487,15 @@ ${data.timeEntries
                     .toFixed(1)}
                   h
                 </div>
-                <p className="text-xs text-muted-foreground">Hours worked</p>
+                <p className="text-xs text-muted-foreground">{t("employees.hours_worked")}</p>
               </CardContent>
             </Card>
           </div>
 
           <Card>
             <CardHeader>
-              <CardTitle>Today's Attendance - {selectedDate}</CardTitle>
-              <CardDescription>
-                Employee clock-in and clock-out records
-              </CardDescription>
+              <CardTitle>{t("employees.todays_attendance")} - {selectedDate}</CardTitle>
+              <CardDescription>{t("employees.clock_records_desc")}</CardDescription>
             </CardHeader>
             <CardContent>
               <Table>
