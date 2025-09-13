@@ -2645,7 +2645,8 @@ export default function Warehouse() {
           <CardContent>
             <div className="text-2xl font-bold">{products.length}</div>
             <p className="text-xs text-muted-foreground">
-              {products.filter((p) => p.status === "in-stock").length} {t("warehouse.in_stock")}
+              {products.filter((p) => p.status === "in-stock").length}{" "}
+              {t("warehouse.in_stock")}
             </p>
           </CardContent>
         </Card>
@@ -2669,20 +2670,26 @@ export default function Warehouse() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t("warehouse.out_of_stock")}</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              {t("warehouse.out_of_stock")}
+            </CardTitle>
             <TrendingDown className="h-4 w-4 text-red-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-red-600">
               {products.filter((p) => p.status === "out-of-stock").length}
             </div>
-            <p className="text-xs text-muted-foreground">{t("warehouse.require_restocking")}</p>
+            <p className="text-xs text-muted-foreground">
+              {t("warehouse.require_restocking")}
+            </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t("warehouse.total_value")}</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              {t("warehouse.total_value")}
+            </CardTitle>
             <TrendingUp className="h-4 w-4 text-green-500" />
           </CardHeader>
           <CardContent>
@@ -2734,7 +2741,9 @@ export default function Warehouse() {
                     <SelectValue placeholder={t("warehouse.category")} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">{t("warehouse.all_categories")}</SelectItem>
+                    <SelectItem value="all">
+                      {t("warehouse.all_categories")}
+                    </SelectItem>
                     <SelectItem value="Smartphones">Smartphones</SelectItem>
                     <SelectItem value="Laptops">Laptops</SelectItem>
                     <SelectItem value="Tablets">Tablets</SelectItem>
@@ -2747,10 +2756,18 @@ export default function Warehouse() {
                     <SelectValue placeholder={t("common.status")} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">{t("warehouse.all_status")}</SelectItem>
-                    <SelectItem value="in-stock">{t("warehouse.in_stock")}</SelectItem>
-                    <SelectItem value="low-stock">{t("warehouse.low_stock")}</SelectItem>
-                    <SelectItem value="out-of-stock">{t("warehouse.out_of_stock")}</SelectItem>
+                    <SelectItem value="all">
+                      {t("warehouse.all_status")}
+                    </SelectItem>
+                    <SelectItem value="in-stock">
+                      {t("warehouse.in_stock")}
+                    </SelectItem>
+                    <SelectItem value="low-stock">
+                      {t("warehouse.low_stock")}
+                    </SelectItem>
+                    <SelectItem value="out-of-stock">
+                      {t("warehouse.out_of_stock")}
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -2786,7 +2803,8 @@ export default function Warehouse() {
                       <TableCell>
                         <div className="font-medium">{product.quantity}</div>
                         <div className="text-xs text-muted-foreground">
-                          {t("warehouse.min_stock")}: {product.minStock} | {t("warehouse.max_stock")}: {product.maxStock}
+                          {t("warehouse.min_stock")}: {product.minStock} |{" "}
+                          {t("warehouse.max_stock")}: {product.maxStock}
                         </div>
                       </TableCell>
                       <TableCell>{getStatusBadge(product.status)}</TableCell>
@@ -3381,7 +3399,8 @@ export default function Warehouse() {
                           {/* Show product details for product operations */}
                           {history.action === "create" && history.details && (
                             <div className="text-xs text-muted-foreground">
-                              {t("warehouse.category")}: {history.details.category}
+                              {t("warehouse.category")}:{" "}
+                              {history.details.category}
                               {history.details.brand &&
                                 ` | ${t("warehouse.brand")}: ${history.details.brand}`}
                             </div>
@@ -3732,7 +3751,9 @@ export default function Warehouse() {
                     />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="supplier">{t("warehouse.supplier")}</SelectItem>
+                    <SelectItem value="supplier">
+                      {t("warehouse.supplier")}
+                    </SelectItem>
                     <SelectItem value="customer_return">
                       {t("warehouse.customer_return")}
                     </SelectItem>
@@ -3810,7 +3831,9 @@ export default function Warehouse() {
 
               <div className="grid grid-cols-1 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="stockInReason">{t("warehouse.reason")} *</Label>
+                  <Label htmlFor="stockInReason">
+                    {t("warehouse.reason")} *
+                  </Label>
                   <Select
                     value={stockReason}
                     onValueChange={setStockReason}
@@ -4060,7 +4083,9 @@ export default function Warehouse() {
 
               <div className="grid grid-cols-1 gap-3">
                 <div className="space-y-2">
-                  <Label htmlFor="stockOutReason">{t("warehouse.reason")} *</Label>
+                  <Label htmlFor="stockOutReason">
+                    {t("warehouse.reason")} *
+                  </Label>
                   <Input
                     id="stockOutReason"
                     value={stockReason}
@@ -4227,7 +4252,9 @@ export default function Warehouse() {
                       const fi = filialOptions.find(
                         (f) => f.id === store.storeId,
                       );
-                      const storeType = fi?.type ? t(`filials.types.${fi.type}`) : t("warehouse.unknown");
+                      const storeType = fi?.type
+                        ? t(`filials.types.${fi.type}`)
+                        : t("warehouse.unknown");
                       const typeColor =
                         fi?.type === "warehouse"
                           ? "text-blue-600"
