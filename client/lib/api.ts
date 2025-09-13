@@ -1,5 +1,5 @@
 export const API_BASE =
-  import.meta.env.VITE_BACKEND_URL ?? "http://localhost:5002/api";
+  import.meta.env.VITE_BACKEND_URL ?? "/api";
 
 export function joinApi(path: string) {
   if (!path) return API_BASE;
