@@ -54,6 +54,7 @@ import {
   Calendar,
 } from "lucide-react";
 import { API_BASE } from "@/lib/api";
+import { useTranslation } from "react-i18next";
 
 interface InvoiceItem {
   id: string;
@@ -286,6 +287,7 @@ export default function Sales() {
     discount: 0,
   });
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   const clearCurrentItem = () => {
     setCurrentItem({
