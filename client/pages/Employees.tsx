@@ -78,6 +78,7 @@ import {
   X,
 } from "lucide-react";
 import DetailCard from "@/components/DetailCard";
+import { useTranslation } from "react-i18next";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -304,6 +305,7 @@ const departmentData = [
 ];
 
 export default function Employees() {
+  const { t } = useTranslation();
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [dailySales, setDailySales] = useState(mockDailySales);
   const [timeEntries, setTimeEntries] = useState<TimeEntry[]>([]);
@@ -1292,10 +1294,10 @@ ${data.timeEntries
       <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
-            Employee Management
+            {t("employees.title")}
           </h1>
           <p className="text-sm md:text-base text-muted-foreground">
-            Manage staff, roles, performance, and sales tracking
+            {t("employees.subtitle")}
           </p>
         </div>
 
@@ -1308,18 +1310,17 @@ ${data.timeEntries
                 className="w-full sm:w-auto justify-center"
               >
                 <Download className="mr-2 h-4 w-4" />
-                <span className="hidden sm:inline">Export Report</span>
-                <span className="sm:hidden">Export</span>
+                <span className="hidden sm:inline">{t("dashboard.export_report")}</span>
+                <span className="sm:hidden">{t("common.export")}</span>
                 <ChevronDown className="ml-2 h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-80">
-              <DropdownMenuLabel>Export Employee Report</DropdownMenuLabel>
+              <DropdownMenuLabel>{t("employees.export_employee_report")}</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <div className="p-2 space-y-1">
                 <div className="text-xs text-muted-foreground mb-2">
-                  Comprehensive employee report including directory, sales
-                  performance, attendance, and analytics.
+                  {t("employees.export_desc")}
                 </div>
                 <DropdownMenuItem
                   onClick={() => exportEmployeeReport("pdf")}
@@ -1327,9 +1328,9 @@ ${data.timeEntries
                 >
                   <FileSpreadsheet className="mr-2 h-4 w-4" />
                   <div className="flex-1">
-                    <div className="font-medium">PDF Employee Report</div>
+                    <div className="font-medium">{t("employees.pdf_title")}</div>
                     <div className="text-xs text-muted-foreground">
-                      Complete HR report with analytics
+                      {t("employees.pdf_desc")}
                     </div>
                   </div>
                 </DropdownMenuItem>
@@ -1339,9 +1340,9 @@ ${data.timeEntries
                 >
                   <FileSpreadsheet className="mr-2 h-4 w-4" />
                   <div className="flex-1">
-                    <div className="font-medium">Excel Workbook</div>
+                    <div className="font-medium">{t("employees.excel_title")}</div>
                     <div className="text-xs text-muted-foreground">
-                      Detailed employee data and sales
+                      {t("employees.excel_desc")}
                     </div>
                   </div>
                 </DropdownMenuItem>
@@ -1351,9 +1352,9 @@ ${data.timeEntries
                 >
                   <FileSpreadsheet className="mr-2 h-4 w-4" />
                   <div className="flex-1">
-                    <div className="font-medium">CSV Employee Data</div>
+                    <div className="font-medium">{t("employees.csv_title")}</div>
                     <div className="text-xs text-muted-foreground">
-                      Raw employee data for analysis
+                      {t("employees.csv_desc")}
                     </div>
                   </div>
                 </DropdownMenuItem>
@@ -1364,9 +1365,9 @@ ${data.timeEntries
                 >
                   <Download className="mr-2 h-4 w-4" />
                   <div className="flex-1">
-                    <div className="font-medium">Employee Directory</div>
+                    <div className="font-medium">{t("employees.employee_directory")}</div>
                     <div className="text-xs text-muted-foreground">
-                      Contact information and roles
+                      {t("employees.directory_desc")}
                     </div>
                   </div>
                 </DropdownMenuItem>
@@ -1376,9 +1377,9 @@ ${data.timeEntries
                 >
                   <Download className="mr-2 h-4 w-4" />
                   <div className="flex-1">
-                    <div className="font-medium">Sales Performance</div>
+                    <div className="font-medium">{t("employees.sales_performance")}</div>
                     <div className="text-xs text-muted-foreground">
-                      Sales data and commissions
+                      {t("employees.sales_performance_desc")}
                     </div>
                   </div>
                 </DropdownMenuItem>
@@ -1388,9 +1389,9 @@ ${data.timeEntries
                 >
                   <Download className="mr-2 h-4 w-4" />
                   <div className="flex-1">
-                    <div className="font-medium">Attendance Data</div>
+                    <div className="font-medium">{t("employees.attendance_data")}</div>
                     <div className="text-xs text-muted-foreground">
-                      Time tracking and presence
+                      {t("employees.attendance_data_desc")}
                     </div>
                   </div>
                 </DropdownMenuItem>
@@ -1404,8 +1405,8 @@ ${data.timeEntries
                 className="w-full sm:w-auto justify-center"
               >
                 <Clock className="mr-2 h-4 w-4" />
-                <span className="hidden sm:inline">Mark Attendance</span>
-                <span className="sm:hidden">Attendance</span>
+                <span className="hidden sm:inline">{t("employees.mark_attendance")}</span>
+                <span className="sm:hidden">{t("employees.attendance")}</span>
               </Button>
             </DialogTrigger>
             <DialogContent className="max-w-md mx-4 max-h-[90vh] overflow-y-auto">
@@ -1547,8 +1548,8 @@ ${data.timeEntries
                 className="w-full sm:w-auto justify-center"
               >
                 <ShoppingCart className="mr-2 h-4 w-4" />
-                <span className="hidden sm:inline">Record Sale</span>
-                <span className="sm:hidden">Sale</span>
+                <span className="hidden sm:inline">{t("employees.record_sale")}</span>
+                <span className="sm:hidden">{t("sales.title")}</span>
               </Button>
             </DialogTrigger>
             <DialogContent className="max-w-md mx-4 max-h-[90vh] overflow-y-auto">
@@ -1669,8 +1670,8 @@ ${data.timeEntries
             <DialogTrigger asChild>
               <Button className="w-full sm:w-auto justify-center">
                 <Plus className="mr-2 h-4 w-4" />
-                <span className="hidden sm:inline">Add Employee</span>
-                <span className="sm:hidden">Add</span>
+                <span className="hidden sm:inline">{t("employees.add_employee")}</span>
+                <span className="sm:hidden">{t("common.add")}</span>
               </Button>
             </DialogTrigger>
             <DialogContent className="max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
@@ -1898,7 +1899,7 @@ ${data.timeEntries
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-xs sm:text-sm font-medium">
-              Total Employees
+              {t("employees.total_employees")}
             </CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
@@ -1907,27 +1908,27 @@ ${data.timeEntries
               {employees.length}
             </div>
             <p className="text-xs text-muted-foreground hidden sm:block">
-              {employees.filter((e) => e.status === "active").length} active
+              {employees.filter((e) => e.status === "active").length} {t("status.active")}
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Sales Team</CardTitle>
+            <CardTitle className="text-sm font-medium">{t("employees.sales_team")}</CardTitle>
             <Target className="h-4 w-4 text-green-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
               {getSalesEmployees().length}
             </div>
-            <p className="text-xs text-muted-foreground">Active sales staff</p>
+            <p className="text-xs text-muted-foreground">{t("employees.active_sales_staff")}</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Today's Sales</CardTitle>
+            <CardTitle className="text-sm font-medium">{t("employees.todays_sales")}</CardTitle>
             <ShoppingCart className="h-4 w-4 text-blue-500" />
           </CardHeader>
           <CardContent>
@@ -1939,15 +1940,14 @@ ${data.timeEntries
                 .toLocaleString()}
             </div>
             <p className="text-xs text-muted-foreground">
-              {dailySales.filter((s) => s.date === selectedDate).length}{" "}
-              transactions
+              {dailySales.filter((s) => s.date === selectedDate).length} {t("employees.transactions")}
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Commissions</CardTitle>
+            <CardTitle className="text-sm font-medium">{t("employees.commissions")}</CardTitle>
             <DollarSign className="h-4 w-4 text-yellow-500" />
           </CardHeader>
           <CardContent>
@@ -1959,7 +1959,7 @@ ${data.timeEntries
                 .toFixed(2)}
             </div>
             <p className="text-xs text-muted-foreground">
-              Today's earned commissions
+              {t("employees.todays_commissions_desc")}
             </p>
           </CardContent>
         </Card>
@@ -1967,7 +1967,7 @@ ${data.timeEntries
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              Average Salary
+              {t("employees.average_salary")}
             </CardTitle>
             <Award className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
@@ -1980,7 +1980,7 @@ ${data.timeEntries
               ).toLocaleString()}
             </div>
             <p className="text-xs text-muted-foreground">
-              Per year across all roles
+              {t("employees.per_year")}
             </p>
           </CardContent>
         </Card>
@@ -1989,16 +1989,16 @@ ${data.timeEntries
       <Tabs defaultValue="directory" className="space-y-4">
         <TabsList className="grid w-full grid-cols-2 md:grid-cols-4">
           <TabsTrigger value="directory" className="text-xs md:text-sm">
-            Directory
+            {t("employees.employee_directory")}
           </TabsTrigger>
           <TabsTrigger value="sales" className="text-xs md:text-sm">
-            Sales
+            {t("sales.title")}
           </TabsTrigger>
           <TabsTrigger value="attendance" className="text-xs md:text-sm">
-            Attendance
+            {t("employees.attendance")}
           </TabsTrigger>
           <TabsTrigger value="analytics" className="text-xs md:text-sm">
-            Analytics
+            {t("employees.hr_analytics")}
           </TabsTrigger>
         </TabsList>
 
@@ -2007,7 +2007,7 @@ ${data.timeEntries
           <Card>
             <CardHeader>
               <CardTitle className="text-lg md:text-xl">
-                Employee Directory
+                {t("employees.employee_directory")}
               </CardTitle>
               {/* Mobile-optimized filters */}
               <div className="flex flex-col gap-3 md:flex-row md:gap-4">
