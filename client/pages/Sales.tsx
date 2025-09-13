@@ -1336,13 +1336,13 @@ export default function Sales() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Invoice #</TableHead>
-                <TableHead>Client</TableHead>
-                <TableHead>Employee</TableHead>
-                <TableHead>Date</TableHead>
-                <TableHead>Amount</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Actions</TableHead>
+                <TableHead>{t("sales.invoice_number")}</TableHead>
+                <TableHead>{t("sales.client")}</TableHead>
+                <TableHead>{t("employees.employee")}</TableHead>
+                <TableHead>{t("common.date")}</TableHead>
+                <TableHead>{t("common.amount")}</TableHead>
+                <TableHead>{t("common.status")}</TableHead>
+                <TableHead>{t("common.actions")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -1382,7 +1382,7 @@ export default function Sales() {
                         </>
                       ) : (
                         <span className="text-sm text-muted-foreground">
-                          No employee
+                          {t("sales.no_employee")}
                         </span>
                       )}
                     </div>
@@ -1397,7 +1397,7 @@ export default function Sales() {
                       ${invoice.total.toFixed(2)}
                     </div>
                     <div className="text-sm text-muted-foreground">
-                      {invoice.paymentMethod.replace("_", " ")}
+                      {t(`sales.${invoice.paymentMethod}`)}
                     </div>
                   </TableCell>
                   <TableCell>{getStatusBadge(invoice.status)}</TableCell>
@@ -1435,7 +1435,7 @@ export default function Sales() {
                               updateInvoiceStatus(invoice.id, "sent")
                             }
                           >
-                            Send
+                            {t("sales.send")}
                           </Button>
                           <Button
                             variant="outline"
@@ -1457,7 +1457,7 @@ export default function Sales() {
                             }
                             className="text-green-600"
                           >
-                            Mark Paid
+                            {t("sales.mark_paid")}
                           </Button>
                           <Button
                             variant="outline"
