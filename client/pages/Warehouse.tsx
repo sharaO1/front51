@@ -3723,9 +3723,9 @@ export default function Warehouse() {
               {stockFromType && (
                 <div className="space-y-2">
                   <Label htmlFor="stockFrom">
-                    {stockFromType === "supplier" && "Supplier Name *"}
-                    {stockFromType === "other_filial" && "Filial/Branch Name *"}
-                    {stockFromType === "customer_return" && "Customer Name *"}
+                    {stockFromType === "supplier" && (<>{t("warehouse.supplier_name")} *</>)}
+                    {stockFromType === "other_filial" && (<>{t("warehouse.filial_branch_name")} *</>)}
+                    {stockFromType === "customer_return" && (<>{t("warehouse.customer_name")} *</>)}
                   </Label>
                   {stockFromType === "supplier" && (
                     <Select value={stockFrom} onValueChange={setStockFrom}>
@@ -3920,8 +3920,8 @@ export default function Warehouse() {
               {stockToType && (
                 <div className="space-y-2">
                   <Label htmlFor="stockTo">
-                    {stockToType === "client" && "Client Name *"}
-                    {stockToType === "other_filial" && "Filial/Branch Name *"}
+                    {stockToType === "client" && (<>{t("sales.client_name")} *</>)}
+                    {stockToType === "other_filial" && (<>{t("warehouse.filial_branch_name")} *</>)}
                   </Label>
                   {stockToType === "client" && (
                     <Select value={stockTo} onValueChange={setStockTo}>
