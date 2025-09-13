@@ -40,4 +40,12 @@ i18n
     },
   });
 
+// Keep <html lang> in sync
+if (typeof document !== 'undefined') {
+  document.documentElement.lang = i18n.language || 'ru';
+  i18n.on('languageChanged', (lng) => {
+    document.documentElement.lang = lng;
+  });
+}
+
 export default i18n;
