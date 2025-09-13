@@ -2318,7 +2318,7 @@ export default function Warehouse() {
                     <Label htmlFor="name">{t("warehouse.product_name")} *</Label>
                     <Input
                       id="name"
-                      placeholder="iPhone 15 Pro"
+                      placeholder={t("warehouse.enter_product_name")}
                       value={newProduct.name}
                       onChange={(e) =>
                         setNewProduct({ ...newProduct, name: e.target.value })
@@ -2347,7 +2347,7 @@ export default function Warehouse() {
                       }
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="Select category" />
+                        <SelectValue placeholder={t("warehouse.select_category")} />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="Smartphones">Smartphones</SelectItem>
@@ -2363,7 +2363,7 @@ export default function Warehouse() {
                     <Label htmlFor="brand">{t("warehouse.brand")}</Label>
                     <Input
                       id="brand"
-                      placeholder="Apple"
+                      placeholder={t("warehouse.enter_brand_name")}
                       value={newProduct.brand}
                       onChange={(e) =>
                         setNewProduct({ ...newProduct, brand: e.target.value })
@@ -2375,7 +2375,7 @@ export default function Warehouse() {
                   <Label htmlFor="description">{t("common.description")}</Label>
                   <Textarea
                     id="description"
-                    placeholder="Product description"
+                    placeholder={t("warehouse.product_description_placeholder")}
                     value={newProduct.description}
                     onChange={(e) =>
                       setNewProduct({
@@ -2484,7 +2484,7 @@ export default function Warehouse() {
                       <div className="flex gap-2">
                         <Input
                           id="supplier"
-                          placeholder="Add supplier and press Enter"
+                          placeholder={t("warehouse.add_supplier_placeholder")}
                           value={supplierInput}
                           onChange={(e) => setSupplierInput(e.target.value)}
                           onKeyDown={(e) => {
@@ -2589,7 +2589,7 @@ export default function Warehouse() {
             <div className="relative">
               <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search products..."
+                placeholder={t("warehouse.search_products")}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-8"
@@ -2606,7 +2606,7 @@ export default function Warehouse() {
                   <div className="flex-1">
                     <div className="font-medium">{product.name}</div>
                     <div className="text-sm text-muted-foreground">
-                      {product.sku} • Current stock: {product.quantity}
+                      {product.sku} • {t("warehouse.current_stock")}: {product.quantity}
                     </div>
                   </div>
                 </Button>
@@ -2702,7 +2702,7 @@ export default function Warehouse() {
                 <div className="relative flex-1">
                   <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                   <Input
-                    placeholder="Search products..."
+                    placeholder={t("warehouse.search_products")}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="pl-8"
@@ -3412,7 +3412,7 @@ export default function Warehouse() {
                 <Label htmlFor="editName">{t("warehouse.product_name")} *</Label>
                 <Input
                   id="editName"
-                  placeholder="iPhone 15 Pro"
+                  placeholder={t("warehouse.enter_product_name")}
                   value={newProduct.name}
                   onChange={(e) =>
                     setNewProduct({ ...newProduct, name: e.target.value })
@@ -3441,7 +3441,7 @@ export default function Warehouse() {
                   }
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select category" />
+                    <SelectValue placeholder={t("warehouse.select_category")} />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="Smartphones">Smartphones</SelectItem>
@@ -3457,7 +3457,7 @@ export default function Warehouse() {
                 <Label htmlFor="editBrand">{t("warehouse.brand")}</Label>
                 <Input
                   id="editBrand"
-                  placeholder="Apple"
+                  placeholder={t("warehouse.enter_brand_name")}
                   value={newProduct.brand}
                   onChange={(e) =>
                     setNewProduct({ ...newProduct, brand: e.target.value })
@@ -3469,7 +3469,7 @@ export default function Warehouse() {
               <Label htmlFor="editDescription">{t("common.description")}</Label>
               <Textarea
                 id="editDescription"
-                placeholder="Product description"
+                placeholder={t("warehouse.product_description_placeholder")}
                 value={newProduct.description}
                 onChange={(e) =>
                   setNewProduct({ ...newProduct, description: e.target.value })
@@ -3570,7 +3570,7 @@ export default function Warehouse() {
                   <div className="flex gap-2">
                     <Input
                       id="editSupplier"
-                      placeholder="Add supplier and press Enter"
+                      placeholder={t("warehouse.add_supplier_placeholder")}
                       value={editSupplierInput}
                       onChange={(e) => setEditSupplierInput(e.target.value)}
                       onKeyDown={(e) => {
@@ -3621,7 +3621,7 @@ export default function Warehouse() {
             </div>
             <div className="flex gap-2">
               <Button className="flex-1" onClick={editProduct}>
-                Update Product
+                {t("warehouse.update_product")}
               </Button>
               <Button
                 variant="outline"
