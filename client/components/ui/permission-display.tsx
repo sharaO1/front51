@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -49,24 +50,14 @@ const actionColors: Record<Action, string> = {
   assign: 'bg-teal-100 text-teal-700 border-teal-300'
 };
 
-const resourceLabels: Record<Resource, string> = {
-  users: 'User Management',
-  employees: 'Employee Management',
-  clients: 'Client Management',
-  sales: 'Sales Management',
-  finance: 'Financial Management',
-  dashboard: 'Dashboard Access',
-  settings: 'System Settings',
-  reports: 'Reports & Analytics',
-  audit_logs: 'Audit Logs',
-  system_config: 'System Configuration'
-};
+const labelForResource = (t: (key: string, opts?: any) => string, resource: Resource) => t(`rbac.resources.${resource}`);
 
 export default function PermissionDisplay({ 
   permissions, 
   className,
   compact = false 
 }: PermissionDisplayProps) {
+  const { t } = useTranslation();
   const [expandedResources, setExpandedResources] = useState<Set<Resource>>(new Set());
 
   const toggleResource = (resource: Resource) => {
@@ -105,7 +96,7 @@ export default function PermissionDisplay({
                     className={cn('text-xs', actionColors[action])}
                   >
                     <Icon className="h-3 w-3 mr-1" />
-                    {action}
+                    {t(`rbac.actions.${action}`)}
                   </Badge>
                 );
               })}
@@ -163,7 +154,7 @@ export default function PermissionDisplay({
                           )}
                         >
                           <Icon className="h-3 w-3 mr-2" />
-                          <span className="capitalize">{action}</span>
+                          <span className="capitalize">{t(`rbac.actions.${action}`)}</span>
                         </Badge>
                       );
                     })}
@@ -171,7 +162,7 @@ export default function PermissionDisplay({
                   
                   {resourcePermissions.some(p => p.conditions) && (
                     <div className="mt-3 pt-3 border-t">
-                      <p className="text-xs text-muted-foreground mb-2">Conditions:</p>
+                      <p className="text-xs text-muted-foreground mb-2">{t('rbac.common.conditions')}:</p>
                       {resourcePermissions.map((permission, index) => 
                         permission.conditions?.map((condition, condIndex) => (
                           <Badge 
@@ -179,7 +170,7 @@ export default function PermissionDisplay({
                             variant="outline" 
                             className="mr-2 mb-1 text-xs"
                           >
-                            {condition.type}: {condition.value || 'applies'}
+                            {condition.type}: {condition.value || t('rbac.common.applies')}
                           </Badge>
                         ))
                       )}
@@ -240,7 +231,7 @@ export function RoleComparison({ roles, className }: RoleComparisonProps) {
         <table className="w-full border-collapse border border-border">
           <thead>
             <tr>
-              <th className="border border-border p-2 text-left bg-muted">Resource</th>
+              <th className="border border-border p-2 text-left bg-muted">{t('rbac.common.resource_header')}</th>
               {Array.from(selectedRoles).map(role => (
                 <th key={role} className="border border-border p-2 text-center bg-muted capitalize">
                   {t(`roles.labels.${role}`)}
@@ -271,13 +262,13 @@ export function RoleComparison({ roles, className }: RoleComparisonProps) {
                                 className={cn('text-xs', actionColors[action])}
                               >
                                 <Icon className="h-2 w-2 mr-1" />
-                                {action}
+                                {t(`rbac.actions.${action}`)}
                               </Badge>
                             );
                           })}
                         </div>
                       ) : (
-                        <span className="text-muted-foreground text-xs">No access</span>
+                        <span className="text-muted-foreground text-xs">{t('rbac.common.no_access')}</span>
                       )}
                     </td>
                   );
