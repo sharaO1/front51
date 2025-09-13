@@ -2645,7 +2645,7 @@ export default function Warehouse() {
           <CardContent>
             <div className="text-2xl font-bold">{products.length}</div>
             <p className="text-xs text-muted-foreground">
-              {products.filter((p) => p.status === "in-stock").length} in stock
+              {products.filter((p) => p.status === "in-stock").length} {t("warehouse.in_stock")}
             </p>
           </CardContent>
         </Card>
@@ -2731,7 +2731,7 @@ export default function Warehouse() {
                 >
                   <SelectTrigger className="w-[150px]">
                     <Filter className="mr-2 h-4 w-4" />
-                    <SelectValue placeholder="Category" />
+                    <SelectValue placeholder={t("warehouse.category")} />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Categories</SelectItem>
@@ -2744,12 +2744,12 @@ export default function Warehouse() {
                 </Select>
                 <Select value={statusFilter} onValueChange={setStatusFilter}>
                   <SelectTrigger className="w-[130px]">
-                    <SelectValue placeholder="Status" />
+                    <SelectValue placeholder={t("common.status")} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">All Status</SelectItem>
-                    <SelectItem value="in-stock">In Stock</SelectItem>
-                    <SelectItem value="low-stock">Low Stock</SelectItem>
+                    <SelectItem value="all">{t("warehouse.all_status")}</SelectItem>
+                    <SelectItem value="in-stock">{t("warehouse.in_stock")}</SelectItem>
+                    <SelectItem value="low-stock">{t("warehouse.low_stock")}</SelectItem>
                     <SelectItem value="out-of-stock">{t("warehouse.out_of_stock")}</SelectItem>
                   </SelectContent>
                 </Select>
