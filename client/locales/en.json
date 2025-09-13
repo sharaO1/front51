@@ -742,7 +742,69 @@
     "late": "Late",
     "half_day": "Half Day",
     "on_leave": "On Leave",
-    "terminated": "Terminated"
+    "terminated": "Terminated",
+    "suspended": "Suspended"
+  },
+  "roles": {
+    "labels": {
+      "super_admin": "Super Admin",
+      "admin": "Admin",
+      "manager": "Manager",
+      "team_lead": "Team Lead",
+      "employee": "Employee",
+      "intern": "Intern",
+      "viewer": "Viewer",
+      "unknown": "Unknown Role"
+    },
+    "descriptions": {
+      "super_admin": "Complete system access with all administrative privileges",
+      "admin": "High-level administrative access to most system functions",
+      "manager": "Departmental management with approval and oversight capabilities",
+      "team_lead": "Team leadership with limited administrative functions",
+      "employee": "Standard user access for daily operational tasks",
+      "intern": "Limited access for learning and basic task completion",
+      "viewer": "Read-only access to basic system information"
+    }
+  },
+  "rbac": {
+    "resources": {
+      "users": "User Management",
+      "employees": "Employee Management",
+      "clients": "Client Management",
+      "sales": "Sales Management",
+      "finance": "Financial Management",
+      "dashboard": "Dashboard",
+      "settings": "System Settings",
+      "reports": "Reports & Analytics",
+      "audit_logs": "Audit Logs",
+      "system_config": "System Configuration"
+    },
+    "actions": {
+      "read": "Read",
+      "create": "Create",
+      "update": "Update",
+      "delete": "Delete",
+      "export": "Export",
+      "import": "Import",
+      "approve": "Approve",
+      "reject": "Reject",
+      "assign": "Assign"
+    },
+    "common": {
+      "permissions": "permissions",
+      "conditions": "Conditions",
+      "applies": "applies",
+      "no_access": "No access",
+      "resource_header": "Resource"
+    }
+  },
+  "departments": {
+    "sales": "Sales",
+    "marketing": "Marketing",
+    "finance": "Finance",
+    "hr": "Human Resources",
+    "it": "IT",
+    "operations": "Operations"
   },
   "admin": {
     "users": {
@@ -796,7 +858,95 @@
         "role_updated_title": "Role Updated",
         "role_updated_desc": "User role has been updated to {{role}}",
         "status_updated_title": "Status Updated",
-        "status_updated_desc": "User status has been updated to {{status}}"
+        "status_updated_desc": "User status has been updated to {{status}}",
+        "password_generated_title": "Password Generated",
+        "password_generated_desc": "A secure password has been generated automatically",
+        "not_authenticated_title": "Not authenticated",
+        "not_authenticated_desc": "Please log in to add users.",
+        "created_success_title": "User Created Successfully",
+        "created_success_desc": "{{name}} has been added to the system with {{role}} role",
+        "create_failed_fallback": "Failed to create user. Please try again."
+      },
+      "create": {
+        "add_user_btn": "Add User",
+        "title": "Create New User",
+        "description": "Add a new user to the system with specific role and permissions",
+        "sections": {
+          "basic_info": "Basic Information",
+          "role_access": "Role and Access",
+          "permissions_preview": "Role Permissions Preview"
+        },
+        "labels": {
+          "first_name": "First Name",
+          "last_name": "Last Name",
+          "email_address": "Email Address",
+          "password": "Password",
+          "user_role": "User Role",
+          "department": "Department",
+          "work_location": "Work Location (Filial)",
+          "additional_notes": "Additional Notes"
+        },
+        "placeholders": {
+          "first_name": "John",
+          "last_name": "Doe",
+          "email": "john@company.com",
+          "password": "Enter secure password",
+          "select_department": "Select department",
+          "select_work_location": "Select work location",
+          "additional_notes": "Any additional information about this user..."
+        },
+        "password_hint": "Minimum 6 characters. Use the generate button for a secure password.",
+        "generate": "Generate",
+        "role_hint": "Role determines what the user can access and modify",
+        "location_hint": "Choose the primary location where this user will work",
+        "permissions_summary": "{{count}} permissions across {{resources}} resources",
+        "creating": "Creating...",
+        "create_user": "Create User",
+        "validation": {
+          "required_fields": "Please fill in all required fields including first and last name and work location",
+          "password_min": "Password must be at least 6 characters long"
+        }
+      }
+    },
+    "roles": {
+      "title": "Role Management",
+      "subtitle": "Manage system roles, permissions, and access hierarchies",
+      "compare_roles": "Compare Roles",
+      "create_role": "Create Role",
+      "stats": {
+        "permissions": "Permissions",
+        "resources": "Resources",
+        "subordinates": "Subordinates"
+      },
+      "total_permissions": "Total Permissions",
+      "tabs": {
+        "permissions": "Permissions",
+        "hierarchy": "Hierarchy",
+        "analytics": "Analytics"
+      },
+      "hierarchy": {
+        "can_manage": "Can Manage",
+        "can_manage_desc": "Roles that {{role}} can manage or oversee",
+        "none_can_manage": "This role cannot manage other roles",
+        "managed_by": "Managed By",
+        "managed_by_desc": "Roles that can manage or oversee {{role}}",
+        "none_managed_by": "This role is not managed by any other role"
+      },
+      "analytics": {
+        "resources_accessible": "Resources Accessible",
+        "of_total_resources": "out of {{count}} total resources",
+        "total_actions": "Total Actions",
+        "across_resources": "across all accessible resources",
+        "hierarchy_level": "Hierarchy Level",
+        "of_total_roles": "of {{count}} total roles"
+      },
+      "permission_breakdown": {
+        "title": "Permission Breakdown",
+        "description": "Detailed analysis of permissions by action type"
+      },
+      "role_comparison": {
+        "title": "Role Comparison",
+        "description": "Compare permissions and capabilities across different roles"
       }
     }
   }
