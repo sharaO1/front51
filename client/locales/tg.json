@@ -70,10 +70,14 @@
       "weak": "Заиф",
       "medium": "Миёна",
       "strong": "Қавӣ"
-    }
+    },
+    "secure_access_title": "Дастрасии амн",
+    "secure_access_message": "Ҳисобҳои корбарон танҳо аз ҷониби маъмурон идора карда мешаванд. Барои дархости дастрасӣ ба маъмури система муроҷиат кунед.",
+    "email_placeholder": "шумо@email.com",
+    "password_placeholder": "Пароли худро ворид кунед"
   },
   "navigation": {
-    "dashboard": "Лавҳаи назорат",
+    "dashboard": "Лавҳаи наз��рат",
     "warehouse": "Анбор",
     "clients": "Муштариён",
     "sales": "Фурӯш",
@@ -445,7 +449,7 @@
     "delete_all_backups": "Ҳамаи нусхаҳои эҳтиётиро нест кунед",
     "account_information": "Маълумоти ҳисоб",
     "manage_personal_details": "Тафсилоти шахсии худро идора кунед",
-    "edit_profile": "Профилро таҳрир кунед",
+    "edit_profile": "Профилро таҳ��ир кунед",
     "subscription_billing": "Обуна ва ҳисобдорӣ",
     "manage_subscription": "Обуна ва тафсилоти пардохтатонро идора кунед",
     "businesspro_enterprise": "БизнесПро корхона",
