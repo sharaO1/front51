@@ -118,6 +118,7 @@ interface Employee {
   firstName: string;
   lastName: string;
   email?: string;
+  accountId?: string;
   phone: string;
   address: string;
   department: string;
@@ -432,6 +433,7 @@ export default function Employees() {
           firstName: w.firstName || "",
           lastName: w.lastName || "",
           email: undefined,
+          accountId: w.accountId ? String(w.accountId) : undefined,
           phone: w.phone || "",
           address: w.address || "",
           department: (() => {
@@ -515,6 +517,20 @@ export default function Employees() {
       mounted = false;
     };
   }, []);
+
+  // Fill missing employee emails from users by accountId
+  useEffect(() => {
+    if (!users || !users.length) return;
+    setEmployees((prev) =>
+      prev.map((e) => {
+        if (e.email) return e;
+        const accId = (e as any).accountId;
+        if (!accId) return e;
+        const u = users.find((uu) => uu.id === accId);
+        return u && u.email ? { ...e, email: u.email } : e;
+      }),
+    );
+  }, [users]);
 
   // --- Load Mock Attendance for Selected Date ---
   const loadMockAttendanceForDate = async (date: string) => {
@@ -859,6 +875,7 @@ export default function Employees() {
         firstName,
         lastName,
         email: selectedUser?.email || newEmployee.email!,
+        accountId: selectedAccountId,
         phone: newEmployee.phone || "",
         address: newEmployee.address || "",
         department: selectedUser?.department || newEmployee.department || "",
@@ -2884,7 +2901,7 @@ ${data.timeEntries
                 { label: "Department", value: selectedEmployee.department },
                 { label: "Filial", value: getFilialName(selectedEmployee.filialId) },
                 { label: "Hire Date", value: selectedEmployee.hireDate },
-                { label: "Email", value: selectedEmployee.email },
+                { label: "Email", value: selectedEmployee.email || (users.find((u) => u.id === (selectedEmployee as any).accountId)?.email || "") },
               ]}
               right={[
                 { label: "Phone", value: selectedEmployee.phone },
