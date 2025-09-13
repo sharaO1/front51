@@ -1303,8 +1303,8 @@ export default function Sales() {
                     setStartDate("");
                     setEndDate("");
                   }}
-                >
-                  Clear
+>
+                  {t("common.clear")}
                 </Button>
               </div>
             )}
