@@ -1582,7 +1582,7 @@ ${data.transactions
                           {transaction.type === "income" ? "Income" : "Expense"}
                         </Badge>
                       </TableCell>
-                      <TableCell>{transaction.category}</TableCell>
+                      <TableCell>{translateCategory(transaction.category)}</TableCell>
                       <TableCell>
                         <div>
                           <div className="font-medium">
