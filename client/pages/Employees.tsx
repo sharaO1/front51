@@ -949,12 +949,15 @@ export default function Employees() {
       const token = useAuthStore.getState().accessToken;
 
       const tryDelete = async (identifier: string) => {
-        const res = await fetch(joinApi(`/workers/${encodeURIComponent(identifier)}`), {
-          method: "DELETE",
-          headers: {
-            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        const res = await fetch(
+          joinApi(`/workers/${encodeURIComponent(identifier)}`),
+          {
+            method: "DELETE",
+            headers: {
+              ...(token ? { Authorization: `Bearer ${token}` } : {}),
+            },
           },
-        });
+        );
         return res;
       };
 
@@ -964,7 +967,11 @@ export default function Employees() {
         const status = res.status;
         const msg = await getErrorMessageFromResponse(res);
         const notFound = status === 404 || /not\s*found/i.test(msg);
-        if (notFound && employee.employeeId && employee.employeeId !== employee.id) {
+        if (
+          notFound &&
+          employee.employeeId &&
+          employee.employeeId !== employee.id
+        ) {
           res = await tryDelete(employee.employeeId);
         }
         if (!res.ok) {
@@ -975,7 +982,8 @@ export default function Employees() {
 
       setEmployees(
         employees.filter(
-          (emp) => emp.id !== employee.id && emp.employeeId !== employee.employeeId,
+          (emp) =>
+            emp.id !== employee.id && emp.employeeId !== employee.employeeId,
         ),
       );
       toast({

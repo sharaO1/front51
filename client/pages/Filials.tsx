@@ -188,7 +188,9 @@ export default function Filials() {
   const [selectedFilial, setSelectedFilial] = useState<Filial | null>(null);
   const [editingFilial, setEditingFilial] = useState<Filial | null>(null);
   const [managerNames, setManagerNames] = useState<Record<string, string>>({});
-  const [managerOptions, setManagerOptions] = useState<{ id: string; name: string }[]>([]);
+  const [managerOptions, setManagerOptions] = useState<
+    { id: string; name: string }[]
+  >([]);
 
   // Products that belong to the selected filial
   const [filialProducts, setFilialProducts] = useState<FilialProduct[]>([]);
@@ -273,8 +275,11 @@ export default function Filials() {
         const json = await res.json().catch(() => null);
         const list = (json?.data || json?.result || []) as any[];
         const managers = list
-          .filter((u) => String(u.role || '').toLowerCase() === 'manager')
-          .map((u) => ({ id: String(u.id), name: String(u.name || u.fullName || u.email || u.username || u.id) }));
+          .filter((u) => String(u.role || "").toLowerCase() === "manager")
+          .map((u) => ({
+            id: String(u.id),
+            name: String(u.name || u.fullName || u.email || u.username || u.id),
+          }));
         if (!mounted) return;
         setManagerOptions(managers);
         setManagerNames((prev) => ({
@@ -590,7 +595,9 @@ export default function Filials() {
 
     toast({
       title: t("filials.toast.updated_title"),
-      description: t("filials.toast.updated_desc", { name: updatedFilial.name }),
+      description: t("filials.toast.updated_desc", {
+        name: updatedFilial.name,
+      }),
     });
   };
 
@@ -613,9 +620,7 @@ export default function Filials() {
           <h1 className="text-3xl font-bold tracking-tight">
             {t("filials.title")}
           </h1>
-          <p className="text-muted-foreground">
-            {t("filials.subtitle")}
-          </p>
+          <p className="text-muted-foreground">{t("filials.subtitle")}</p>
         </div>
 
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
@@ -660,9 +665,15 @@ export default function Filials() {
                       <SelectValue placeholder={t("filials.select_type")} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="warehouse">{t("filials.types.warehouse")}</SelectItem>
-                      <SelectItem value="retail">{t("filials.types.retail_store")}</SelectItem>
-                      <SelectItem value="online">{t("filials.types.online_center")}</SelectItem>
+                      <SelectItem value="warehouse">
+                        {t("filials.types.warehouse")}
+                      </SelectItem>
+                      <SelectItem value="retail">
+                        {t("filials.types.retail_store")}
+                      </SelectItem>
+                      <SelectItem value="online">
+                        {t("filials.types.online_center")}
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -731,7 +742,9 @@ export default function Filials() {
                 <Label htmlFor="manager">{t("filials.manager")} *</Label>
                 <Select
                   value={newFilial.manager}
-                  onValueChange={(value) => setNewFilial({ ...newFilial, manager: value })}
+                  onValueChange={(value) =>
+                    setNewFilial({ ...newFilial, manager: value })
+                  }
                 >
                   <SelectTrigger>
                     <SelectValue placeholder={t("filials.select_manager")} />
@@ -740,7 +753,9 @@ export default function Filials() {
                     {managerOptions
                       .filter((m) => {
                         const used = new Set(
-                          filials.map((f) => f.manager).filter((v) => isIdLike(v)),
+                          filials
+                            .map((f) => f.manager)
+                            .filter((v) => isIdLike(v)),
                         );
                         return !used.has(m.id);
                       })
@@ -768,9 +783,15 @@ export default function Filials() {
                       <SelectValue placeholder={t("filials.select_status")} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="active">{t("filials.statuses.active")}</SelectItem>
-                      <SelectItem value="inactive">{t("filials.statuses.inactive")}</SelectItem>
-                      <SelectItem value="maintenance">{t("filials.statuses.maintenance")}</SelectItem>
+                      <SelectItem value="active">
+                        {t("filials.statuses.active")}
+                      </SelectItem>
+                      <SelectItem value="inactive">
+                        {t("filials.statuses.inactive")}
+                      </SelectItem>
+                      <SelectItem value="maintenance">
+                        {t("filials.statuses.maintenance")}
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -792,7 +813,9 @@ export default function Filials() {
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="openingHours">{t("filials.opening_hours")}</Label>
+                <Label htmlFor="openingHours">
+                  {t("filials.opening_hours")}
+                </Label>
                 <Input
                   id="openingHours"
                   placeholder={t("filials.placeholders.opening_hours")}
@@ -822,20 +845,25 @@ export default function Filials() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t("filials.total_filials")}</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              {t("filials.total_filials")}
+            </CardTitle>
             <Building2 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{filials.length}</div>
             <p className="text-xs text-muted-foreground">
-              {filials.filter((f) => f.status === "active").length} {t("filials.statuses.active")}
+              {filials.filter((f) => f.status === "active").length}{" "}
+              {t("filials.statuses.active")}
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t("filials.retail_stores")}</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              {t("filials.retail_stores")}
+            </CardTitle>
             <Store className="h-4 w-4 text-green-500" />
           </CardHeader>
           <CardContent>
@@ -850,20 +878,26 @@ export default function Filials() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t("filials.warehouses")}</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              {t("filials.warehouses")}
+            </CardTitle>
             <Building2 className="h-4 w-4 text-blue-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-blue-600">
               {filials.filter((f) => f.type === "warehouse").length}
             </div>
-            <p className="text-xs text-muted-foreground">{t("filials.storage_facilities")}</p>
+            <p className="text-xs text-muted-foreground">
+              {t("filials.storage_facilities")}
+            </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t("filials.total_staff")}</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              {t("filials.total_staff")}
+            </CardTitle>
             <User className="h-4 w-4 text-purple-500" />
           </CardHeader>
           <CardContent>
@@ -897,9 +931,15 @@ export default function Filials() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">{t("filials.all_types")}</SelectItem>
-                <SelectItem value="warehouse">{t("filials.types.warehouse")}</SelectItem>
-                <SelectItem value="retail">{t("filials.types.retail")}</SelectItem>
-                <SelectItem value="online">{t("filials.types.online")}</SelectItem>
+                <SelectItem value="warehouse">
+                  {t("filials.types.warehouse")}
+                </SelectItem>
+                <SelectItem value="retail">
+                  {t("filials.types.retail")}
+                </SelectItem>
+                <SelectItem value="online">
+                  {t("filials.types.online")}
+                </SelectItem>
               </SelectContent>
             </Select>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
@@ -908,9 +948,15 @@ export default function Filials() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">{t("filials.all_status")}</SelectItem>
-                <SelectItem value="active">{t("filials.statuses.active")}</SelectItem>
-                <SelectItem value="inactive">{t("filials.statuses.inactive")}</SelectItem>
-                <SelectItem value="maintenance">{t("filials.statuses.maintenance")}</SelectItem>
+                <SelectItem value="active">
+                  {t("filials.statuses.active")}
+                </SelectItem>
+                <SelectItem value="inactive">
+                  {t("filials.statuses.inactive")}
+                </SelectItem>
+                <SelectItem value="maintenance">
+                  {t("filials.statuses.maintenance")}
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -1049,9 +1095,12 @@ export default function Filials() {
           {selectedFilial && (
             <DetailCard
               title={selectedFilial.name}
-              subtitle={t("filials.details.subtitle") }
+              subtitle={t("filials.details.subtitle")}
               left={[
-                { label: t("filials.type"), value: getTypeBadge(selectedFilial.type) },
+                {
+                  label: t("filials.type"),
+                  value: getTypeBadge(selectedFilial.type),
+                },
                 {
                   label: t("common.address"),
                   value: `${selectedFilial.address}, ${selectedFilial.city}, ${selectedFilial.country}`,
@@ -1069,7 +1118,8 @@ export default function Filials() {
                       <div className="flex items-center gap-2">
                         <User className="h-4 w-4 text-muted-foreground" />
                         <span className="text-sm">
-                          {t("filials.manager")}: {getManagerDisplay(selectedFilial.manager)}
+                          {t("filials.manager")}:{" "}
+                          {getManagerDisplay(selectedFilial.manager)}
                         </span>
                       </div>
                       {selectedFilial.phone && (
@@ -1093,9 +1143,15 @@ export default function Filials() {
                 },
               ]}
               stats={[
-  { label: t("filials.current_staff"), value: selectedFilial.currentStaff },
-  { label: t("filials.capacity"), value: selectedFilial.capacity || t("filials.na") },
-]}
+                {
+                  label: t("filials.current_staff"),
+                  value: selectedFilial.currentStaff,
+                },
+                {
+                  label: t("filials.capacity"),
+                  value: selectedFilial.capacity || t("filials.na"),
+                },
+              ]}
             >
               <div>
                 <div className="text-xs text-muted-foreground mb-2">
@@ -1118,7 +1174,7 @@ export default function Filials() {
                     <Table>
                       <TableHeader>
                         <TableRow>
-                            <TableHead>{t("filials.product")}</TableHead>
+                          <TableHead>{t("filials.product")}</TableHead>
                           <TableHead>{t("filials.sku")}</TableHead>
                           <TableHead>{t("filials.price")}</TableHead>
                           <TableHead>{t("filials.quantity")}</TableHead>
@@ -1146,8 +1202,12 @@ export default function Filials() {
               </div>
 
               <div className="grid grid-cols-2 gap-3 text-xs text-muted-foreground border-t pt-3 mt-3">
-                <div>📅 {t("filials.created")}: {selectedFilial.createdAt}</div>
-                <div>🔄 {t("filials.updated")}: {selectedFilial.updatedAt}</div>
+                <div>
+                  📅 {t("filials.created")}: {selectedFilial.createdAt}
+                </div>
+                <div>
+                  🔄 {t("filials.updated")}: {selectedFilial.updatedAt}
+                </div>
               </div>
             </DetailCard>
           )}
@@ -1159,7 +1219,9 @@ export default function Filials() {
         <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle>{t("filials.edit_filial")}</DialogTitle>
-            <DialogDescription>{t("filials.edit_description")}</DialogDescription>
+            <DialogDescription>
+              {t("filials.edit_description")}
+            </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             {/* Same form structure as Add Dialog but with edit functionality */}
@@ -1190,9 +1252,15 @@ export default function Filials() {
                     <SelectValue placeholder={t("filials.select_type")} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="warehouse">{t("filials.types.warehouse")}</SelectItem>
-                    <SelectItem value="retail">{t("filials.types.retail_store")}</SelectItem>
-                    <SelectItem value="online">{t("filials.types.online_center")}</SelectItem>
+                    <SelectItem value="warehouse">
+                      {t("filials.types.warehouse")}
+                    </SelectItem>
+                    <SelectItem value="retail">
+                      {t("filials.types.retail_store")}
+                    </SelectItem>
+                    <SelectItem value="online">
+                      {t("filials.types.online_center")}
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -1224,7 +1292,9 @@ export default function Filials() {
                 <Label htmlFor="editManager">{t("filials.manager")} *</Label>
                 <Select
                   value={newFilial.manager}
-                  onValueChange={(value) => setNewFilial({ ...newFilial, manager: value })}
+                  onValueChange={(value) =>
+                    setNewFilial({ ...newFilial, manager: value })
+                  }
                 >
                   <SelectTrigger>
                     <SelectValue placeholder={t("filials.select_manager")} />
@@ -1234,11 +1304,14 @@ export default function Filials() {
                       .filter((m) => {
                         const used = new Set(
                           filials
-                            .filter((f) => f.id !== (editingFilial?.id || ''))
+                            .filter((f) => f.id !== (editingFilial?.id || ""))
                             .map((f) => f.manager)
                             .filter((v) => isIdLike(v)),
                         );
-                        return !used.has(m.id) || String(editingFilial?.manager) === m.id;
+                        return (
+                          !used.has(m.id) ||
+                          String(editingFilial?.manager) === m.id
+                        );
                       })
                       .map((m) => (
                         <SelectItem key={m.id} value={m.id}>
