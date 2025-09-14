@@ -1135,7 +1135,67 @@ export default function Employees() {
     window.URL.revokeObjectURL(url);
   };
 
-  const exportEmployeeReport = (format: "pdf" | "excel" | "csv") => {
+  const openPrintWindow = (html: string, title: string) => {
+    const iframe = document.createElement("iframe");
+    iframe.style.position = "fixed";
+    iframe.style.right = "0";
+    iframe.style.bottom = "0";
+    iframe.style.width = "0";
+    iframe.style.height = "0";
+    iframe.style.border = "0";
+    document.body.appendChild(iframe);
+
+    const doc = iframe.contentDocument || iframe.contentWindow?.document;
+    if (!doc) return;
+
+    doc.open();
+    doc.write(`<!doctype html><html><head><meta charset="utf-8"/>
+      <meta name="viewport" content="width=device-width, initial-scale=1"/>
+      <title>${title}</title>
+      <style>
+        :root { --primary: #2563eb; --muted:#f8fafc; --text:#0f172a; }
+        * { box-sizing: border-box; }
+        body { font-family: Inter, system-ui, -apple-system, sans-serif; color: var(--text); margin: 0; background: #ffffff; }
+        .container { max-width: 1000px; margin: 24px auto; padding: 24px; }
+        .card { background: white; border: 1px solid #e5e7eb; border-radius: 12px; padding: 24px; box-shadow: 0 2px 6px rgba(0,0,0,.04); }
+        .header { display:flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+        h1 { font-size: 24px; margin: 0 0 8px; }
+        h3 { margin: 12px 0 8px; font-size: 14px; color:#334155; text-transform: uppercase; letter-spacing:.06em; }
+        .subtitle { color:#64748b; font-size: 14px; }
+        .grid { display:grid; grid-template-columns: 1fr 1fr; gap:16px; }
+        table { width:100%; border-collapse: collapse; font-size: 13px; }
+        th, td { padding: 10px 12px; border-bottom: 1px solid #e5e7eb; text-align: left; }
+        th { background: var(--muted); color:#334155; font-weight:600; }
+        .right { text-align:right; }
+        .muted { color:#64748b; }
+        .badge { background: #eef2ff; color:#3730a3; padding:4px 8px; border-radius:8px; font-size:12px; font-weight:600; }
+        @media print { .card { box-shadow:none; border:0; } }
+      </style>
+    </head><body>${html}</body></html>`);
+    doc.close();
+
+    const cleanup = () => {
+      try {
+        document.body.removeChild(iframe);
+      } catch {}
+    };
+
+    const doPrint = () => {
+      try {
+        iframe.contentWindow?.focus();
+        iframe.contentWindow?.print();
+      } catch {}
+      setTimeout(cleanup, 800);
+    };
+
+    if (iframe.contentWindow?.document.readyState === "complete") {
+      setTimeout(doPrint, 200);
+    } else {
+      iframe.onload = () => setTimeout(doPrint, 200);
+    }
+  };
+
+  const exportEmployeeReport = () => {
     const todaysSales = dailySales
       .filter((s) => s.date === selectedDate)
       .reduce((sum, s) => sum + s.amount, 0);
@@ -1143,7 +1203,7 @@ export default function Employees() {
       .filter((s) => s.date === selectedDate)
       .reduce((sum, s) => sum + s.commission, 0);
     const avgSalary = Math.round(
-      employees.reduce((sum, e) => sum + e.salary, 0) / employees.length,
+      employees.reduce((sum, e) => sum + e.salary, 0) / Math.max(employees.length, 1),
     );
 
     const reportData = {
@@ -1164,33 +1224,12 @@ export default function Employees() {
       departmentData,
     };
 
-    switch (format) {
-      case "pdf":
-        downloadFile(
-          generateEmployeePDFContent(reportData),
-          "employee-report.pdf",
-          "application/pdf",
-        );
-        break;
-      case "excel":
-        downloadFile(
-          generateEmployeeExcelContent(reportData),
-          "employee-report.xlsx",
-          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        );
-        break;
-      case "csv":
-        downloadFile(
-          generateEmployeeCSVContent(reportData),
-          "employee-report.csv",
-          "text/csv",
-        );
-        break;
-    }
+    const html = buildEmployeeReportHTML(reportData);
+    openPrintWindow(html, t("employees.pdf_title"));
 
     toast({
-      title: "Employee Report Exported",
-      description: `Employee report has been exported as ${format.toUpperCase()} and downloaded.`,
+      title: t("employees.pdf_title"),
+      description: t("employees.pdf_desc"),
     });
   };
 
@@ -1242,49 +1281,101 @@ export default function Employees() {
     });
   };
 
-  const generateEmployeePDFContent = (data: any) => {
+  const buildEmployeeReportHTML = (data: any) => {
+    const nf = (n: number) => new Intl.NumberFormat(i18n.language || "en").format(n || 0);
+    const dateStr = new Intl.DateTimeFormat(i18n.language || "en", { year: "numeric", month: "long", day: "2-digit", hour: "2-digit", minute: "2-digit" }).format(new Date(data.generatedAt));
+
+    const directoryRows = data.employees.map((emp: any) => `
+      <tr>
+        <td>${emp.firstName} ${emp.lastName}</td>
+        <td>${emp.department}</td>
+        <td>${emp.position || ""}</td>
+        <td>${t(`status.${emp.status}`)}</td>
+      </tr>
+    `).join("");
+
+    const deptRows = data.departmentData.map((d: any) => `
+      <tr>
+        <td>${d.department}</td>
+        <td class="right">${nf(d.employees)}</td>
+        <td class="right">${d.productivity}%</td>
+      </tr>
+    `).join("");
+
+    const salesRows = data.dailySales.slice(0, 50).map((s: any) => {
+      const emp = data.employees.find((e: any) => e.id === s.employeeId || e.employeeId === s.employeeId);
+      return `
+        <tr>
+          <td>${s.date}</td>
+          <td>${emp ? emp.firstName + " " + emp.lastName : ""}</td>
+          <td class="right">$${nf(s.amount)}</td>
+          <td class="right">$${(Number(s.commission) || 0).toFixed(2)}</td>
+        </tr>`;
+    }).join("");
+
+    const attendanceRows = data.timeEntries.slice(0, 50).map((a: any) => {
+      const emp = data.employees.find((e: any) => e.employeeId === a.employeeId);
+      return `
+        <tr>
+          <td>${a.date}</td>
+          <td>${emp ? emp.firstName + " " + emp.lastName : ""}</td>
+          <td class="right">${a.totalHours}h</td>
+          <td>${t(`status.${a.status}`)}</td>
+        </tr>`;
+    }).join("");
+
     return `
-EMPLOYEE REPORT
-===============
-Generated: ${new Date(data.generatedAt).toLocaleString()}
-
-EXECUTIVE SUMMARY
-=================
-Total Employees: ${data.summary.totalEmployees}
-Active Employees: ${data.summary.activeEmployees}
-Sales Team: ${data.summary.salesTeam}
-Today's Sales: $${data.summary.todaysSales.toLocaleString()}
-Today's Commissions: $${data.summary.todaysCommissions.toFixed(2)}
-Average Salary: $${data.summary.avgSalary.toLocaleString()}
-
-EMPLOYEE DIRECTORY
-==================
-${data.employees.map((emp: any) => `${emp.employeeId} - ${emp.firstName} ${emp.lastName} | ${emp.department} - ${emp.position} | ${emp.status.toUpperCase()}`).join("\n")}
-
-DEPARTMENT BREAKDOWN
-====================
-${data.departmentData.map((dept: any) => `${dept.department}: ${dept.employees} employees (${dept.productivity}% productivity)`).join("\n")}
-
-SALES PERFORMANCE
-=================
-${data.dailySales
-  .map((sale: any) => {
-    const employee = data.employees.find((e: any) => e.id === sale.employeeId);
-    return `${sale.date} - ${employee?.firstName} ${employee?.lastName}: $${sale.amount.toLocaleString()} (Commission: $${sale.commission.toFixed(2)})`;
-  })
-  .join("\n")}
-
-ATTENDANCE SUMMARY
-==================
-${data.timeEntries
-  .map((entry: any) => {
-    const employee = data.employees.find(
-      (e: any) => e.employeeId === entry.employeeId,
-    );
-    return `${entry.date} - ${employee?.firstName} ${employee?.lastName}: ${entry.totalHours}h (${entry.status})`;
-  })
-  .join("\n")}
-    `;
+      <div class="container">
+        <div class="card">
+          <div class="header">
+            <div>
+              <h1>${t("employees.export_employee_report")}</h1>
+              <div class="subtitle">${t("finance.generated_at")}: ${dateStr}</div>
+            </div>
+          </div>
+          <div class="grid" style="margin-top:16px;">
+            <div>
+              <h3>${t("finance.executive_summary")}</h3>
+              <table><tbody>
+                <tr><td>${t("employees.total_employees")}</td><td class="right">${nf(data.summary.totalEmployees)}</td></tr>
+                <tr><td>${t("status.active")}</td><td class="right">${nf(data.summary.activeEmployees)}</td></tr>
+                <tr><td>${t("employees.sales_team")}</td><td class="right">${nf(data.summary.salesTeam)}</td></tr>
+                <tr><td>${t("employees.todays_sales")}</td><td class="right">$${nf(data.summary.todaysSales)}</td></tr>
+                <tr><td>${t("employees.commissions")}</td><td class="right">$${(Number(data.summary.todaysCommissions)||0).toFixed(2)}</td></tr>
+                <tr><td>${t("employees.average_salary")}</td><td class="right">$${nf(data.summary.avgSalary)}</td></tr>
+              </tbody></table>
+            </div>
+            <div>
+              <h3>${t("employees.department_statistics")}</h3>
+              <table>
+                <thead><tr><th>${t("employees.department")}</th><th class="right">${t("employees.employee")}</th><th class="right">${t("employees.productivity")}%</th></tr></thead>
+                <tbody>${deptRows || `<tr><td colspan="3" class="muted">${t("clients.no_products", "No data")}</td></tr>`}</tbody>
+              </table>
+            </div>
+          </div>
+          <div style="margin-top:16px;">
+            <h3>${t("employees.employee_directory")}</h3>
+            <table>
+              <thead><tr><th>${t("clients.name", "Name")}</th><th>${t("employees.department")}</th><th>${t("employees.position")}</th><th>${t("common.status")}</th></tr></thead>
+              <tbody>${directoryRows || `<tr><td colspan="4" class="muted">${t("clients.no_products", "No data")}</td></tr>`}</tbody>
+            </table>
+          </div>
+          <div style="margin-top:16px;">
+            <h3>${t("employees.sales_performance_header")}</h3>
+            <table>
+              <thead><tr><th>${t("common.date")}</th><th>${t("employees.employee")}</th><th class="right">${t("sales.total_value")}</th><th class="right">${t("employees.commission")}</th></tr></thead>
+              <tbody>${salesRows || `<tr><td colspan="4" class="muted">${t("clients.no_products", "No data")}</td></tr>`}</tbody>
+            </table>
+          </div>
+          <div style="margin-top:16px;">
+            <h3>${t("employees.employee_attendance_header")}</h3>
+            <table>
+              <thead><tr><th>${t("common.date")}</th><th>${t("employees.employee")}</th><th class="right">${t("employees.total_hours")}</th><th>${t("common.status")}</th></tr></thead>
+              <tbody>${attendanceRows || `<tr><td colspan="4" class="muted">${t("clients.no_products", "No data")}</td></tr>`}</tbody>
+            </table>
+          </div>
+        </div>
+      </div>`;
   };
 
   const generateEmployeeExcelContent = (data: any) => {
@@ -1393,7 +1484,7 @@ ${data.timeEntries
                   {t("employees.export_desc")}
                 </div>
                 <DropdownMenuItem
-                  onClick={() => exportEmployeeReport("pdf")}
+                  onClick={() => exportEmployeeReport()}
                   className="cursor-pointer"
                 >
                   <FileSpreadsheet className="mr-2 h-4 w-4" />
@@ -1403,77 +1494,6 @@ ${data.timeEntries
                     </div>
                     <div className="text-xs text-muted-foreground">
                       {t("employees.pdf_desc")}
-                    </div>
-                  </div>
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => exportEmployeeReport("excel")}
-                  className="cursor-pointer"
-                >
-                  <FileSpreadsheet className="mr-2 h-4 w-4" />
-                  <div className="flex-1">
-                    <div className="font-medium">
-                      {t("employees.excel_title")}
-                    </div>
-                    <div className="text-xs text-muted-foreground">
-                      {t("employees.excel_desc")}
-                    </div>
-                  </div>
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => exportEmployeeReport("csv")}
-                  className="cursor-pointer"
-                >
-                  <FileSpreadsheet className="mr-2 h-4 w-4" />
-                  <div className="flex-1">
-                    <div className="font-medium">
-                      {t("employees.csv_title")}
-                    </div>
-                    <div className="text-xs text-muted-foreground">
-                      {t("employees.csv_desc")}
-                    </div>
-                  </div>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  onClick={() => exportEmployeeDirectory()}
-                  className="cursor-pointer"
-                >
-                  <Download className="mr-2 h-4 w-4" />
-                  <div className="flex-1">
-                    <div className="font-medium">
-                      {t("employees.employee_directory")}
-                    </div>
-                    <div className="text-xs text-muted-foreground">
-                      {t("employees.directory_desc")}
-                    </div>
-                  </div>
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => exportSalesPerformance()}
-                  className="cursor-pointer"
-                >
-                  <Download className="mr-2 h-4 w-4" />
-                  <div className="flex-1">
-                    <div className="font-medium">
-                      {t("employees.sales_performance")}
-                    </div>
-                    <div className="text-xs text-muted-foreground">
-                      {t("employees.sales_performance_desc")}
-                    </div>
-                  </div>
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => exportAttendance()}
-                  className="cursor-pointer"
-                >
-                  <Download className="mr-2 h-4 w-4" />
-                  <div className="flex-1">
-                    <div className="font-medium">
-                      {t("employees.attendance_data")}
-                    </div>
-                    <div className="text-xs text-muted-foreground">
-                      {t("employees.attendance_data_desc")}
                     </div>
                   </div>
                 </DropdownMenuItem>
