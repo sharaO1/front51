@@ -692,6 +692,16 @@ export default function Finance() {
   >("all");
   const { toast } = useToast();
 
+  // Export PDF dialog state
+  const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
+  const [exportPeriod, setExportPeriod] = useState<"daily" | "monthly" | "yearly">("monthly");
+  const [exportDate, setExportDate] = useState<string>(new Date().toISOString().split("T")[0]);
+  const [exportMonth, setExportMonth] = useState<string>(() => {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+  });
+  const [exportYear, setExportYear] = useState<string>(String(new Date().getFullYear()));
+
   const filteredTransactions = transactions
     .filter((transaction) => {
       const matchesSearch =
