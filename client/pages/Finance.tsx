@@ -1123,6 +1123,10 @@ export default function Finance() {
 
   const buildFinanceReportHTML = (data: any) => {
     const money = (n: number) => `$${Number(n || 0).toLocaleString()}`;
+    const sanitize = (s: string) => {
+      if (!s) return s;
+      return String(s).replace(/[A-Z0-9_-]{8,}/g, "••••••");
+    };
     const txRows = data.transactions
       .slice(0, 50)
       .map(
@@ -1131,7 +1135,7 @@ export default function Finance() {
         <td>${t.date}</td>
         <td>${t.type}</td>
         <td>${t.category}</td>
-        <td>${t.description}</td>
+        <td>${sanitize(formatDescription(t.description))}</td>
         <td class="right">${money(t.amount)}</td>
       </tr>`,
       )
@@ -1144,6 +1148,7 @@ export default function Finance() {
             <div>
               <h1>${t("finance.report_title", { defaultValue: "FINANCIAL REPORT" })}</h1>
               <div class="subtitle">${t("finance.generated_at", { defaultValue: "Generated" })}: ${new Date(data.generatedAt).toLocaleString()}</div>
+              ${data.periodLabel ? `<div class="subtitle">${t("common.period", { defaultValue: "Period" })}: ${data.periodLabel}</div>` : ""}
             </div>
           </div>
           <div class="grid">
