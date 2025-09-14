@@ -701,7 +701,7 @@ export default function Sales() {
 
     await updateInvoiceStatus(
       invoiceToCancel.id,
-      "draft",
+      "cancelled",
       cancellationReason.trim(),
     );
 
@@ -716,10 +716,11 @@ export default function Sales() {
       return p ? p.name : pid;
     };
     const rawStatus = String(r.status || "draft").toLowerCase();
-    const isCancelled = !!r.cancellationReason;
+    const isCancelled =
+      !!r.cancellationReason || rawStatus === "cancelled" || rawStatus === "canceled";
     const status = isCancelled
       ? ("cancelled" as const)
-      : ((["draft", "sent", "paid", "overdue"].includes(rawStatus)
+      : ((["draft", "sent", "paid", "overdue", "cancelled"].includes(rawStatus)
           ? rawStatus
           : "draft") as Invoice["status"]);
 
