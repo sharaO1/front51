@@ -1624,20 +1624,6 @@ ${data.transactions
                   </div>
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                  onClick={() => exportFinanceReport("excel")}
-                  className="cursor-pointer"
-                >
-                  <FileSpreadsheet className="mr-2 h-4 w-4" />
-                  <div className="flex-1">
-                    <div className="font-medium">
-                      {t("finance.export_excel_title")}
-                    </div>
-                    <div className="text-xs text-muted-foreground">
-                      {t("finance.export_excel_desc")}
-                    </div>
-                  </div>
-                </DropdownMenuItem>
-                <DropdownMenuItem
                   onClick={() => exportFinanceReport("csv")}
                   className="cursor-pointer"
                 >
