@@ -509,6 +509,7 @@ export default function Finance() {
   const [loans, setLoans] = useState<LoanRecord[]>(mockLoans);
   const [isAddLoanOpen, setIsAddLoanOpen] = useState(false);
   const [selectedLoan, setSelectedLoan] = useState<LoanRecord | null>(null);
+  const [isEditLoanOpen, setIsEditLoanOpen] = useState(false);
   const [newLoan, setNewLoan] = useState<Partial<LoanRecord>>({
     type: "borrow",
     amount: 0,
@@ -963,6 +964,57 @@ export default function Finance() {
       title: "Removed",
       description: `Record removed for ${loan?.partyName}.`,
     });
+  };
+
+  const openEditLoanDialog = (loan: LoanRecord) => {
+    setSelectedLoan(loan);
+    setNewLoan({
+      id: loan.id,
+      type: loan.type,
+      amount: loan.amount,
+      productName: loan.productName,
+      sku: loan.sku,
+      quantity: loan.quantity,
+      partyType: loan.partyType,
+      partyName: loan.partyName,
+      date: loan.date?.split("T")[0] || loan.date,
+      dueDate: loan.dueDate?.split("T")[0] || loan.dueDate,
+      status: loan.status,
+      notes: loan.notes || "",
+    });
+    setIsEditLoanOpen(true);
+  };
+
+  const updateLoan = () => {
+    if (!selectedLoan) return;
+    if (!newLoan.partyName || !newLoan.dueDate) {
+      toast({
+        title: t("common.error"),
+        description: t("common.required_fields_error"),
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const updated: LoanRecord = {
+      id: selectedLoan.id,
+      type: (newLoan.type as any) || selectedLoan.type,
+      amount: Number(newLoan.amount ?? selectedLoan.amount) || 0,
+      productName: newLoan.productName,
+      sku: newLoan.sku,
+      quantity: newLoan.quantity,
+      partyType: (newLoan.partyType as any) || selectedLoan.partyType,
+      partyName: newLoan.partyName!,
+      date: (newLoan.date as string) || selectedLoan.date,
+      dueDate: newLoan.dueDate!,
+      status: (newLoan.status as any) || selectedLoan.status,
+      notes: newLoan.notes || "",
+    };
+
+    setLoans(loans.map((l) => (l.id === selectedLoan.id ? updated : l)));
+    setIsEditLoanOpen(false);
+    setSelectedLoan(null);
+    toast({ title: t("common.updated"), description: t("common.changes_saved", { defaultValue: "Changes saved" }) });
   };
 
   const [editingLoanId, setEditingLoanId] = useState<string | null>(null);
@@ -1953,6 +2005,13 @@ ${data.transactions
                       <TableCell>{getLoanStatusBadge(loan.status)}</TableCell>
                       <TableCell>
                         <div className="flex gap-1">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => openEditLoanDialog(loan)}
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Button>
                           {loan.status !== "returned" && (
                             <Button
                               variant="outline"
@@ -2435,6 +2494,164 @@ ${data.transactions
                   clearNewTransaction();
                   setIsEditTransactionOpen(false);
                   setSelectedTransaction(null);
+                }}
+              >
+                {t("common.cancel")}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Borrow/Lend Dialog */}
+      <Dialog open={isEditLoanOpen} onOpenChange={setIsEditLoanOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>
+              {t("common.edit")} {t("finance.borrow_lend")}
+            </DialogTitle>
+            <DialogDescription>{t("finance.create_borrow_lend_desc")}</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>{t("clients.type")}</Label>
+                <Select
+                  value={newLoan.type}
+                  onValueChange={(v) => setNewLoan({ ...newLoan, type: v as any })}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="borrow">{t("finance.borrow_label")}</SelectItem>
+                    <SelectItem value="lend">{t("finance.lend_label")}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label>{t("finance.amount_label")}</Label>
+                <Input
+                  type="number"
+                  step="0.01"
+                  value={Number(newLoan.amount ?? 0)}
+                  onChange={(e) =>
+                    setNewLoan({ ...newLoan, amount: parseFloat(e.target.value) || 0 })
+                  }
+                />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label>{t("warehouse.product")}</Label>
+              <Input
+                placeholder={t("warehouse.product_name")}
+                value={newLoan.productName || ""}
+                onChange={(e) => setNewLoan({ ...newLoan, productName: e.target.value })}
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>{t("warehouse.sku")}</Label>
+                <Input
+                  placeholder="SKU"
+                  value={newLoan.sku || ""}
+                  onChange={(e) => setNewLoan({ ...newLoan, sku: e.target.value })}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>{t("warehouse.quantity")}</Label>
+                <Input
+                  type="number"
+                  min="1"
+                  value={newLoan.quantity || 1}
+                  onChange={(e) =>
+                    setNewLoan({
+                      ...newLoan,
+                      quantity: parseInt(e.target.value) || 1,
+                    })
+                  }
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>{t("finance.party_type")}</Label>
+                <Select
+                  value={newLoan.partyType}
+                  onValueChange={(v) => setNewLoan({ ...newLoan, partyType: v as any })}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="supplier">{t("warehouse.supplier")}</SelectItem>
+                    <SelectItem value="client">{t("sales.client")}</SelectItem>
+                    <SelectItem value="other">{t("warehouse.other")}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label>{t("finance.party_name")}</Label>
+                <Input
+                  placeholder={t("finance.party_name_placeholder")}
+                  value={newLoan.partyName || ""}
+                  onChange={(e) => setNewLoan({ ...newLoan, partyName: e.target.value })}
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>{t("common.date")}</Label>
+                <Input
+                  type="date"
+                  value={(newLoan.date as string) || ""}
+                  onChange={(e) => setNewLoan({ ...newLoan, date: e.target.value })}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>{t("sales.due_date")}</Label>
+                <Input
+                  type="date"
+                  value={newLoan.dueDate || ""}
+                  onChange={(e) => setNewLoan({ ...newLoan, dueDate: e.target.value })}
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>{t("common.status")}</Label>
+                <Select
+                  value={newLoan.status}
+                  onValueChange={(v) => setNewLoan({ ...newLoan, status: v as any })}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="active">{t("status.active")}</SelectItem>
+                    <SelectItem value="returned">{t("status.returned")}</SelectItem>
+                    <SelectItem value="overdue">{t("status.overdue")}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label>{t("warehouse.notes")}</Label>
+              <Textarea
+                placeholder={t("warehouse.additional_notes_placeholder")}
+                value={newLoan.notes || ""}
+                onChange={(e) => setNewLoan({ ...newLoan, notes: e.target.value })}
+              />
+            </div>
+            <div className="flex gap-2">
+              <Button className="flex-1" onClick={updateLoan}>
+                {t("common.update", { defaultValue: "Update" })}
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setIsEditLoanOpen(false);
+                  setSelectedLoan(null);
                 }}
               >
                 {t("common.cancel")}
