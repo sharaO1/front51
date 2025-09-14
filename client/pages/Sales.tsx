@@ -262,6 +262,7 @@ export default function Sales() {
     .split("T")[0];
   const [borrowReturnDate, setBorrowReturnDate] =
     useState<string>(defaultReturnDate);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Real clients/products will be loaded from backend
   const [clients, setClients] = useState<Client[]>([]);
@@ -591,6 +592,7 @@ export default function Sales() {
     };
 
     try {
+      setIsSubmitting(true);
       const res = await fetch("http://localhost:5002/api/Sales", {
         method: "POST",
         headers: {
@@ -600,12 +602,26 @@ export default function Sales() {
         body: JSON.stringify(payload),
       });
       const data = await res.json().catch(() => null);
-      if (!res.ok) {
-        throw new Error((data && (data.error || data.message)) || "Request failed");
+
+      const result = (data && (data.result || data.data || data)) || {};
+      const apiStatus =
+        typeof data?.status === "number"
+          ? data.status
+          : typeof result?.status === "number"
+            ? result.status
+            : null;
+      const apiOk = data?.ok;
+      if (!res.ok || apiOk === false || (apiStatus != null && apiStatus >= 400)) {
+        const errMsg =
+          result?.response?.message ||
+          result?.message ||
+          data?.message ||
+          data?.error ||
+          "Request failed";
+        throw new Error(errMsg);
       }
 
-      // Try to enrich local invoice from backend response if available
-      const result = (data && (data.result || data.data || data)) || {};
+      // Build local invoice view from request fields (backend accepted)
       const invoice: Invoice = {
         id: String(result.id || Date.now()),
         invoiceNumber: String(result.invoiceNumber || generateInvoiceNumber()),
@@ -644,6 +660,8 @@ export default function Sales() {
         description: e?.message || "Could not create invoice",
         variant: "destructive",
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -1202,9 +1220,9 @@ export default function Sales() {
               </div>
 
               <div className="flex gap-2">
-                <Button className="flex-1" onClick={createInvoice}>
+                <Button className="flex-1" onClick={createInvoice} disabled={isSubmitting}>
                   <Receipt className="mr-2 h-4 w-4" />
-                  Create Invoice
+                  {isSubmitting ? "Creating..." : "Create Invoice"}
                 </Button>
                 <Button
                   variant="outline"
