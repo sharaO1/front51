@@ -19,6 +19,8 @@ import {
   PieChart,
   Pie,
   Cell,
+  LineChart,
+  Line,
 } from "recharts";
 import {
   Package,
@@ -96,6 +98,13 @@ export default function Dashboard() {
   const [categoryDist, setCategoryDist] = useState<
     { name: string; value: number; color: string }[]
   >([]);
+
+  // Cash Flow Trend (monthly income, expense, profit)
+  const [cashFlowData, setCashFlowData] = useState<
+    { month: string; totalIncome: number; totalExpense: number; totalProfit: number }[]
+  >([]);
+  const [cashFlowLoading, setCashFlowLoading] = useState(false);
+  const [cashFlowError, setCashFlowError] = useState<string | null>(null);
 
   useEffect(() => {
     let mounted = true;
@@ -805,6 +814,48 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
           </CardContent>
         </Card>
       </div>
+
+      {/* Cash Flow Trend */}
+      <Card className="relative overflow-hidden group border-0 bg-gradient-to-br from-white via-white to-emerald-50/20 backdrop-blur-xl shadow-business-lg hover:shadow-business-xl transition-all duration-500 hover:-translate-y-1">
+        <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/3 to-green-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        <CardHeader className="pb-6 relative z-10">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-gradient-to-br from-emerald-100 to-green-100 rounded-lg">
+              <DollarSign className="h-5 w-5 text-emerald-600" />
+            </div>
+            <div>
+              <CardTitle className="text-2xl font-bold text-gray-900 tracking-tight">
+                {t("finance.cash_flow_trend") || "Cash Flow Trend"}
+              </CardTitle>
+              <CardDescription className="text-gray-600 mt-1">
+                {t("finance.monthly_income_expense_profit") || "Monthly income, expense, and profit"}
+              </CardDescription>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          {cashFlowLoading && (
+            <div className="text-sm text-muted-foreground">Loading cash flow…</div>
+          )}
+          {cashFlowError && (
+            <div className="text-sm text-red-600">{cashFlowError}</div>
+          )}
+          {!cashFlowLoading && !cashFlowError && (
+            <ResponsiveContainer width="100%" height={320}>
+              <LineChart data={cashFlowData} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="month" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Line type="monotone" dataKey="totalIncome" name="Income" stroke="#22c55e" strokeWidth={2} dot={false} />
+                <Line type="monotone" dataKey="totalExpense" name="Expense" stroke="#ef4444" strokeWidth={2} dot={false} />
+                <Line type="monotone" dataKey="totalProfit" name="Profit" stroke="#3b82f6" strokeWidth={2} dot={false} />
+              </LineChart>
+            </ResponsiveContainer>
+          )}
+        </CardContent>
+      </Card>
 
       <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-7">
         {/* Enhanced Sales Chart */}
