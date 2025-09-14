@@ -276,9 +276,9 @@ export default function Sales() {
 
   // PDF export dialog state
   const [isPdfDialogOpen, setIsPdfDialogOpen] = useState(false);
-  const [pdfPeriod, setPdfPeriod] = useState<"today" | "last_month" | "last_year">(
-    "today",
-  );
+  const [pdfPeriod, setPdfPeriod] = useState<
+    "today" | "last_month" | "last_year"
+  >("today");
 
   // Real clients/products will be loaded from backend
   const [clients, setClients] = useState<Client[]>([]);
@@ -509,7 +509,9 @@ export default function Sales() {
     doc.close();
 
     const cleanup = () => {
-      try { document.body.removeChild(iframe); } catch {}
+      try {
+        document.body.removeChild(iframe);
+      } catch {}
     };
 
     const doPrint = () => {
@@ -680,7 +682,11 @@ export default function Sales() {
 
     const html = buildSalesReportHTML(
       pdfPeriod,
-      pdfPeriod === "today" ? todayStr : pdfPeriod === "last_month" ? lastMonthStr : lastYearStr,
+      pdfPeriod === "today"
+        ? todayStr
+        : pdfPeriod === "last_month"
+          ? lastMonthStr
+          : lastYearStr,
       data,
     );
     openPrintWindow(html, `${t("navigation.sales")} ${t("common.export")} PDF`);
@@ -1944,14 +1950,21 @@ export default function Sales() {
               <div className="space-y-4">
                 <div className="space-y-2">
                   <Label>{t("common.filter")}</Label>
-                  <Select value={pdfPeriod} onValueChange={(v) => setPdfPeriod(v as any)}>
+                  <Select
+                    value={pdfPeriod}
+                    onValueChange={(v) => setPdfPeriod(v as any)}
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Period" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="today">{t("sales.today")}</SelectItem>
-                      <SelectItem value="last_month">{t("sales.last_month")}</SelectItem>
-                      <SelectItem value="last_year">{t("finance.last_year", "Last Year")}</SelectItem>
+                      <SelectItem value="last_month">
+                        {t("sales.last_month")}
+                      </SelectItem>
+                      <SelectItem value="last_year">
+                        {t("finance.last_year", "Last Year")}
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -1959,7 +1972,10 @@ export default function Sales() {
                   <Button className="flex-1" onClick={handleExportPDF}>
                     <Download className="mr-2 h-4 w-4" /> {t("common.export")}
                   </Button>
-                  <Button variant="outline" onClick={() => setIsPdfDialogOpen(false)}>
+                  <Button
+                    variant="outline"
+                    onClick={() => setIsPdfDialogOpen(false)}
+                  >
                     {t("common.cancel")}
                   </Button>
                 </div>
