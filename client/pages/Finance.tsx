@@ -322,13 +322,6 @@ const mockLoans: LoanRecord[] = [
   },
 ];
 
-const expenseCategories = [
-  { name: "Office Supplies", value: 15000, color: "#0088FE" },
-  { name: "Marketing", value: 8000, color: "#00C49F" },
-  { name: "Utilities", value: 5400, color: "#FFBB28" },
-  { name: "Equipment", value: 12000, color: "#FF8042" },
-  { name: "Travel", value: 3200, color: "#8884d8" },
-];
 
 export default function Finance() {
   const [transactions, setTransactions] = useState(mockTransactions);
