@@ -597,8 +597,8 @@ export default function Dashboard() {
     }
 
     toast({
-      title: "Report Exported",
-      description: `Dashboard report has been exported as ${format.toUpperCase()} and downloaded.`,
+      title: t("dashboard.export_report"),
+      description: "PDF downloaded.",
     });
   };
 
