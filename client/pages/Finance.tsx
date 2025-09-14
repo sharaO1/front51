@@ -126,9 +126,10 @@ interface FinancialGoal {
 interface LoanRecord {
   id: string;
   type: "borrow" | "lend";
-  productName: string;
+  amount: number;
+  productName?: string;
   sku?: string;
-  quantity: number;
+  quantity?: number;
   partyType: "supplier" | "client" | "other";
   partyName: string;
   date: string;
@@ -248,88 +249,74 @@ const mockLoans: LoanRecord[] = [
   {
     id: "L1",
     type: "borrow",
-    productName: "HP LaserJet Pro M404dn",
-    sku: "HP-M404DN",
-    quantity: 2,
+    amount: 1200,
     partyType: "supplier",
     partyName: "HP Distribution",
-    date: "2024-01-05",
-    dueDate: "2024-01-20",
+    date: "2024-01-05T10:15:00",
+    dueDate: "2024-01-20T09:00:00",
     status: "returned",
     notes: "Borrowed for enterprise demo",
   },
   {
     id: "L2",
     type: "lend",
-    productName: "Dell XPS 13",
-    sku: "DELL-XPS13-9320",
-    quantity: 1,
+    amount: 850,
     partyType: "client",
     partyName: "Acme Corp",
-    date: "2024-01-12",
-    dueDate: "2024-02-12",
+    date: "2024-01-12T13:45:20",
+    dueDate: "2024-02-12T17:00:00",
     status: "active",
     notes: "Loaner while repair in progress",
   },
   {
     id: "L3",
     type: "borrow",
-    productName: "Apple iPhone 15 Pro",
-    sku: "APL-IP15PRO-256",
-    quantity: 3,
+    amount: 3000,
     partyType: "supplier",
     partyName: "Apple Inc.",
-    date: "2023-12-20",
-    dueDate: "2024-01-05",
+    date: "2023-12-20T08:05:10",
+    dueDate: "2024-01-05T12:00:00",
     status: "overdue",
     notes: "Awaiting shipment return",
   },
   {
     id: "L4",
     type: "lend",
-    productName: "Samsung Galaxy S24",
-    sku: "SMSNG-GS24-128",
-    quantity: 2,
+    amount: 1400,
     partyType: "client",
     partyName: "Bright Tech LLC",
-    date: "2024-01-18",
-    dueDate: "2024-02-01",
+    date: "2024-01-18T16:20:00",
+    dueDate: "2024-02-01T10:00:00",
     status: "active",
   },
   {
     id: "L5",
     type: "lend",
-    productName: "Logitech MX Master 3S",
-    sku: "LOGI-MX3S",
-    quantity: 5,
+    amount: 275,
     partyType: "client",
     partyName: "John Doe",
-    date: "2024-01-08",
-    dueDate: "2024-01-22",
+    date: "2024-01-08T11:10:00",
+    dueDate: "2024-01-22T11:00:00",
     status: "returned",
   },
   {
     id: "L6",
     type: "borrow",
-    productName: "Cisco SG350 Switch",
-    sku: "CISCO-SG350-28",
-    quantity: 1,
+    amount: 980,
     partyType: "supplier",
     partyName: "Cisco Partner",
-    date: "2024-01-02",
-    dueDate: "2024-01-30",
+    date: "2024-01-02T09:00:00",
+    dueDate: "2024-01-30T09:00:00",
     status: "active",
   },
   {
     id: "L7",
     type: "lend",
-    productName: "Lenovo ThinkPad T14",
-    sku: "LNVO-T14-G3",
-    quantity: 1,
+    amount: 1100,
     partyType: "client",
     partyName: "Globex",
-    date: "2023-12-28",
-    dueDate: "2024-01-10",
+    date: "2023-12-28T14:30:00",
+    dueDate: "2024-01-10T15:00:00",
     status: "overdue",
     notes: "Follow up with client",
   },
@@ -524,11 +511,10 @@ export default function Finance() {
   const [selectedLoan, setSelectedLoan] = useState<LoanRecord | null>(null);
   const [newLoan, setNewLoan] = useState<Partial<LoanRecord>>({
     type: "borrow",
-    productName: "",
-    quantity: 1,
+    amount: 0,
     partyType: "supplier",
     partyName: "",
-    date: new Date().toISOString().split("T")[0],
+    date: new Date().toISOString(),
     dueDate: "",
     status: "active",
     notes: "",
@@ -923,12 +909,7 @@ export default function Finance() {
   };
 
   const addLoan = () => {
-    if (
-      !newLoan.productName ||
-      !newLoan.quantity ||
-      !newLoan.partyName ||
-      !newLoan.dueDate
-    ) {
+    if (!newLoan.partyName || !newLoan.dueDate) {
       toast({
         title: "Error",
         description: "Please fill in required fields",
@@ -942,12 +923,10 @@ export default function Finance() {
     const loan: LoanRecord = {
       id: Date.now().toString(),
       type: newLoan.type as any,
-      productName: newLoan.productName!,
-      sku: newLoan.sku,
-      quantity: newLoan.quantity!,
+      amount: Number(newLoan.amount) || 0,
       partyType: newLoan.partyType as any,
       partyName: newLoan.partyName!,
-      date: (newLoan.date as string) || new Date().toISOString().split("T")[0],
+      date: (newLoan.date as string) || new Date().toISOString(),
       dueDate: newLoan.dueDate!,
       status,
       notes: newLoan.notes || "",
@@ -956,18 +935,17 @@ export default function Finance() {
     setIsAddLoanOpen(false);
     setNewLoan({
       type: "borrow",
-      productName: "",
-      quantity: 1,
+      amount: 0,
       partyType: "supplier",
       partyName: "",
-      date: new Date().toISOString().split("T")[0],
+      date: new Date().toISOString(),
       dueDate: "",
       status: "active",
       notes: "",
     });
     toast({
       title: loan.type === "borrow" ? "Borrow recorded" : "Lend recorded",
-      description: `${loan.quantity} × ${loan.productName} ${loan.type === "borrow" ? "borrowed" : "lent"} to ${loan.partyName}.`,
+      description: `Amount ${loan.type === "borrow" ? "borrowed" : "lent"} to ${loan.partyName}.`,
     });
   };
 
@@ -983,9 +961,28 @@ export default function Finance() {
     setLoans(loans.filter((l) => l.id !== loanId));
     toast({
       title: "Removed",
-      description: `${loan?.productName} record removed.`,
+      description: `Record removed for ${loan?.partyName}.`,
     });
   };
+
+  const [editingLoanId, setEditingLoanId] = useState<string | null>(null);
+  const [editingAmount, setEditingAmount] = useState<string>("");
+  const startEditAmount = (loan: LoanRecord) => {
+    setEditingLoanId(loan.id);
+    setEditingAmount(String(loan.amount ?? 0));
+  };
+  const saveEditAmount = () => {
+    if (!editingLoanId) return;
+    const v = parseFloat(editingAmount);
+    if (isNaN(v)) {
+      toast({ title: t("common.error"), description: t("common.required_fields_error"), variant: "destructive" });
+      return;
+    }
+    setLoans(loans.map((l) => (l.id === editingLoanId ? { ...l, amount: v } : l)));
+    setEditingLoanId(null);
+    toast({ title: t("common.updated"), description: "Amount updated." });
+  };
+  const cancelEditAmount = () => setEditingLoanId(null);
 
   const exportFinanceReport = (format: "pdf" | "excel" | "csv") => {
     const reportData = {
@@ -1856,19 +1853,18 @@ ${data.transactions
                 <TableHeader>
                   <TableRow>
                     <TableHead>{t("common.date")}</TableHead>
-                    <TableHead>{t("clients.type")}</TableHead>
-                    <TableHead>{t("warehouse.product")}</TableHead>
-                    <TableHead>{t("warehouse.quantity")}</TableHead>
-                    <TableHead>{t("finance.party")}</TableHead>
-                    <TableHead>{t("sales.due_date")}</TableHead>
-                    <TableHead>{t("common.status")}</TableHead>
-                    <TableHead>{t("common.actions")}</TableHead>
+                  <TableHead>{t("clients.type")}</TableHead>
+                  <TableHead>{t("common.amount")}</TableHead>
+                  <TableHead>{t("finance.party")}</TableHead>
+                  <TableHead>{t("sales.due_date")}</TableHead>
+                  <TableHead>{t("common.status")}</TableHead>
+                  <TableHead>{t("common.actions")}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {loans.map((loan) => (
                     <TableRow key={loan.id}>
-                      <TableCell>{loan.date}</TableCell>
+                      <TableCell>{new Intl.DateTimeFormat(i18n.language || "en", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit" }).format(new Date(loan.date))}</TableCell>
                       <TableCell>
                         <Badge
                           variant={
@@ -1886,14 +1882,27 @@ ${data.transactions
                         </Badge>
                       </TableCell>
                       <TableCell>
-                        <div className="font-medium">{loan.productName}</div>
-                        {loan.sku && (
-                          <div className="text-xs text-muted-foreground">
-                            SKU: {loan.sku}
+                        {editingLoanId === loan.id ? (
+                          <div className="flex items-center gap-2">
+                            <Input
+                              type="number"
+                              step="0.01"
+                              value={editingAmount}
+                              onChange={(e) => setEditingAmount(e.target.value)}
+                              className="w-28"
+                            />
+                            <Button size="sm" variant="outline" onClick={saveEditAmount}>{t("common.save")}</Button>
+                            <Button size="sm" variant="outline" onClick={cancelEditAmount}>{t("common.cancel")}</Button>
+                          </div>
+                        ) : (
+                          <div className="flex items-center gap-2">
+                            <span className="font-medium">${(loan.amount ?? 0).toFixed(2)}</span>
+                            <Button variant="outline" size="sm" onClick={() => startEditAmount(loan)}>
+                              <Edit className="h-4 w-4" />
+                            </Button>
                           </div>
                         )}
                       </TableCell>
-                      <TableCell>{loan.quantity}</TableCell>
                       <TableCell>
                         <div>{loan.partyName}</div>
                         <div className="text-xs text-muted-foreground capitalize">
