@@ -1274,7 +1274,7 @@ export default function Finance() {
       transactions: filteredTransactions,
       goals,
       cashFlowData,
-      expenseCategories,
+      expenseBreakdown,
     };
 
     switch (format) {
