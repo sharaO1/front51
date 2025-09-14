@@ -1678,7 +1678,10 @@ ${data.transactions
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <Dialog open={isExportDialogOpen} onOpenChange={setIsExportDialogOpen}>
+          <Dialog
+            open={isExportDialogOpen}
+            onOpenChange={setIsExportDialogOpen}
+          >
             <DialogContent className="max-w-md">
               <DialogHeader>
                 <DialogTitle>{t("finance.export_pdf_title")}</DialogTitle>
@@ -1689,14 +1692,23 @@ ${data.transactions
               <div className="space-y-4">
                 <div className="space-y-2">
                   <Label>{t("common.filter")}</Label>
-                  <Select value={exportPeriod} onValueChange={(v) => setExportPeriod(v as any)}>
+                  <Select
+                    value={exportPeriod}
+                    onValueChange={(v) => setExportPeriod(v as any)}
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Period" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="daily">{t("settings.daily")}</SelectItem>
-                      <SelectItem value="monthly">{t("settings.monthly")}</SelectItem>
-                      <SelectItem value="yearly">{t("status.year") || "Yearly"}</SelectItem>
+                      <SelectItem value="daily">
+                        {t("settings.daily")}
+                      </SelectItem>
+                      <SelectItem value="monthly">
+                        {t("settings.monthly")}
+                      </SelectItem>
+                      <SelectItem value="yearly">
+                        {t("status.year") || "Yearly"}
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -1704,27 +1716,47 @@ ${data.transactions
                 {exportPeriod === "daily" && (
                   <div className="space-y-2">
                     <Label>{t("common.date")}</Label>
-                    <Input type="date" value={exportDate} onChange={(e) => setExportDate(e.target.value)} />
+                    <Input
+                      type="date"
+                      value={exportDate}
+                      onChange={(e) => setExportDate(e.target.value)}
+                    />
                   </div>
                 )}
                 {exportPeriod === "monthly" && (
                   <div className="space-y-2">
                     <Label>{t("dashboard.this_month")}</Label>
-                    <Input type="month" value={exportMonth} onChange={(e) => setExportMonth(e.target.value)} />
+                    <Input
+                      type="month"
+                      value={exportMonth}
+                      onChange={(e) => setExportMonth(e.target.value)}
+                    />
                   </div>
                 )}
                 {exportPeriod === "yearly" && (
                   <div className="space-y-2">
                     <Label>{t("status.year", { defaultValue: "Year" })}</Label>
-                    <Input type="number" min="2000" max="9999" value={exportYear} onChange={(e) => setExportYear(e.target.value)} />
+                    <Input
+                      type="number"
+                      min="2000"
+                      max="9999"
+                      value={exportYear}
+                      onChange={(e) => setExportYear(e.target.value)}
+                    />
                   </div>
                 )}
 
                 <div className="flex gap-2">
-                  <Button className="flex-1" onClick={() => exportFinanceReport("pdf")}>
+                  <Button
+                    className="flex-1"
+                    onClick={() => exportFinanceReport("pdf")}
+                  >
                     <Download className="mr-2 h-4 w-4" /> {t("common.export")}
                   </Button>
-                  <Button variant="outline" onClick={() => setIsExportDialogOpen(false)}>
+                  <Button
+                    variant="outline"
+                    onClick={() => setIsExportDialogOpen(false)}
+                  >
                     {t("common.cancel")}
                   </Button>
                 </div>

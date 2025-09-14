@@ -1203,7 +1203,8 @@ export default function Employees() {
       .filter((s) => s.date === selectedDate)
       .reduce((sum, s) => sum + s.commission, 0);
     const avgSalary = Math.round(
-      employees.reduce((sum, e) => sum + e.salary, 0) / Math.max(employees.length, 1),
+      employees.reduce((sum, e) => sum + e.salary, 0) /
+        Math.max(employees.length, 1),
     );
 
     const reportData = {
@@ -1282,47 +1283,72 @@ export default function Employees() {
   };
 
   const buildEmployeeReportHTML = (data: any) => {
-    const nf = (n: number) => new Intl.NumberFormat(i18n.language || "en").format(n || 0);
-    const dateStr = new Intl.DateTimeFormat(i18n.language || "en", { year: "numeric", month: "long", day: "2-digit", hour: "2-digit", minute: "2-digit" }).format(new Date(data.generatedAt));
+    const nf = (n: number) =>
+      new Intl.NumberFormat(i18n.language || "en").format(n || 0);
+    const dateStr = new Intl.DateTimeFormat(i18n.language || "en", {
+      year: "numeric",
+      month: "long",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+    }).format(new Date(data.generatedAt));
 
-    const directoryRows = data.employees.map((emp: any) => `
+    const directoryRows = data.employees
+      .map(
+        (emp: any) => `
       <tr>
         <td>${emp.firstName} ${emp.lastName}</td>
         <td>${emp.department}</td>
         <td>${emp.position || ""}</td>
         <td>${t(`status.${emp.status}`)}</td>
       </tr>
-    `).join("");
+    `,
+      )
+      .join("");
 
-    const deptRows = data.departmentData.map((d: any) => `
+    const deptRows = data.departmentData
+      .map(
+        (d: any) => `
       <tr>
         <td>${d.department}</td>
         <td class="right">${nf(d.employees)}</td>
         <td class="right">${d.productivity}%</td>
       </tr>
-    `).join("");
+    `,
+      )
+      .join("");
 
-    const salesRows = data.dailySales.slice(0, 50).map((s: any) => {
-      const emp = data.employees.find((e: any) => e.id === s.employeeId || e.employeeId === s.employeeId);
-      return `
+    const salesRows = data.dailySales
+      .slice(0, 50)
+      .map((s: any) => {
+        const emp = data.employees.find(
+          (e: any) => e.id === s.employeeId || e.employeeId === s.employeeId,
+        );
+        return `
         <tr>
           <td>${s.date}</td>
           <td>${emp ? emp.firstName + " " + emp.lastName : ""}</td>
           <td class="right">$${nf(s.amount)}</td>
           <td class="right">$${(Number(s.commission) || 0).toFixed(2)}</td>
         </tr>`;
-    }).join("");
+      })
+      .join("");
 
-    const attendanceRows = data.timeEntries.slice(0, 50).map((a: any) => {
-      const emp = data.employees.find((e: any) => e.employeeId === a.employeeId);
-      return `
+    const attendanceRows = data.timeEntries
+      .slice(0, 50)
+      .map((a: any) => {
+        const emp = data.employees.find(
+          (e: any) => e.employeeId === a.employeeId,
+        );
+        return `
         <tr>
           <td>${a.date}</td>
           <td>${emp ? emp.firstName + " " + emp.lastName : ""}</td>
           <td class="right">${a.totalHours}h</td>
           <td>${t(`status.${a.status}`)}</td>
         </tr>`;
-    }).join("");
+      })
+      .join("");
 
     return `
       <div class="container">
@@ -1341,7 +1367,7 @@ export default function Employees() {
                 <tr><td>${t("status.active")}</td><td class="right">${nf(data.summary.activeEmployees)}</td></tr>
                 <tr><td>${t("employees.sales_team")}</td><td class="right">${nf(data.summary.salesTeam)}</td></tr>
                 <tr><td>${t("employees.todays_sales")}</td><td class="right">$${nf(data.summary.todaysSales)}</td></tr>
-                <tr><td>${t("employees.commissions")}</td><td class="right">$${(Number(data.summary.todaysCommissions)||0).toFixed(2)}</td></tr>
+                <tr><td>${t("employees.commissions")}</td><td class="right">$${(Number(data.summary.todaysCommissions) || 0).toFixed(2)}</td></tr>
                 <tr><td>${t("employees.average_salary")}</td><td class="right">$${nf(data.summary.avgSalary)}</td></tr>
               </tbody></table>
             </div>

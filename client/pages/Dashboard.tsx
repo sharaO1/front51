@@ -619,7 +619,8 @@ export default function Dashboard() {
   };
 
   const generatePDFContent = (data: any) => {
-    const nf = (n: number) => new Intl.NumberFormat(i18n.language || "en").format(n || 0);
+    const nf = (n: number) =>
+      new Intl.NumberFormat(i18n.language || "en").format(n || 0);
     return `
 ${t("dashboard.title").toUpperCase()}
 ${t("finance.generated_at")}: ${new Date(data.generatedAt).toLocaleString()}
