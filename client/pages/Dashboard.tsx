@@ -27,6 +27,7 @@ import {
   Users,
   DollarSign,
   TrendingUp,
+  TrendingDown,
   AlertTriangle,
   ShoppingCart,
   MessageCircle,
@@ -126,6 +127,14 @@ export default function Dashboard() {
   >([]);
   const [cashFlowLoading, setCashFlowLoading] = useState(false);
   const [cashFlowError, setCashFlowError] = useState<string | null>(null);
+
+  // Quick Statistics (dynamic from backend)
+  const [quickStats, setQuickStats] = useState({
+    totalSales: { thisMonth: 0, lastMonth: 0, change: 0 },
+    newClients: { thisMonth: 0, lastMonth: 0, change: 0 },
+    productsSold: { thisMonth: 0, lastMonth: 0, change: 0 },
+    avgOrder: { thisMonth: 0, lastMonth: 0, change: 0 },
+  });
 
   useEffect(() => {
     let mounted = true;
@@ -735,6 +744,110 @@ export default function Dashboard() {
           setCashFlowError(e?.message || "Failed to load cash flow analytics");
       } finally {
         if (mounted) setCashFlowLoading(false);
+      }
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, [accessToken]);
+
+  // Compute Quick Statistics: Total Sales, New Clients, Products Sold, Average Order
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      try {
+        const headers: Record<string, string> = { "Content-Type": "application/json" };
+        if (accessToken) headers.Authorization = `Bearer ${accessToken}`;
+
+        const [salesRes, clientsRes] = await Promise.all([
+          fetch(`${API_BASE}/Sales`, { headers }),
+          fetch(`${API_BASE}/clients`, { headers }),
+        ]);
+        const salesJson = await salesRes.json().catch(() => null as any);
+        const clientsJson = await clientsRes.json().catch(() => null as any);
+        const salesList: any[] = (salesJson && (salesJson.result || salesJson.data || salesJson)) || [];
+        const clientsList: any[] = (clientsJson && (clientsJson.result || clientsJson.data || clientsJson)) || [];
+
+        // Date helpers
+        const now = new Date();
+        const thisStart = new Date(now.getFullYear(), now.getMonth(), 1);
+        const prevStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+        const prevEnd = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59, 999);
+
+        const normalizeStatus = (r: any) => {
+          const raw = String(r?.status || "").toLowerCase();
+          const cancelled = !!r?.cancellationReason || raw === "cancelled" || raw === "canceled";
+          if (cancelled) return "cancelled";
+          return ["draft", "sent", "paid", "overdue", "cancelled"].includes(raw) ? raw : "draft";
+        };
+        const getDate = (r: any) =>
+          new Date(
+            r?.createdAt || r?.date || r?.created_at || r?.createdAtUtc || Date.now(),
+          );
+        const inRange = (d: Date, start: Date, end: Date) => d.getTime() >= start.getTime() && d.getTime() <= end.getTime();
+
+        // Sales: paid only
+        const paidSales = Array.isArray(salesList)
+          ? salesList.filter((r) => normalizeStatus(r) === "paid")
+          : [];
+
+        const tmSales = paidSales.filter((r) => getDate(r).getTime() >= thisStart.getTime());
+        const lmSales = paidSales.filter((r) => inRange(getDate(r), prevStart, prevEnd));
+
+        const sumTotals = (arr: any[]) =>
+          arr.reduce((s, r) => s + (parseFloat(String(r.total ?? 0)) || 0), 0);
+        const sumQty = (arr: any[]) =>
+          arr.reduce((s, r) =>
+            s + ((Array.isArray(r.items) ? r.items : []).reduce(
+              (x: number, it: any) => x + (Number(it.quantity || 0) || 0),
+              0,
+            ) || 0), 0);
+        const avgOrder = (arr: any[]) => {
+          if (!arr.length) return 0;
+          return sumTotals(arr) / arr.length;
+        };
+        const pc = (cur: number, prev: number) =>
+          prev === 0 ? (cur > 0 ? 100 : 0) : ((cur - prev) / prev) * 100;
+
+        const totalSalesThis = sumTotals(tmSales);
+        const totalSalesLast = sumTotals(lmSales);
+        const productsSoldThis = sumQty(tmSales);
+        const productsSoldLast = sumQty(lmSales);
+        const avgOrderThis = avgOrder(tmSales);
+        const avgOrderLast = avgOrder(lmSales);
+
+        // Clients: new this month vs last month
+        const getCreated = (c: any) =>
+          new Date(c?.createdAt || c?.created_at || c?.ph_created_at || c?.created || 0);
+        const clientsThis = clientsList.filter((c) => getCreated(c).getTime() >= thisStart.getTime()).length;
+        const clientsLast = clientsList.filter((c) => inRange(getCreated(c), prevStart, prevEnd)).length;
+
+        if (mounted) {
+          setQuickStats({
+            totalSales: {
+              thisMonth: totalSalesThis,
+              lastMonth: totalSalesLast,
+              change: Math.round(pc(totalSalesThis, totalSalesLast) * 10) / 10,
+            },
+            newClients: {
+              thisMonth: clientsThis,
+              lastMonth: clientsLast,
+              change: Math.round(pc(clientsThis, clientsLast) * 10) / 10,
+            },
+            productsSold: {
+              thisMonth: productsSoldThis,
+              lastMonth: productsSoldLast,
+              change: Math.round(pc(productsSoldThis, productsSoldLast) * 10) / 10,
+            },
+            avgOrder: {
+              thisMonth: avgOrderThis,
+              lastMonth: avgOrderLast,
+              change: Math.round(pc(avgOrderThis, avgOrderLast) * 10) / 10,
+            },
+          });
+        }
+      } catch (e) {
+        // keep zeros on failure
       }
     })();
     return () => {
@@ -1386,70 +1499,68 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
               </TableRow>
             </TableHeader>
             <TableBody>
-              <TableRow>
-                <TableCell className="font-medium">
-                  {t("dashboard.total_sales")}
-                </TableCell>
-                <TableCell>$45,231</TableCell>
-                <TableCell>$38,942</TableCell>
-                <TableCell className="text-green-600">+16.1%</TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-1">
-                    <TrendingUp className="h-4 w-4 text-green-600" />
-                    <span className="text-green-600 text-sm">
-                      {t("dashboard.up")}
-                    </span>
-                  </div>
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell className="font-medium">
-                  {t("dashboard.new_clients")}
-                </TableCell>
-                <TableCell>25</TableCell>
-                <TableCell>18</TableCell>
-                <TableCell className="text-green-600">+38.9%</TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-1">
-                    <TrendingUp className="h-4 w-4 text-green-600" />
-                    <span className="text-green-600 text-sm">
-                      {t("dashboard.up")}
-                    </span>
-                  </div>
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell className="font-medium">
-                  {t("dashboard.products_sold")}
-                </TableCell>
-                <TableCell>1,247</TableCell>
-                <TableCell>1,156</TableCell>
-                <TableCell className="text-green-600">+7.9%</TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-1">
-                    <TrendingUp className="h-4 w-4 text-green-600" />
-                    <span className="text-green-600 text-sm">
-                      {t("dashboard.up")}
-                    </span>
-                  </div>
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell className="font-medium">
-                  {t("dashboard.average_order")}
-                </TableCell>
-                <TableCell>$186.42</TableCell>
-                <TableCell>$172.33</TableCell>
-                <TableCell className="text-green-600">+8.2%</TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-1">
-                    <TrendingUp className="h-4 w-4 text-green-600" />
-                    <span className="text-green-600 text-sm">
-                      {t("dashboard.up")}
-                    </span>
-                  </div>
-                </TableCell>
-              </TableRow>
+              {[
+                {
+                  label: t("dashboard.total_sales"),
+                  thisVal: quickStats.totalSales.thisMonth,
+                  lastVal: quickStats.totalSales.lastMonth,
+                  change: quickStats.totalSales.change,
+                  money: true,
+                  decimals: 0,
+                },
+                {
+                  label: t("dashboard.new_clients"),
+                  thisVal: quickStats.newClients.thisMonth,
+                  lastVal: quickStats.newClients.lastMonth,
+                  change: quickStats.newClients.change,
+                  money: false,
+                  decimals: 0,
+                },
+                {
+                  label: t("dashboard.products_sold"),
+                  thisVal: quickStats.productsSold.thisMonth,
+                  lastVal: quickStats.productsSold.lastMonth,
+                  change: quickStats.productsSold.change,
+                  money: false,
+                  decimals: 0,
+                },
+                {
+                  label: t("dashboard.average_order"),
+                  thisVal: quickStats.avgOrder.thisMonth,
+                  lastVal: quickStats.avgOrder.lastMonth,
+                  change: quickStats.avgOrder.change,
+                  money: true,
+                  decimals: 2,
+                },
+              ].map((row, idx) => {
+                const positive = (row.change || 0) >= 0;
+                const fmt = (n: number) =>
+                  row.money
+                    ? `$${Number(n || 0).toLocaleString(undefined, { minimumFractionDigits: row.decimals, maximumFractionDigits: row.decimals })}`
+                    : Number(n || 0).toLocaleString();
+                return (
+                  <TableRow key={idx}>
+                    <TableCell className="font-medium">{row.label}</TableCell>
+                    <TableCell>{fmt(row.thisVal)}</TableCell>
+                    <TableCell>{fmt(row.lastVal)}</TableCell>
+                    <TableCell className={positive ? "text-green-600" : "text-red-600"}>
+                      {(positive ? "+" : "") + (row.change || 0).toFixed(1)}%
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-1">
+                        {positive ? (
+                          <TrendingUp className="h-4 w-4 text-green-600" />
+                        ) : (
+                          <TrendingDown className="h-4 w-4 text-red-600" />
+                        )}
+                        <span className={(positive ? "text-green-600" : "text-red-600") + " text-sm"}>
+                          {positive ? t("dashboard.up") : "Down"}
+                        </span>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         </CardContent>
