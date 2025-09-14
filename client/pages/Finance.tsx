@@ -909,7 +909,9 @@ export default function Finance() {
     filename: string,
     mimeType: string,
   ) => {
-    const blob = new Blob([content], { type: mimeType });
+    const needsBOM = /csv/i.test(mimeType);
+    const data = needsBOM ? "\uFEFF" + content : content;
+    const blob = new Blob([data], { type: mimeType + ";charset=utf-8" });
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
@@ -1028,28 +1030,46 @@ export default function Finance() {
     }
 
     toast({
-      title: "Financial Report Exported",
-      description: `Financial report has been exported as ${format.toUpperCase()} and downloaded.`,
+      title: t("finance.toast.exported_title"),
+      description: t("finance.toast.exported_desc", { format: format.toUpperCase() }),
     });
   };
 
   const exportTransactions = () => {
-    let csv =
-      "Date,Type,Category,Description,Amount,Payment Method,Status,Performed By,Tags\n";
+    const headers = [
+      t("common.date"),
+      t("finance.transaction_type"),
+      t("category", { defaultValue: "Category" }),
+      t("common.description"),
+      t("common.amount"),
+      t("sales.payment_method"),
+      t("common.status"),
+      t("finance.performed_by"),
+      "Tags",
+    ];
+    let csv = headers.join(",") + "\n";
     filteredTransactions.forEach((transaction) => {
       csv += `${transaction.date},${transaction.type},${transaction.category},"${transaction.description}",${transaction.amount},${transaction.paymentMethod.replace("_", " ")},${transaction.status},${transaction.performedBy || ""},"${transaction.tags.join(", ")}"\n`;
     });
 
     downloadFile(csv, "transactions.csv", "text/csv");
     toast({
-      title: "Transactions Exported",
-      description: "Transaction data has been exported as CSV.",
+      title: t("finance.toast.transactions_exported_title"),
+      description: t("finance.toast.transactions_exported_desc"),
     });
   };
 
   const exportGoals = () => {
-    let csv =
-      "Title,Target Amount,Current Amount,Progress %,Deadline,Category,Status\n";
+    const headers = [
+      t("finance.goal_title"),
+      t("finance.target_amount"),
+      t("finance.current_amount"),
+      "%",
+      t("sales.due_date", { defaultValue: "Due Date" }),
+      t("category", { defaultValue: "Category" }),
+      t("common.status"),
+    ];
+    let csv = headers.join(",") + "\n";
     goals.forEach((goal) => {
       const progress = (goal.currentAmount / goal.targetAmount) * 100;
       csv += `"${goal.title}",${goal.targetAmount},${goal.currentAmount},${progress.toFixed(1)},${goal.deadline},${goal.category},${goal.status}\n`;
@@ -1057,38 +1077,38 @@ export default function Finance() {
 
     downloadFile(csv, "financial-goals.csv", "text/csv");
     toast({
-      title: "Goals Exported",
-      description: "Financial goals data has been exported as CSV.",
+      title: t("finance.toast.goals_exported_title"),
+      description: t("finance.toast.goals_exported_desc"),
     });
   };
 
   const generateFinancePDFContent = (data: any) => {
     return `
-FINANCIAL REPORT
+${t("finance.report_title", { defaultValue: "FINANCIAL REPORT" })}
 ================
-Generated: ${new Date(data.generatedAt).toLocaleString()}
+${t("finance.generated_at", { defaultValue: "Generated" })}: ${new Date(data.generatedAt).toLocaleString()}
 
-EXECUTIVE SUMMARY
+${t("finance.executive_summary", { defaultValue: "EXECUTIVE SUMMARY" })}
 =================
-Total Income: $${data.summary.totalIncome.toLocaleString()}
-Total Expenses: $${data.summary.totalExpenses.toLocaleString()}
-Net Profit: $${data.summary.netProfit.toLocaleString()}
-Profit Margin: ${data.summary.profitMargin.toFixed(1)}%
-Pending Transactions: ${data.summary.pendingTransactions}
+${t("finance.total_income")}: $${data.summary.totalIncome.toLocaleString()}
+${t("finance.total_expenses")}: $${data.summary.totalExpenses.toLocaleString()}
+${t("finance.net_profit")}: $${data.summary.netProfit.toLocaleString()}
+${t("finance.profit_margin")}: ${data.summary.profitMargin.toFixed(1)}%
+${t("finance.pending_transactions")}: ${data.summary.pendingTransactions}
 
-CASH FLOW ANALYSIS
+${t("finance.cash_flow_trend")}
 ==================
-${data.cashFlowData.map((item: any) => `${item.month}: Income $${item.income.toLocaleString()}, Expenses $${item.expenses.toLocaleString()}, Profit $${item.profit.toLocaleString()}`).join("\n")}
+${data.cashFlowData.map((item: any) => `${item.month}: ${t("finance.income") } $${item.income.toLocaleString()}, ${t("finance.expenses") } $${item.expenses.toLocaleString()}, ${t("finance.profit")} $${item.profit.toLocaleString()}`).join("\n")}
 
-EXPENSE BREAKDOWN
+${t("finance.expense_breakdown")}
 =================
 ${data.expenseCategories.map((cat: any) => `${cat.name}: $${cat.value.toLocaleString()}`).join("\n")}
 
-FINANCIAL GOALS
+${t("finance.financial_goals")}
 ===============
 ${data.goals.map((goal: any) => `${goal.title}: $${goal.currentAmount.toLocaleString()}/$${goal.targetAmount.toLocaleString()} (${((goal.currentAmount / goal.targetAmount) * 100).toFixed(1)}%) - ${goal.status}`).join("\n")}
 
-RECENT TRANSACTIONS
+${t("finance.recent_transactions", { defaultValue: "RECENT TRANSACTIONS" })}
 ===================
 ${data.transactions
   .slice(0, 20)
