@@ -263,6 +263,7 @@ export default function Sales() {
   const [borrowReturnDate, setBorrowReturnDate] =
     useState<string>(defaultReturnDate);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [updatingIds, setUpdatingIds] = useState<Set<string>>(new Set());
 
   // Real clients/products will be loaded from backend
   const [clients, setClients] = useState<Client[]>([]);
@@ -688,7 +689,7 @@ export default function Sales() {
     setIsCancelDialogOpen(true);
   };
 
-  const cancelInvoice = () => {
+  const cancelInvoice = async () => {
     if (!invoiceToCancel || !cancellationReason.trim()) {
       toast({
         title: "Error",
@@ -698,41 +699,135 @@ export default function Sales() {
       return;
     }
 
-    const updatedInvoice = {
-      ...invoiceToCancel,
-      status: "cancelled" as any,
-      cancellationReason: cancellationReason.trim(),
-      cancelledBy: "Current User", // In a real app, this would be the actual user
-      cancelledDate: new Date().toISOString().split("T")[0],
-    };
-
-    setInvoices(
-      invoices.map((inv) =>
-        inv.id === invoiceToCancel.id ? updatedInvoice : inv,
-      ),
+    await updateInvoiceStatus(
+      invoiceToCancel.id,
+      "draft",
+      cancellationReason.trim(),
     );
 
     setIsCancelDialogOpen(false);
     setInvoiceToCancel(null);
     setCancellationReason("");
-
-    toast({
-      title: "Invoice cancelled",
-      description: `Invoice ${invoiceToCancel.invoiceNumber} has been cancelled with reason: ${cancellationReason.trim()}`,
-    });
   };
 
-  const updateInvoiceStatus = (invoiceId: string, newStatus: string) => {
-    setInvoices(
-      invoices.map((inv) =>
-        inv.id === invoiceId ? { ...inv, status: newStatus as any } : inv,
-      ),
-    );
+  const normalizeApiSale = (r: any): Invoice => {
+    const lookupName = (pid: string) => {
+      const p = products.find((x) => x.id === pid);
+      return p ? p.name : pid;
+    };
+    const rawStatus = String(r.status || "draft").toLowerCase();
+    const isCancelled = !!r.cancellationReason;
+    const status = isCancelled
+      ? ("cancelled" as const)
+      : ((["draft", "sent", "paid", "overdue"].includes(rawStatus)
+          ? rawStatus
+          : "draft") as Invoice["status"]);
 
-    toast({
-      title: "Status updated",
-      description: `Invoice status changed to ${newStatus}.`,
+    return {
+      id: String(r.id),
+      invoiceNumber: String(r.invoiceNumber || ""),
+      clientId: String(r.clientId || ""),
+      clientName: String(r.clientName || ""),
+      clientEmail: "",
+      clientType: "retail",
+      employeeId: r.userId ? String(r.userId) : undefined,
+      employeeName: r.userName || undefined,
+      date: r.createdAt || new Date().toISOString(),
+      dueDate: "",
+      items: (r.items || []).map((it: any) => ({
+        id: String(it.id || `${r.id}-${it.productId}`),
+        productId: String(it.productId || ""),
+        productName: lookupName(String(it.productId || "")),
+        quantity: Number(it.quantity || 0),
+        unitPrice: 0,
+        discount: parseFloat(String(it.discount ?? 0)),
+        total: parseFloat(String(it.total ?? 0)),
+      })),
+      subtotal: parseFloat(String(r.subtotal ?? 0)),
+      taxRate: parseFloat(String(r.taxRate ?? 0)),
+      taxAmount: parseFloat(String(r.taxAmount ?? 0)),
+      discountAmount: parseFloat(String(r.discountAmount ?? 0)),
+      total: parseFloat(String(r.total ?? 0)),
+      status,
+      paymentMethod: (r.paymentMethod || "cash") as any,
+      notes: r.notes || "",
+      borrow: !!(r.isBorrow ?? r.borrow),
+      returnDate: r.returnDate || undefined,
+      cancellationReason: r.cancellationReason || undefined,
+    };
+  };
+
+  const serverUpdateInvoice = async (id: string, payload: any) => {
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json",
+      ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+    };
+    const url = `http://localhost:5002/api/Sales/${encodeURIComponent(id)}`;
+    const methods: RequestInit["method"][] = ["PATCH", "PUT", "POST"];
+    let lastError: any = null;
+
+    for (const method of methods) {
+      try {
+        const res = await fetch(url, {
+          method,
+          headers,
+          body: JSON.stringify(payload),
+        });
+        const data = await res.json().catch(() => null);
+        if (res.ok) {
+          return (data && (data.result || data.data || data)) || {};
+        }
+        lastError =
+          (data && (data.message || data.error)) || res.statusText || "Error";
+      } catch (e) {
+        lastError = e;
+      }
+    }
+
+    throw new Error(
+      typeof lastError === "string" ? lastError : (lastError?.message || "Request failed"),
+    );
+  };
+
+  const updateInvoiceStatus = async (
+    invoiceId: string,
+    newStatus: string,
+    reason?: string,
+  ) => {
+    setUpdatingIds((prev) => {
+      const next = new Set(prev);
+      next.add(invoiceId);
+      return next;
     });
+
+    try {
+      const payload: any = { status: newStatus };
+      if (reason) payload.cancellationReason = reason;
+
+      const result = await serverUpdateInvoice(invoiceId, payload);
+      const normalized = normalizeApiSale(result);
+
+      setInvoices((curr) =>
+        curr.map((inv) => (inv.id === invoiceId ? normalized : inv)),
+      );
+
+      toast({
+        title: "Status updated",
+        description: `Invoice status changed to ${normalized.status}.`,
+      });
+    } catch (e: any) {
+      toast({
+        title: "Failed",
+        description: e?.message || "Could not update invoice",
+        variant: "destructive",
+      });
+    } finally {
+      setUpdatingIds((prev) => {
+        const next = new Set(prev);
+        next.delete(invoiceId);
+        return next;
+      });
+    }
   };
 
   const getSalesEmployees = () => {
@@ -857,38 +952,7 @@ export default function Sales() {
         };
 
         const normalized: Invoice[] = Array.isArray(result)
-          ? result.map((r: any) => ({
-              id: String(r.id),
-              invoiceNumber: String(r.invoiceNumber || ""),
-              clientId: String(r.clientId || ""),
-              clientName: String(r.clientName || ""),
-              clientEmail: "",
-              clientType: "retail",
-              employeeId: r.userId ? String(r.userId) : undefined,
-              employeeName: r.userName || undefined,
-              date: r.createdAt || new Date().toISOString(),
-              dueDate: "",
-              items: (r.items || []).map((it: any) => ({
-                id: String(it.id || `${r.id}-${it.productId}`),
-                productId: String(it.productId || ""),
-                productName: lookupName(String(it.productId || "")),
-                quantity: Number(it.quantity || 0),
-                unitPrice: 0,
-                discount: parseFloat(String(it.discount ?? 0)),
-                total: parseFloat(String(it.total ?? 0)),
-              })),
-              subtotal: parseFloat(String(r.subtotal ?? 0)),
-              taxRate: parseFloat(String(r.taxRate ?? 0)),
-              taxAmount: parseFloat(String(r.taxAmount ?? 0)),
-              discountAmount: parseFloat(String(r.discountAmount ?? 0)),
-              total: parseFloat(String(r.total ?? 0)),
-              status: (r.status || "draft") as any,
-              paymentMethod: (r.paymentMethod || "cash") as any,
-              notes: r.notes || "",
-              borrow: !!(r.isBorrow ?? r.borrow),
-              returnDate: r.returnDate || undefined,
-              cancellationReason: r.cancellationReason || undefined,
-            }))
+          ? result.map(normalizeApiSale)
           : [];
 
         if (mounted) setInvoices(normalized);
@@ -1654,6 +1718,7 @@ export default function Sales() {
                           <Button
                             variant="outline"
                             size="sm"
+                            disabled={updatingIds.has(invoice.id)}
                             onClick={() =>
                               updateInvoiceStatus(invoice.id, "sent")
                             }
@@ -1663,6 +1728,7 @@ export default function Sales() {
                           <Button
                             variant="outline"
                             size="sm"
+                            disabled={updatingIds.has(invoice.id)}
                             onClick={() => openCancelDialog(invoice)}
                             className="text-red-600 hover:text-red-700"
                           >
@@ -1675,6 +1741,7 @@ export default function Sales() {
                           <Button
                             variant="outline"
                             size="sm"
+                            disabled={updatingIds.has(invoice.id)}
                             onClick={() =>
                               updateInvoiceStatus(invoice.id, "paid")
                             }
@@ -1685,6 +1752,7 @@ export default function Sales() {
                           <Button
                             variant="outline"
                             size="sm"
+                            disabled={updatingIds.has(invoice.id)}
                             onClick={() => openCancelDialog(invoice)}
                             className="text-red-600 hover:text-red-700"
                           >
