@@ -2899,13 +2899,22 @@ ${data.timeEntries
               title={`${selectedEmployee.firstName} ${selectedEmployee.lastName}`}
               subtitle={selectedEmployee.position}
               left={[
-                { label: t("employees.employee_id"), value: selectedEmployee.employeeId },
-                { label: t("employees.department"), value: selectedEmployee.department },
+                {
+                  label: t("employees.employee_id"),
+                  value: selectedEmployee.employeeId,
+                },
+                {
+                  label: t("employees.department"),
+                  value: selectedEmployee.department,
+                },
                 {
                   label: t("admin.users.create.labels.work_location"),
                   value: getFilialName(selectedEmployee.filialId),
                 },
-                { label: t("employees.hire_date"), value: selectedEmployee.hireDate },
+                {
+                  label: t("employees.hire_date"),
+                  value: selectedEmployee.hireDate,
+                },
                 {
                   label: t("auth.email_address"),
                   value:
@@ -2917,7 +2926,10 @@ ${data.timeEntries
                 },
               ]}
               right={[
-                { label: t("clients.phone_number"), value: selectedEmployee.phone },
+                {
+                  label: t("clients.phone_number"),
+                  value: selectedEmployee.phone,
+                },
                 {
                   label: t("employees.salary"),
                   value: `$${selectedEmployee.salary.toLocaleString()}`,
@@ -2936,7 +2948,10 @@ ${data.timeEntries
                   : { label: "", value: "" },
               ].filter((k) => k.label)}
               stats={[
-                { label: t("employees.role"), value: getRoleBadge(selectedEmployee.role) },
+                {
+                  label: t("employees.role"),
+                  value: getRoleBadge(selectedEmployee.role),
+                },
                 {
                   label: t("common.status"),
                   value: getStatusBadge(selectedEmployee.status),
