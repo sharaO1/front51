@@ -1695,12 +1695,6 @@ ${data.transactions
                 <CardDescription>{t("finance.debts_subtitle")}</CardDescription>
               </div>
               <Dialog open={isAddLoanOpen} onOpenChange={setIsAddLoanOpen}>
-                <DialogTrigger asChild>
-                  <Button>
-                    <Handshake className="mr-2 h-4 w-4" />
-                    {t("finance.borrow_lend")}
-                  </Button>
-                </DialogTrigger>
                 <DialogContent className="max-w-md">
                   <DialogHeader>
                     <DialogTitle>{t("finance.record_borrow_lend")}</DialogTitle>
