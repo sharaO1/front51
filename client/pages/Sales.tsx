@@ -54,6 +54,7 @@ import {
   Calendar,
 } from "lucide-react";
 import { API_BASE } from "@/lib/api";
+import { useAuthStore } from "@/stores/authStore";
 import { useTranslation } from "react-i18next";
 
 interface InvoiceItem {
@@ -288,6 +289,7 @@ export default function Sales() {
   });
   const { toast } = useToast();
   const { t, i18n } = useTranslation();
+  const accessToken = useAuthStore((s) => s.accessToken);
 
   const clearCurrentItem = () => {
     setCurrentItem({
@@ -591,7 +593,10 @@ export default function Sales() {
     try {
       const res = await fetch("http://localhost:5002/api/Sales", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+        },
         body: JSON.stringify(payload),
       });
       const data = await res.json().catch(() => null);
