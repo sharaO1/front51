@@ -276,7 +276,9 @@ export default function Sales() {
 
   // PDF export dialog state
   const [isPdfDialogOpen, setIsPdfDialogOpen] = useState(false);
-  const [pdfPeriod, setPdfPeriod] = useState<"daily" | "monthly" | "yearly">("daily");
+  const [pdfPeriod, setPdfPeriod] = useState<"daily" | "monthly" | "yearly">(
+    "daily",
+  );
   const todayISO = new Date().toISOString().split("T")[0];
   const [pdfDate, setPdfDate] = useState<string>(todayISO);
   const currentMonth = new Date().toISOString().slice(0, 7);
@@ -502,14 +504,36 @@ export default function Sales() {
     </head><body>${html}</body></html>`);
     win.document.close();
     win.focus();
-    setTimeout(() => { try { win.print(); } catch {} try { win.close(); } catch {} }, 400);
+    setTimeout(() => {
+      try {
+        win.print();
+      } catch {}
+      try {
+        win.close();
+      } catch {}
+    }, 400);
   };
 
   const formatCurrency = (n: number) =>
-    new Intl.NumberFormat(i18n.language || "en", { style: "currency", currency: "USD" }).format(n);
+    new Intl.NumberFormat(i18n.language || "en", {
+      style: "currency",
+      currency: "USD",
+    }).format(n);
 
-  const formatDateTime = (d: string | Date, opts?: Intl.DateTimeFormatOptions) =>
-    new Intl.DateTimeFormat(i18n.language || "en", opts || { year:"numeric", month:"2-digit", day:"2-digit", hour:"2-digit", minute:"2-digit" }).format(new Date(d));
+  const formatDateTime = (
+    d: string | Date,
+    opts?: Intl.DateTimeFormatOptions,
+  ) =>
+    new Intl.DateTimeFormat(
+      i18n.language || "en",
+      opts || {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+      },
+    ).format(new Date(d));
 
   const buildSalesReportHTML = (
     period: "daily" | "monthly" | "yearly",
@@ -536,7 +560,7 @@ export default function Sales() {
 
     const rows = data
       .slice()
-      .sort((a,b)=> new Date(b.date).getTime() - new Date(a.date).getTime())
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
       .map(
         (inv) => `<tr>
           <td>${inv.invoiceNumber}</td>
@@ -623,32 +647,49 @@ export default function Sales() {
 
   const handleExportPDF = () => {
     let data = filteredInvoices;
-    const byDate = (d: string) => new Date(d).toISOString().slice(0,10);
+    const byDate = (d: string) => new Date(d).toISOString().slice(0, 10);
     if (pdfPeriod === "daily") {
       data = data.filter((i) => byDate(i.date) === pdfDate);
     } else if (pdfPeriod === "monthly") {
-      data = data.filter((i) => byDate(i.date).slice(0,7) === pdfMonth);
+      data = data.filter((i) => byDate(i.date).slice(0, 7) === pdfMonth);
     } else if (pdfPeriod === "yearly") {
-      data = data.filter((i) => new Date(i.date).getFullYear().toString() === pdfYear);
+      data = data.filter(
+        (i) => new Date(i.date).getFullYear().toString() === pdfYear,
+      );
     }
 
-    const html = buildSalesReportHTML(pdfPeriod, pdfPeriod === "daily" ? pdfDate : pdfPeriod === "monthly" ? pdfMonth : pdfYear, data);
+    const html = buildSalesReportHTML(
+      pdfPeriod,
+      pdfPeriod === "daily"
+        ? pdfDate
+        : pdfPeriod === "monthly"
+          ? pdfMonth
+          : pdfYear,
+      data,
+    );
     openPrintWindow(html, `${t("navigation.sales")} ${t("common.export")} PDF`);
     setIsPdfDialogOpen(false);
 
-    toast({ title: t("common.export"), description: t("finance.export_pdf_title", "PDF Report") });
+    toast({
+      title: t("common.export"),
+      description: t("finance.export_pdf_title", "PDF Report"),
+    });
   };
 
   const buildInvoicePDF = (inv: Invoice) => {
     const money = (n: number) => formatCurrency(n);
-    const items = inv.items.map((it, idx)=>`<tr>
-      <td>${idx+1}</td>
+    const items = inv.items
+      .map(
+        (it, idx) => `<tr>
+      <td>${idx + 1}</td>
       <td>${it.productName}</td>
       <td class="right">${it.quantity}</td>
       <td class="right">${money(it.unitPrice)}</td>
       <td class="right">${it.discount}%</td>
       <td class="right">${money(it.total)}</td>
-    </tr>`).join("");
+    </tr>`,
+      )
+      .join("");
 
     const html = `
       <div class="container">
@@ -708,7 +749,10 @@ export default function Sales() {
         </div>
       </div>`;
 
-    openPrintWindow(html, `${t("sales.report.invoice_heading", "INVOICE")} ${inv.invoiceNumber}`);
+    openPrintWindow(
+      html,
+      `${t("sales.report.invoice_heading", "INVOICE")} ${inv.invoiceNumber}`,
+    );
   };
 
   const { t, i18n } = useTranslation();
@@ -1874,48 +1918,85 @@ export default function Sales() {
           <Dialog open={isPdfDialogOpen} onOpenChange={setIsPdfDialogOpen}>
             <DialogContent className="max-w-md">
               <DialogHeader>
-                <DialogTitle>{t("finance.export_pdf_title", "PDF Report")}</DialogTitle>
+                <DialogTitle>
+                  {t("finance.export_pdf_title", "PDF Report")}
+                </DialogTitle>
                 <DialogDescription>
                   {t("dashboard.export_report", "Export Report")}
                 </DialogDescription>
               </DialogHeader>
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label>{t("dashboard.days", "days").toString().length ? t("common.filter") : "Filter"}</Label>
-                  <Select value={pdfPeriod} onValueChange={(v)=> setPdfPeriod(v as any)}>
+                  <Label>
+                    {t("dashboard.days", "days").toString().length
+                      ? t("common.filter")
+                      : "Filter"}
+                  </Label>
+                  <Select
+                    value={pdfPeriod}
+                    onValueChange={(v) => setPdfPeriod(v as any)}
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Period" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="daily">{t("sales.today", "Today")} ({t("dashboard.days", "days")})</SelectItem>
-                      <SelectItem value="monthly">{t("dashboard.this_month", "This Month")}</SelectItem>
-                      <SelectItem value="yearly">{t("last_year", "Year")}</SelectItem>
+                      <SelectItem value="daily">
+                        {t("sales.today", "Today")} (
+                        {t("dashboard.days", "days")})
+                      </SelectItem>
+                      <SelectItem value="monthly">
+                        {t("dashboard.this_month", "This Month")}
+                      </SelectItem>
+                      <SelectItem value="yearly">
+                        {t("last_year", "Year")}
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 {pdfPeriod === "daily" && (
                   <div className="space-y-2">
                     <Label htmlFor="pdfDate">{t("common.date")}</Label>
-                    <Input id="pdfDate" type="date" value={pdfDate} onChange={(e)=> setPdfDate(e.target.value)} />
+                    <Input
+                      id="pdfDate"
+                      type="date"
+                      value={pdfDate}
+                      onChange={(e) => setPdfDate(e.target.value)}
+                    />
                   </div>
                 )}
                 {pdfPeriod === "monthly" && (
                   <div className="space-y-2">
                     <Label htmlFor="pdfMonth">{t("this_month", "Month")}</Label>
-                    <Input id="pdfMonth" type="month" value={pdfMonth} onChange={(e)=> setPdfMonth(e.target.value)} />
+                    <Input
+                      id="pdfMonth"
+                      type="month"
+                      value={pdfMonth}
+                      onChange={(e) => setPdfMonth(e.target.value)}
+                    />
                   </div>
                 )}
                 {pdfPeriod === "yearly" && (
                   <div className="space-y-2">
                     <Label htmlFor="pdfYear">{t("last_year", "Year")}</Label>
-                    <Input id="pdfYear" type="number" min="2000" value={pdfYear} onChange={(e)=> setPdfYear(e.target.value)} />
+                    <Input
+                      id="pdfYear"
+                      type="number"
+                      min="2000"
+                      value={pdfYear}
+                      onChange={(e) => setPdfYear(e.target.value)}
+                    />
                   </div>
                 )}
                 <div className="flex gap-2">
                   <Button className="flex-1" onClick={handleExportPDF}>
                     <Download className="mr-2 h-4 w-4" /> {t("common.export")}
                   </Button>
-                  <Button variant="outline" onClick={()=> setIsPdfDialogOpen(false)}>{t("common.cancel")}</Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => setIsPdfDialogOpen(false)}
+                  >
+                    {t("common.cancel")}
+                  </Button>
                 </div>
               </div>
             </DialogContent>
