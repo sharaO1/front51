@@ -1366,7 +1366,7 @@ ${data.cashFlowData.map((item: any) => `${item.month}: ${t("finance.income")} $$
 
 ${t("finance.expense_breakdown")}
 =================
-${data.expenseCategories.map((cat: any) => `${cat.name}: $${cat.value.toLocaleString()}`).join("\n")}
+${data.expenseBreakdown.map((cat: any) => `${cat.name}: $${cat.value.toLocaleString()}`).join("\n")}
 
 ${t("finance.financial_goals")}
 ===============
