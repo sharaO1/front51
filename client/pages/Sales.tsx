@@ -276,9 +276,22 @@ export default function Sales() {
 
   // PDF export dialog state
   const [isPdfDialogOpen, setIsPdfDialogOpen] = useState(false);
+  const [exportMenuOpen, setExportMenuOpen] = useState(false);
   const [pdfPeriod, setPdfPeriod] = useState<
     "today" | "last_month" | "last_year"
   >("today");
+
+  const closeExportLayers = () => {
+    setExportMenuOpen(false);
+    setIsPdfDialogOpen(false);
+    try {
+      const el = document.activeElement as HTMLElement | null;
+      el?.blur?.();
+    } catch {}
+    try {
+      document.body.style.pointerEvents = "";
+    } catch {}
+  };
 
   // Real clients/products will be loaded from backend
   const [clients, setClients] = useState<Client[]>([]);
