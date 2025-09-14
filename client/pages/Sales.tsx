@@ -274,6 +274,16 @@ export default function Sales() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [updatingIds, setUpdatingIds] = useState<Set<string>>(new Set());
 
+  // PDF export dialog state
+  const [isPdfDialogOpen, setIsPdfDialogOpen] = useState(false);
+  const [pdfPeriod, setPdfPeriod] = useState<"daily" | "monthly" | "yearly">("daily");
+  const todayISO = new Date().toISOString().split("T")[0];
+  const [pdfDate, setPdfDate] = useState<string>(todayISO);
+  const currentMonth = new Date().toISOString().slice(0, 7);
+  const [pdfMonth, setPdfMonth] = useState<string>(currentMonth);
+  const currentYear = new Date().getFullYear();
+  const [pdfYear, setPdfYear] = useState<string>(String(currentYear));
+
   // Real clients/products will be loaded from backend
   const [clients, setClients] = useState<Client[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
@@ -457,6 +467,250 @@ export default function Sales() {
     downloadBlob(blob, `sales-report-${today}.json`);
     toast({ title: "Exported", description: "Sales JSON downloaded." });
   };
+
+  // Open a print window with given HTML (users can Save as PDF)
+  const openPrintWindow = (html: string, title: string) => {
+    const win = window.open("", "_blank");
+    if (!win) return;
+    win.document.open();
+    win.document.write(`<!doctype html><html><head><meta charset="utf-8"/>
+      <meta name="viewport" content="width=device-width, initial-scale=1"/>
+      <title>${title}</title>
+      <style>
+        :root { --primary: #2563eb; --muted:#f8fafc; --text:#0f172a; }
+        * { box-sizing: border-box; }
+        body { font-family: Inter, system-ui, -apple-system, sans-serif; color: var(--text); margin: 0; background: #ffffff; }
+        .container { max-width: 1000px; margin: 24px auto; padding: 24px; }
+        .card { background: white; border: 1px solid #e5e7eb; border-radius: 12px; padding: 24px; box-shadow: 0 2px 6px rgba(0,0,0,.04); }
+        .header { display:flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+        h1 { font-size: 24px; margin: 0 0 8px; }
+        .subtitle { color:#64748b; font-size: 14px; }
+        .badge { display:inline-block; padding: 4px 10px; background: rgba(37,99,235,.08); color: var(--primary); border:1px solid rgba(37,99,235,.18); border-radius: 999px; font-weight: 600; font-size: 12px; }
+        .grid { display:grid; grid-template-columns: 1fr 1fr; gap:16px; }
+        .section h3 { margin: 0 0 8px; font-size: 14px; color:#334155; text-transform: uppercase; letter-spacing:.06em; }
+        table { width:100%; border-collapse: collapse; font-size: 13px; }
+        th, td { padding: 10px 12px; border-bottom: 1px solid #e5e7eb; text-align: left; }
+        th { background: var(--muted); color:#334155; font-weight:600; }
+        tfoot td { font-weight: 700; }
+        .right { text-align:right; }
+        .muted { color:#64748b; }
+        .totals { margin-top: 12px; }
+        .totals .row { display:flex; justify-content: space-between; padding: 6px 0; }
+        .footer { margin-top: 16px; color:#64748b; font-size:12px; }
+        @media print { .no-print { display:none; } body { background:white; } .card { box-shadow:none; border:0; } }
+      </style>
+    </head><body>${html}</body></html>`);
+    win.document.close();
+    win.focus();
+    setTimeout(() => { try { win.print(); } catch {} try { win.close(); } catch {} }, 400);
+  };
+
+  const formatCurrency = (n: number) =>
+    new Intl.NumberFormat(i18n.language || "en", { style: "currency", currency: "USD" }).format(n);
+
+  const formatDateTime = (d: string | Date, opts?: Intl.DateTimeFormatOptions) =>
+    new Intl.DateTimeFormat(i18n.language || "en", opts || { year:"numeric", month:"2-digit", day:"2-digit", hour:"2-digit", minute:"2-digit" }).format(new Date(d));
+
+  const buildSalesReportHTML = (
+    period: "daily" | "monthly" | "yearly",
+    dateStr: string,
+    data: Invoice[],
+  ) => {
+    const periodLabel =
+      period === "daily"
+        ? `${t("common.date")}: ${dateStr}`
+        : period === "monthly"
+          ? `${t("dashboard.this_month", "This Month")}: ${dateStr}`
+          : `${t("dashboard.title", "Dashboard")} ${t("settings.year", "Year")} ${dateStr}`;
+
+    const totals = data.reduce(
+      (acc, inv) => {
+        acc.subtotal += inv.subtotal;
+        acc.tax += inv.taxAmount;
+        acc.discount += inv.discountAmount;
+        acc.total += inv.total;
+        return acc;
+      },
+      { subtotal: 0, tax: 0, discount: 0, total: 0 },
+    );
+
+    const rows = data
+      .slice()
+      .sort((a,b)=> new Date(b.date).getTime() - new Date(a.date).getTime())
+      .map(
+        (inv) => `<tr>
+          <td>${inv.invoiceNumber}</td>
+          <td>${inv.clientName}</td>
+          <td>${formatDateTime(inv.date)}</td>
+          <td class="right">${formatCurrency(inv.total)}</td>
+          <td><span class="badge">${t(`status.${inv.status}`)}</span></td>
+        </tr>`,
+      )
+      .join("");
+
+    return `
+      <div class="container">
+        <div class="card">
+          <div class="header">
+            <div>
+              <h1>${t("navigation.sales")} — ${t("dashboard.recent_activity", "Recent Activity")}</h1>
+              <div class="subtitle">${t("finance.report_title", "FINANCIAL REPORT").replace("FINANCIAL", t("navigation.sales"))}</div>
+            </div>
+            <div class="badge">${period.toUpperCase()}</div>
+          </div>
+          <div class="section" style="margin:16px 0;">
+            <div class="grid">
+              <div>
+                <h3>${t("dashboard.kpi_at_glance", "KPI at a glance")}</h3>
+                <div class="totals">
+                  <div class="row"><span>${t("sales.total_invoices")}</span><span class="right">${data.length}</span></div>
+                  <div class="row"><span>${t("sales.total_revenue")}</span><span class="right">${formatCurrency(totals.total)}</span></div>
+                  <div class="row"><span>${t("sales.subtotal")}</span><span class="right">${formatCurrency(totals.subtotal)}</span></div>
+                  <div class="row"><span>${t("sales.tax")}</span><span class="right">${formatCurrency(totals.tax)}</span></div>
+                  <div class="row"><span>${t("sales.discount")}</span><span class="right">-${formatCurrency(totals.discount)}</span></div>
+                </div>
+              </div>
+              <div>
+                <h3>${t("common.date_time")}</h3>
+                <div class="totals">
+                  <div class="row"><span>${t("common.date")}</span><span class="right">${periodLabel}</span></div>
+                  <div class="row"><span>${t("sales.report.generated_on", "Generated on")}</span><span class="right">${formatDateTime(new Date())}</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="section">
+            <h3>${t("dashboard.recent_activity", "Recent Activity")}</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>${t("sales.invoice_number")}</th>
+                  <th>${t("clients.client", "Client")}</th>
+                  <th>${t("common.date")}</th>
+                  <th class="right">${t("common.amount")}</th>
+                  <th>${t("common.status")}</th>
+                </tr>
+              </thead>
+              <tbody>${rows || `<tr><td colspan="5" class="muted">${t("clients.no_products", "No data")}</td></tr>`}</tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="3" class="right">${t("sales.subtotal")}</td>
+                  <td class="right">${formatCurrency(totals.subtotal)}</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td colspan="3" class="right">${t("sales.tax")}</td>
+                  <td class="right">${formatCurrency(totals.tax)}</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td colspan="3" class="right">${t("sales.discount")}</td>
+                  <td class="right">-${formatCurrency(totals.discount)}</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td colspan="3" class="right">${t("common.total").toUpperCase()}</td>
+                  <td class="right">${formatCurrency(totals.total)}</td>
+                  <td></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+          <div class="footer">${t("sales.report.generated_on", "Generated on")}: ${formatDateTime(new Date())}</div>
+        </div>
+      </div>`;
+  };
+
+  const handleExportPDF = () => {
+    let data = filteredInvoices;
+    const byDate = (d: string) => new Date(d).toISOString().slice(0,10);
+    if (pdfPeriod === "daily") {
+      data = data.filter((i) => byDate(i.date) === pdfDate);
+    } else if (pdfPeriod === "monthly") {
+      data = data.filter((i) => byDate(i.date).slice(0,7) === pdfMonth);
+    } else if (pdfPeriod === "yearly") {
+      data = data.filter((i) => new Date(i.date).getFullYear().toString() === pdfYear);
+    }
+
+    const html = buildSalesReportHTML(pdfPeriod, pdfPeriod === "daily" ? pdfDate : pdfPeriod === "monthly" ? pdfMonth : pdfYear, data);
+    openPrintWindow(html, `${t("navigation.sales")} ${t("common.export")} PDF`);
+    setIsPdfDialogOpen(false);
+
+    toast({ title: t("common.export"), description: t("finance.export_pdf_title", "PDF Report") });
+  };
+
+  const buildInvoicePDF = (inv: Invoice) => {
+    const money = (n: number) => formatCurrency(n);
+    const items = inv.items.map((it, idx)=>`<tr>
+      <td>${idx+1}</td>
+      <td>${it.productName}</td>
+      <td class="right">${it.quantity}</td>
+      <td class="right">${money(it.unitPrice)}</td>
+      <td class="right">${it.discount}%</td>
+      <td class="right">${money(it.total)}</td>
+    </tr>`).join("");
+
+    const html = `
+      <div class="container">
+        <div class="card">
+          <div class="header">
+            <div>
+              <h1>${t("sales.report.invoice_heading", "INVOICE")} ${inv.invoiceNumber}</h1>
+              <div class="subtitle">${t("sales.invoice_details")}</div>
+            </div>
+            <div class="badge">${t(`status.${inv.status}`)}</div>
+          </div>
+          <div class="section" style="margin-top:16px;">
+            <div class="grid">
+              <div>
+                <h3>${t("sales.client_information")}</h3>
+                <div class="totals">
+                  <div class="row"><span>${t("common.name")}</span><span class="right">${inv.clientName}</span></div>
+                  <div class="row"><span>${t("common.email")}</span><span class="right">${inv.clientEmail || "-"}</span></div>
+                  <div class="row"><span>${t("clients.type", "Type")}</span><span class="right">${t(`clients.${inv.clientType}`)}</span></div>
+                  <div class="row"><span>${t("sales.payment_method")}</span><span class="right">${t(`sales.${inv.paymentMethod}`)}</span></div>
+                </div>
+              </div>
+              <div>
+                <h3>${t("sales.report.invoice_details", "Invoice Details")}</h3>
+                <div class="totals">
+                  <div class="row"><span>${t("common.date")}</span><span class="right">${formatDateTime(inv.date)}</span></div>
+                  <div class="row"><span>${t("sales.due_date", "Due Date")}</span><span class="right">${inv.dueDate ? formatDateTime(inv.dueDate) : "-"}</span></div>
+                  ${inv.employeeName ? `<div class="row"><span>${t("sales.sales_employee", "Sales Employee")}</span><span class="right">${inv.employeeName}</span></div>` : ""}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="section">
+            <h3>${t("sales.invoice_items")}</h3>
+            <table>
+              <thead><tr>
+                <th>#</th><th>${t("sales.product_name")}</th><th class="right">${t("sales.qty")}</th><th class="right">${t("sales.unit_price")}</th><th class="right">${t("sales.discount")}</th><th class="right">${t("common.total")}</th>
+              </tr></thead>
+              <tbody>${items}</tbody>
+            </table>
+          </div>
+          <div class="section">
+            <div class="grid">
+              <div></div>
+              <div>
+                <div class="totals">
+                  <div class="row"><span>${t("sales.subtotal")}</span><span class="right">${money(inv.subtotal)}</span></div>
+                  <div class="row"><span>${t("sales.tax")} (${inv.taxRate}%)</span><span class="right">${money(inv.taxAmount)}</span></div>
+                  ${inv.discountAmount > 0 ? `<div class="row"><span>${t("sales.discount")}</span><span class="right">-${money(inv.discountAmount)}</span></div>` : ""}
+                  <div class="row" style="font-weight:700;"><span>${t("common.total").toUpperCase()}</span><span class="right">${money(inv.total)}</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          ${inv.notes ? `<div class="section"><h3>${t("common.notes")}</h3><div class="muted">${inv.notes}</div></div>` : ""}
+          <div class="footer">${t("sales.report.generated_on", "Generated on")}: ${formatDateTime(new Date())}</div>
+        </div>
+      </div>`;
+
+    openPrintWindow(html, `${t("sales.report.invoice_heading", "INVOICE")} ${inv.invoiceNumber}`);
+  };
+
   const { t, i18n } = useTranslation();
   const accessToken = useAuthStore((s) => s.accessToken);
 
@@ -1170,6 +1424,9 @@ export default function Sales() {
               <DropdownMenuItem onClick={handleExportJSON}>
                 <FileJson className="mr-2 h-4 w-4" /> JSON
               </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setIsPdfDialogOpen(true)}>
+                <Receipt className="mr-2 h-4 w-4" /> PDF
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
 
@@ -1608,6 +1865,57 @@ export default function Sales() {
                     <X className="mr-2 h-4 w-4" />
                     Cancel Invoice
                   </Button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+
+          {/* Export PDF Dialog */}
+          <Dialog open={isPdfDialogOpen} onOpenChange={setIsPdfDialogOpen}>
+            <DialogContent className="max-w-md">
+              <DialogHeader>
+                <DialogTitle>{t("finance.export_pdf_title", "PDF Report")}</DialogTitle>
+                <DialogDescription>
+                  {t("dashboard.export_report", "Export Report")}
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label>{t("dashboard.days", "days").toString().length ? t("common.filter") : "Filter"}</Label>
+                  <Select value={pdfPeriod} onValueChange={(v)=> setPdfPeriod(v as any)}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Period" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="daily">{t("sales.today", "Today")} ({t("dashboard.days", "days")})</SelectItem>
+                      <SelectItem value="monthly">{t("dashboard.this_month", "This Month")}</SelectItem>
+                      <SelectItem value="yearly">{t("last_year", "Year")}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                {pdfPeriod === "daily" && (
+                  <div className="space-y-2">
+                    <Label htmlFor="pdfDate">{t("common.date")}</Label>
+                    <Input id="pdfDate" type="date" value={pdfDate} onChange={(e)=> setPdfDate(e.target.value)} />
+                  </div>
+                )}
+                {pdfPeriod === "monthly" && (
+                  <div className="space-y-2">
+                    <Label htmlFor="pdfMonth">{t("this_month", "Month")}</Label>
+                    <Input id="pdfMonth" type="month" value={pdfMonth} onChange={(e)=> setPdfMonth(e.target.value)} />
+                  </div>
+                )}
+                {pdfPeriod === "yearly" && (
+                  <div className="space-y-2">
+                    <Label htmlFor="pdfYear">{t("last_year", "Year")}</Label>
+                    <Input id="pdfYear" type="number" min="2000" value={pdfYear} onChange={(e)=> setPdfYear(e.target.value)} />
+                  </div>
+                )}
+                <div className="flex gap-2">
+                  <Button className="flex-1" onClick={handleExportPDF}>
+                    <Download className="mr-2 h-4 w-4" /> {t("common.export")}
+                  </Button>
+                  <Button variant="outline" onClick={()=> setIsPdfDialogOpen(false)}>{t("common.cancel")}</Button>
                 </div>
               </div>
             </DialogContent>
@@ -2136,24 +2444,8 @@ export default function Sales() {
                 <Button
                   className="flex-1"
                   onClick={() => {
-                    // Generate plain text report using i18n
-                    const downloadReport = () => {
-                      const content = buildInvoiceReport(selectedInvoice);
-                      const blob = new Blob([content], {
-                        type: "text/plain",
-                      });
-                      const url = window.URL.createObjectURL(blob);
-                      const link = document.createElement("a");
-                      link.href = url;
-                      link.download = `invoice-${selectedInvoice.invoiceNumber}.txt`;
-                      document.body.appendChild(link);
-                      link.click();
-                      document.body.removeChild(link);
-                      window.URL.revokeObjectURL(url);
-                    };
-
-                    downloadReport();
-
+                    if (!selectedInvoice) return;
+                    buildInvoicePDF(selectedInvoice);
                     toast({
                       title: t("sales.toast.invoice_downloaded_title"),
                       description: t(
@@ -2164,7 +2456,7 @@ export default function Sales() {
                   }}
                 >
                   <Download className="mr-2 h-4 w-4" />
-                  {t("common.download")}
+                  {t("sales.download_pdf")}
                 </Button>
                 {selectedInvoice.status !== "cancelled" &&
                   selectedInvoice.status !== "paid" && (
