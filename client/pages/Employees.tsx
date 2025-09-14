@@ -2899,15 +2899,15 @@ ${data.timeEntries
               title={`${selectedEmployee.firstName} ${selectedEmployee.lastName}`}
               subtitle={selectedEmployee.position}
               left={[
-                { label: "Employee ID", value: selectedEmployee.employeeId },
-                { label: "Department", value: selectedEmployee.department },
+                { label: t("employees.employee_id"), value: selectedEmployee.employeeId },
+                { label: t("employees.department"), value: selectedEmployee.department },
                 {
-                  label: "Filial",
+                  label: t("admin.users.create.labels.work_location"),
                   value: getFilialName(selectedEmployee.filialId),
                 },
-                { label: "Hire Date", value: selectedEmployee.hireDate },
+                { label: t("employees.hire_date"), value: selectedEmployee.hireDate },
                 {
-                  label: "Email",
+                  label: t("auth.email_address"),
                   value:
                     selectedEmployee.email ||
                     users.find(
@@ -2917,28 +2917,28 @@ ${data.timeEntries
                 },
               ]}
               right={[
-                { label: "Phone", value: selectedEmployee.phone },
+                { label: t("clients.phone_number"), value: selectedEmployee.phone },
                 {
-                  label: "Salary",
+                  label: t("employees.salary"),
                   value: `$${selectedEmployee.salary.toLocaleString()}`,
                 },
                 selectedEmployee.commission > 0
                   ? {
-                      label: "Commission",
+                      label: t("employees.commission"),
                       value: `${selectedEmployee.commission}%`,
                     }
                   : { label: "", value: "" },
                 selectedEmployee.salesTarget
                   ? {
-                      label: "Monthly Target",
+                      label: t("employees.monthly_sales_target"),
                       value: `$${selectedEmployee.salesTarget.toLocaleString()}`,
                     }
                   : { label: "", value: "" },
               ].filter((k) => k.label)}
               stats={[
-                { label: "Role", value: getRoleBadge(selectedEmployee.role) },
+                { label: t("employees.role"), value: getRoleBadge(selectedEmployee.role) },
                 {
-                  label: "Status",
+                  label: t("common.status"),
                   value: getStatusBadge(selectedEmployee.status),
                 },
               ]}
