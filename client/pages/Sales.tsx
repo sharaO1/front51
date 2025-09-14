@@ -1111,7 +1111,7 @@ export default function Sales() {
 
     try {
       setIsSubmitting(true);
-      const res = await fetch("http://localhost:5002/api/Sales", {
+      const res = await fetch(`${API_BASE}/Sales`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -1269,7 +1269,7 @@ export default function Sales() {
       "Content-Type": "application/json",
       ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
     };
-    const url = `http://localhost:5002/api/Sales/${encodeURIComponent(id)}`;
+    const url = `${API_BASE}/Sales/${encodeURIComponent(id)}`;
     const methods: RequestInit["method"][] = ["PATCH", "PUT", "POST"];
     let lastError: any = null;
 
@@ -1426,7 +1426,7 @@ export default function Sales() {
     let mounted = true;
     const loadInvoices = async () => {
       try {
-        const res = await fetch("http://localhost:5002/api/Sales", {
+        const res = await fetch(`${API_BASE}/Sales`, {
           headers: {
             "Content-Type": "application/json",
             ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
