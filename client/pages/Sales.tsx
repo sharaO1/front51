@@ -593,7 +593,7 @@ export default function Sales() {
               <h1>${t("navigation.sales")} — ${t("dashboard.recent_activity", "Recent Activity")}</h1>
               <div class="subtitle">${t("finance.report_title", "FINANCIAL REPORT").replace("FINANCIAL", t("navigation.sales"))}</div>
             </div>
-            <div class="badge">${period.toUpperCase()}</div>
+            <div class="badge">${period === "today" ? t("sales.today") : period === "last_month" ? t("sales.last_month") : t("sales.last_year")}</div>
           </div>
           <div class="section" style="margin:16px 0;">
             <div class="grid">
