@@ -300,6 +300,65 @@ export default function Sales() {
   });
   const { toast } = useToast();
 
+  const buildInvoiceReport = (inv: Invoice) => {
+    const sep = "========================================";
+    const line = (s: string) => s;
+    const money = (n: number) => `$${n.toFixed(2)}`;
+    const fmtDate = (d: string) => new Date(d).toLocaleString(i18n.language || "en");
+
+    const title = `${t("sales.report.invoice_heading", "INVOICE")} ${inv.invoiceNumber}`;
+
+    const clientSection = [
+      `${t("sales.report.client_information", "Client Information")}:
+------------------`,
+      `${t("common.name")}: ${inv.clientName}`,
+      `${t("common.email")}: ${inv.clientEmail}`,
+      `${t("clients.type", "Type")}: ${t(`clients.${inv.clientType}`)}`,
+      `${t("sales.payment_method")}: ${t(`sales.${inv.paymentMethod}`)}`,
+    ].join("\n");
+
+    const detailsSection = [
+      `${t("sales.report.invoice_details", "Invoice Details")}:
+---------------`,
+      `${t("common.date")}: ${fmtDate(inv.date)}`,
+      `${t("sales.due_date", "Due Date")}: ${inv.dueDate ? fmtDate(inv.dueDate) : "-"}`,
+      `${t("common.status")}: ${t(`status.${inv.status}`)}`,
+      inv.employeeName
+        ? `${t("sales.sales_employee", "Sales Employee")}: ${inv.employeeName}`
+        : "",
+    ]
+      .filter(Boolean)
+      .join("\n");
+
+    const itemsHeader = `${t("sales.invoice_items")}:\n------`;
+    const itemsBody = inv.items
+      .map(
+        (item, index) =>
+          `${index + 1}. ${item.productName}
+   ${t("sales.qty")} : ${item.quantity}
+   ${t("sales.unit_price")}: ${money(item.unitPrice)}
+   ${t("sales.discount")}: ${item.discount}%
+   ${t("common.total")}: ${money(item.total)}`,
+      )
+      .join("\n\n");
+
+    const summarySection = [
+      `${t("sales.report.summary", "Summary")}:
+--------`,
+      `${t("sales.subtotal")}: ${money(inv.subtotal)}`,
+      `${t("sales.tax")} (${inv.taxRate}%): ${money(inv.taxAmount)}`,
+      inv.discountAmount > 0 ? `${t("sales.discount")}: -${money(inv.discountAmount)}` : "",
+      `${t("common.total").toUpperCase()}: ${money(inv.total)}`,
+    ]
+      .filter(Boolean)
+      .join("\n");
+
+    const notes = inv.notes ? `\n${t("common.notes")}: ${inv.notes}\n` : "\n";
+    const generated = `${t("sales.report.generated_on", "Generated on")}: ${new Date().toLocaleString(i18n.language || "en")}`;
+
+    return [title, sep, "", clientSection, "", detailsSection, "", itemsHeader, itemsBody, "", summarySection, notes, generated].join("\n");
+  };
+
   const downloadBlob = (blob: Blob, filename: string) => {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -2050,53 +2109,10 @@ export default function Sales() {
                 <Button
                   className="flex-1"
                   onClick={() => {
-                    // Generate PDF download functionality
-                    const downloadPDF = () => {
-                      // Create PDF content
-                      const pdfContent = `
-INVOICE ${selectedInvoice.invoiceNumber}
-========================================
-
-Client Information:
-------------------
-Name: ${selectedInvoice.clientName}
-Email: ${selectedInvoice.clientEmail}
-Type: ${selectedInvoice.clientType}
-Payment Method: ${selectedInvoice.paymentMethod.replace("_", " ")}
-
-Invoice Details:
----------------
-Date: ${new Date(selectedInvoice.date).toLocaleString()}
-Status: ${selectedInvoice.status}
-${selectedInvoice.employeeName ? `Sales Employee: ${selectedInvoice.employeeName}` : ""}
-
-Items:
-------
-${selectedInvoice.items
-  .map(
-    (item, index) =>
-      `${index + 1}. ${item.productName}
-   Quantity: ${item.quantity}
-   Unit Price: $${item.unitPrice.toFixed(2)}
-   Discount: ${item.discount}%
-   Total: $${item.total.toFixed(2)}`,
-  )
-  .join("\n\n")}
-
-Summary:
---------
-Subtotal: $${selectedInvoice.subtotal.toFixed(2)}
-Tax (${selectedInvoice.taxRate}%): $${selectedInvoice.taxAmount.toFixed(2)}
-${selectedInvoice.discountAmount > 0 ? `Discount: -$${selectedInvoice.discountAmount.toFixed(2)}` : ""}
-TOTAL: $${selectedInvoice.total.toFixed(2)}
-
-${selectedInvoice.notes ? `Notes: ${selectedInvoice.notes}` : ""}
-
-Generated on: ${new Date().toLocaleString()}
-                      `;
-
-                      // Create and download file
-                      const blob = new Blob([pdfContent], {
+                    // Generate plain text report using i18n
+                    const downloadReport = () => {
+                      const content = buildInvoiceReport(selectedInvoice);
+                      const blob = new Blob([content], {
                         type: "text/plain",
                       });
                       const url = window.URL.createObjectURL(blob);
@@ -2109,7 +2125,7 @@ Generated on: ${new Date().toLocaleString()}
                       window.URL.revokeObjectURL(url);
                     };
 
-                    downloadPDF();
+                    downloadReport();
 
                     toast({
                       title: t("sales.toast.invoice_downloaded_title"),
@@ -2121,7 +2137,7 @@ Generated on: ${new Date().toLocaleString()}
                   }}
                 >
                   <Download className="mr-2 h-4 w-4" />
-                  {t("sales.download_pdf")}
+                  {t("common.download")}
                 </Button>
                 {selectedInvoice.status !== "cancelled" &&
                   selectedInvoice.status !== "paid" && (
