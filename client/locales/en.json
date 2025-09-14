@@ -40,6 +40,8 @@
     "total": "Total",
     "description": "Description",
     "notes": "Notes",
+    "tags": "Tags",
+    "month": "Month",
     "required_fields_error": "Please fill in all required fields",
     "updated": "Updated",
     "unknown": "Unknown"
@@ -891,6 +893,7 @@
     "daily": "Daily",
     "weekly": "Weekly",
     "monthly": "Monthly",
+    "yearly": "Yearly",
     "cloud_storage": "Cloud Storage",
     "local_storage": "Local Storage",
     "external_drive": "External Drive",
