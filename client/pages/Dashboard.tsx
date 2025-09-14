@@ -915,8 +915,7 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
                 {t("finance.cash_flow_trend") || "Cash Flow Trend"}
               </CardTitle>
               <CardDescription className="text-gray-600 mt-1">
-                {t("finance.monthly_income_expense_profit") ||
-                  "Monthly income, expense, and profit"}
+                {t("finance.income_expenses_profit")}
               </CardDescription>
             </div>
           </div>
