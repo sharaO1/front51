@@ -703,7 +703,7 @@ export default function Sales() {
       data,
     );
     openPrintWindow(html, `${t("navigation.sales")} ${t("common.export")} PDF`);
-    setIsPdfDialogOpen(false);
+    closeExportLayers();
 
     toast({
       title: t("common.export"),
