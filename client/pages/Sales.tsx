@@ -54,6 +54,15 @@ import {
   Calendar,
 } from "lucide-react";
 import { API_BASE } from "@/lib/api";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { FileSpreadsheet, FileJson } from "lucide-react";
 import { useAuthStore } from "@/stores/authStore";
 import { useTranslation } from "react-i18next";
 
@@ -290,6 +299,87 @@ export default function Sales() {
     discount: 0,
   });
   const { toast } = useToast();
+
+  const downloadBlob = (blob: Blob, filename: string) => {
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
+  const toCSV = (rows: any[], headers: string[]) => {
+    const escape = (val: any) => {
+      const s = String(val ?? "");
+      if (/[",\n]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
+      return s;
+    };
+    const lines = [headers.join(",")];
+    for (const r of rows) lines.push(headers.map((h) => escape(r[h])).join(","));
+    return lines.join("\n");
+  };
+
+  const handleExportCSV = () => {
+    const headers = [
+      "invoiceNumber",
+      "date",
+      "clientName",
+      "clientEmail",
+      "employeeName",
+      "status",
+      "paymentMethod",
+      "subtotal",
+      "taxRate",
+      "taxAmount",
+      "discountAmount",
+      "total",
+    ];
+    const rows = filteredInvoices.map((inv) => ({
+      invoiceNumber: inv.invoiceNumber,
+      date: new Date(inv.date).toISOString(),
+      clientName: inv.clientName,
+      clientEmail: inv.clientEmail,
+      employeeName: inv.employeeName || "",
+      status: inv.status,
+      paymentMethod: inv.paymentMethod,
+      subtotal: inv.subtotal,
+      taxRate: inv.taxRate,
+      taxAmount: inv.taxAmount,
+      discountAmount: inv.discountAmount,
+      total: inv.total,
+    }));
+    const csv = toCSV(rows, headers);
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const today = new Date().toISOString().slice(0, 10);
+    downloadBlob(blob, `sales-report-${today}.csv`);
+    toast({ title: "Exported", description: "Sales CSV downloaded." });
+  };
+
+  const handleExportJSON = () => {
+    const data = JSON.stringify(
+      filteredInvoices.map((inv) => ({
+        ...inv,
+        items: inv.items.map((it) => ({
+          id: it.id,
+          productId: it.productId,
+          productName: it.productName,
+          quantity: it.quantity,
+          unitPrice: it.unitPrice,
+          discount: it.discount,
+          total: it.total,
+        })),
+      })),
+      null,
+      2,
+    );
+    const blob = new Blob([data], { type: "application/json" });
+    const today = new Date().toISOString().slice(0, 10);
+    downloadBlob(blob, `sales-report-${today}.json`);
+    toast({ title: "Exported", description: "Sales JSON downloaded." });
+  };
   const { t, i18n } = useTranslation();
   const accessToken = useAuthStore((s) => s.accessToken);
 
@@ -983,7 +1073,26 @@ export default function Sales() {
           </h1>
           <p className="text-muted-foreground">{t("sales.subtitle")}</p>
         </div>
-        <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+        <div className="flex items-center gap-2">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline">
+                <Download className="mr-2 h-4 w-4" /> Export
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Export filtered</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={handleExportCSV}>
+                <FileSpreadsheet className="mr-2 h-4 w-4" /> CSV
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleExportJSON}>
+                <FileJson className="mr-2 h-4 w-4" /> JSON
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
           <DialogTrigger asChild>
             <Button>
               <Plus className="mr-2 h-4 w-4" />
@@ -1417,6 +1526,7 @@ export default function Sales() {
             </div>
           </DialogContent>
         </Dialog>
+        </div>
       </div>
 
       {/* Summary Cards */}
