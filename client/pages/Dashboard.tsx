@@ -99,6 +99,9 @@ export default function Dashboard() {
     { name: string; value: number; color: string }[]
   >([]);
 
+  const [salesTodayCount, setSalesTodayCount] = useState<number | null>(null);
+  const [salesTodayChange, setSalesTodayChange] = useState<number | null>(null);
+
   // Cash Flow Trend (monthly income, expense, profit)
   const [cashFlowData, setCashFlowData] = useState<
     {
@@ -384,6 +387,58 @@ export default function Dashboard() {
     };
   }, []);
 
+  // Load daily sales (paid invoices today) and change vs. yesterday
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      try {
+        const headers: Record<string, string> = { "Content-Type": "application/json" };
+        if (accessToken) headers.Authorization = `Bearer ${accessToken}`;
+        const res = await fetch(`${API_BASE}/Sales`, { headers });
+        const data = await res.json().catch(() => null as any);
+        const list = (data && (data.result || data.data || data)) || [];
+        if (!Array.isArray(list)) {
+          if (mounted) {
+            setSalesTodayCount(0);
+            setSalesTodayChange(0);
+          }
+          return;
+        }
+
+        const normalizeStatus = (r: any) => {
+          const raw = String(r?.status || "").toLowerCase();
+          const cancelled = !!r?.cancellationReason || raw === "cancelled" || raw === "canceled";
+          if (cancelled) return "cancelled";
+          return ["draft", "sent", "paid", "overdue", "cancelled"].includes(raw) ? raw : "draft";
+        };
+        const getDate = (r: any) => new Date(r?.createdAt || r?.date || r?.created_at || r?.createdAtUtc || Date.now());
+        const isSameDay = (a: Date, b: Date) => a.toDateString() === b.toDateString();
+
+        const today = new Date();
+        const yesterday = new Date();
+        yesterday.setDate(today.getDate() - 1);
+
+        const paidToday = list.filter((r: any) => normalizeStatus(r) === "paid" && isSameDay(getDate(r), today)).length;
+        const paidYesterday = list.filter((r: any) => normalizeStatus(r) === "paid" && isSameDay(getDate(r), yesterday)).length;
+
+        const change = paidYesterday === 0 ? (paidToday > 0 ? 100 : 0) : ((paidToday - paidYesterday) / paidYesterday) * 100;
+
+        if (mounted) {
+          setSalesTodayCount(paidToday);
+          setSalesTodayChange(Math.round(change));
+        }
+      } catch (e) {
+        if (mounted) {
+          setSalesTodayCount(0);
+          setSalesTodayChange(0);
+        }
+      }
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, [accessToken]);
+
   useEffect(() => {
     let isMounted = true;
     const load = async () => {
@@ -552,7 +607,7 @@ export default function Dashboard() {
         totalRevenue: 45231.89,
         totalProducts: totalProducts || 2350,
         activeClients: activeClients || 573,
-        salesToday: 127,
+        salesToday: salesTodayCount ?? 0,
         growthMetrics: {
           revenueGrowth: 20.1,
           productGrowth: 180,
@@ -827,13 +882,13 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
           </CardHeader>
           <CardContent className="pt-0 relative z-10">
             <div className="text-3xl font-bold text-gray-900 mb-2 tracking-tight">
-              127
+              {typeof salesTodayCount === "number" ? salesTodayCount.toLocaleString() : "—"}
             </div>
             <div className="flex items-center gap-2">
               <div className="flex items-center gap-1">
                 <TrendingUp className="h-4 w-4 text-orange-600" />
                 <span className="text-sm font-semibold text-orange-600">
-                  +12%
+                  {typeof salesTodayChange === "number" ? `${salesTodayChange >= 0 ? "+" : ""}${salesTodayChange}%` : "—"}
                 </span>
               </div>
               <span className="text-sm text-muted-foreground">
