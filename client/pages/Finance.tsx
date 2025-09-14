@@ -530,6 +530,21 @@ export default function Finance() {
         return name;
     }
   };
+
+  // Real Expense Breakdown computed from backend transactions
+  const expenseBreakdown = useMemo(() => {
+    const map = new Map<string, number>();
+    transactions
+      .filter((t) => t.type === "expense" && t.status === "completed")
+      .forEach((t) => {
+        const key = translateCategory(t.category || "Other");
+        map.set(key, (map.get(key) || 0) + (Number(t.amount) || 0));
+      });
+    const palette = ["#0088FE","#00C49F","#FFBB28","#FF8042","#A78BFA","#34D399","#F472B6","#F43F5E","#06B6D4","#84CC16"];
+    return Array.from(map.entries())
+      .sort((a, b) => b[1] - a[1])
+      .map(([name, value], i) => ({ name, value, color: palette[i % palette.length] }));
+  }, [transactions, i18n.language]);
   const [searchTerm, setSearchTerm] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
