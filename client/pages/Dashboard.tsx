@@ -98,6 +98,11 @@ export default function Dashboard() {
   const [categoryDist, setCategoryDist] = useState<
     { name: string; value: number; color: string }[]
   >([]);
+  const [productIndex, setProductIndex] = useState<Record<string, { name: string; unitPrice?: number }>>({});
+  const [derivedSales, setDerivedSales] = useState<{
+    products: { id: string; name: string; unitsSold: number; revenue: number; profit: number }[];
+    totals: { units: number; revenue: number; profit: number };
+  } | null>(null);
 
   const [salesTodayCount, setSalesTodayCount] = useState<number | null>(null);
   const [salesTodayChange, setSalesTodayChange] = useState<number | null>(null);
@@ -166,6 +171,21 @@ export default function Dashboard() {
         const scopedProducts = managerFilialId
           ? products.filter((p: any) => inFilial(p, managerFilialId))
           : products;
+
+        const index: Record<string, { name: string; unitPrice?: number }> = {};
+        for (const p of scopedProducts) {
+          const id = String(p.id ?? "");
+          if (!id) continue;
+          index[id] = {
+            name: String(
+              p.name || p.productName || p.title || p.title_en || "Unnamed",
+            ),
+            unitPrice: Number(
+              p.unitPrice ?? p.price ?? p.sellingPrice ?? p.selling_price ?? 0,
+            ) || undefined,
+          };
+        }
+        setProductIndex(index);
         const scopedClients = managerFilialId
           ? clients.filter((c: any) => inFilial(c, managerFilialId))
           : clients;
@@ -386,6 +406,62 @@ export default function Dashboard() {
       mounted = false;
     };
   }, []);
+
+  // Derive "Sales by Product" from Sales management (paid invoices)
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      try {
+        const headers: Record<string, string> = { "Content-Type": "application/json" };
+        if (accessToken) headers.Authorization = `Bearer ${accessToken}`;
+        const res = await fetch(`${API_BASE}/Sales`, { headers });
+        const data = await res.json().catch(() => null as any);
+        const list: any[] = (data && (data.result || data.data || data)) || [];
+        if (!Array.isArray(list)) return;
+
+        const normalizeStatus = (r: any) => {
+          const raw = String(r?.status || "").toLowerCase();
+          const cancelled = !!r?.cancellationReason || raw === "cancelled" || raw === "canceled";
+          if (cancelled) return "cancelled";
+          return ["draft", "sent", "paid", "overdue", "cancelled"].includes(raw) ? raw : "draft";
+        };
+
+        const map = new Map<string, { id: string; name: string; unitsSold: number; revenue: number; profit: number }>();
+        for (const r of list) {
+          if (normalizeStatus(r) !== "paid") continue;
+          const items = Array.isArray(r.items) ? r.items : [];
+          for (const it of items) {
+            const pid = String(it.productId || it.productID || it.id || "");
+            if (!pid) continue;
+            const qty = Number(it.quantity || 0) || 0;
+            const total = (() => {
+              const t = Number(it.total);
+              if (!isNaN(t) && t !== 0) return t;
+              const up = Number(it.unitPrice ?? productIndex[pid]?.unitPrice ?? 0) || 0;
+              return qty * up;
+            })();
+            if (!map.has(pid)) {
+              const name = productIndex[pid]?.name || String(it.productName || pid);
+              map.set(pid, { id: pid, name, unitsSold: 0, revenue: 0, profit: 0 });
+            }
+            const entry = map.get(pid)!;
+            entry.unitsSold += qty;
+            entry.revenue += total;
+            // profit unknown without cost; keep 0
+          }
+        }
+        const productsAgg = Array.from(map.values()).sort((a, b) => b.revenue - a.revenue);
+        const totals = productsAgg.reduce(
+          (acc, p) => ({ units: acc.units + p.unitsSold, revenue: acc.revenue + p.revenue, profit: acc.profit + p.profit }),
+          { units: 0, revenue: 0, profit: 0 },
+        );
+        if (mounted) setDerivedSales({ products: productsAgg, totals });
+      } catch {}
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, [accessToken, productIndex]);
 
   // Load daily sales (paid invoices today) and change vs. yesterday
   useEffect(() => {
@@ -1125,44 +1201,44 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
           {salesError && (
             <div className="text-sm text-red-600">{salesError}</div>
           )}
-          {salesSummary && (
+          {(derivedSales || salesSummary) && (
             <>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
                 <div className="p-3 rounded-lg border bg-white">
                   <div className="text-xs text-muted-foreground">
-                    Products Sold
+                    {t("dashboard.products_sold")}
                   </div>
                   <div className="text-xl font-semibold">
-                    {salesSummary.totals.units.toLocaleString()}
+                    {(derivedSales?.totals.units ?? salesSummary?.totals.units ?? 0).toLocaleString()}
                   </div>
                 </div>
                 <div className="p-3 rounded-lg border bg-white">
                   <div className="text-xs text-muted-foreground">
-                    Money Received
+                    {t("finance.sales_revenue")}
                   </div>
                   <div className="text-xl font-semibold">
-                    ${salesSummary.totals.revenue.toLocaleString()}
+                    ${((derivedSales?.totals.revenue ?? salesSummary?.totals.revenue) || 0).toLocaleString()}
                   </div>
                 </div>
                 <div className="p-3 rounded-lg border bg-white">
-                  <div className="text-xs text-muted-foreground">Profit</div>
+                  <div className="text-xs text-muted-foreground">{t("finance.profit")}</div>
                   <div className="text-xl font-semibold">
-                    ${salesSummary.totals.profit.toLocaleString()}
+                    ${((derivedSales?.totals.profit ?? salesSummary?.totals.profit) || 0).toLocaleString()}
                   </div>
                 </div>
               </div>
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Product</TableHead>
-                    <TableHead className="text-right">Units</TableHead>
-                    <TableHead className="text-right">Revenue</TableHead>
-                    <TableHead className="text-right">Profit</TableHead>
+                    <TableHead>{t("warehouse.product_name") || "Product"}</TableHead>
+                    <TableHead className="text-right">{t("dashboard.products_sold")}</TableHead>
+                    <TableHead className="text-right">{t("finance.sales_revenue")}</TableHead>
+                    <TableHead className="text-right">{t("finance.profit")}</TableHead>
                     <TableHead className="text-right">Margin %</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {salesSummary.products.map((p) => {
+                  {(derivedSales?.products || salesSummary?.products || []).map((p) => {
                     const margin = p.revenue ? (p.profit / p.revenue) * 100 : 0;
                     return (
                       <TableRow key={p.id}>
