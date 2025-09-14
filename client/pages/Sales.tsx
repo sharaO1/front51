@@ -241,7 +241,7 @@ const mockInvoices: Invoice[] = [
 ];
 
 export default function Sales() {
-  const [invoices, setInvoices] = useState(mockInvoices);
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [dateFilter, setDateFilter] = useState("all");
@@ -799,6 +799,94 @@ export default function Sales() {
       mounted = false;
     };
   }, []);
+
+  // Load sales invoices from backend
+  useEffect(() => {
+    let mounted = true;
+    const loadInvoices = async () => {
+      try {
+        const res = await fetch("http://localhost:5002/api/Sales", {
+          headers: {
+            "Content-Type": "application/json",
+            ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+          },
+        });
+        const data = await res.json().catch(() => null);
+        const result = (data && (data.result || data.data || data)) || [];
+        const apiStatus =
+          typeof data?.status === "number"
+            ? data.status
+            : typeof result?.status === "number"
+              ? result.status
+              : null;
+        const apiOk = data?.ok;
+        if (!res.ok || apiOk === false || (apiStatus != null && apiStatus >= 400)) {
+          const errMsg =
+            result?.response?.message ||
+            result?.message ||
+            data?.message ||
+            data?.error ||
+            "Request failed";
+          throw new Error(errMsg);
+        }
+
+        const lookupName = (pid: string) => {
+          const p = products.find((x) => x.id === pid);
+          return p ? p.name : pid;
+        };
+
+        const normalized: Invoice[] = Array.isArray(result)
+          ? result.map((r: any) => ({
+              id: String(r.id),
+              invoiceNumber: String(r.invoiceNumber || ""),
+              clientId: String(r.clientId || ""),
+              clientName: String(r.clientName || ""),
+              clientEmail: "",
+              clientType: "retail",
+              employeeId: r.userId ? String(r.userId) : undefined,
+              employeeName: r.userName || undefined,
+              date: r.createdAt || new Date().toISOString(),
+              dueDate: "",
+              items: (r.items || []).map((it: any) => ({
+                id: String(it.id || `${r.id}-${it.productId}`),
+                productId: String(it.productId || ""),
+                productName: lookupName(String(it.productId || "")),
+                quantity: Number(it.quantity || 0),
+                unitPrice: 0,
+                discount: parseFloat(String(it.discount ?? 0)),
+                total: parseFloat(String(it.total ?? 0)),
+              })),
+              subtotal: parseFloat(String(r.subtotal ?? 0)),
+              taxRate: parseFloat(String(r.taxRate ?? 0)),
+              taxAmount: parseFloat(String(r.taxAmount ?? 0)),
+              discountAmount: parseFloat(String(r.discountAmount ?? 0)),
+              total: parseFloat(String(r.total ?? 0)),
+              status: (r.status || "draft") as any,
+              paymentMethod: (r.paymentMethod || "cash") as any,
+              notes: r.notes || "",
+              borrow: !!(r.isBorrow ?? r.borrow),
+              returnDate: r.returnDate || undefined,
+              cancellationReason: r.cancellationReason || undefined,
+            }))
+          : [];
+
+        if (mounted) setInvoices(normalized);
+      } catch (e: any) {
+        if (mounted) {
+          toast({
+            title: "Failed",
+            description: e?.message || "Could not load invoices",
+            variant: "destructive",
+          });
+        }
+      }
+    };
+
+    loadInvoices();
+    return () => {
+      mounted = false;
+    };
+  }, [accessToken, products]);
 
   return (
     <div className="space-y-6">
