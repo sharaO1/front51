@@ -1610,7 +1610,7 @@ ${data.transactions
                   {t("finance.reports_analytics")}
                 </div>
                 <DropdownMenuItem
-                  onClick={() => exportFinanceReport("pdf")}
+                  onClick={() => setIsExportDialogOpen(true)}
                   className="cursor-pointer"
                 >
                   <FileSpreadsheet className="mr-2 h-4 w-4" />
