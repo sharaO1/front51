@@ -98,9 +98,17 @@ export default function Dashboard() {
   const [categoryDist, setCategoryDist] = useState<
     { name: string; value: number; color: string }[]
   >([]);
-  const [productIndex, setProductIndex] = useState<Record<string, { name: string; unitPrice?: number }>>({});
+  const [productIndex, setProductIndex] = useState<
+    Record<string, { name: string; unitPrice?: number }>
+  >({});
   const [derivedSales, setDerivedSales] = useState<{
-    products: { id: string; name: string; unitsSold: number; revenue: number; profit: number }[];
+    products: {
+      id: string;
+      name: string;
+      unitsSold: number;
+      revenue: number;
+      profit: number;
+    }[];
     totals: { units: number; revenue: number; profit: number };
   } | null>(null);
 
@@ -180,9 +188,14 @@ export default function Dashboard() {
             name: String(
               p.name || p.productName || p.title || p.title_en || "Unnamed",
             ),
-            unitPrice: Number(
-              p.unitPrice ?? p.price ?? p.sellingPrice ?? p.selling_price ?? 0,
-            ) || undefined,
+            unitPrice:
+              Number(
+                p.unitPrice ??
+                  p.price ??
+                  p.sellingPrice ??
+                  p.selling_price ??
+                  0,
+              ) || undefined,
           };
         }
         setProductIndex(index);
@@ -412,7 +425,9 @@ export default function Dashboard() {
     let mounted = true;
     (async () => {
       try {
-        const headers: Record<string, string> = { "Content-Type": "application/json" };
+        const headers: Record<string, string> = {
+          "Content-Type": "application/json",
+        };
         if (accessToken) headers.Authorization = `Bearer ${accessToken}`;
         const res = await fetch(`${API_BASE}/Sales`, { headers });
         const data = await res.json().catch(() => null as any);
@@ -421,12 +436,26 @@ export default function Dashboard() {
 
         const normalizeStatus = (r: any) => {
           const raw = String(r?.status || "").toLowerCase();
-          const cancelled = !!r?.cancellationReason || raw === "cancelled" || raw === "canceled";
+          const cancelled =
+            !!r?.cancellationReason ||
+            raw === "cancelled" ||
+            raw === "canceled";
           if (cancelled) return "cancelled";
-          return ["draft", "sent", "paid", "overdue", "cancelled"].includes(raw) ? raw : "draft";
+          return ["draft", "sent", "paid", "overdue", "cancelled"].includes(raw)
+            ? raw
+            : "draft";
         };
 
-        const map = new Map<string, { id: string; name: string; unitsSold: number; revenue: number; profit: number }>();
+        const map = new Map<
+          string,
+          {
+            id: string;
+            name: string;
+            unitsSold: number;
+            revenue: number;
+            profit: number;
+          }
+        >();
         for (const r of list) {
           if (normalizeStatus(r) !== "paid") continue;
           const items = Array.isArray(r.items) ? r.items : [];
@@ -437,12 +466,20 @@ export default function Dashboard() {
             const total = (() => {
               const t = Number(it.total);
               if (!isNaN(t) && t !== 0) return t;
-              const up = Number(it.unitPrice ?? productIndex[pid]?.unitPrice ?? 0) || 0;
+              const up =
+                Number(it.unitPrice ?? productIndex[pid]?.unitPrice ?? 0) || 0;
               return qty * up;
             })();
             if (!map.has(pid)) {
-              const name = productIndex[pid]?.name || String(it.productName || pid);
-              map.set(pid, { id: pid, name, unitsSold: 0, revenue: 0, profit: 0 });
+              const name =
+                productIndex[pid]?.name || String(it.productName || pid);
+              map.set(pid, {
+                id: pid,
+                name,
+                unitsSold: 0,
+                revenue: 0,
+                profit: 0,
+              });
             }
             const entry = map.get(pid)!;
             entry.unitsSold += qty;
@@ -450,9 +487,15 @@ export default function Dashboard() {
             // profit unknown without cost; keep 0
           }
         }
-        const productsAgg = Array.from(map.values()).sort((a, b) => b.revenue - a.revenue);
+        const productsAgg = Array.from(map.values()).sort(
+          (a, b) => b.revenue - a.revenue,
+        );
         const totals = productsAgg.reduce(
-          (acc, p) => ({ units: acc.units + p.unitsSold, revenue: acc.revenue + p.revenue, profit: acc.profit + p.profit }),
+          (acc, p) => ({
+            units: acc.units + p.unitsSold,
+            revenue: acc.revenue + p.revenue,
+            profit: acc.profit + p.profit,
+          }),
           { units: 0, revenue: 0, profit: 0 },
         );
         if (mounted) setDerivedSales({ products: productsAgg, totals });
@@ -468,7 +511,9 @@ export default function Dashboard() {
     let mounted = true;
     (async () => {
       try {
-        const headers: Record<string, string> = { "Content-Type": "application/json" };
+        const headers: Record<string, string> = {
+          "Content-Type": "application/json",
+        };
         if (accessToken) headers.Authorization = `Bearer ${accessToken}`;
         const res = await fetch(`${API_BASE}/Sales`, { headers });
         const data = await res.json().catch(() => null as any);
@@ -483,21 +528,45 @@ export default function Dashboard() {
 
         const normalizeStatus = (r: any) => {
           const raw = String(r?.status || "").toLowerCase();
-          const cancelled = !!r?.cancellationReason || raw === "cancelled" || raw === "canceled";
+          const cancelled =
+            !!r?.cancellationReason ||
+            raw === "cancelled" ||
+            raw === "canceled";
           if (cancelled) return "cancelled";
-          return ["draft", "sent", "paid", "overdue", "cancelled"].includes(raw) ? raw : "draft";
+          return ["draft", "sent", "paid", "overdue", "cancelled"].includes(raw)
+            ? raw
+            : "draft";
         };
-        const getDate = (r: any) => new Date(r?.createdAt || r?.date || r?.created_at || r?.createdAtUtc || Date.now());
-        const isSameDay = (a: Date, b: Date) => a.toDateString() === b.toDateString();
+        const getDate = (r: any) =>
+          new Date(
+            r?.createdAt ||
+              r?.date ||
+              r?.created_at ||
+              r?.createdAtUtc ||
+              Date.now(),
+          );
+        const isSameDay = (a: Date, b: Date) =>
+          a.toDateString() === b.toDateString();
 
         const today = new Date();
         const yesterday = new Date();
         yesterday.setDate(today.getDate() - 1);
 
-        const paidToday = list.filter((r: any) => normalizeStatus(r) === "paid" && isSameDay(getDate(r), today)).length;
-        const paidYesterday = list.filter((r: any) => normalizeStatus(r) === "paid" && isSameDay(getDate(r), yesterday)).length;
+        const paidToday = list.filter(
+          (r: any) =>
+            normalizeStatus(r) === "paid" && isSameDay(getDate(r), today),
+        ).length;
+        const paidYesterday = list.filter(
+          (r: any) =>
+            normalizeStatus(r) === "paid" && isSameDay(getDate(r), yesterday),
+        ).length;
 
-        const change = paidYesterday === 0 ? (paidToday > 0 ? 100 : 0) : ((paidToday - paidYesterday) / paidYesterday) * 100;
+        const change =
+          paidYesterday === 0
+            ? paidToday > 0
+              ? 100
+              : 0
+            : ((paidToday - paidYesterday) / paidYesterday) * 100;
 
         if (mounted) {
           setSalesTodayCount(paidToday);
@@ -958,13 +1027,17 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
           </CardHeader>
           <CardContent className="pt-0 relative z-10">
             <div className="text-3xl font-bold text-gray-900 mb-2 tracking-tight">
-              {typeof salesTodayCount === "number" ? salesTodayCount.toLocaleString() : "—"}
+              {typeof salesTodayCount === "number"
+                ? salesTodayCount.toLocaleString()
+                : "—"}
             </div>
             <div className="flex items-center gap-2">
               <div className="flex items-center gap-1">
                 <TrendingUp className="h-4 w-4 text-orange-600" />
                 <span className="text-sm font-semibold text-orange-600">
-                  {typeof salesTodayChange === "number" ? `${salesTodayChange >= 0 ? "+" : ""}${salesTodayChange}%` : "—"}
+                  {typeof salesTodayChange === "number"
+                    ? `${salesTodayChange >= 0 ? "+" : ""}${salesTodayChange}%`
+                    : "—"}
                 </span>
               </div>
               <span className="text-sm text-muted-foreground">
@@ -1209,7 +1282,11 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
                     {t("dashboard.products_sold")}
                   </div>
                   <div className="text-xl font-semibold">
-                    {(derivedSales?.totals.units ?? salesSummary?.totals.units ?? 0).toLocaleString()}
+                    {(
+                      derivedSales?.totals.units ??
+                      salesSummary?.totals.units ??
+                      0
+                    ).toLocaleString()}
                   </div>
                 </div>
                 <div className="p-3 rounded-lg border bg-white">
@@ -1217,47 +1294,73 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
                     {t("finance.sales_revenue")}
                   </div>
                   <div className="text-xl font-semibold">
-                    ${((derivedSales?.totals.revenue ?? salesSummary?.totals.revenue) || 0).toLocaleString()}
+                    $
+                    {(
+                      (derivedSales?.totals.revenue ??
+                        salesSummary?.totals.revenue) ||
+                      0
+                    ).toLocaleString()}
                   </div>
                 </div>
                 <div className="p-3 rounded-lg border bg-white">
-                  <div className="text-xs text-muted-foreground">{t("finance.profit")}</div>
+                  <div className="text-xs text-muted-foreground">
+                    {t("finance.profit")}
+                  </div>
                   <div className="text-xl font-semibold">
-                    ${((derivedSales?.totals.profit ?? salesSummary?.totals.profit) || 0).toLocaleString()}
+                    $
+                    {(
+                      (derivedSales?.totals.profit ??
+                        salesSummary?.totals.profit) ||
+                      0
+                    ).toLocaleString()}
                   </div>
                 </div>
               </div>
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>{t("warehouse.product_name") || "Product"}</TableHead>
-                    <TableHead className="text-right">{t("dashboard.products_sold")}</TableHead>
-                    <TableHead className="text-right">{t("finance.sales_revenue")}</TableHead>
-                    <TableHead className="text-right">{t("finance.profit")}</TableHead>
+                    <TableHead>
+                      {t("warehouse.product_name") || "Product"}
+                    </TableHead>
+                    <TableHead className="text-right">
+                      {t("dashboard.products_sold")}
+                    </TableHead>
+                    <TableHead className="text-right">
+                      {t("finance.sales_revenue")}
+                    </TableHead>
+                    <TableHead className="text-right">
+                      {t("finance.profit")}
+                    </TableHead>
                     <TableHead className="text-right">Margin %</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {(derivedSales?.products || salesSummary?.products || []).map((p) => {
-                    const margin = p.revenue ? (p.profit / p.revenue) * 100 : 0;
-                    return (
-                      <TableRow key={p.id}>
-                        <TableCell className="font-medium">{p.name}</TableCell>
-                        <TableCell className="text-right">
-                          {p.unitsSold.toLocaleString()}
-                        </TableCell>
-                        <TableCell className="text-right">
-                          ${p.revenue.toLocaleString()}
-                        </TableCell>
-                        <TableCell className="text-right">
-                          ${p.profit.toLocaleString()}
-                        </TableCell>
-                        <TableCell className="text-right">
-                          {margin.toFixed(1)}%
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
+                  {(derivedSales?.products || salesSummary?.products || []).map(
+                    (p) => {
+                      const margin = p.revenue
+                        ? (p.profit / p.revenue) * 100
+                        : 0;
+                      return (
+                        <TableRow key={p.id}>
+                          <TableCell className="font-medium">
+                            {p.name}
+                          </TableCell>
+                          <TableCell className="text-right">
+                            {p.unitsSold.toLocaleString()}
+                          </TableCell>
+                          <TableCell className="text-right">
+                            ${p.revenue.toLocaleString()}
+                          </TableCell>
+                          <TableCell className="text-right">
+                            ${p.profit.toLocaleString()}
+                          </TableCell>
+                          <TableCell className="text-right">
+                            {margin.toFixed(1)}%
+                          </TableCell>
+                        </TableRow>
+                      );
+                    },
+                  )}
                 </TableBody>
               </Table>
             </>
