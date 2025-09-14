@@ -1462,9 +1462,11 @@ export default function Finance() {
   };
 
   const exportFinanceReport = (format: "pdf" | "excel" | "csv") => {
+    const scope = buildReportScope();
     const reportData = {
       reportType: "Financial Report",
       generatedAt: new Date().toISOString(),
+      periodLabel: scope.label,
       summary: {
         totalIncome,
         totalExpenses,
@@ -1473,39 +1475,20 @@ export default function Finance() {
         pendingTransactions: transactions.filter((t) => t.status === "pending")
           .length,
       },
-      transactions: filteredTransactions,
+      transactions: scope.list,
       goals,
-      cashFlowData,
-      expenseBreakdown,
+      cashFlowData: scope.cash,
+      expenseBreakdown: scope.expense,
     };
 
-    switch (format) {
-      case "pdf": {
-        const html = buildFinanceReportHTML(reportData);
-        openPrintWindow(html, t("finance.export_pdf_title"));
-        break;
-      }
-      case "excel":
-        downloadFile(
-          generateFinanceExcelContent(reportData),
-          "financial-report.xlsx",
-          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        );
-        break;
-      case "csv":
-        downloadFile(
-          generateFinanceCSVContent(reportData),
-          "financial-report.csv",
-          "text/csv",
-        );
-        break;
+    if (format === "pdf") {
+      const html = buildFinanceReportHTML(reportData);
+      openPrintWindow(html, t("finance.export_pdf_title"));
     }
 
     toast({
       title: t("finance.toast.exported_title"),
-      description: t("finance.toast.exported_desc", {
-        format: format.toUpperCase(),
-      }),
+      description: t("finance.export_pdf_title"),
     });
   };
 
