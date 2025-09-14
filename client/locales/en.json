@@ -629,7 +629,19 @@
     "export_csv_title": "CSV Export",
     "export_csv_desc": "Comma-separated values for imports",
     "export_transactions_title": "Export transactions",
-    "export_transactions_desc": "CSV of all filtered transactions"
+    "export_transactions_desc": "CSV of all filtered transactions",
+    "report_title": "FINANCIAL REPORT",
+    "generated_at": "Generated",
+    "executive_summary": "EXECUTIVE SUMMARY",
+    "recent_transactions": "RECENT TRANSACTIONS",
+    "toast": {
+      "exported_title": "Report exported",
+      "exported_desc": "Exported as {{format}} and downloaded.",
+      "transactions_exported_title": "Transactions exported",
+      "transactions_exported_desc": "Transaction data exported as CSV.",
+      "goals_exported_title": "Goals exported",
+      "goals_exported_desc": "Financial goals exported as CSV."
+    }
   },
   "employees": {
     "title": "Employee Management",
