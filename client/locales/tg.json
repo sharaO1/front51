@@ -39,7 +39,9 @@
     "amount": "Миқдор",
     "total": "Ҷамъ",
     "description": "Тавсиф",
-    "notes": "Қайдҳо"
+    "notes": "Қайдҳо",
+    "tags": "Тегҳо",
+    "month": "Моҳ"
   },
   "auth": {
     "login": "Ворид шудан",
@@ -317,7 +319,7 @@
     "type": "Навъ",
     "across_all_clients": "Дар байни ҳамаи муштариён",
     "clients_need_followup": "Муштариён пайгирӣ талаб мекунанд",
-    "all_time_revenue": "Даромади ҳама вақт",
+    "all_time_revenue": "Дар��мади ҳама вақт",
     "add_new_client": "Муштарии нав илова кардан",
     "create_client_profile": "Профили нави муштарӣ бо маълумоти тамос ва тиҷоратӣ эҷод кунед.",
     "company_name": "Номи пурра / Номи ширкат",
@@ -337,7 +339,7 @@
     "full_address": "Нишонии пурра",
     "edit_client": "Таҳрири муштарӣ",
     "update_client": "Навсозии муштарӣ",
-    "update_client_info": "Маълумоти муштариро навсозӣ кунед.",
+    "update_client_info": "Маълумоти муш��ариро навсозӣ кунед.",
     "client": "Муштарӣ",
     "required_fields_error": "Лутфан ҳамаи майдонҳои ҳатмиро пур кунед",
     "toast": {
@@ -441,7 +443,7 @@
   },
   "sales": {
     "title": "Идоракунии фурӯш",
-    "subtitle": "Ҳисобфактураҳо эҷод кунед ва муомилоти фурӯшро идора кунед",
+    "subtitle": "Ҳисобфактураҳо эҷод кунед ва муомилоти фурӯшро ��дора кунед",
     "new_invoice": "Ҳисобфактураи нав",
     "total_invoices": "Ҳисобфактураҳои умумӣ",
     "total_revenue": "Даромади умумӣ",
@@ -526,7 +528,7 @@
     "keep_invoice": "Нигоҳ доштани ҳисобфактура",
     "toast": {
       "invoice_downloaded_title": "Ҳисобфактура боргирӣ шуд",
-      "invoice_downloaded_desc": "PDF-и ҳисобфактура эҷод ва боргирӣ шуд.",
+      "invoice_downloaded_desc": "PDF-и ҳисобфактура эҷод ва боргирӣ ��уд.",
       "invoice_downloaded_desc_number": "Ҳисобфактураи {{number}} ҳамчун PDF боргирӣ шуд."
     }
   },
@@ -549,7 +551,7 @@
     "cancelled": "Бекоршуда",
     "add_new_transaction": "Муомилаи нав илова кардан",
     "record_transaction": "Муомилаи нави даромад ё хароҷотро сабт кунед.",
-    "transaction_type": "Навъи муомила",
+    "transaction_type": "Навъи м��омила",
     "transaction_description": "Тавсифи муомила",
     "reports_analytics": "Гузоришҳо ва таҷлил",
     "financial_goals": "Ҳадафҳои молиявӣ",
@@ -572,7 +574,7 @@
     "achieved": "Ноилшуда",
     "profit_margin": "ҳошияи фоида",
     "awaiting_completion": "Интизори анҷом",
-    "features_include": "Хусусиятҳо иборатанд аз:",
+    "features_include": "��усусиятҳо иборатанд аз:",
     "sales_revenue": "Даромади фурӯш",
     "office_supplies": "Лавозимоти идорӣ",
     "marketing": "Маркетинг",
@@ -635,7 +637,7 @@
       "exported_title": "Гузориш содир шуд",
       "exported_desc": "Ҳамчун {{format}} содир ва боргирӣ шуд.",
       "transactions_exported_title": "Муомилот содир шуд",
-      "transactions_exported_desc": "Маълумоти муомилот ба CSV содир шуд.",
+      "transactions_exported_desc": "Маълумоти муоми��от ба CSV содир шуд.",
       "goals_exported_title": "Ҳадафҳо содир шуданд",
       "goals_exported_desc": "Ҳадафҳои молиявӣ ба CSV содир шуданд."
     }
@@ -660,7 +662,7 @@
     "currently_away": "Айни ҳол берун",
     "attendance": "Ҳузур",
     "hr_analytics": "Таҳлили кадрӣ",
-    "todays_attendance": "Ҳузури имрӯз",
+    "todays_attendance": "Ҳузу��и имрӯз",
     "real_time_tracking": "Назорати вақти воқеӣ",
     "clock_in": "Омадан",
     "clock_out": "Рафтан",
@@ -708,7 +710,7 @@
     "transactions": "Муомилот",
     "commissions": "Комиссияҳо",
     "todays_commissions_desc": "Ҳамагии комиссияҳои имрӯз",
-    "export_employee_report": "Содироти гузориши кормандон",
+    "export_employee_report": "С��дироти гузориши кормандон",
     "export_desc": "Дода ва таҳлили кормандонро содир кунед",
     "pdf_title": "Гузориши PDF",
     "pdf_desc": "Хулосаи чопшаванда бо нишондиҳандаҳои калидӣ",
@@ -725,7 +727,7 @@
     "mark_employee_attendance": "Ҳузури кормандро қайд кунед",
     "record_attendance_desc": "Сабти вақтро барои санаи интихобшуда илова кунед",
     "select_employee": "Кормандро интихоб кунед",
-    "record_sale": "Сабти фурӯш",
+    "record_sale": "Сабти ��урӯш",
     "record_daily_sale_title": "Сабти фурӯши ҳаррӯза",
     "record_sale_desc": "Фурӯшро бо маблағ, миқдор ва муштарӣ сабт кунед",
     "amount_label": "Маблағ ($)",
@@ -746,7 +748,7 @@
     "not_present": "корманд ҳозир нест",
     "total_hours_card": "Ҳамагӣ соат",
     "hours_worked": "соатҳои корӣ",
-    "clock_records_desc": "Сабтҳои вақт барои санаи интихобшуда",
+    "clock_records_desc": "С��бтҳои вақт барои санаи интихобшуда",
     "total_hours": "Ҳамагӣ соат",
     "all_status": "Ҳамаи ҳолатҳо",
     "update_employee": "Навсозии корманд",
@@ -804,7 +806,7 @@
     "low_stock_alerts": "Огоҳиҳои захираи кам",
     "inventory_minimum": "Ҳангоме ки захира аз сатҳи ҳадди ақал паст мешавад",
     "payment_reminders": "Ёдовариҳои пардохт",
-    "overdue_notifications": "Огоҳиҳои ҳисобфактура ва пардохти мӯҳлат гузашта",
+    "overdue_notifications": "Огоҳиҳои ҳисобфактура ва пар��охти мӯҳлат гузашта",
     "system_updates": "Навсозиҳои система",
     "maintenance_notices": "Огоҳиҳои навсозии нармафзор ва таъмир",
     "weekly_reports": "Гузоришҳои ҳафтавора",
@@ -823,7 +825,7 @@
     "password_requirements": "Талабот ва сиёсатҳои парол",
     "password_expiry": "Мӯҳлати парол (рӯз)",
     "password_requirements_list": "Талаботи парол",
-    "minimum_characters": "Ҳадди ақали 8 аломат",
+    "minimum_characters": "Ҳадд�� ақали 8 аломат",
     "uppercase_letter": "Ҳадди ақали як ҳарфи калон",
     "one_number": "Ҳадди ақали як рақам",
     "special_character": "Ҳадди ақали як аломати махсус",
@@ -878,6 +880,7 @@
     "daily": "Ҳаррӯза",
     "weekly": "Ҳафтавора",
     "monthly": "Моҳона",
+    "yearly": "Солона",
     "cloud_storage": "Захирагоҳи абрӣ",
     "local_storage": "Захирагоҳи маҳаллӣ",
     "external_drive": "Диски беруна",
@@ -998,7 +1001,7 @@
         "change_role": "Иваз кардани нақш",
         "deactivate": "Ғайрифаъол кардан",
         "suspend": "Бастан",
-        "activate": "Фаъол кардан"
+        "activate": "Фаъ��л кардан"
       },
       "dialogs": {
         "change_role": {
@@ -1023,7 +1026,7 @@
         "role_updated_desc": "Нақши корбар ба {{role}} нав шуд",
         "status_updated_title": "Ҳолат нав шуд",
         "status_updated_desc": "Ҳолати корбар ба {{status}} нав шуд",
-        "password_generated_title": "Парол эҷод шуд",
+        "password_generated_title": "Парол э��од шуд",
         "password_generated_desc": "Пароли амн худкорона эҷод карда шуд",
         "not_authenticated_title": "Ворид нашудааст",
         "not_authenticated_desc": "Барои илова кардани корбарон ворид шавед.",
