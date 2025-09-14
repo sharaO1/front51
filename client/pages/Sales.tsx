@@ -419,6 +419,7 @@ export default function Sales() {
   };
 
   const handleExportCSV = () => {
+    setExportMenuOpen(false);
     const headers = [
       "invoiceNumber",
       "date",
