@@ -507,6 +507,67 @@ export default function Finance() {
   const [selectedGoal, setSelectedGoal] = useState<FinancialGoal | null>(null);
 
   const [loans, setLoans] = useState<LoanRecord[]>(mockLoans);
+
+  // Load borrow/lend records from backend
+  useEffect(() => {
+    let mounted = true;
+    const headers: Record<string, string> = { "Content-Type": "application/json" };
+    if (accessToken) headers["Authorization"] = `Bearer ${accessToken}`;
+
+    const normalizeBorrow = (r: any): LoanRecord => {
+      const toNum = (v: any) => {
+        const n = typeof v === "string" ? parseFloat(v) : Number(v);
+        return Number.isFinite(n) ? n : 0;
+      };
+      const type = String(r.type || "borrow").toLowerCase() === "lend" ? "lend" : "borrow";
+      const partyTypeRaw = String(r.partyType || "other").toLowerCase();
+      const partyType: LoanRecord["partyType"] = ["supplier", "client", "other"].includes(partyTypeRaw)
+        ? (partyTypeRaw as any)
+        : "other";
+      const created = r.createdAt || r.date || new Date().toISOString();
+      const due = r.returnDate || r.dueDate || "";
+      const stRaw = String(r.status || "active").toLowerCase();
+      let status: LoanRecord["status"] = stRaw === "returned" ? "returned" : stRaw === "overdue" ? "overdue" : "active";
+      if (status === "active" && due) {
+        const d = new Date(due);
+        if (!Number.isNaN(d.getTime())) {
+          const today = new Date();
+          d.setHours(23,59,59,999);
+          if (d.getTime() < today.getTime()) status = "overdue";
+        }
+      }
+      return {
+        id: String(r.id || r._id || crypto.randomUUID()),
+        type,
+        amount: toNum(r.amount),
+        productName: r.productName || r.product || undefined,
+        sku: r.sku || undefined,
+        quantity: r.quantity ? Number(r.quantity) : undefined,
+        partyType,
+        partyName: r.partyName || r.userName || "",
+        date: String(created),
+        dueDate: String(due || ""),
+        status,
+        notes: r.notes || "",
+      };
+    };
+
+    (async () => {
+      try {
+        const res = await fetch(`${API_BASE}/borrow`, { headers });
+        const data = await res.json().catch(() => null as any);
+        const list: any[] = (data && (data.result || data.data || data)) || [];
+        if (mounted && Array.isArray(list)) setLoans(list.map(normalizeBorrow));
+      } catch (err) {
+        // keep existing mockLoans on failure
+        console.warn("Failed to load borrow/lend records", err);
+      }
+    })();
+
+    return () => {
+      mounted = false;
+    };
+  }, [accessToken]);
   const [isAddLoanOpen, setIsAddLoanOpen] = useState(false);
   const [selectedLoan, setSelectedLoan] = useState<LoanRecord | null>(null);
   const [isEditLoanOpen, setIsEditLoanOpen] = useState(false);
