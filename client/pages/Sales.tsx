@@ -1951,7 +1951,7 @@ export default function Sales() {
                     <SelectContent>
                       <SelectItem value="today">{t("sales.today")}</SelectItem>
                       <SelectItem value="last_month">{t("sales.last_month")}</SelectItem>
-                      <SelectItem value="last_year">{t("sales.last_year")}</SelectItem>
+                      <SelectItem value="last_year">{t("finance.last_year", "Last Year")}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
