@@ -999,7 +999,7 @@ export default function Finance() {
     const updated: LoanRecord = {
       id: selectedLoan.id,
       type: (newLoan.type as any) || selectedLoan.type,
-      amount: Number(newLoan.amount ?? selectedLoan.amount) || 0,
+      amount: selectedLoan.amount,
       productName: newLoan.productName,
       sku: newLoan.sku,
       quantity: newLoan.quantity,
@@ -1017,30 +1017,6 @@ export default function Finance() {
     toast({ title: t("common.updated"), description: t("common.changes_saved", { defaultValue: "Changes saved" }) });
   };
 
-  const [editingLoanId, setEditingLoanId] = useState<string | null>(null);
-  const [editingAmount, setEditingAmount] = useState<string>("");
-  const startEditAmount = (loan: LoanRecord) => {
-    setEditingLoanId(loan.id);
-    setEditingAmount(String(loan.amount ?? 0));
-  };
-  const saveEditAmount = () => {
-    if (!editingLoanId) return;
-    const v = parseFloat(editingAmount);
-    if (isNaN(v)) {
-      toast({
-        title: t("common.error"),
-        description: t("common.required_fields_error"),
-        variant: "destructive",
-      });
-      return;
-    }
-    setLoans(
-      loans.map((l) => (l.id === editingLoanId ? { ...l, amount: v } : l)),
-    );
-    setEditingLoanId(null);
-    toast({ title: t("common.updated"), description: "Amount updated." });
-  };
-  const cancelEditAmount = () => setEditingLoanId(null);
 
   const exportFinanceReport = (format: "pdf" | "excel" | "csv") => {
     const reportData = {
@@ -1951,44 +1927,7 @@ ${data.transactions
                         </Badge>
                       </TableCell>
                       <TableCell>
-                        {editingLoanId === loan.id ? (
-                          <div className="flex items-center gap-2">
-                            <Input
-                              type="number"
-                              step="0.01"
-                              value={editingAmount}
-                              onChange={(e) => setEditingAmount(e.target.value)}
-                              className="w-28"
-                            />
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={saveEditAmount}
-                            >
-                              {t("common.save")}
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={cancelEditAmount}
-                            >
-                              {t("common.cancel")}
-                            </Button>
-                          </div>
-                        ) : (
-                          <div className="flex items-center gap-2">
-                            <span className="font-medium">
-                              ${(loan.amount ?? 0).toFixed(2)}
-                            </span>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => startEditAmount(loan)}
-                            >
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        )}
+                        <span className="font-medium">${(loan.amount ?? 0).toFixed(2)}</span>
                       </TableCell>
                       <TableCell>
                         <div>{loan.partyName}</div>
@@ -2532,12 +2471,8 @@ ${data.transactions
               <div className="space-y-2">
                 <Label>{t("finance.amount_label")}</Label>
                 <Input
-                  type="number"
-                  step="0.01"
-                  value={Number(newLoan.amount ?? 0)}
-                  onChange={(e) =>
-                    setNewLoan({ ...newLoan, amount: parseFloat(e.target.value) || 0 })
-                  }
+                  disabled
+                  value={`${Number(selectedLoan?.amount ?? newLoan.amount ?? 0).toFixed(2)}`}
                 />
               </div>
             </div>
