@@ -558,7 +558,7 @@ export default function Sales() {
         ? `${t("sales.today")} (${dateStr})`
         : period === "last_month"
           ? `${t("sales.last_month")} (${dateStr})`
-          : `${t("sales.last_year")} (${dateStr})`;
+          : `${t("finance.last_year", "Last Year")} (${dateStr})`;
 
     const totals = data.reduce(
       (acc, inv) => {
