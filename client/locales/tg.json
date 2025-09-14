@@ -55,7 +55,7 @@
     "create_account": "Ҳисоби нав эҷод кунед",
     "dont_have_account": "Ҳисоб надоред?",
     "already_have_account": "Аллакай ҳисоб доред?",
-    "sign_in_instead": "Ба ивази он ворид шавед",
+    "sign_in_instead": "��а ивази он ворид шавед",
     "full_name": "Номи пурра",
     "confirm_password": "Паролро тасдиқ кунед",
     "create_new_account": "Ҳисоби нав эҷод кунед",
@@ -122,7 +122,7 @@
     "payments": "Пардохтҳо",
     "reorder": "Аз нав фармоиш додан",
     "view_all_inventory": "Ҳамаи захираро дидан",
-    "export_report": "Гузориши содирот",
+    "export_report": "Гуз��риши содирот",
     "export_options": "Имконоти содирот",
     "export_as_pdf": "Ҳамчун PDF содир кардан",
     "export_as_excel": "Ҳамчун Excel содир кардан",
@@ -267,7 +267,7 @@
     "profit": "Фоида",
     "total_stock": "Ҷамъии захира",
     "sku": "SKU",
-    "select_product": "Маҳсулотро интихоб кунед",
+    "select_product": "Маҳсул��тро интихоб кунед",
     "choose_product": "Маҳсулотро интихоб кунед",
     "quantity_to_add": "Миқдор барои илова кардан",
     "enter_quantity": "Миқдорро ворид кунед",
@@ -349,7 +349,7 @@
       "deleted_desc": "Муштарӣ аз система ҳазф шуд.",
       "reminder_title": "Ёдоварӣ фиристода шуд",
       "reminder_desc_prefix": "Ёдоварии пардохт ба",
-      "reminder_desc_suffix": "тавассути email ва SMS фиристода шуд."
+      "reminder_desc_suffix": "тавассути email в�� SMS фиристода шуд."
     }
   },
   "filials": {
@@ -407,7 +407,7 @@
       "staff": "Кормандон"
     },
     "contact": "Тамос",
-    "loading": "Боргирии филиалҳо...",
+    "loading": "Боргирии фили��лҳо...",
     "details": {
       "title": "Тафсилоти филиал",
       "subtitle": "Маълумоти пурра дар бораи ин макон"
@@ -478,7 +478,7 @@
     "tax": "Андоз",
     "create_invoice": "Ҳисобфактура эҷод кардан",
     "invoice_details": "Тафсилоти ҳисобфактура",
-    "complete_invoice_info": "Маълумоти пурраи ҳисобфактура ва тақсимоти ашё",
+    "complete_invoice_info": "Маълумоти пурраи ҳисобфактура ва ��ақсимоти ашё",
     "invoice_information": "Маълумоти ҳисобфактура",
     "client_information": "Маълумоти муштарӣ",
     "customer": "Муштарӣ",
@@ -626,7 +626,19 @@
     "export_csv_title": "Содироти CSV",
     "export_csv_desc": "Қиматҳо бо вергул ҷудошуда барои воридот",
     "export_transactions_title": "Содироти муомилот",
-    "export_transactions_desc": "CSV ҳамаи муомилотҳои филтршуда"
+    "export_transactions_desc": "CSV ҳамаи муомилотҳои филтршуда",
+    "report_title": "ГУЗОРИШИ МОЛИЯВӢ",
+    "generated_at": "Эҷод шуд",
+    "executive_summary": "ХУЛОСА",
+    "recent_transactions": "Муомилотҳои охирин",
+    "toast": {
+      "exported_title": "Гузориш содир шуд",
+      "exported_desc": "Ҳамчун {{format}} содир ва боргирӣ шуд.",
+      "transactions_exported_title": "Муомилот содир шуд",
+      "transactions_exported_desc": "Маълумоти муомилот ба CSV содир шуд.",
+      "goals_exported_title": "Ҳадафҳо содир шуданд",
+      "goals_exported_desc": "Ҳадафҳои молиявӣ ба CSV содир шуданд."
+    }
   },
   "employees": {
     "title": "Идоракунии кормандон",
@@ -663,7 +675,7 @@
     "department_statistics": "Омори шуъба",
     "detailed_breakdown": "Тақсимоти муфассал аз рӯи шуъба",
     "avg_salary": "Маоши миёна",
-    "productivity": "Маҳсулнокӣ",
+    "productivity": "Ма��сулнокӣ",
     "manager": "Модир",
     "no_manager": "Модир нест",
     "add_new_employee": "Корманди нав илова кардан",
@@ -726,7 +738,7 @@
     "monthly_sales_by_employee": "Фурӯши моҳона аз рӯи корманд",
     "employee_attendance_header": "Ҳузури кормандон",
     "employee_attendance_subtitle": "Хулосаи ҳузури рӯзона",
-    "present_today": "Имрӯз ҳозир",
+    "present_today": "Имрӯ�� ҳозир",
     "employees_present": "корманд ҳозир",
     "late_arrivals": "Дер омаданд",
     "late_employees": "корманд дер",
@@ -747,7 +759,7 @@
     "sales_history_for": "Таърихи фурӯш барои",
     "sales_label": "Фурӯш",
     "not_marked": "Қайд нашудааст",
-    "commission": "Комиссия",
+    "commission": "К��миссия",
     "monthly_sales_target": "Ҳадафи моҳонаи фурӯш",
     "sales_performance_header": "Натиҷаҳои фурӯш",
     "sales_performance_subtitle": "Фурӯши ҳаррӯза аз рӯи корманд",
@@ -822,7 +834,7 @@
     "backup_configuration": "Конфигуратсияи эҳтиётӣ",
     "configure_auto_backups": "Нусхабардории худкори додаҳоро танзим кунед",
     "automatic_backups": "Нусхабардории худкор",
-    "enable_scheduled": "Нусхабардории худкори банақшагирифтаро фаъол кунед",
+    "enable_scheduled": "Нусхабардории худкори банақшагирифтаро фаъол ��унед",
     "backup_frequency": "Басомади нусхабардорӣ",
     "backup_location": "Ҷойгоҳи нусхабардорӣ",
     "retention_period": "Муддати нигоҳдорӣ (рӯз)",
@@ -839,7 +851,7 @@
     "manage_personal_details": "Тафсилоти шахсии худро идора кунед",
     "edit_profile": "Профилро таҳрир кунед",
     "subscription_billing": "Обуна ва ҳисобдорӣ",
-    "manage_subscription": "Обуна ва пардохтҳоро идора кунед",
+    "manage_subscription": "Обуна ва ��ардохтҳоро идора кунед",
     "businesspro_enterprise": "БизнесПро корхона",
     "unlimited_features": "Корбарони номаҳдуд, хусусиятҳои пешрафта, дастгирии аввалиятнок",
     "per_month": "/моҳ",
@@ -1077,7 +1089,7 @@
         "analytics": "Таҳлил"
       },
       "hierarchy": {
-        "can_manage": "Метавад идора кунад",
+        "can_manage": "Метава�� идора кунад",
         "can_manage_desc": "Нақшҳое, ки {{role}} метавонад идора кунад",
         "none_can_manage": "Ин нақш дигар нақшҳоро идора карда наметавонад",
         "managed_by": "Идора мешавад аз",
@@ -1121,7 +1133,7 @@
     "phone_placeholder": "Рақами телефонро ворид кунед",
     "account_information": "Маълумоти аккаунт",
     "email_address": "Почтаи электронӣ",
-    "email_cannot_change": "Почтаро тағйир карда намешавад. Бо администратор тамос гиред.",
+    "email_cannot_change": "Почтаро тағйир карда ��амешавад. Бо администратор тамос гиред.",
     "user_id": "ID-и корбар",
     "user_id_desc": "Шиносандаи ягонаи аккаунти шумо.",
     "editing_mode_active": "Ҳолати таҳрир фаъол аст",
