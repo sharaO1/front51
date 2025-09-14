@@ -687,7 +687,7 @@ export default function Finance() {
         cash: groupScopedCashFlow(list, "monthly", { month: exportMonth }),
       };
     }
-    const y = Number(exportYear);
+    const y = Number(exportYear) || new Date().getFullYear();
     const list = filterByRange(transactions, startOfYear(y), endOfYear(y));
     return {
       label: String(y),
@@ -1304,16 +1304,19 @@ export default function Finance() {
     };
     const txRows = data.transactions
       .slice(0, 50)
-      .map(
-        (t: any) => `
+      .map((row: any) => {
+        const typeLabel = row.type === "income" ? t("finance.income") : t("finance.expense");
+        const categoryLabel = translateCategory(row.category);
+        const dateLabel = new Date(row.date).toLocaleString(i18n.language || "en");
+        return `
       <tr>
-        <td>${t.date}</td>
-        <td>${t.type}</td>
-        <td>${t.category}</td>
-        <td>${sanitize(formatDescription(t.description))}</td>
-        <td class="right">${money(t.amount)}</td>
-      </tr>`,
-      )
+        <td>${dateLabel}</td>
+        <td>${typeLabel}</td>
+        <td>${categoryLabel}</td>
+        <td>${sanitize(formatDescription(row.description))}</td>
+        <td class="right">${money(row.amount)}</td>
+      </tr>`;
+      })
       .join("");
 
     return `
@@ -1322,7 +1325,7 @@ export default function Finance() {
           <div class="header">
             <div>
               <h1>${t("finance.report_title", { defaultValue: "FINANCIAL REPORT" })}</h1>
-              <div class="subtitle">${t("finance.generated_at", { defaultValue: "Generated" })}: ${new Date(data.generatedAt).toLocaleString()}</div>
+              <div class="subtitle">${t("finance.generated_at", { defaultValue: "Generated" })}: ${new Date(data.generatedAt).toLocaleString(i18n.language || "en")}</div>
               ${data.periodLabel ? `<div class="subtitle">${t("common.period", { defaultValue: "Period" })}: ${data.periodLabel}</div>` : ""}
             </div>
           </div>
@@ -1341,7 +1344,7 @@ export default function Finance() {
             <div>
               <h3>${t("finance.recent_transactions", { defaultValue: "RECENT TRANSACTIONS" })}</h3>
               <table>
-                <thead><tr><th>${t("common.date")}</th><th>${t("finance.transaction_type")}</th><th>${t("category", { defaultValue: "Category" })}</th><th>${t("common.description")}</th><th class="right">${t("common.amount")}</th></tr></thead>
+                <thead><tr><th>${t("common.date")}</th><th>${t("finance.transaction_type")}</th><th>${t("warehouse.category")}</th><th>${t("common.description")}</th><th class="right">${t("common.amount")}</th></tr></thead>
                 <tbody>${txRows || `<tr><td colspan="5" class="muted">${t("clients.no_products", { defaultValue: "No data" })}</td></tr>`}</tbody>
               </table>
             </div>
@@ -1496,17 +1499,24 @@ export default function Finance() {
     const headers = [
       t("common.date"),
       t("finance.transaction_type"),
-      t("category", { defaultValue: "Category" }),
+      t("warehouse.category"),
       t("common.description"),
       t("common.amount"),
       t("sales.payment_method"),
       t("common.status"),
       t("finance.performed_by"),
-      "Tags",
+      t("common.tags", { defaultValue: "Tags" }),
     ];
     let csv = headers.join(",") + "\n";
     filteredTransactions.forEach((transaction) => {
-      csv += `${transaction.date},${transaction.type},${transaction.category},"${transaction.description}",${transaction.amount},${transaction.paymentMethod.replace("_", " ")},${transaction.status},${transaction.performedBy || ""},"${transaction.tags.join(", ")}"\n`;
+      const typeLabel = transaction.type === "income" ? t("finance.income") : t("finance.expense");
+      const categoryLabel = translateCategory(transaction.category);
+      const statusLabel = t(`status.${transaction.status}`, { defaultValue: transaction.status });
+      const paymentLabel = transaction.paymentMethod === "check"
+        ? t("finance.check")
+        : t(`sales.${transaction.paymentMethod}`, { defaultValue: transaction.paymentMethod.replace("_", " ") });
+      const dateLabel = new Date(transaction.date).toLocaleString(i18n.language || "en");
+      csv += `${dateLabel},${typeLabel},${categoryLabel},"${formatDescription(transaction.description)}",${transaction.amount},${paymentLabel},${statusLabel},${getPerformedByDisplay(transaction.performedBy) || ""},"${transaction.tags.join(", ")}"\n`;
     });
 
     downloadFile(csv, "transactions.csv", "text/csv");
@@ -1521,9 +1531,9 @@ export default function Finance() {
       t("finance.goal_title"),
       t("finance.target_amount"),
       t("finance.current_amount"),
-      "%",
+      `${t("finance.progress")} %`,
       t("sales.due_date", { defaultValue: "Due Date" }),
-      t("category", { defaultValue: "Category" }),
+      t("warehouse.category"),
       t("common.status"),
     ];
     let csv = headers.join(",") + "\n";
@@ -1707,7 +1717,7 @@ ${data.transactions
                         {t("settings.monthly")}
                       </SelectItem>
                       <SelectItem value="yearly">
-                        {t("status.year") || "Yearly"}
+                        {t("settings.yearly", { defaultValue: "Yearly" })}
                       </SelectItem>
                     </SelectContent>
                   </Select>
@@ -1730,18 +1740,6 @@ ${data.transactions
                       type="month"
                       value={exportMonth}
                       onChange={(e) => setExportMonth(e.target.value)}
-                    />
-                  </div>
-                )}
-                {exportPeriod === "yearly" && (
-                  <div className="space-y-2">
-                    <Label>{t("status.year", { defaultValue: "Year" })}</Label>
-                    <Input
-                      type="number"
-                      min="2000"
-                      max="9999"
-                      value={exportYear}
-                      onChange={(e) => setExportYear(e.target.value)}
                     />
                   </div>
                 )}
