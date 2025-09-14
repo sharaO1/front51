@@ -1623,21 +1623,6 @@ ${data.transactions
                     </div>
                   </div>
                 </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  onClick={() => exportTransactions()}
-                  className="cursor-pointer"
-                >
-                  <Download className="mr-2 h-4 w-4" />
-                  <div className="flex-1">
-                    <div className="font-medium">
-                      {t("finance.export_transactions_title")}
-                    </div>
-                    <div className="text-xs text-muted-foreground">
-                      {t("finance.export_transactions_desc")}
-                    </div>
-                  </div>
-                </DropdownMenuItem>
               </div>
             </DropdownMenuContent>
           </DropdownMenu>
