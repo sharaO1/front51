@@ -1187,9 +1187,9 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
       {/* Sales by Product */}
       <Card>
         <CardHeader>
-          <CardTitle>Sales by Product</CardTitle>
+          <CardTitle>{t("dashboard.sales_by_product")}</CardTitle>
           <CardDescription>
-            Units sold, revenue received, and profit
+            {t("dashboard.units_revenue_profit")}
           </CardDescription>
         </CardHeader>
         <CardContent>
