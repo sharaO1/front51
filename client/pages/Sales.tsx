@@ -464,12 +464,22 @@ export default function Sales() {
     toast({ title: "Exported", description: "Sales JSON downloaded." });
   };
 
-  // Open a print window with given HTML (users can Save as PDF)
+  // Open a print window using a hidden iframe (reduces browser freezes)
   const openPrintWindow = (html: string, title: string) => {
-    const win = window.open("", "_blank");
-    if (!win) return;
-    win.document.open();
-    win.document.write(`<!doctype html><html><head><meta charset="utf-8"/>
+    const iframe = document.createElement("iframe");
+    iframe.style.position = "fixed";
+    iframe.style.right = "0";
+    iframe.style.bottom = "0";
+    iframe.style.width = "0";
+    iframe.style.height = "0";
+    iframe.style.border = "0";
+    document.body.appendChild(iframe);
+
+    const doc = iframe.contentDocument || iframe.contentWindow?.document;
+    if (!doc) return;
+
+    doc.open();
+    doc.write(`<!doctype html><html><head><meta charset="utf-8"/>
       <meta name="viewport" content="width=device-width, initial-scale=1"/>
       <title>${title}</title>
       <style>
@@ -496,16 +506,25 @@ export default function Sales() {
         @media print { .no-print { display:none; } body { background:white; } .card { box-shadow:none; border:0; } }
       </style>
     </head><body>${html}</body></html>`);
-    win.document.close();
-    win.focus();
-    setTimeout(() => {
+    doc.close();
+
+    const cleanup = () => {
+      try { document.body.removeChild(iframe); } catch {}
+    };
+
+    const doPrint = () => {
       try {
-        win.print();
+        iframe.contentWindow?.focus();
+        iframe.contentWindow?.print();
       } catch {}
-      try {
-        win.close();
-      } catch {}
-    }, 400);
+      setTimeout(cleanup, 800);
+    };
+
+    if (iframe.contentWindow?.document.readyState === "complete") {
+      setTimeout(doPrint, 200);
+    } else {
+      iframe.onload = () => setTimeout(doPrint, 200);
+    }
   };
 
   const formatCurrency = (n: number) =>
@@ -530,16 +549,16 @@ export default function Sales() {
     ).format(new Date(d));
 
   const buildSalesReportHTML = (
-    period: "daily" | "monthly" | "yearly",
+    period: "today" | "last_month" | "last_year",
     dateStr: string,
     data: Invoice[],
   ) => {
     const periodLabel =
-      period === "daily"
-        ? `${t("common.date")}: ${dateStr}`
-        : period === "monthly"
-          ? `${t("dashboard.this_month", "This Month")}: ${dateStr}`
-          : `${t("dashboard.title", "Dashboard")} ${t("settings.year", "Year")} ${dateStr}`;
+      period === "today"
+        ? `${t("sales.today")} (${dateStr})`
+        : period === "last_month"
+          ? `${t("sales.last_month")} (${dateStr})`
+          : `${t("sales.last_year")} (${dateStr})`;
 
     const totals = data.reduce(
       (acc, inv) => {
@@ -642,23 +661,26 @@ export default function Sales() {
   const handleExportPDF = () => {
     let data = filteredInvoices;
     const byDate = (d: string) => new Date(d).toISOString().slice(0, 10);
-    if (pdfPeriod === "daily") {
-      data = data.filter((i) => byDate(i.date) === pdfDate);
-    } else if (pdfPeriod === "monthly") {
-      data = data.filter((i) => byDate(i.date).slice(0, 7) === pdfMonth);
-    } else if (pdfPeriod === "yearly") {
+
+    const now = new Date();
+    const todayStr = byDate(now.toISOString());
+    const lastMonthDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    const lastMonthStr = `${lastMonthDate.toISOString().slice(0, 7)}`; // YYYY-MM
+    const lastYearStr = String(now.getFullYear() - 1);
+
+    if (pdfPeriod === "today") {
+      data = data.filter((i) => byDate(i.date) === todayStr);
+    } else if (pdfPeriod === "last_month") {
+      data = data.filter((i) => byDate(i.date).slice(0, 7) === lastMonthStr);
+    } else if (pdfPeriod === "last_year") {
       data = data.filter(
-        (i) => new Date(i.date).getFullYear().toString() === pdfYear,
+        (i) => new Date(i.date).getFullYear().toString() === lastYearStr,
       );
     }
 
     const html = buildSalesReportHTML(
       pdfPeriod,
-      pdfPeriod === "daily"
-        ? pdfDate
-        : pdfPeriod === "monthly"
-          ? pdfMonth
-          : pdfYear,
+      pdfPeriod === "today" ? todayStr : pdfPeriod === "last_month" ? lastMonthStr : lastYearStr,
       data,
     );
     openPrintWindow(html, `${t("navigation.sales")} ${t("common.export")} PDF`);
@@ -1921,74 +1943,23 @@ export default function Sales() {
               </DialogHeader>
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label>
-                    {t("dashboard.days", "days").toString().length
-                      ? t("common.filter")
-                      : "Filter"}
-                  </Label>
-                  <Select
-                    value={pdfPeriod}
-                    onValueChange={(v) => setPdfPeriod(v as any)}
-                  >
+                  <Label>{t("common.filter")}</Label>
+                  <Select value={pdfPeriod} onValueChange={(v) => setPdfPeriod(v as any)}>
                     <SelectTrigger>
                       <SelectValue placeholder="Period" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="daily">
-                        {t("sales.today", "Today")} (
-                        {t("dashboard.days", "days")})
-                      </SelectItem>
-                      <SelectItem value="monthly">
-                        {t("dashboard.this_month", "This Month")}
-                      </SelectItem>
-                      <SelectItem value="yearly">
-                        {t("last_year", "Year")}
-                      </SelectItem>
+                      <SelectItem value="today">{t("sales.today")}</SelectItem>
+                      <SelectItem value="last_month">{t("sales.last_month")}</SelectItem>
+                      <SelectItem value="last_year">{t("sales.last_year")}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
-                {pdfPeriod === "daily" && (
-                  <div className="space-y-2">
-                    <Label htmlFor="pdfDate">{t("common.date")}</Label>
-                    <Input
-                      id="pdfDate"
-                      type="date"
-                      value={pdfDate}
-                      onChange={(e) => setPdfDate(e.target.value)}
-                    />
-                  </div>
-                )}
-                {pdfPeriod === "monthly" && (
-                  <div className="space-y-2">
-                    <Label htmlFor="pdfMonth">{t("this_month", "Month")}</Label>
-                    <Input
-                      id="pdfMonth"
-                      type="month"
-                      value={pdfMonth}
-                      onChange={(e) => setPdfMonth(e.target.value)}
-                    />
-                  </div>
-                )}
-                {pdfPeriod === "yearly" && (
-                  <div className="space-y-2">
-                    <Label htmlFor="pdfYear">{t("last_year", "Year")}</Label>
-                    <Input
-                      id="pdfYear"
-                      type="number"
-                      min="2000"
-                      value={pdfYear}
-                      onChange={(e) => setPdfYear(e.target.value)}
-                    />
-                  </div>
-                )}
                 <div className="flex gap-2">
                   <Button className="flex-1" onClick={handleExportPDF}>
                     <Download className="mr-2 h-4 w-4" /> {t("common.export")}
                   </Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => setIsPdfDialogOpen(false)}
-                  >
+                  <Button variant="outline" onClick={() => setIsPdfDialogOpen(false)}>
                     {t("common.cancel")}
                   </Button>
                 </div>
