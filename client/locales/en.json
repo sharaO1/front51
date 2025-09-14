@@ -141,7 +141,9 @@
     "paid": "paid",
     "current": "Current",
     "required": "Required",
-    "deadline": "Deadline"
+    "deadline": "Deadline",
+    "sales_by_product": "Sales by product",
+    "units_revenue_profit": "Units, revenue, and profit"
   },
   "warehouse": {
     "title": "Warehouse Management",
