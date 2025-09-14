@@ -1488,7 +1488,7 @@ export default function Sales() {
           <p className="text-muted-foreground">{t("sales.subtitle")}</p>
         </div>
         <div className="flex items-center gap-2">
-          <DropdownMenu>
+          <DropdownMenu open={exportMenuOpen} onOpenChange={setExportMenuOpen}>
             <DropdownMenuTrigger asChild>
               <Button variant="outline">
                 <Download className="mr-2 h-4 w-4" /> Export
