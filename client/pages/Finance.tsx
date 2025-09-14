@@ -975,10 +975,16 @@ export default function Finance() {
     if (!editingLoanId) return;
     const v = parseFloat(editingAmount);
     if (isNaN(v)) {
-      toast({ title: t("common.error"), description: t("common.required_fields_error"), variant: "destructive" });
+      toast({
+        title: t("common.error"),
+        description: t("common.required_fields_error"),
+        variant: "destructive",
+      });
       return;
     }
-    setLoans(loans.map((l) => (l.id === editingLoanId ? { ...l, amount: v } : l)));
+    setLoans(
+      loans.map((l) => (l.id === editingLoanId ? { ...l, amount: v } : l)),
+    );
     setEditingLoanId(null);
     toast({ title: t("common.updated"), description: "Amount updated." });
   };
@@ -1028,7 +1034,9 @@ export default function Finance() {
 
     toast({
       title: t("finance.toast.exported_title"),
-      description: t("finance.toast.exported_desc", { format: format.toUpperCase() }),
+      description: t("finance.toast.exported_desc", {
+        format: format.toUpperCase(),
+      }),
     });
   };
 
@@ -1095,7 +1103,7 @@ ${t("finance.pending_transactions")}: ${data.summary.pendingTransactions}
 
 ${t("finance.cash_flow_trend")}
 ==================
-${data.cashFlowData.map((item: any) => `${item.month}: ${t("finance.income") } $${item.income.toLocaleString()}, ${t("finance.expenses") } $${item.expenses.toLocaleString()}, ${t("finance.profit")} $${item.profit.toLocaleString()}`).join("\n")}
+${data.cashFlowData.map((item: any) => `${item.month}: ${t("finance.income")} $${item.income.toLocaleString()}, ${t("finance.expenses")} $${item.expenses.toLocaleString()}, ${t("finance.profit")} $${item.profit.toLocaleString()}`).join("\n")}
 
 ${t("finance.expense_breakdown")}
 =================
@@ -1853,18 +1861,27 @@ ${data.transactions
                 <TableHeader>
                   <TableRow>
                     <TableHead>{t("common.date")}</TableHead>
-                  <TableHead>{t("clients.type")}</TableHead>
-                  <TableHead>{t("common.amount")}</TableHead>
-                  <TableHead>{t("finance.party")}</TableHead>
-                  <TableHead>{t("sales.due_date")}</TableHead>
-                  <TableHead>{t("common.status")}</TableHead>
-                  <TableHead>{t("common.actions")}</TableHead>
+                    <TableHead>{t("clients.type")}</TableHead>
+                    <TableHead>{t("common.amount")}</TableHead>
+                    <TableHead>{t("finance.party")}</TableHead>
+                    <TableHead>{t("sales.due_date")}</TableHead>
+                    <TableHead>{t("common.status")}</TableHead>
+                    <TableHead>{t("common.actions")}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {loans.map((loan) => (
                     <TableRow key={loan.id}>
-                      <TableCell>{new Intl.DateTimeFormat(i18n.language || "en", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit" }).format(new Date(loan.date))}</TableCell>
+                      <TableCell>
+                        {new Intl.DateTimeFormat(i18n.language || "en", {
+                          year: "numeric",
+                          month: "2-digit",
+                          day: "2-digit",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          second: "2-digit",
+                        }).format(new Date(loan.date))}
+                      </TableCell>
                       <TableCell>
                         <Badge
                           variant={
@@ -1891,13 +1908,31 @@ ${data.transactions
                               onChange={(e) => setEditingAmount(e.target.value)}
                               className="w-28"
                             />
-                            <Button size="sm" variant="outline" onClick={saveEditAmount}>{t("common.save")}</Button>
-                            <Button size="sm" variant="outline" onClick={cancelEditAmount}>{t("common.cancel")}</Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={saveEditAmount}
+                            >
+                              {t("common.save")}
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={cancelEditAmount}
+                            >
+                              {t("common.cancel")}
+                            </Button>
                           </div>
                         ) : (
                           <div className="flex items-center gap-2">
-                            <span className="font-medium">${(loan.amount ?? 0).toFixed(2)}</span>
-                            <Button variant="outline" size="sm" onClick={() => startEditAmount(loan)}>
+                            <span className="font-medium">
+                              ${(loan.amount ?? 0).toFixed(2)}
+                            </span>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => startEditAmount(loan)}
+                            >
                               <Edit className="h-4 w-4" />
                             </Button>
                           </div>

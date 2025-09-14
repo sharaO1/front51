@@ -1429,7 +1429,16 @@ export default function Sales() {
                   </TableCell>
                   <TableCell>
                     <div>
-                      <div>{new Intl.DateTimeFormat(i18n.language || "en", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit" }).format(new Date(invoice.date))}</div>
+                      <div>
+                        {new Intl.DateTimeFormat(i18n.language || "en", {
+                          year: "numeric",
+                          month: "2-digit",
+                          day: "2-digit",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          second: "2-digit",
+                        }).format(new Date(invoice.date))}
+                      </div>
                     </div>
                   </TableCell>
                   <TableCell>
@@ -1544,7 +1553,15 @@ export default function Sales() {
                       {selectedInvoice.invoiceNumber}
                     </div>
                     <div>
-                      {t("common.date")}: {new Intl.DateTimeFormat(i18n.language || "en", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit" }).format(new Date(selectedInvoice.date))}
+                      {t("common.date")}:{" "}
+                      {new Intl.DateTimeFormat(i18n.language || "en", {
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "2-digit",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        second: "2-digit",
+                      }).format(new Date(selectedInvoice.date))}
                     </div>
                     <div>
                       {t("common.status")}:{" "}
