@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
   Card,
   CardContent,
@@ -321,6 +321,17 @@ export default function Sales() {
     setForBorrow(false);
     setBorrowReturnDate(defaultReturnDate);
   };
+
+  const metrics = useMemo(() => {
+    const revenue = invoices
+      .filter((i) => i.status !== "cancelled")
+      .reduce((sum, i) => sum + (Number(i.total) || 0), 0);
+    const pending = invoices
+      .filter((i) => i.status !== "paid" && i.status !== "cancelled")
+      .reduce((sum, i) => sum + (Number(i.total) || 0), 0);
+    const cancelled = invoices.filter((i) => i.status === "cancelled").length;
+    return { revenue, pending, cancelled };
+  }, [invoices]);
 
   const filteredInvoices = invoices.filter((invoice) => {
     const matchesSearch =
@@ -1354,13 +1365,7 @@ export default function Sales() {
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
-              $
-              {invoices
-                .filter((i) => i.status === "paid")
-                .reduce((sum, i) => sum + i.total, 0)
-                .toLocaleString()}
-            </div>
+            <div className="text-2xl font-bold">${metrics.revenue.toLocaleString()}</div>
             <p className="text-xs text-muted-foreground">
               {t("sales.from_paid_invoices")}
             </p>
@@ -1375,13 +1380,7 @@ export default function Sales() {
             <Calculator className="h-4 w-4 text-yellow-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
-              $
-              {invoices
-                .filter((i) => i.status === "sent")
-                .reduce((sum, i) => sum + i.total, 0)
-                .toLocaleString()}
-            </div>
+            <div className="text-2xl font-bold">${metrics.pending.toLocaleString()}</div>
             <p className="text-xs text-muted-foreground">
               {t("sales.awaiting_payment")}
             </p>
@@ -1396,9 +1395,7 @@ export default function Sales() {
             <X className="h-4 w-4 text-red-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
-              {invoices.filter((i) => i.status === "cancelled").length}
-            </div>
+            <div className="text-2xl font-bold">{metrics.cancelled}</div>
             <p className="text-xs text-muted-foreground">
               {t("sales.cancelled_invoices")}
             </p>
