@@ -591,7 +591,7 @@ export default function Sales() {
     };
 
     try {
-      const res = await fetch(`${API_BASE}/Sales`, {
+      const res = await fetch("http://localhost:5002/api/Sales", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
