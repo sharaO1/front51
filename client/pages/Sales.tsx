@@ -515,7 +515,7 @@ export default function Sales() {
     return `INV-${year}-${count.toString().padStart(3, "0")}`;
   };
 
-  const createInvoice = () => {
+  const createInvoice = async () => {
     // If this invoice is for borrow, client is required
     if (forBorrow) {
       if (
@@ -560,38 +560,86 @@ export default function Sales() {
       return;
     }
 
-    const invoice: Invoice = {
-      id: Date.now().toString(),
-      invoiceNumber: generateInvoiceNumber(),
-      clientId: newInvoice.clientId || "",
-      clientName: newInvoice.clientName || "",
-      clientEmail: newInvoice.clientEmail || "",
-      clientType: newInvoice.clientType || "retail",
-      employeeId: newInvoice.employeeId,
-      employeeName: newInvoice.employeeName,
-      date: new Date().toISOString().split("T")[0],
-      dueDate: "",
-      items: newInvoice.items!,
-      subtotal: newInvoice.subtotal ?? 0,
-      taxRate: newInvoice.taxRate ?? 0,
-      taxAmount: newInvoice.taxAmount ?? 0,
-      discountAmount: newInvoice.discountAmount || 0,
-      total: newInvoice.total || 0,
-      status: "draft",
+    // Determine clientId field value per requirements
+    const clientIdForPayload: string | null = useExistingClient
+      ? newInvoice.clientId || null
+      : (newInvoice.clientName?.trim() ? newInvoice.clientName.trim() : null);
+
+    // Build payload expected by backend
+    const itemsPayload = (newInvoice.items || []).map((it) => ({
+      productId: it.productId,
+      quantity: it.quantity,
+      discount: it.discount,
+      total: it.total,
+    }));
+
+    const payload = {
+      items: itemsPayload,
+      clientId: clientIdForPayload,
+      subtotal: Number(newInvoice.subtotal ?? 0),
+      taxRate: Number(newInvoice.taxRate ?? 0),
+      taxAmount: Number(newInvoice.taxAmount ?? 0),
+      discountAmount: Number(newInvoice.discountAmount ?? 0),
+      total: Number(newInvoice.total ?? 0),
       paymentMethod: newInvoice.paymentMethod || "cash",
       notes: newInvoice.notes || "",
-      borrow: forBorrow,
+      borrow: !!forBorrow,
       returnDate: forBorrow ? borrowReturnDate : undefined,
+      cancellationReason: undefined as any,
     };
 
-    setInvoices([invoice, ...invoices]);
-    clearNewInvoice();
-    setIsCreateDialogOpen(false);
+    try {
+      const res = await fetch("http://localhost:5002/api/Sales", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json().catch(() => null);
+      if (!res.ok) {
+        throw new Error((data && (data.error || data.message)) || "Request failed");
+      }
 
-    toast({
-      title: "Invoice created",
-      description: `Invoice ${invoice.invoiceNumber} has been created successfully.`,
-    });
+      // Try to enrich local invoice from backend response if available
+      const result = (data && (data.result || data.data || data)) || {};
+      const invoice: Invoice = {
+        id: String(result.id || Date.now()),
+        invoiceNumber: String(result.invoiceNumber || generateInvoiceNumber()),
+        clientId: String(newInvoice.clientId || ""),
+        clientName: String(newInvoice.clientName || ""),
+        clientEmail: String(newInvoice.clientEmail || ""),
+        clientType: (newInvoice.clientType || "retail") as any,
+        employeeId: newInvoice.employeeId,
+        employeeName: newInvoice.employeeName,
+        date: new Date().toISOString(),
+        dueDate: "",
+        items: newInvoice.items!,
+        subtotal: Number(newInvoice.subtotal ?? 0),
+        taxRate: Number(newInvoice.taxRate ?? 0),
+        taxAmount: Number(newInvoice.taxAmount ?? 0),
+        discountAmount: Number(newInvoice.discountAmount ?? 0),
+        total: Number(newInvoice.total ?? 0),
+        status: (result.status as any) || "draft",
+        paymentMethod: (newInvoice.paymentMethod || "cash") as any,
+        notes: newInvoice.notes || "",
+        borrow: !!forBorrow,
+        returnDate: forBorrow ? borrowReturnDate : undefined,
+      };
+
+      setInvoices([invoice, ...invoices]);
+      clearNewInvoice();
+      setIsCreateDialogOpen(false);
+
+      toast({
+        title: "Invoice created",
+        description: `Sent to backend and saved as ${invoice.invoiceNumber}.`,
+      });
+    } catch (e: any) {
+      toast({
+        title: "Failed",
+        description: e?.message || "Could not create invoice",
+        variant: "destructive",
+      });
+    }
   };
 
   const openCancelDialog = (invoice: Invoice) => {
