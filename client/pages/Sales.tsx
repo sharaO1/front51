@@ -276,15 +276,9 @@ export default function Sales() {
 
   // PDF export dialog state
   const [isPdfDialogOpen, setIsPdfDialogOpen] = useState(false);
-  const [pdfPeriod, setPdfPeriod] = useState<"daily" | "monthly" | "yearly">(
-    "daily",
+  const [pdfPeriod, setPdfPeriod] = useState<"today" | "last_month" | "last_year">(
+    "today",
   );
-  const todayISO = new Date().toISOString().split("T")[0];
-  const [pdfDate, setPdfDate] = useState<string>(todayISO);
-  const currentMonth = new Date().toISOString().slice(0, 7);
-  const [pdfMonth, setPdfMonth] = useState<string>(currentMonth);
-  const currentYear = new Date().getFullYear();
-  const [pdfYear, setPdfYear] = useState<string>(String(currentYear));
 
   // Real clients/products will be loaded from backend
   const [clients, setClients] = useState<Client[]>([]);
