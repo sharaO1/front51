@@ -474,6 +474,41 @@ export default function Dashboard() {
     };
   }, [accessToken, user]);
 
+  // Load Financial Management - Cash Flow Trend
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      try {
+        setCashFlowLoading(true);
+        setCashFlowError(null);
+        const headers: Record<string, string> = { "Content-Type": "application/json" };
+        if (accessToken) headers.Authorization = `Bearer ${accessToken}`;
+        const res = await fetch(`${API_BASE}/transactions/analytics`, { headers });
+        const json = await res.json().catch(() => null as any);
+        if (!res.ok || !json?.ok || !Array.isArray(json.result)) {
+          throw new Error((json && (json.error || json.message)) || "Failed to load cash flow analytics");
+        }
+        // Transform months like "8" -> "Aug"
+        const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+        const data = (json.result as any[]).map((r) => ({
+          month: (() => {
+            const m = Number(r.month);
+            return !isNaN(m) && m >= 1 && m <= 12 ? monthNames[m - 1] : String(r.month);
+          })(),
+          totalIncome: Number(r.totalIncome) || 0,
+          totalExpense: Number(r.totalExpense) || 0,
+          totalProfit: Number(r.totalProfit ?? (Number(r.totalIncome) - Number(r.totalExpense))) || 0,
+        }));
+        if (mounted) setCashFlowData(data);
+      } catch (e: any) {
+        if (mounted) setCashFlowError(e?.message || "Failed to load cash flow analytics");
+      } finally {
+        if (mounted) setCashFlowLoading(false);
+      }
+    })();
+    return () => { mounted = false; };
+  }, [accessToken]);
+
   const exportReport = (format: "pdf" | "excel" | "csv") => {
     // Generate comprehensive report data
     const reportData = {
