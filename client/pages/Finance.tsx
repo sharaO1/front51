@@ -964,10 +964,111 @@ export default function Finance() {
     const link = document.createElement("a");
     link.href = url;
     link.download = filename;
+    link.rel = "noopener";
+    link.target = "_self";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
     window.URL.revokeObjectURL(url);
+  };
+
+  // Print-helper via hidden iframe to avoid SPA navigation/blank page
+  const openPrintWindow = (html: string, title: string) => {
+    const iframe = document.createElement("iframe");
+    iframe.style.position = "fixed";
+    iframe.style.right = "0";
+    iframe.style.bottom = "0";
+    iframe.style.width = "0";
+    iframe.style.height = "0";
+    iframe.style.border = "0";
+    document.body.appendChild(iframe);
+
+    const doc = iframe.contentDocument || iframe.contentWindow?.document;
+    if (!doc) return;
+
+    doc.open();
+    doc.write(`<!doctype html><html><head><meta charset="utf-8"/>
+      <meta name="viewport" content="width=device-width, initial-scale=1"/>
+      <title>${title}</title>
+      <style>
+        :root { --primary: #2563eb; --muted:#f8fafc; --text:#0f172a; }
+        * { box-sizing: border-box; }
+        body { font-family: Inter, system-ui, -apple-system, sans-serif; color: var(--text); margin: 0; background: #ffffff; }
+        .container { max-width: 1000px; margin: 24px auto; padding: 24px; }
+        .card { background: white; border: 1px solid #e5e7eb; border-radius: 12px; padding: 24px; box-shadow: 0 2px 6px rgba(0,0,0,.04); }
+        .header { display:flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+        h1 { font-size: 24px; margin: 0 0 8px; }
+        h3 { margin: 12px 0 8px; font-size: 14px; color:#334155; text-transform: uppercase; letter-spacing:.06em; }
+        .subtitle { color:#64748b; font-size: 14px; }
+        .grid { display:grid; grid-template-columns: 1fr 1fr; gap:16px; }
+        table { width:100%; border-collapse: collapse; font-size: 13px; }
+        th, td { padding: 10px 12px; border-bottom: 1px solid #e5e7eb; text-align: left; }
+        th { background: var(--muted); color:#334155; font-weight:600; }
+        .right { text-align:right; }
+        .muted { color:#64748b; }
+        @media print { .card { box-shadow:none; border:0; } }
+      </style>
+    </head><body>${html}</body></html>`);
+    doc.close();
+
+    const cleanup = () => {
+      try { document.body.removeChild(iframe); } catch {}
+    };
+
+    const doPrint = () => {
+      try { iframe.contentWindow?.focus(); iframe.contentWindow?.print(); } catch {}
+      setTimeout(cleanup, 800);
+    };
+
+    if (iframe.contentWindow?.document.readyState === "complete") {
+      setTimeout(doPrint, 200);
+    } else {
+      iframe.onload = () => setTimeout(doPrint, 200);
+    }
+  };
+
+  const buildFinanceReportHTML = (data: any) => {
+    const money = (n: number) => `$${Number(n || 0).toLocaleString()}`;
+    const txRows = data.transactions.slice(0, 50).map((t: any) => `
+      <tr>
+        <td>${t.date}</td>
+        <td>${t.type}</td>
+        <td>${t.category}</td>
+        <td>${t.description}</td>
+        <td class="right">${money(t.amount)}</td>
+      </tr>`).join("");
+
+    return `
+      <div class="container">
+        <div class="card">
+          <div class="header">
+            <div>
+              <h1>${t("finance.report_title", { defaultValue: "FINANCIAL REPORT" })}</h1>
+              <div class="subtitle">${t("finance.generated_at", { defaultValue: "Generated" })}: ${new Date(data.generatedAt).toLocaleString()}</div>
+            </div>
+          </div>
+          <div class="grid">
+            <div>
+              <h3>${t("finance.executive_summary")}</h3>
+              <table>
+                <tbody>
+                  <tr><td>${t("finance.total_income")}</td><td class="right">${money(data.summary.totalIncome)}</td></tr>
+                  <tr><td>${t("finance.total_expenses")}</td><td class="right">${money(data.summary.totalExpenses)}</td></tr>
+                  <tr><td>${t("finance.net_profit")}</td><td class="right">${money(data.summary.netProfit)}</td></tr>
+                  <tr><td>${t("finance.profit_margin")}</td><td class="right">${data.summary.profitMargin.toFixed(1)}%</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div>
+              <h3>${t("finance.recent_transactions", { defaultValue: "RECENT TRANSACTIONS" })}</h3>
+              <table>
+                <thead><tr><th>${t("common.date")}</th><th>${t("finance.transaction_type")}</th><th>${t("category", { defaultValue: "Category" })}</th><th>${t("common.description")}</th><th class="right">${t("common.amount")}</th></tr></thead>
+                <tbody>${txRows || `<tr><td colspan="5" class="muted">${t("clients.no_products", { defaultValue: "No data" })}</td></tr>`}</tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>`;
   };
 
   const addLoan = () => {
@@ -1098,13 +1199,11 @@ export default function Finance() {
     };
 
     switch (format) {
-      case "pdf":
-        downloadFile(
-          generateFinancePDFContent(reportData),
-          "financial-report.pdf",
-          "application/pdf",
-        );
+      case "pdf": {
+        const html = buildFinanceReportHTML(reportData);
+        openPrintWindow(html, t("finance.export_pdf_title"));
         break;
+      }
       case "excel":
         downloadFile(
           generateFinanceExcelContent(reportData),
