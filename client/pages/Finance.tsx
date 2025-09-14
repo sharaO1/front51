@@ -539,10 +539,13 @@ export default function Finance() {
   };
 
   // Date helpers for report scoping
-  const startOfDay = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0, 0);
-  const endOfDay = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate(), 23, 59, 59, 999);
+  const startOfDay = (d: Date) =>
+    new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0, 0);
+  const endOfDay = (d: Date) =>
+    new Date(d.getFullYear(), d.getMonth(), d.getDate(), 23, 59, 59, 999);
   const startOfMonth = (y: number, m: number) => new Date(y, m, 1, 0, 0, 0, 0);
-  const endOfMonth = (y: number, m: number) => new Date(y, m + 1, 0, 23, 59, 59, 999);
+  const endOfMonth = (y: number, m: number) =>
+    new Date(y, m + 1, 0, 23, 59, 59, 999);
   const startOfYear = (y: number) => new Date(y, 0, 1, 0, 0, 0, 0);
   const endOfYear = (y: number) => new Date(y, 11, 31, 23, 59, 59, 999);
 
@@ -563,10 +566,25 @@ export default function Finance() {
         const key = translateCategory(t.category || "Other");
         map.set(key, (map.get(key) || 0) + (Number(t.amount) || 0));
       });
-    const palette = ["#0088FE","#00C49F","#FFBB28","#FF8042","#A78BFA","#34D399","#F472B6","#F43F5E","#06B6D4","#84CC16"];
+    const palette = [
+      "#0088FE",
+      "#00C49F",
+      "#FFBB28",
+      "#FF8042",
+      "#A78BFA",
+      "#34D399",
+      "#F472B6",
+      "#F43F5E",
+      "#06B6D4",
+      "#84CC16",
+    ];
     return Array.from(map.entries())
       .sort((a, b) => b[1] - a[1])
-      .map(([name, value], i) => ({ name, value, color: palette[i % palette.length] }));
+      .map(([name, value], i) => ({
+        name,
+        value,
+        color: palette[i % palette.length],
+      }));
   };
 
   const groupScopedCashFlow = (
@@ -576,9 +594,17 @@ export default function Finance() {
   ): { month: string; income: number; expenses: number; profit: number }[] => {
     if (period === "daily") {
       const d = new Date(ctx.day as string);
-      const label = new Intl.DateTimeFormat(i18n.language || "en", { year: "numeric", month: "short", day: "2-digit" }).format(d);
-      const income = list.filter((t) => t.type === "income" && t.status === "completed").reduce((s, t) => s + (Number(t.amount) || 0), 0);
-      const expenses = list.filter((t) => t.type === "expense" && t.status === "completed").reduce((s, t) => s + (Number(t.amount) || 0), 0);
+      const label = new Intl.DateTimeFormat(i18n.language || "en", {
+        year: "numeric",
+        month: "short",
+        day: "2-digit",
+      }).format(d);
+      const income = list
+        .filter((t) => t.type === "income" && t.status === "completed")
+        .reduce((s, t) => s + (Number(t.amount) || 0), 0);
+      const expenses = list
+        .filter((t) => t.type === "expense" && t.status === "completed")
+        .reduce((s, t) => s + (Number(t.amount) || 0), 0);
       return [{ month: label, income, expenses, profit: income - expenses }];
     }
     if (period === "monthly") {
@@ -586,7 +612,10 @@ export default function Finance() {
       const y = Number(yStr);
       const m = Number(mStr) - 1;
       const days = endOfMonth(y, m).getDate();
-      const points = Array.from({ length: days }, () => ({ income: 0, expenses: 0 }));
+      const points = Array.from({ length: days }, () => ({
+        income: 0,
+        expenses: 0,
+      }));
       list.forEach((t) => {
         const d = new Date(t.date);
         const idx = Math.max(0, Math.min(days - 1, d.getDate() - 1));
@@ -595,7 +624,12 @@ export default function Finance() {
           else points[idx].expenses += Number(t.amount) || 0;
         }
       });
-      return points.map((v, i) => ({ month: String(i + 1).padStart(2, "0"), income: v.income, expenses: v.expenses, profit: v.income - v.expenses }));
+      return points.map((v, i) => ({
+        month: String(i + 1).padStart(2, "0"),
+        income: v.income,
+        expenses: v.expenses,
+        profit: v.income - v.expenses,
+      }));
     }
     const y = Number(ctx.year);
     const pts = Array.from({ length: 12 }, () => ({ income: 0, expenses: 0 }));
@@ -608,7 +642,9 @@ export default function Finance() {
       }
     });
     return pts.map((v, m) => ({
-      month: new Intl.DateTimeFormat(i18n.language || "en", { month: "short" }).format(new Date(y, m, 1)),
+      month: new Intl.DateTimeFormat(i18n.language || "en", {
+        month: "short",
+      }).format(new Date(y, m, 1)),
       income: v.income,
       expenses: v.expenses,
       profit: v.income - v.expenses,
@@ -619,20 +655,46 @@ export default function Finance() {
     if (exportPeriod === "daily") {
       const d = new Date(exportDate);
       const list = filterByRange(transactions, startOfDay(d), endOfDay(d));
-      const label = new Intl.DateTimeFormat(i18n.language || "en", { year: "numeric", month: "long", day: "2-digit" }).format(d);
-      return { label, list, expense: computeScopedExpenseBreakdown(list), cash: groupScopedCashFlow(list, "daily", { day: exportDate }) };
+      const label = new Intl.DateTimeFormat(i18n.language || "en", {
+        year: "numeric",
+        month: "long",
+        day: "2-digit",
+      }).format(d);
+      return {
+        label,
+        list,
+        expense: computeScopedExpenseBreakdown(list),
+        cash: groupScopedCashFlow(list, "daily", { day: exportDate }),
+      };
     }
     if (exportPeriod === "monthly") {
       const [yStr, mStr] = exportMonth.split("-");
       const y = Number(yStr);
       const m = Number(mStr) - 1;
-      const list = filterByRange(transactions, startOfMonth(y, m), endOfMonth(y, m));
-      const label = new Intl.DateTimeFormat(i18n.language || "en", { year: "numeric", month: "long" }).format(new Date(y, m, 1));
-      return { label, list, expense: computeScopedExpenseBreakdown(list), cash: groupScopedCashFlow(list, "monthly", { month: exportMonth }) };
+      const list = filterByRange(
+        transactions,
+        startOfMonth(y, m),
+        endOfMonth(y, m),
+      );
+      const label = new Intl.DateTimeFormat(i18n.language || "en", {
+        year: "numeric",
+        month: "long",
+      }).format(new Date(y, m, 1));
+      return {
+        label,
+        list,
+        expense: computeScopedExpenseBreakdown(list),
+        cash: groupScopedCashFlow(list, "monthly", { month: exportMonth }),
+      };
     }
     const y = Number(exportYear);
     const list = filterByRange(transactions, startOfYear(y), endOfYear(y));
-    return { label: String(y), list, expense: computeScopedExpenseBreakdown(list), cash: groupScopedCashFlow(list, "yearly", { year: String(y) }) };
+    return {
+      label: String(y),
+      list,
+      expense: computeScopedExpenseBreakdown(list),
+      cash: groupScopedCashFlow(list, "yearly", { year: String(y) }),
+    };
   };
 
   // Real Expense Breakdown computed from backend transactions
@@ -791,13 +853,19 @@ export default function Finance() {
 
   // Export PDF dialog state
   const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
-  const [exportPeriod, setExportPeriod] = useState<"daily" | "monthly" | "yearly">("monthly");
-  const [exportDate, setExportDate] = useState<string>(new Date().toISOString().split("T")[0]);
+  const [exportPeriod, setExportPeriod] = useState<
+    "daily" | "monthly" | "yearly"
+  >("monthly");
+  const [exportDate, setExportDate] = useState<string>(
+    new Date().toISOString().split("T")[0],
+  );
   const [exportMonth, setExportMonth] = useState<string>(() => {
     const d = new Date();
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
   });
-  const [exportYear, setExportYear] = useState<string>(String(new Date().getFullYear()));
+  const [exportYear, setExportYear] = useState<string>(
+    String(new Date().getFullYear()),
+  );
 
   const filteredTransactions = transactions
     .filter((transaction) => {
