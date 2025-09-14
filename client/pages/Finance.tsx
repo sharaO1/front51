@@ -342,16 +342,59 @@ export default function Finance() {
   const [clientsMap, setClientsMap] = useState<Record<string, string>>({});
   const { t, i18n } = useTranslation();
 
-  const cashFlowData = useMemo(
-    () =>
-      CASH_FLOW_BASE.map((item) => ({
-        ...item,
-        month: new Intl.DateTimeFormat(i18n.language || "en", {
-          month: "short",
-        }).format(new Date(2020, item.monthIndex, 1)),
-      })),
-    [i18n.language],
-  );
+  // Cash Flow Trend from backend analytics
+  const [cashFlowData, setCashFlowData] = useState<
+    { month: string; income: number; expenses: number; profit: number }[]
+  >([]);
+  const [cashFlowLoading, setCashFlowLoading] = useState(false);
+  const [cashFlowError, setCashFlowError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      try {
+        setCashFlowLoading(true);
+        setCashFlowError(null);
+        const headers: Record<string, string> = { "Content-Type": "application/json" };
+        if (accessToken) headers["Authorization"] = `Bearer ${accessToken}`;
+        const res = await fetch(`${API_BASE}/transactions/analytics`, { headers });
+        const json = await res.json().catch(() => null as any);
+        const list: any[] = (json && (json.result || json.data || [])) || [];
+        if (!res.ok || !json?.ok || !Array.isArray(list)) {
+          throw new Error((json && (json.error || json.message)) || "Failed to load analytics");
+        }
+        const toMonthLabel = (m: any) => {
+          const n = Number(m);
+          if (!Number.isNaN(n) && n >= 1 && n <= 12) {
+            return new Intl.DateTimeFormat(i18n.language || "en", { month: "short" }).format(
+              new Date(2020, n - 1, 1),
+            );
+          }
+          return String(m);
+        };
+        const sorted = list
+          .slice()
+          .sort((a, b) => (Number(a.month) || 0) - (Number(b.month) || 0))
+          .map((r: any) => ({
+            month: toMonthLabel(r.month),
+            income: Number(r.totalIncome) || 0,
+            expenses: Number(r.totalExpense) || 0,
+            profit:
+              Number(
+                r.totalProfit ?? Number(r.totalIncome || 0) - Number(r.totalExpense || 0),
+              ) || 0,
+          }));
+        if (mounted) setCashFlowData(sorted);
+      } catch (e: any) {
+        if (mounted) setCashFlowError(e?.message || "Failed to load analytics");
+      } finally {
+        if (mounted) setCashFlowLoading(false);
+      }
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, [accessToken, i18n.language]);
 
   useEffect(() => {
     let mounted = true;
@@ -2183,41 +2226,37 @@ ${data.transactions
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <ResponsiveContainer width="100%" height={300}>
-                  <LineChart data={cashFlowData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="month" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend
-                      formatter={(v) =>
-                        v === "income"
-                          ? t("finance.income")
-                          : v === "expenses"
-                            ? t("finance.expenses")
-                            : t("finance.profit")
-                      }
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="income"
-                      stroke="#22c55e"
-                      strokeWidth={2}
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="expenses"
-                      stroke="#ef4444"
-                      strokeWidth={2}
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="profit"
-                      stroke="#3b82f6"
-                      strokeWidth={2}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
+                {cashFlowLoading && (
+                  <div className="text-sm text-muted-foreground">Loading…</div>
+                )}
+                {cashFlowError && (
+                  <div className="text-sm text-red-600">{cashFlowError}</div>
+                )}
+                {!cashFlowLoading && !cashFlowError && cashFlowData.length === 0 && (
+                  <div className="text-sm text-muted-foreground">No data</div>
+                )}
+                {!cashFlowLoading && !cashFlowError && cashFlowData.length > 0 && (
+                  <ResponsiveContainer width="100%" height={300}>
+                    <LineChart data={cashFlowData}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="month" />
+                      <YAxis />
+                      <Tooltip />
+                      <Legend
+                        formatter={(v) =>
+                          v === "income"
+                            ? t("finance.income")
+                            : v === "expenses"
+                              ? t("finance.expenses")
+                              : t("finance.profit")
+                        }
+                      />
+                      <Line type="monotone" dataKey="income" stroke="#22c55e" strokeWidth={2} dot />
+                      <Line type="monotone" dataKey="expenses" stroke="#ef4444" strokeWidth={2} dot />
+                      <Line type="monotone" dataKey="profit" stroke="#3b82f6" strokeWidth={2} dot />
+                    </LineChart>
+                  </ResponsiveContainer>
+                )}
               </CardContent>
             </Card>
 
@@ -2278,9 +2317,9 @@ ${data.transactions
                           : t("finance.profit")
                     }
                   />
-                  <Bar dataKey="income" fill="#22c55e" />
-                  <Bar dataKey="expenses" fill="#ef4444" />
-                  <Bar dataKey="profit" fill="#3b82f6" />
+                  <Bar dataKey="income" name={t("finance.income") as string} fill="#22c55e" />
+                  <Bar dataKey="expenses" name={t("finance.expenses") as string} fill="#ef4444" />
+                  <Bar dataKey="profit" name={t("finance.profit") as string} fill="#3b82f6" />
                 </BarChart>
               </ResponsiveContainer>
             </CardContent>
