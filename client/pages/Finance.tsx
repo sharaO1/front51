@@ -537,7 +537,7 @@ export default function Finance() {
         }
       }
       return {
-        id: String(r.id || r._id || crypto.randomUUID()),
+        id: String(r.id || r._id || `${Date.now()}-${Math.random().toString(36).slice(2)}`),
         type,
         amount: toNum(r.amount),
         productName: r.productName || r.product || undefined,
