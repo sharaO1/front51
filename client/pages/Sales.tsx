@@ -456,6 +456,7 @@ export default function Sales() {
   };
 
   const handleExportJSON = () => {
+    setExportMenuOpen(false);
     const data = JSON.stringify(
       filteredInvoices.map((inv) => ({
         ...inv,
