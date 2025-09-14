@@ -75,7 +75,7 @@
       "strong": "Сильный"
     },
     "secure_access_title": "Безопасный доступ",
-    "secure_access_message": "Учетные записи пользователей управляются только администраторами. Обратитесь к системному администратору для получения доcтупа.",
+    "secure_access_message": "Учетные записи пользователей управляются только администраторами. Обратитесь к системному администратору для получе��ия доcтупа.",
     "email_placeholder": "ваш@email.com",
     "password_placeholder": "Введите пароль"
   },
@@ -148,7 +148,7 @@
     "out_of_stock": "Нет в наличии",
     "total_value": "Общая стоимость",
     "product_inventory": "Складские запасы",
-    "search_products": "Поиск товаров...",
+    "search_products": "Поиск т��варов...",
     "all_categories": "Все категории",
     "all_status": "Все статусы",
     "product_name": "Название товара",
@@ -513,7 +513,7 @@
     "to": "По",
     "showing_invoices": "Показано {{count}} из {{total}} счетов",
     "total_value": "Общая сумма",
-    "no_employee": "Без сотрудника",
+    "no_employee": "Бе�� сотрудника",
     "payment": "Платеж",
     "cancellation_details": "Детали отмены",
     "reason": "Причина",
@@ -528,7 +528,17 @@
       "invoice_downloaded_title": "Счет скачан",
       "invoice_downloaded_desc": "PDF счета сформирован и скачан.",
       "invoice_downloaded_desc_number": "Счет {{number}} скачан в формате PDF."
-    }
+    },
+    "report": {
+      "invoice_heading": "СЧЕТ",
+      "client_information": "Информация о клиенте",
+      "invoice_details": "Детали счета",
+      "items": "Позиции",
+      "summary": "Итоги",
+      "generated_on": "Сформировано",
+      "sales_employee": "Сотрудник продаж"
+    },
+    "sales_employee": "Сотрудник продаж"
   },
   "finance": {
     "title": "Финансовое управление",
@@ -756,7 +766,7 @@
     "update_employee_info": "Обновить информацию о сотруднике",
     "select_email_unused": "Выберите неиспользуемый email",
     "sales_details_title": "Детали продаж",
-    "sales_history_for": "История продаж для",
+    "sales_history_for": "История про��аж для",
     "sales_label": "Продажи",
     "not_marked": "Не отмечено",
     "commission": "Комиссия",
@@ -797,10 +807,10 @@
     "sms_notifications": "SMS уведомления",
     "receive_via_sms": "Получать уведомления по SMS",
     "push_notifications": "Push уведомления",
-    "browser_push": "Получать push-уведомления браузера",
+    "browser_push": "Получать push-уведомлени�� браузера",
     "save_channels": "Сохранить каналы",
     "alert_types": "Типы оповещений",
-    "configure_events": "Настройте, какие события вызывают уведомления",
+    "configure_events": "Настройте, какие собы��ия вызывают уведомления",
     "low_stock_alerts": "Оповещения о низком запасе",
     "inventory_minimum": "Когда запасы падают ниже минимального уровня",
     "payment_reminders": "Напоминания о платежах",
@@ -844,7 +854,7 @@
     "last_backup": "Последняя резервная копия",
     "create_backup_now": "Создать резервную копию сейчас",
     "restore_from_backup": "Восстановить из резервной копии",
-    "export_all_data": "Экспортировать все данные",
+    "export_all_data": "Экспортировать все да��ные",
     "danger_zone": "Опасная зона",
     "delete_all_backups": "Удалить все резервные копии",
     "account_information": "Информация об аккаунте",
@@ -1022,7 +1032,7 @@
         "role_updated_title": "Роль обновлена",
         "role_updated_desc": "Роль пользователя обновлена на {{role}}",
         "status_updated_title": "Статус обновлен",
-        "status_updated_desc": "Статус пользователя обновлен на {{status}}",
+        "status_updated_desc": "Статус пользователя обно��лен на {{status}}",
         "password_generated_title": "Пароль сгенерирован",
         "password_generated_desc": "Безопасный пароль был сгенерирован автоматически",
         "not_authenticated_title": "Не авторизованы",
@@ -1038,7 +1048,7 @@
         "sections": {
           "basic_info": "Базовая информация",
           "role_access": "Роль и доссуп",
-          "permissions_preview": "Предпросмотр прав роли"
+          "permissions_preview": "Предпросмотр прав ��оли"
         },
         "labels": {
           "first_name": "Имя",
@@ -1063,7 +1073,7 @@
         "generate": "Сгенерировать",
         "role_hint": "Роли определяет, к чему пользователь имеет доступ и что может изменять",
         "location_hint": "Выберите основное место работы пользователя",
-        "permissions_summary": "{{count}} прав(а) на {{resources}} ресурс(а)",
+        "permissions_summary": "{{count}} прав(а) на {{resources}} р��сурс(а)",
         "creating": "Создание...",
         "create_user": "Создать пользователя",
         "validation": {
@@ -1136,7 +1146,7 @@
     "email_cannot_change": "Email нельзя изменить. Свяжитесь с администратором.",
     "user_id": "ID пользователя",
     "user_id_desc": "Уникальный идентификатор вашего аккаунта.",
-    "editing_mode_active": "Режим редактирования включен",
+    "editing_mode_active": "Режим р��дактирования включен",
     "editing_mode_desc": "Вы можете изменить имя, телефон и аватар. Остальная информация управляется администратором.",
     "not_specified": "Не указано",
     "change_avatar": "Сменить аватар",
