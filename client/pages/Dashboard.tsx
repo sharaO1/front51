@@ -587,31 +587,13 @@ export default function Dashboard() {
       ],
     };
 
-    // Simulate different export formats
-    switch (format) {
-      case "pdf":
-        // In a real app, this would generate a PDF using libraries like jsPDF or PDFKit
-        downloadFile(
-          generatePDFContent(reportData),
-          "dashboard-report.pdf",
-          "application/pdf",
-        );
-        break;
-      case "excel":
-        // In a real app, this would use libraries like XLSX or ExcelJS
-        downloadFile(
-          generateExcelContent(reportData),
-          "dashboard-report.xlsx",
-          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        );
-        break;
-      case "csv":
-        downloadFile(
-          generateCSVContent(reportData),
-          "dashboard-report.csv",
-          "text/csv",
-        );
-        break;
+    // PDF only
+    if (format === "pdf") {
+      downloadFile(
+        generatePDFContent(reportData),
+        "dashboard-report.pdf",
+        "application/pdf",
+      );
     }
 
     toast({
