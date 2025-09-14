@@ -322,7 +322,6 @@ const mockLoans: LoanRecord[] = [
   },
 ];
 
-
 export default function Finance() {
   const [transactions, setTransactions] = useState(mockTransactions);
   const [goals, setGoals] = useState(mockGoals);
@@ -348,20 +347,27 @@ export default function Finance() {
       try {
         setCashFlowLoading(true);
         setCashFlowError(null);
-        const headers: Record<string, string> = { "Content-Type": "application/json" };
+        const headers: Record<string, string> = {
+          "Content-Type": "application/json",
+        };
         if (accessToken) headers["Authorization"] = `Bearer ${accessToken}`;
-        const res = await fetch(`${API_BASE}/transactions/analytics`, { headers });
+        const res = await fetch(`${API_BASE}/transactions/analytics`, {
+          headers,
+        });
         const json = await res.json().catch(() => null as any);
         const list: any[] = (json && (json.result || json.data || [])) || [];
         if (!res.ok || !json?.ok || !Array.isArray(list)) {
-          throw new Error((json && (json.error || json.message)) || "Failed to load analytics");
+          throw new Error(
+            (json && (json.error || json.message)) ||
+              "Failed to load analytics",
+          );
         }
         const toMonthLabel = (m: any) => {
           const n = Number(m);
           if (!Number.isNaN(n) && n >= 1 && n <= 12) {
-            return new Intl.DateTimeFormat(i18n.language || "en", { month: "short" }).format(
-              new Date(2020, n - 1, 1),
-            );
+            return new Intl.DateTimeFormat(i18n.language || "en", {
+              month: "short",
+            }).format(new Date(2020, n - 1, 1));
           }
           return String(m);
         };
@@ -374,7 +380,8 @@ export default function Finance() {
             expenses: Number(r.totalExpense) || 0,
             profit:
               Number(
-                r.totalProfit ?? Number(r.totalIncome || 0) - Number(r.totalExpense || 0),
+                r.totalProfit ??
+                  Number(r.totalIncome || 0) - Number(r.totalExpense || 0),
               ) || 0,
           }));
         if (mounted) setCashFlowData(sorted);
@@ -540,10 +547,25 @@ export default function Finance() {
         const key = translateCategory(t.category || "Other");
         map.set(key, (map.get(key) || 0) + (Number(t.amount) || 0));
       });
-    const palette = ["#0088FE","#00C49F","#FFBB28","#FF8042","#A78BFA","#34D399","#F472B6","#F43F5E","#06B6D4","#84CC16"];
+    const palette = [
+      "#0088FE",
+      "#00C49F",
+      "#FFBB28",
+      "#FF8042",
+      "#A78BFA",
+      "#34D399",
+      "#F472B6",
+      "#F43F5E",
+      "#06B6D4",
+      "#84CC16",
+    ];
     return Array.from(map.entries())
       .sort((a, b) => b[1] - a[1])
-      .map(([name, value], i) => ({ name, value, color: palette[i % palette.length] }));
+      .map(([name, value], i) => ({
+        name,
+        value,
+        color: palette[i % palette.length],
+      }));
   }, [transactions, i18n.language]);
   const [searchTerm, setSearchTerm] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
@@ -1532,7 +1554,6 @@ ${data.transactions
                     </div>
                   </div>
                 </DropdownMenuItem>
-    
               </div>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -2076,31 +2097,53 @@ ${data.transactions
                 {cashFlowError && (
                   <div className="text-sm text-red-600">{cashFlowError}</div>
                 )}
-                {!cashFlowLoading && !cashFlowError && cashFlowData.length === 0 && (
-                  <div className="text-sm text-muted-foreground">No data</div>
-                )}
-                {!cashFlowLoading && !cashFlowError && cashFlowData.length > 0 && (
-                  <ResponsiveContainer width="100%" height={300}>
-                    <LineChart data={cashFlowData}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="month" />
-                      <YAxis />
-                      <Tooltip />
-                      <Legend
-                        formatter={(v) =>
-                          v === "income"
-                            ? t("finance.income")
-                            : v === "expenses"
-                              ? t("finance.expenses")
-                              : t("finance.profit")
-                        }
-                      />
-                      <Line type="monotone" dataKey="income" stroke="#22c55e" strokeWidth={2} dot />
-                      <Line type="monotone" dataKey="expenses" stroke="#ef4444" strokeWidth={2} dot />
-                      <Line type="monotone" dataKey="profit" stroke="#3b82f6" strokeWidth={2} dot />
-                    </LineChart>
-                  </ResponsiveContainer>
-                )}
+                {!cashFlowLoading &&
+                  !cashFlowError &&
+                  cashFlowData.length === 0 && (
+                    <div className="text-sm text-muted-foreground">No data</div>
+                  )}
+                {!cashFlowLoading &&
+                  !cashFlowError &&
+                  cashFlowData.length > 0 && (
+                    <ResponsiveContainer width="100%" height={300}>
+                      <LineChart data={cashFlowData}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="month" />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend
+                          formatter={(v) =>
+                            v === "income"
+                              ? t("finance.income")
+                              : v === "expenses"
+                                ? t("finance.expenses")
+                                : t("finance.profit")
+                          }
+                        />
+                        <Line
+                          type="monotone"
+                          dataKey="income"
+                          stroke="#22c55e"
+                          strokeWidth={2}
+                          dot
+                        />
+                        <Line
+                          type="monotone"
+                          dataKey="expenses"
+                          stroke="#ef4444"
+                          strokeWidth={2}
+                          dot
+                        />
+                        <Line
+                          type="monotone"
+                          dataKey="profit"
+                          stroke="#3b82f6"
+                          strokeWidth={2}
+                          dot
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  )}
               </CardContent>
             </Card>
 
@@ -2161,15 +2204,26 @@ ${data.transactions
                           : t("finance.profit")
                     }
                   />
-                  <Bar dataKey="income" name={t("finance.income") as string} fill="#22c55e" />
-                  <Bar dataKey="expenses" name={t("finance.expenses") as string} fill="#ef4444" />
-                  <Bar dataKey="profit" name={t("finance.profit") as string} fill="#3b82f6" />
+                  <Bar
+                    dataKey="income"
+                    name={t("finance.income") as string}
+                    fill="#22c55e"
+                  />
+                  <Bar
+                    dataKey="expenses"
+                    name={t("finance.expenses") as string}
+                    fill="#ef4444"
+                  />
+                  <Bar
+                    dataKey="profit"
+                    name={t("finance.profit") as string}
+                    fill="#3b82f6"
+                  />
                 </BarChart>
               </ResponsiveContainer>
             </CardContent>
           </Card>
         </TabsContent>
-
       </Tabs>
 
       {/* Edit Transaction Dialog */}
@@ -2563,7 +2617,6 @@ ${data.transactions
           )}
         </DialogContent>
       </Dialog>
-
     </div>
   );
 }

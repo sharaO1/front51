@@ -101,7 +101,12 @@ export default function Dashboard() {
 
   // Cash Flow Trend (monthly income, expense, profit)
   const [cashFlowData, setCashFlowData] = useState<
-    { month: string; totalIncome: number; totalExpense: number; totalProfit: number }[]
+    {
+      month: string;
+      totalIncome: number;
+      totalExpense: number;
+      totalProfit: number;
+    }[]
   >([]);
   const [cashFlowLoading, setCashFlowLoading] = useState(false);
   const [cashFlowError, setCashFlowError] = useState<string | null>(null);
@@ -481,32 +486,60 @@ export default function Dashboard() {
       try {
         setCashFlowLoading(true);
         setCashFlowError(null);
-        const headers: Record<string, string> = { "Content-Type": "application/json" };
+        const headers: Record<string, string> = {
+          "Content-Type": "application/json",
+        };
         if (accessToken) headers.Authorization = `Bearer ${accessToken}`;
-        const res = await fetch(`${API_BASE}/transactions/analytics`, { headers });
+        const res = await fetch(`${API_BASE}/transactions/analytics`, {
+          headers,
+        });
         const json = await res.json().catch(() => null as any);
         if (!res.ok || !json?.ok || !Array.isArray(json.result)) {
-          throw new Error((json && (json.error || json.message)) || "Failed to load cash flow analytics");
+          throw new Error(
+            (json && (json.error || json.message)) ||
+              "Failed to load cash flow analytics",
+          );
         }
         // Transform months like "8" -> "Aug"
-        const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+        const monthNames = [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun",
+          "Jul",
+          "Aug",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dec",
+        ];
         const data = (json.result as any[]).map((r) => ({
           month: (() => {
             const m = Number(r.month);
-            return !isNaN(m) && m >= 1 && m <= 12 ? monthNames[m - 1] : String(r.month);
+            return !isNaN(m) && m >= 1 && m <= 12
+              ? monthNames[m - 1]
+              : String(r.month);
           })(),
           totalIncome: Number(r.totalIncome) || 0,
           totalExpense: Number(r.totalExpense) || 0,
-          totalProfit: Number(r.totalProfit ?? (Number(r.totalIncome) - Number(r.totalExpense))) || 0,
+          totalProfit:
+            Number(
+              r.totalProfit ?? Number(r.totalIncome) - Number(r.totalExpense),
+            ) || 0,
         }));
         if (mounted) setCashFlowData(data);
       } catch (e: any) {
-        if (mounted) setCashFlowError(e?.message || "Failed to load cash flow analytics");
+        if (mounted)
+          setCashFlowError(e?.message || "Failed to load cash flow analytics");
       } finally {
         if (mounted) setCashFlowLoading(false);
       }
     })();
-    return () => { mounted = false; };
+    return () => {
+      mounted = false;
+    };
   }, [accessToken]);
 
   const exportReport = (format: "pdf" | "excel" | "csv") => {
@@ -863,29 +896,56 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
                 {t("finance.cash_flow_trend") || "Cash Flow Trend"}
               </CardTitle>
               <CardDescription className="text-gray-600 mt-1">
-                {t("finance.monthly_income_expense_profit") || "Monthly income, expense, and profit"}
+                {t("finance.monthly_income_expense_profit") ||
+                  "Monthly income, expense, and profit"}
               </CardDescription>
             </div>
           </div>
         </CardHeader>
         <CardContent>
           {cashFlowLoading && (
-            <div className="text-sm text-muted-foreground">Loading cash flow…</div>
+            <div className="text-sm text-muted-foreground">
+              Loading cash flow…
+            </div>
           )}
           {cashFlowError && (
             <div className="text-sm text-red-600">{cashFlowError}</div>
           )}
           {!cashFlowLoading && !cashFlowError && (
             <ResponsiveContainer width="100%" height={320}>
-              <LineChart data={cashFlowData} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
+              <LineChart
+                data={cashFlowData}
+                margin={{ top: 10, right: 20, left: 0, bottom: 0 }}
+              >
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="month" />
                 <YAxis />
                 <Tooltip />
                 <Legend />
-                <Line type="monotone" dataKey="totalIncome" name="Income" stroke="#22c55e" strokeWidth={2} dot={false} />
-                <Line type="monotone" dataKey="totalExpense" name="Expense" stroke="#ef4444" strokeWidth={2} dot={false} />
-                <Line type="monotone" dataKey="totalProfit" name="Profit" stroke="#3b82f6" strokeWidth={2} dot={false} />
+                <Line
+                  type="monotone"
+                  dataKey="totalIncome"
+                  name="Income"
+                  stroke="#22c55e"
+                  strokeWidth={2}
+                  dot={false}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="totalExpense"
+                  name="Expense"
+                  stroke="#ef4444"
+                  strokeWidth={2}
+                  dot={false}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="totalProfit"
+                  name="Profit"
+                  stroke="#3b82f6"
+                  strokeWidth={2}
+                  dot={false}
+                />
               </LineChart>
             </ResponsiveContainer>
           )}
