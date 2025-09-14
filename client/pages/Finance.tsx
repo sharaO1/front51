@@ -511,7 +511,9 @@ export default function Finance() {
   // Load borrow/lend records from backend
   useEffect(() => {
     let mounted = true;
-    const headers: Record<string, string> = { "Content-Type": "application/json" };
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json",
+    };
     if (accessToken) headers["Authorization"] = `Bearer ${accessToken}`;
 
     const normalizeBorrow = (r: any): LoanRecord => {
@@ -519,25 +521,39 @@ export default function Finance() {
         const n = typeof v === "string" ? parseFloat(v) : Number(v);
         return Number.isFinite(n) ? n : 0;
       };
-      const type = String(r.type || "borrow").toLowerCase() === "lend" ? "lend" : "borrow";
+      const type =
+        String(r.type || "borrow").toLowerCase() === "lend" ? "lend" : "borrow";
       const partyTypeRaw = String(r.partyType || "other").toLowerCase();
-      const partyType: LoanRecord["partyType"] = ["supplier", "client", "other"].includes(partyTypeRaw)
+      const partyType: LoanRecord["partyType"] = [
+        "supplier",
+        "client",
+        "other",
+      ].includes(partyTypeRaw)
         ? (partyTypeRaw as any)
         : "other";
       const created = r.createdAt || r.date || new Date().toISOString();
       const due = r.returnDate || r.dueDate || "";
       const stRaw = String(r.status || "active").toLowerCase();
-      let status: LoanRecord["status"] = stRaw === "returned" ? "returned" : stRaw === "overdue" ? "overdue" : "active";
+      let status: LoanRecord["status"] =
+        stRaw === "returned"
+          ? "returned"
+          : stRaw === "overdue"
+            ? "overdue"
+            : "active";
       if (status === "active" && due) {
         const d = new Date(due);
         if (!Number.isNaN(d.getTime())) {
           const today = new Date();
-          d.setHours(23,59,59,999);
+          d.setHours(23, 59, 59, 999);
           if (d.getTime() < today.getTime()) status = "overdue";
         }
       }
       return {
-        id: String(r.id || r._id || `${Date.now()}-${Math.random().toString(36).slice(2)}`),
+        id: String(
+          r.id ||
+            r._id ||
+            `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+        ),
         type,
         amount: toNum(r.amount),
         productName: r.productName || r.product || undefined,
@@ -1012,11 +1028,16 @@ export default function Finance() {
     doc.close();
 
     const cleanup = () => {
-      try { document.body.removeChild(iframe); } catch {}
+      try {
+        document.body.removeChild(iframe);
+      } catch {}
     };
 
     const doPrint = () => {
-      try { iframe.contentWindow?.focus(); iframe.contentWindow?.print(); } catch {}
+      try {
+        iframe.contentWindow?.focus();
+        iframe.contentWindow?.print();
+      } catch {}
       setTimeout(cleanup, 800);
     };
 
@@ -1029,14 +1050,19 @@ export default function Finance() {
 
   const buildFinanceReportHTML = (data: any) => {
     const money = (n: number) => `$${Number(n || 0).toLocaleString()}`;
-    const txRows = data.transactions.slice(0, 50).map((t: any) => `
+    const txRows = data.transactions
+      .slice(0, 50)
+      .map(
+        (t: any) => `
       <tr>
         <td>${t.date}</td>
         <td>${t.type}</td>
         <td>${t.category}</td>
         <td>${t.description}</td>
         <td class="right">${money(t.amount)}</td>
-      </tr>`).join("");
+      </tr>`,
+      )
+      .join("");
 
     return `
       <div class="container">
@@ -1176,9 +1202,11 @@ export default function Finance() {
     setLoans(loans.map((l) => (l.id === selectedLoan.id ? updated : l)));
     setIsEditLoanOpen(false);
     setSelectedLoan(null);
-    toast({ title: t("common.updated"), description: t("common.changes_saved", { defaultValue: "Changes saved" }) });
+    toast({
+      title: t("common.updated"),
+      description: t("common.changes_saved", { defaultValue: "Changes saved" }),
+    });
   };
-
 
   const exportFinanceReport = (format: "pdf" | "excel" | "csv") => {
     const reportData = {
@@ -2087,7 +2115,9 @@ ${data.transactions
                         </Badge>
                       </TableCell>
                       <TableCell>
-                        <span className="font-medium">${(loan.amount ?? 0).toFixed(2)}</span>
+                        <span className="font-medium">
+                          ${(loan.amount ?? 0).toFixed(2)}
+                        </span>
                       </TableCell>
                       <TableCell>
                         <div>{loan.partyName}</div>
@@ -2609,7 +2639,9 @@ ${data.transactions
             <DialogTitle>
               {t("common.edit")} {t("finance.borrow_lend")}
             </DialogTitle>
-            <DialogDescription>{t("finance.create_borrow_lend_desc")}</DialogDescription>
+            <DialogDescription>
+              {t("finance.create_borrow_lend_desc")}
+            </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
@@ -2617,14 +2649,20 @@ ${data.transactions
                 <Label>{t("clients.type")}</Label>
                 <Select
                   value={newLoan.type}
-                  onValueChange={(v) => setNewLoan({ ...newLoan, type: v as any })}
+                  onValueChange={(v) =>
+                    setNewLoan({ ...newLoan, type: v as any })
+                  }
                 >
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="borrow">{t("finance.borrow_label")}</SelectItem>
-                    <SelectItem value="lend">{t("finance.lend_label")}</SelectItem>
+                    <SelectItem value="borrow">
+                      {t("finance.borrow_label")}
+                    </SelectItem>
+                    <SelectItem value="lend">
+                      {t("finance.lend_label")}
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -2641,7 +2679,9 @@ ${data.transactions
               <Input
                 placeholder={t("warehouse.product_name")}
                 value={newLoan.productName || ""}
-                onChange={(e) => setNewLoan({ ...newLoan, productName: e.target.value })}
+                onChange={(e) =>
+                  setNewLoan({ ...newLoan, productName: e.target.value })
+                }
               />
             </div>
             <div className="grid grid-cols-2 gap-4">
@@ -2650,7 +2690,9 @@ ${data.transactions
                 <Input
                   placeholder="SKU"
                   value={newLoan.sku || ""}
-                  onChange={(e) => setNewLoan({ ...newLoan, sku: e.target.value })}
+                  onChange={(e) =>
+                    setNewLoan({ ...newLoan, sku: e.target.value })
+                  }
                 />
               </div>
               <div className="space-y-2">
@@ -2673,15 +2715,21 @@ ${data.transactions
                 <Label>{t("finance.party_type")}</Label>
                 <Select
                   value={newLoan.partyType}
-                  onValueChange={(v) => setNewLoan({ ...newLoan, partyType: v as any })}
+                  onValueChange={(v) =>
+                    setNewLoan({ ...newLoan, partyType: v as any })
+                  }
                 >
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="supplier">{t("warehouse.supplier")}</SelectItem>
+                    <SelectItem value="supplier">
+                      {t("warehouse.supplier")}
+                    </SelectItem>
                     <SelectItem value="client">{t("sales.client")}</SelectItem>
-                    <SelectItem value="other">{t("warehouse.other")}</SelectItem>
+                    <SelectItem value="other">
+                      {t("warehouse.other")}
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -2690,7 +2738,9 @@ ${data.transactions
                 <Input
                   placeholder={t("finance.party_name_placeholder")}
                   value={newLoan.partyName || ""}
-                  onChange={(e) => setNewLoan({ ...newLoan, partyName: e.target.value })}
+                  onChange={(e) =>
+                    setNewLoan({ ...newLoan, partyName: e.target.value })
+                  }
                 />
               </div>
             </div>
@@ -2700,7 +2750,9 @@ ${data.transactions
                 <Input
                   type="date"
                   value={(newLoan.date as string) || ""}
-                  onChange={(e) => setNewLoan({ ...newLoan, date: e.target.value })}
+                  onChange={(e) =>
+                    setNewLoan({ ...newLoan, date: e.target.value })
+                  }
                 />
               </div>
               <div className="space-y-2">
@@ -2708,7 +2760,9 @@ ${data.transactions
                 <Input
                   type="date"
                   value={newLoan.dueDate || ""}
-                  onChange={(e) => setNewLoan({ ...newLoan, dueDate: e.target.value })}
+                  onChange={(e) =>
+                    setNewLoan({ ...newLoan, dueDate: e.target.value })
+                  }
                 />
               </div>
             </div>
@@ -2717,15 +2771,21 @@ ${data.transactions
                 <Label>{t("common.status")}</Label>
                 <Select
                   value={newLoan.status}
-                  onValueChange={(v) => setNewLoan({ ...newLoan, status: v as any })}
+                  onValueChange={(v) =>
+                    setNewLoan({ ...newLoan, status: v as any })
+                  }
                 >
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="active">{t("status.active")}</SelectItem>
-                    <SelectItem value="returned">{t("status.returned")}</SelectItem>
-                    <SelectItem value="overdue">{t("status.overdue")}</SelectItem>
+                    <SelectItem value="returned">
+                      {t("status.returned")}
+                    </SelectItem>
+                    <SelectItem value="overdue">
+                      {t("status.overdue")}
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -2735,7 +2795,9 @@ ${data.transactions
               <Textarea
                 placeholder={t("warehouse.additional_notes_placeholder")}
                 value={newLoan.notes || ""}
-                onChange={(e) => setNewLoan({ ...newLoan, notes: e.target.value })}
+                onChange={(e) =>
+                  setNewLoan({ ...newLoan, notes: e.target.value })
+                }
               />
             </div>
             <div className="flex gap-2">

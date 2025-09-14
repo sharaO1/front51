@@ -1501,13 +1501,31 @@ export default function Sales() {
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Export filtered</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onSelect={(e) => { e.preventDefault(); setExportMenuOpen(false); setTimeout(() => handleExportCSV(), 10); }}>
+              <DropdownMenuItem
+                onSelect={(e) => {
+                  e.preventDefault();
+                  setExportMenuOpen(false);
+                  setTimeout(() => handleExportCSV(), 10);
+                }}
+              >
                 <FileSpreadsheet className="mr-2 h-4 w-4" /> CSV
               </DropdownMenuItem>
-              <DropdownMenuItem onSelect={(e) => { e.preventDefault(); setExportMenuOpen(false); setTimeout(() => handleExportJSON(), 10); }}>
+              <DropdownMenuItem
+                onSelect={(e) => {
+                  e.preventDefault();
+                  setExportMenuOpen(false);
+                  setTimeout(() => handleExportJSON(), 10);
+                }}
+              >
                 <FileJson className="mr-2 h-4 w-4" /> JSON
               </DropdownMenuItem>
-              <DropdownMenuItem onSelect={(e) => { e.preventDefault(); setExportMenuOpen(false); setTimeout(() => setIsPdfDialogOpen(true), 10); }}>
+              <DropdownMenuItem
+                onSelect={(e) => {
+                  e.preventDefault();
+                  setExportMenuOpen(false);
+                  setTimeout(() => setIsPdfDialogOpen(true), 10);
+                }}
+              >
                 <Receipt className="mr-2 h-4 w-4" /> PDF
               </DropdownMenuItem>
             </DropdownMenuContent>
