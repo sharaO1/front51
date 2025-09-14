@@ -173,8 +173,8 @@ const mockInvoices: Invoice[] = [
     employeeName: "Sarah Chen",
     employeeAvatar:
       "https://images.pexels.com/photos/25651531/pexels-photo-25651531.jpeg",
-    date: "2024-01-15",
-    dueDate: "2024-02-15",
+    date: "2024-01-15T09:30:45",
+    dueDate: "2024-02-15T17:00:00",
     items: [
       {
         id: "1",
@@ -215,8 +215,8 @@ const mockInvoices: Invoice[] = [
     employeeName: "Michael Rodriguez",
     employeeAvatar:
       "https://images.pexels.com/photos/3613388/pexels-photo-3613388.jpeg",
-    date: "2024-01-20",
-    dueDate: "2024-01-25",
+    date: "2024-01-20T14:05:10",
+    dueDate: "2024-01-25T12:00:00",
     items: [
       {
         id: "1",
@@ -287,7 +287,7 @@ export default function Sales() {
     discount: 0,
   });
   const { toast } = useToast();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const clearCurrentItem = () => {
     setCurrentItem({
@@ -1429,7 +1429,7 @@ export default function Sales() {
                   </TableCell>
                   <TableCell>
                     <div>
-                      <div>{invoice.date}</div>
+                      <div>{new Intl.DateTimeFormat(i18n.language || "en", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit" }).format(new Date(invoice.date))}</div>
                     </div>
                   </TableCell>
                   <TableCell>
@@ -1544,7 +1544,7 @@ export default function Sales() {
                       {selectedInvoice.invoiceNumber}
                     </div>
                     <div>
-                      {t("common.date")}: {selectedInvoice.date}
+                      {t("common.date")}: {new Intl.DateTimeFormat(i18n.language || "en", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit" }).format(new Date(selectedInvoice.date))}
                     </div>
                     <div>
                       {t("common.status")}:{" "}
@@ -1696,7 +1696,7 @@ Payment Method: ${selectedInvoice.paymentMethod.replace("_", " ")}
 
 Invoice Details:
 ---------------
-Date: ${selectedInvoice.date}
+Date: ${new Date(selectedInvoice.date).toLocaleString()}
 Status: ${selectedInvoice.status}
 ${selectedInvoice.employeeName ? `Sales Employee: ${selectedInvoice.employeeName}` : ""}
 
