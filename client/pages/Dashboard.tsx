@@ -619,41 +619,22 @@ export default function Dashboard() {
   };
 
   const generatePDFContent = (data: any) => {
-    // Simplified PDF content (in real app, use proper PDF generation)
+    const nf = (n: number) => new Intl.NumberFormat(i18n.language || "en").format(n || 0);
     return `
-DASHBOARD REPORT
-Generated: ${new Date(data.generatedAt).toLocaleString()}
-Period: ${data.dateRange}
+${t("dashboard.title").toUpperCase()}
+${t("finance.generated_at")}: ${new Date(data.generatedAt).toLocaleString()}
+${t("common.period", { defaultValue: "Period" })}: ${data.dateRange}
 
-EXECUTIVE SUMMARY
+${t("finance.executive_summary")}
 ===============
-Total Revenue: $${data.summary.totalRevenue.toLocaleString()}
-Total Products: ${data.summary.totalProducts.toLocaleString()}
-Active Clients: ${data.summary.activeClients.toLocaleString()}
-Sales Today: ${data.summary.salesToday}
+${t("dashboard.total_revenue")}: $${nf(data.summary.totalRevenue)}
+${t("dashboard.products")}: ${nf(data.summary.totalProducts)}
+${t("dashboard.active_clients")}: ${nf(data.summary.activeClients)}
+${t("dashboard.sales_today")}: ${nf(data.summary.salesToday)}
 
-GROWTH METRICS
-==============
-Revenue Growth: +${data.summary.growthMetrics.revenueGrowth}%
-Product Growth: +${data.summary.growthMetrics.productGrowth} new items
-Client Growth: +${data.summary.growthMetrics.clientGrowth} new clients
-Sales Growth: +${data.summary.growthMetrics.salesGrowth}%
-
-MONTHLY SALES DATA
-==================
-${data.salesData.map((item: any) => `${item.name}: $${item.sales.toLocaleString()} sales, $${item.profit.toLocaleString()} profit`).join("\n")}
-
-PRODUCT CATEGORIES
-==================
-${data.productCategories.map((cat: any) => `${cat.name}: ${cat.value} products`).join("\n")}
-
-LOW STOCK ALERTS
-================
-${data.lowStockItems.map((item: any) => `${item.name}: ${item.stock} units (Min: ${item.minRequired})`).join("\n")}
-
-RECENT ACTIVITIES
+${t("dashboard.recent_activity")}
 =================
-${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.description}${activity.amount ? ` ($${activity.amount.toLocaleString()})` : ""}`).join("\n")}
+${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.description}${activity.amount ? ` ($${nf(activity.amount)})` : ""}`).join("\n")}
     `;
   };
 
