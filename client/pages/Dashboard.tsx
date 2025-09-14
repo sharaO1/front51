@@ -756,7 +756,9 @@ export default function Dashboard() {
     let mounted = true;
     (async () => {
       try {
-        const headers: Record<string, string> = { "Content-Type": "application/json" };
+        const headers: Record<string, string> = {
+          "Content-Type": "application/json",
+        };
         if (accessToken) headers.Authorization = `Bearer ${accessToken}`;
 
         const [salesRes, clientsRes] = await Promise.all([
@@ -765,43 +767,74 @@ export default function Dashboard() {
         ]);
         const salesJson = await salesRes.json().catch(() => null as any);
         const clientsJson = await clientsRes.json().catch(() => null as any);
-        const salesList: any[] = (salesJson && (salesJson.result || salesJson.data || salesJson)) || [];
-        const clientsList: any[] = (clientsJson && (clientsJson.result || clientsJson.data || clientsJson)) || [];
+        const salesList: any[] =
+          (salesJson && (salesJson.result || salesJson.data || salesJson)) ||
+          [];
+        const clientsList: any[] =
+          (clientsJson &&
+            (clientsJson.result || clientsJson.data || clientsJson)) ||
+          [];
 
         // Date helpers
         const now = new Date();
         const thisStart = new Date(now.getFullYear(), now.getMonth(), 1);
         const prevStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-        const prevEnd = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59, 999);
+        const prevEnd = new Date(
+          now.getFullYear(),
+          now.getMonth(),
+          0,
+          23,
+          59,
+          59,
+          999,
+        );
 
         const normalizeStatus = (r: any) => {
           const raw = String(r?.status || "").toLowerCase();
-          const cancelled = !!r?.cancellationReason || raw === "cancelled" || raw === "canceled";
+          const cancelled =
+            !!r?.cancellationReason ||
+            raw === "cancelled" ||
+            raw === "canceled";
           if (cancelled) return "cancelled";
-          return ["draft", "sent", "paid", "overdue", "cancelled"].includes(raw) ? raw : "draft";
+          return ["draft", "sent", "paid", "overdue", "cancelled"].includes(raw)
+            ? raw
+            : "draft";
         };
         const getDate = (r: any) =>
           new Date(
-            r?.createdAt || r?.date || r?.created_at || r?.createdAtUtc || Date.now(),
+            r?.createdAt ||
+              r?.date ||
+              r?.created_at ||
+              r?.createdAtUtc ||
+              Date.now(),
           );
-        const inRange = (d: Date, start: Date, end: Date) => d.getTime() >= start.getTime() && d.getTime() <= end.getTime();
+        const inRange = (d: Date, start: Date, end: Date) =>
+          d.getTime() >= start.getTime() && d.getTime() <= end.getTime();
 
         // Sales: paid only
         const paidSales = Array.isArray(salesList)
           ? salesList.filter((r) => normalizeStatus(r) === "paid")
           : [];
 
-        const tmSales = paidSales.filter((r) => getDate(r).getTime() >= thisStart.getTime());
-        const lmSales = paidSales.filter((r) => inRange(getDate(r), prevStart, prevEnd));
+        const tmSales = paidSales.filter(
+          (r) => getDate(r).getTime() >= thisStart.getTime(),
+        );
+        const lmSales = paidSales.filter((r) =>
+          inRange(getDate(r), prevStart, prevEnd),
+        );
 
         const sumTotals = (arr: any[]) =>
           arr.reduce((s, r) => s + (parseFloat(String(r.total ?? 0)) || 0), 0);
         const sumQty = (arr: any[]) =>
-          arr.reduce((s, r) =>
-            s + ((Array.isArray(r.items) ? r.items : []).reduce(
-              (x: number, it: any) => x + (Number(it.quantity || 0) || 0),
-              0,
-            ) || 0), 0);
+          arr.reduce(
+            (s, r) =>
+              s +
+              ((Array.isArray(r.items) ? r.items : []).reduce(
+                (x: number, it: any) => x + (Number(it.quantity || 0) || 0),
+                0,
+              ) || 0),
+            0,
+          );
         const avgOrder = (arr: any[]) => {
           if (!arr.length) return 0;
           return sumTotals(arr) / arr.length;
@@ -818,9 +851,19 @@ export default function Dashboard() {
 
         // Clients: new this month vs last month
         const getCreated = (c: any) =>
-          new Date(c?.createdAt || c?.created_at || c?.ph_created_at || c?.created || 0);
-        const clientsThis = clientsList.filter((c) => getCreated(c).getTime() >= thisStart.getTime()).length;
-        const clientsLast = clientsList.filter((c) => inRange(getCreated(c), prevStart, prevEnd)).length;
+          new Date(
+            c?.createdAt ||
+              c?.created_at ||
+              c?.ph_created_at ||
+              c?.created ||
+              0,
+          );
+        const clientsThis = clientsList.filter(
+          (c) => getCreated(c).getTime() >= thisStart.getTime(),
+        ).length;
+        const clientsLast = clientsList.filter((c) =>
+          inRange(getCreated(c), prevStart, prevEnd),
+        ).length;
 
         if (mounted) {
           setQuickStats({
@@ -837,7 +880,8 @@ export default function Dashboard() {
             productsSold: {
               thisMonth: productsSoldThis,
               lastMonth: productsSoldLast,
-              change: Math.round(pc(productsSoldThis, productsSoldLast) * 10) / 10,
+              change:
+                Math.round(pc(productsSoldThis, productsSoldLast) * 10) / 10,
             },
             avgOrder: {
               thisMonth: avgOrderThis,
@@ -1543,7 +1587,9 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
                     <TableCell className="font-medium">{row.label}</TableCell>
                     <TableCell>{fmt(row.thisVal)}</TableCell>
                     <TableCell>{fmt(row.lastVal)}</TableCell>
-                    <TableCell className={positive ? "text-green-600" : "text-red-600"}>
+                    <TableCell
+                      className={positive ? "text-green-600" : "text-red-600"}
+                    >
                       {(positive ? "+" : "") + (row.change || 0).toFixed(1)}%
                     </TableCell>
                     <TableCell>
@@ -1553,7 +1599,12 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
                         ) : (
                           <TrendingDown className="h-4 w-4 text-red-600" />
                         )}
-                        <span className={(positive ? "text-green-600" : "text-red-600") + " text-sm"}>
+                        <span
+                          className={
+                            (positive ? "text-green-600" : "text-red-600") +
+                            " text-sm"
+                          }
+                        >
                           {positive ? t("dashboard.up") : "Down"}
                         </span>
                       </div>
