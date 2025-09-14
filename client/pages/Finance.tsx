@@ -1595,49 +1595,56 @@ ${data.transactions
     let csv = "";
 
     // Summary
-    csv += "Financial Summary\n";
-    csv += `Generated,${new Date(data.generatedAt).toLocaleString()}\n`;
+    csv += `${t("finance.executive_summary")}\n`;
+    csv += `${t("finance.generated_at")},${new Date(data.generatedAt).toLocaleString(i18n.language || "en")}\n`;
     csv += "\n";
-    csv += "Metric,Amount\n";
-    csv += `Total Income,$${data.summary.totalIncome.toLocaleString()}\n`;
-    csv += `Total Expenses,$${data.summary.totalExpenses.toLocaleString()}\n`;
-    csv += `Net Profit,$${data.summary.netProfit.toLocaleString()}\n`;
-    csv += `Profit Margin,${data.summary.profitMargin.toFixed(1)}%\n`;
-    csv += `Pending Transactions,${data.summary.pendingTransactions}\n`;
+    csv += `${t("dashboard.metric")},${t("common.amount")}\n`;
+    csv += `${t("finance.total_income")},$${data.summary.totalIncome.toLocaleString()}\n`;
+    csv += `${t("finance.total_expenses")},$${data.summary.totalExpenses.toLocaleString()}\n`;
+    csv += `${t("finance.net_profit")},$${data.summary.netProfit.toLocaleString()}\n`;
+    csv += `${t("finance.profit_margin")},${data.summary.profitMargin.toFixed(1)}%\n`;
+    csv += `${t("finance.pending_transactions")},${data.summary.pendingTransactions}\n`;
     csv += "\n";
 
     // Cash Flow
-    csv += "Monthly Cash Flow\n";
-    csv += "Month,Income,Expenses,Profit\n";
+    csv += `${t("finance.cash_flow_trend")}\n`;
+    csv += `${t("common.month", { defaultValue: "Month" })},${t("finance.income")},${t("finance.expenses")},${t("finance.profit")}\n`;
     data.cashFlowData.forEach((item: any) => {
       csv += `${item.month},$${item.income.toLocaleString()},$${item.expenses.toLocaleString()},$${item.profit.toLocaleString()}\n`;
     });
     csv += "\n";
 
     // Expense Categories
-    csv += "Expense Categories\n";
-    csv += "Category,Amount\n";
+    csv += `${t("finance.expense_breakdown")}\n`;
+    csv += `${t("warehouse.category")},${t("common.amount")}\n`;
     data.expenseBreakdown.forEach((cat: any) => {
       csv += `${cat.name},$${cat.value.toLocaleString()}\n`;
     });
     csv += "\n";
 
     // Financial Goals
-    csv += "Financial Goals\n";
+    csv += `${t("finance.financial_goals")}\n`;
     csv +=
-      "Title,Target Amount,Current Amount,Progress %,Deadline,Category,Status\n";
+      `${t("finance.goal_title")},${t("finance.target_amount")},${t("finance.current_amount")},${t("finance.progress")} %,${t("sales.due_date")},${t("warehouse.category")},${t("common.status")}\n`;
     data.goals.forEach((goal: any) => {
       const progress = (goal.currentAmount / goal.targetAmount) * 100;
-      csv += `"${goal.title}",$${goal.targetAmount.toLocaleString()},$${goal.currentAmount.toLocaleString()},${progress.toFixed(1)}%,${goal.deadline},${goal.category},${goal.status}\n`;
+      csv += `"${goal.title}",$${goal.targetAmount.toLocaleString()},$${goal.currentAmount.toLocaleString()},${progress.toFixed(1)}%,${goal.deadline},${goal.category},${t(`status.${goal.status}`, { defaultValue: goal.status })}\n`;
     });
     csv += "\n";
 
     // Transactions
-    csv += "Transactions\n";
+    csv += `${t("finance.transactions")}\n`;
     csv +=
-      "Date,Type,Category,Description,Amount,Payment Method,Status,Performed By,Tags\n";
+      `${t("common.date")},${t("finance.transaction_type")},${t("warehouse.category")},${t("common.description")},${t("common.amount")},${t("sales.payment_method")},${t("common.status")},${t("finance.performed_by")},${t("common.tags", { defaultValue: "Tags" })}\n`;
     data.transactions.forEach((transaction: any) => {
-      csv += `${transaction.date},${transaction.type},${transaction.category},"${transaction.description}",$${transaction.amount.toLocaleString()},${transaction.paymentMethod.replace("_", " ")},${transaction.status},${transaction.performedBy || ""},"${transaction.tags.join(", ")}"\n`;
+      const typeLabel = transaction.type === "income" ? t("finance.income") : t("finance.expense");
+      const categoryLabel = translateCategory(transaction.category);
+      const statusLabel = t(`status.${transaction.status}`, { defaultValue: transaction.status });
+      const paymentLabel = transaction.paymentMethod === "check"
+        ? t("finance.check")
+        : t(`sales.${transaction.paymentMethod}`, { defaultValue: transaction.paymentMethod.replace("_", " ") });
+      const dateLabel = new Date(transaction.date).toLocaleString(i18n.language || "en");
+      csv += `${dateLabel},${typeLabel},${categoryLabel},"${formatDescription(transaction.description)}",$${transaction.amount.toLocaleString()},${paymentLabel},${statusLabel},${getPerformedByDisplay(transaction.performedBy) || ""},"${transaction.tags.join(", ")}"\n`;
     });
 
     return csv;
