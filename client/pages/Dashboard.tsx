@@ -943,7 +943,7 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
                 <Line
                   type="monotone"
                   dataKey="totalIncome"
-                  name="Income"
+                  name={t("finance.income")}
                   stroke="#22c55e"
                   strokeWidth={2}
                   dot={false}
@@ -951,7 +951,7 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
                 <Line
                   type="monotone"
                   dataKey="totalExpense"
-                  name="Expense"
+                  name={t("finance.expenses")}
                   stroke="#ef4444"
                   strokeWidth={2}
                   dot={false}
@@ -959,7 +959,7 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
                 <Line
                   type="monotone"
                   dataKey="totalProfit"
-                  name="Profit"
+                  name={t("finance.profit")}
                   stroke="#3b82f6"
                   strokeWidth={2}
                   dot={false}
