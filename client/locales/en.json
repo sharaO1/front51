@@ -531,7 +531,17 @@
       "invoice_downloaded_title": "Invoice downloaded",
       "invoice_downloaded_desc": "Invoice PDF has been generated and downloaded.",
       "invoice_downloaded_desc_number": "Invoice {{number}} has been downloaded as a PDF."
-    }
+    },
+    "report": {
+      "invoice_heading": "INVOICE",
+      "client_information": "Client Information",
+      "invoice_details": "Invoice Details",
+      "items": "Items",
+      "summary": "Summary",
+      "generated_on": "Generated on",
+      "sales_employee": "Sales Employee"
+    },
+    "sales_employee": "Sales Employee"
   },
   "finance": {
     "title": "Financial Management",
