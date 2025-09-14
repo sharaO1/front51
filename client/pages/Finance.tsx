@@ -1444,7 +1444,7 @@ ${data.transactions
     // Expense Categories
     csv += "Expense Categories\n";
     csv += "Category,Amount\n";
-    data.expenseCategories.forEach((cat: any) => {
+    data.expenseBreakdown.forEach((cat: any) => {
       csv += `${cat.name},$${cat.value.toLocaleString()}\n`;
     });
     csv += "\n";
@@ -2158,7 +2158,7 @@ ${data.transactions
                 <ResponsiveContainer width="100%" height={300}>
                   <RechartsPieChart>
                     <Pie
-                      data={expenseCategories}
+                      data={expenseBreakdown}
                       cx="50%"
                       cy="50%"
                       labelLine={false}
@@ -2169,7 +2169,7 @@ ${data.transactions
                       fill="#8884d8"
                       dataKey="value"
                     >
-                      {expenseCategories.map((entry, index) => (
+                      {expenseBreakdown.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={entry.color} />
                       ))}
                     </Pie>
