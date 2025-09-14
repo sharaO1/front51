@@ -577,7 +577,9 @@ export default function Sales() {
     // Determine clientId field value per requirements
     const clientIdForPayload: string | null = useExistingClient
       ? newInvoice.clientId || null
-      : (newInvoice.clientName?.trim() ? newInvoice.clientName.trim() : null);
+      : newInvoice.clientName?.trim()
+        ? newInvoice.clientName.trim()
+        : null;
 
     // Build payload expected by backend
     const itemsPayload = (newInvoice.items || []).map((it) => ({
@@ -622,7 +624,11 @@ export default function Sales() {
             ? result.status
             : null;
       const apiOk = data?.ok;
-      if (!res.ok || apiOk === false || (apiStatus != null && apiStatus >= 400)) {
+      if (
+        !res.ok ||
+        apiOk === false ||
+        (apiStatus != null && apiStatus >= 400)
+      ) {
         const errMsg =
           result?.response?.message ||
           result?.message ||
@@ -831,7 +837,11 @@ export default function Sales() {
               ? result.status
               : null;
         const apiOk = data?.ok;
-        if (!res.ok || apiOk === false || (apiStatus != null && apiStatus >= 400)) {
+        if (
+          !res.ok ||
+          apiOk === false ||
+          (apiStatus != null && apiStatus >= 400)
+        ) {
           const errMsg =
             result?.response?.message ||
             result?.message ||
@@ -1319,7 +1329,11 @@ export default function Sales() {
               </div>
 
               <div className="flex gap-2">
-                <Button className="flex-1" onClick={createInvoice} disabled={isSubmitting}>
+                <Button
+                  className="flex-1"
+                  onClick={createInvoice}
+                  disabled={isSubmitting}
+                >
                   <Receipt className="mr-2 h-4 w-4" />
                   {isSubmitting ? "Creating..." : "Create Invoice"}
                 </Button>
@@ -1365,7 +1379,9 @@ export default function Sales() {
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${metrics.revenue.toLocaleString()}</div>
+            <div className="text-2xl font-bold">
+              ${metrics.revenue.toLocaleString()}
+            </div>
             <p className="text-xs text-muted-foreground">
               {t("sales.from_paid_invoices")}
             </p>
@@ -1380,7 +1396,9 @@ export default function Sales() {
             <Calculator className="h-4 w-4 text-yellow-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${metrics.pending.toLocaleString()}</div>
+            <div className="text-2xl font-bold">
+              ${metrics.pending.toLocaleString()}
+            </div>
             <p className="text-xs text-muted-foreground">
               {t("sales.awaiting_payment")}
             </p>
