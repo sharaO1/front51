@@ -290,6 +290,8 @@ export default function Sales() {
     } catch {}
     try {
       document.body.style.pointerEvents = "";
+      document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
     } catch {}
   };
 
