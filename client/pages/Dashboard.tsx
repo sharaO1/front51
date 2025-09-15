@@ -95,7 +95,7 @@ export default function Dashboard() {
     { name: string; value: number; color: string }[]
   >([]);
   const [productIndex, setProductIndex] = useState<
-    Record<string, { name: string; unitPrice?: number }>
+    Record<string, { name: string; unitPrice?: number; cost?: number }>
   >({});
   const [derivedSales, setDerivedSales] = useState<{
     products: {
@@ -103,9 +103,9 @@ export default function Dashboard() {
       name: string;
       unitsSold: number;
       revenue: number;
-      profit: number;
+      profit: number | null;
     }[];
-    totals: { units: number; revenue: number; profit: number };
+    totals: { units: number; revenue: number; profit: number | null };
   } | null>(null);
   const [salesSummary, setSalesSummary] = useState<
     SalesSummaryResponse["result"] | null
@@ -187,7 +187,7 @@ export default function Dashboard() {
           ? products.filter((p: any) => inFilial(p, managerFilialId))
           : products;
 
-        const index: Record<string, { name: string; unitPrice?: number }> = {};
+        const index: Record<string, { name: string; unitPrice?: number; cost?: number }> = {};
         for (const p of scopedProducts) {
           const id = String(p.id ?? "");
           if (!id) continue;
@@ -201,6 +201,19 @@ export default function Dashboard() {
                   p.price ??
                   p.sellingPrice ??
                   p.selling_price ??
+                  0,
+              ) || undefined,
+            cost:
+              Number(
+                p.cost ??
+                  p.costPrice ??
+                  p.purchasePrice ??
+                  p.buyingPrice ??
+                  p.purchase_price ??
+                  p.buy_price ??
+                  p.cost_price ??
+                  p.cogs ??
+                  p.cogsUnit ??
                   0,
               ) || undefined,
           };
@@ -427,7 +440,7 @@ export default function Dashboard() {
     };
   }, []);
 
-  // Derive "Sales by Product" from Sales management (paid invoices)
+  // Derive "Sales by Product" from Sales management (paid invoices) - TODAY ONLY
   useEffect(() => {
     let mounted = true;
     (async () => {
@@ -452,6 +465,16 @@ export default function Dashboard() {
             ? raw
             : "draft";
         };
+        const getDate = (r: any) =>
+          new Date(
+            r?.createdAt ||
+              r?.date ||
+              r?.created_at ||
+              r?.createdAtUtc ||
+              Date.now(),
+          );
+        const isSameDay = (a: Date, b: Date) => a.toDateString() === b.toDateString();
+        const today = new Date();
 
         const map = new Map<
           string,
@@ -460,23 +483,35 @@ export default function Dashboard() {
             name: string;
             unitsSold: number;
             revenue: number;
-            profit: number;
+            profit: number | null;
           }
         >();
         for (const r of list) {
           if (normalizeStatus(r) !== "paid") continue;
+          if (!isSameDay(getDate(r), today)) continue;
           const items = Array.isArray(r.items) ? r.items : [];
           for (const it of items) {
             const pid = String(it.productId || it.productID || it.id || "");
             if (!pid) continue;
             const qty = Number(it.quantity || 0) || 0;
-            const total = (() => {
-              const t = Number(it.total);
-              if (!isNaN(t) && t !== 0) return t;
-              const up =
-                Number(it.unitPrice ?? productIndex[pid]?.unitPrice ?? 0) || 0;
-              return qty * up;
+            const rawTotal = Number(it.total);
+            const unitPrice = Number(
+              it.unitPrice ?? productIndex[pid]?.unitPrice ?? 0,
+            ) || 0;
+            const total = !isNaN(rawTotal) && rawTotal !== 0 ? rawTotal : qty * unitPrice;
+            const effectiveUnit = qty > 0 ? total / qty : unitPrice;
+            const cost = (() => {
+              const c = Number(
+                it.cost ??
+                  it.costPrice ??
+                  it.purchasePrice ??
+                  it.buyingPrice ??
+                  productIndex[pid]?.cost ??
+                  0,
+              );
+              return isNaN(c) || c === 0 ? undefined : c;
             })();
+
             if (!map.has(pid)) {
               const name =
                 productIndex[pid]?.name || String(it.productName || pid);
@@ -485,29 +520,52 @@ export default function Dashboard() {
                 name,
                 unitsSold: 0,
                 revenue: 0,
-                profit: 0,
+                profit: null,
               });
             }
             const entry = map.get(pid)!;
             entry.unitsSold += qty;
             entry.revenue += total;
-            // profit unknown without cost; keep 0
+            if (cost != null) {
+              const p = qty * (effectiveUnit - cost);
+              entry.profit = (entry.profit ?? 0) + p;
+            }
           }
         }
-        const productsAgg = Array.from(map.values()).sort(
-          (a, b) => b.revenue - a.revenue,
-        );
+        const productsAgg = Array.from(map.values())
+          .map((p) => ({
+            ...p,
+            profit:
+              p.profit == null
+                ? null
+                : Math.abs(p.profit) < 1e-6
+                  ? 0
+                  : p.profit,
+          }))
+          .sort((a, b) => b.revenue - a.revenue);
+
         const totals = productsAgg.reduce(
           (acc, p) => ({
             units: acc.units + p.unitsSold,
             revenue: acc.revenue + p.revenue,
-            profit: acc.profit + p.profit,
+            profit:
+              p.profit == null ? acc.profit : (acc.profit ?? 0) + p.profit,
           }),
-          { units: 0, revenue: 0, profit: 0 },
+          { units: 0, revenue: 0, profit: null as number | null },
         );
         if (mounted) {
           setDerivedSales({ products: productsAgg, totals });
-          setSalesSummary({ products: productsAgg as any, totals });
+          setSalesSummary({
+            products: productsAgg.map((p) => ({
+              ...p,
+              profit: (p.profit ?? 0) as number,
+            })) as any,
+            totals: {
+              units: totals.units,
+              revenue: totals.revenue,
+              profit: (totals.profit ?? 0) as number,
+            },
+          });
         }
       } catch {}
     })();
@@ -1429,10 +1487,9 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
                     {t("finance.profit")}
                   </div>
                   <div className="text-xl font-semibold">
-                    $
-                    {(
-                      (derivedSales?.totals.profit ?? salesSummary?.totals.profit) || 0
-                    ).toLocaleString()}
+                    {derivedSales?.totals.profit == null
+                      ? "—"
+                      : `$${(derivedSales?.totals.profit || 0).toLocaleString()}`}
                   </div>
                 </div>
               </div>
@@ -1456,9 +1513,9 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
                 </TableHeader>
                 <TableBody>
                   {(derivedSales?.products || salesSummary?.products || []).map((p) => {
-                      const margin = p.revenue
+                      const margin = p.revenue && p.profit != null
                         ? (p.profit / p.revenue) * 100
-                        : 0;
+                        : null;
                       return (
                         <TableRow key={p.id}>
                           <TableCell className="font-medium">
@@ -1471,10 +1528,10 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
                             ${p.revenue.toLocaleString()}
                           </TableCell>
                           <TableCell className="text-right">
-                            ${p.profit.toLocaleString()}
+                            {p.profit == null ? "—" : `$${p.profit.toLocaleString()}`}
                           </TableCell>
                           <TableCell className="text-right">
-                            {margin.toFixed(1)}%
+                            {margin == null ? "—" : `${margin.toFixed(1)}%`}
                           </TableCell>
                         </TableRow>
                       );
