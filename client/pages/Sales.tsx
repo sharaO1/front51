@@ -611,7 +611,7 @@ export default function Sales() {
         <div class="card">
           <div class="header">
             <div>
-              <h1>${t("navigation.sales")} — ${t("dashboard.recent_activity", "Recent Activity")}</h1>
+              <h1>${t("navigation.sales")} ��� ${t("dashboard.recent_activity", "Recent Activity")}</h1>
               <div class="subtitle">${t("finance.report_title", "FINANCIAL REPORT").replace("FINANCIAL", t("navigation.sales"))}</div>
             </div>
             <div class="badge">${period === "today" ? t("sales.today") : period === "last_month" ? t("sales.last_month") : t("finance.last_12_months", "Last 12 Months")}</div>
@@ -701,7 +701,12 @@ export default function Sales() {
         return d.getFullYear() === lastMonthYear && d.getMonth() === lastMonthIndex;
       });
     } else if (pdfPeriod === "last_year") {
-      data = data.filter((i) => new Date(i.date).getFullYear() === lastYear);
+      const start = new Date(now);
+      start.setFullYear(now.getFullYear() - 1);
+      data = data.filter((i) => {
+        const d = new Date(i.date);
+        return d >= start && d <= now;
+      });
     }
 
     const dateLabel =
@@ -716,7 +721,7 @@ export default function Sales() {
               year: "numeric",
               month: "long",
             }).format(new Date(lastMonthYear, lastMonthIndex, 1))
-          : String(lastYear);
+          : `${new Intl.DateTimeFormat(i18n.language || "en", { month: "short", year: "numeric" }).format(new Date(now.getFullYear() - 1, now.getMonth(), 1))} – ${new Intl.DateTimeFormat(i18n.language || "en", { month: "short", year: "numeric" }).format(new Date(now.getFullYear(), now.getMonth(), 1))}`;
 
     const html = buildSalesReportHTML(pdfPeriod, dateLabel, data);
     openPrintWindow(html, `${t("navigation.sales")} ${t("common.export")} PDF`);
