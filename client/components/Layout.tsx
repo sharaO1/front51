@@ -143,7 +143,7 @@ export default function Layout({ children }: LayoutProps) {
             {!sidebarCollapsed && (
               <div className="transition-all duration-300 opacity-100">
                 <h1 className="font-bold text-xl bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
-                  BusinessPro
+                  StockMind
                 </h1>
                 <p className="text-sm text-muted-foreground font-medium">
                   Management Suite

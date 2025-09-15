@@ -58,7 +58,7 @@ export default function Settings() {
   const { t } = useTranslation();
 
   const [systemSettings, setSystemSettings] = useState<SystemSettings>({
-    companyName: "BusinessPro Corp",
+    companyName: "StockMind Corp",
     companyEmail: "admin@businesspro.com",
     companyPhone: "+1 (555) 123-4567",
     currency: "USD",

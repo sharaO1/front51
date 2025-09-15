@@ -63,7 +63,7 @@ export default function Login() {
           </div>
           <div className="text-center">
             <h1 className="font-bold text-3xl text-gray-900 hover:text-blue-700 transition-colors duration-300">
-              BusinessPro
+              StockMind
             </h1>
             <p className="text-sm text-gray-600">Management Suite</p>
           </div>

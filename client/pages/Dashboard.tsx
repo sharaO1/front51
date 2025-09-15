@@ -605,7 +605,7 @@ export default function Dashboard() {
           | { ok?: false; error?: string };
         if (!res.ok || !(json as any)?.ok)
           throw new Error(
-            (json as any)?.error || "Failed to load sales summary",
+            (json as any)?.error || '',
           );
         if (isMounted) setSalesSummary((json as SalesSummaryResponse).result);
       } catch (e: any) {
@@ -904,7 +904,7 @@ export default function Dashboard() {
     const reportData = {
       reportType: "Dashboard Overview",
       generatedAt: new Date().toISOString(),
-      dateRange: `Last ${dateFilter} days`,
+      dateRange: `Last ${NodeFilter} days`,
       summary: {
         totalRevenue: 45231.89,
         totalProducts: totalProducts || 2350,

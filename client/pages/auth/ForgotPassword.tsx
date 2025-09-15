@@ -53,7 +53,7 @@ export default function ForgotPassword() {
               <Package className="h-6 w-6 text-white" />
             </div>
             <div className="text-center">
-              <h1 className="font-bold text-2xl text-gray-900">BusinessPro</h1>
+              <h1 className="font-bold text-2xl text-gray-900">StockMind</h1>
               <p className="text-sm text-gray-600">Management Suite</p>
             </div>
           </div>
@@ -117,7 +117,7 @@ export default function ForgotPassword() {
             <Package className="h-6 w-6 text-white" />
           </div>
           <div className="text-center">
-            <h1 className="font-bold text-2xl text-gray-900">BusinessPro</h1>
+            <h1 className="font-bold text-2xl text-gray-900">StockMind</h1>
             <p className="text-sm text-gray-600">Management Suite</p>
           </div>
         </div>
