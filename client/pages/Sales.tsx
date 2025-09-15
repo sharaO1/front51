@@ -577,7 +577,7 @@ export default function Sales() {
         ? `${t("sales.today")} (${dateStr})`
         : period === "last_month"
           ? `${t("sales.last_month")} (${dateStr})`
-          : `${t("finance.last_year", "Last Year")} (${dateStr})`;
+          : `${t("finance.last_12_months", "Last 12 Months")} (${dateStr})`;
 
     // KPIs should reflect only paid (ad-status) sales
     const paidData = data.filter((inv) => inv.status === "paid");
