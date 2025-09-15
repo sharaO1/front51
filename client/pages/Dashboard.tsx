@@ -46,7 +46,6 @@ import { Badge } from "@/components/ui/badge";
 import UserCredentials from "@/components/UserCredentials";
 import { useAuthStore } from "@/stores/authStore";
 import { API_BASE } from "@/lib/api";
-import { SalesSummaryResponse } from "@shared/api";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import AIChat from "@/components/AIChat";
 
@@ -75,11 +74,8 @@ export default function Dashboard() {
   const { user } = useAuthStore();
   const accessToken = useAuthStore((s) => s.accessToken);
 
-  const [salesSummary, setSalesSummary] = useState<
-    SalesSummaryResponse["result"] | null
-  >(null);
-  const [salesLoading, setSalesLoading] = useState(false);
-  const [salesError, setSalesError] = useState<string | null>(null);
+  const [salesLoading] = useState(false);
+  const [salesError] = useState<string | null>(null);
 
   // Real total revenue computed from Transaction History (income)
   const [totalRevenue, setTotalRevenue] = useState<number | null>(null);
@@ -593,32 +589,6 @@ export default function Dashboard() {
     };
   }, [accessToken]);
 
-  useEffect(() => {
-    let isMounted = true;
-    const load = async () => {
-      try {
-        setSalesLoading(true);
-        setSalesError(null);
-        const res = await fetch(`${API_BASE}/dashboard/sales-summary`);
-        const json = (await res.json()) as
-          | SalesSummaryResponse
-          | { ok?: false; error?: string };
-        if (!res.ok || !(json as any)?.ok)
-          throw new Error(
-            (json as any)?.error || '',
-          );
-        if (isMounted) setSalesSummary((json as SalesSummaryResponse).result);
-      } catch (e: any) {
-        if (isMounted) setSalesError(e?.message || "Failed to load");
-      } finally {
-        if (isMounted) setSalesLoading(false);
-      }
-    };
-    load();
-    return () => {
-      isMounted = false;
-    };
-  }, []);
 
   // Compute real total revenue from transactions (income)
   useEffect(() => {
@@ -1081,8 +1051,8 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
             <div className="text-3xl font-bold text-gray-900 mb-2 tracking-tight">
               {typeof totalRevenue === "number"
                 ? `$${totalRevenue.toLocaleString()}`
-                : salesSummary
-                  ? `$${salesSummary.totals.revenue.toLocaleString()}`
+                : derivedSales
+                  ? `$${derivedSales.totals.revenue.toLocaleString()}`
                   : "—"}
             </div>
             <div className="flex items-center gap-2">
@@ -1431,7 +1401,7 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
           {salesError && (
             <div className="text-sm text-red-600">{salesError}</div>
           )}
-          {(derivedSales || salesSummary) && (
+          {derivedSales && (
             <>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
                 <div className="p-3 rounded-lg border bg-white">
@@ -1440,9 +1410,7 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
                   </div>
                   <div className="text-xl font-semibold">
                     {(
-                      derivedSales?.totals.units ??
-                      salesSummary?.totals.units ??
-                      0
+                      derivedSales?.totals.units ?? 0
                     ).toLocaleString()}
                   </div>
                 </div>
@@ -1453,9 +1421,7 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
                   <div className="text-xl font-semibold">
                     $
                     {(
-                      (derivedSales?.totals.revenue ??
-                        salesSummary?.totals.revenue) ||
-                      0
+                      derivedSales?.totals.revenue || 0
                     ).toLocaleString()}
                   </div>
                 </div>
@@ -1466,9 +1432,7 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
                   <div className="text-xl font-semibold">
                     $
                     {(
-                      (derivedSales?.totals.profit ??
-                        salesSummary?.totals.profit) ||
-                      0
+                      derivedSales?.totals.profit || 0
                     ).toLocaleString()}
                   </div>
                 </div>
@@ -1492,8 +1456,7 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {(derivedSales?.products || salesSummary?.products || []).map(
-                    (p) => {
+                  {(derivedSales?.products || []).map((p) => {
                       const margin = p.revenue
                         ? (p.profit / p.revenue) * 100
                         : 0;
