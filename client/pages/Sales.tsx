@@ -1234,16 +1234,67 @@ export default function Sales() {
       const p = products.find((x) => x.id === pid);
       return p ? p.name : pid;
     };
-    const rawStatus = String(r.status || "draft").toLowerCase();
+    const rawStatus = String(
+      r.status ?? r.state ?? r.orderStatus ?? r.paymentStatus ?? "draft",
+    )
+      .toLowerCase()
+      .replace(/\s+/g, "_")
+      .replace(/-/g, "_");
+
     const isCancelled =
       !!r.cancellationReason ||
       rawStatus === "cancelled" ||
-      rawStatus === "canceled";
-    const status = isCancelled
-      ? ("cancelled" as const)
-      : ((["draft", "sent", "paid", "overdue", "cancelled"].includes(rawStatus)
-          ? rawStatus
-          : "draft") as Invoice["status"]);
+      rawStatus === "canceled" ||
+      rawStatus === "void" ||
+      rawStatus === "refunded" ||
+      rawStatus === "reversed" ||
+      rawStatus === "failed" ||
+      rawStatus === "rejected";
+
+    const map: Record<string, Invoice["status"]> = {
+      // Paid equivalents
+      paid: "paid",
+      complete: "paid",
+      completed: "paid",
+      success: "paid",
+      successful: "paid",
+      approved: "paid",
+      confirmed: "paid",
+      received: "paid",
+      payment_received: "paid",
+      fulfilled: "paid",
+      closed: "paid",
+      closed_won: "paid",
+      won: "paid",
+      delivered: "paid",
+      finished: "paid",
+      done: "paid",
+      sale: "paid",
+      sold: "paid",
+      // Sent/pending equivalents
+      sent: "sent",
+      pending: "sent",
+      unpaid: "sent",
+      awaiting_payment: "sent",
+      processing: "sent",
+      in_progress: "sent",
+      open: "sent",
+      issued: "sent",
+      created: "sent",
+      // Overdue equivalents
+      overdue: "overdue",
+      past_due: "overdue",
+      late: "overdue",
+    };
+
+    const status: Invoice["status"] = isCancelled
+      ? "cancelled"
+      : (map[rawStatus] ??
+          (["draft", "sent", "paid", "overdue", "cancelled"].includes(
+            rawStatus,
+          )
+            ? (rawStatus as Invoice["status"])
+            : "draft"));
 
     return {
       id: String(r.id),
