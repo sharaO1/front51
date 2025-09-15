@@ -74,8 +74,6 @@ export default function Dashboard() {
   const { user } = useAuthStore();
   const accessToken = useAuthStore((s) => s.accessToken);
 
-  const [salesLoading] = useState(false);
-  const [salesError] = useState<string | null>(null);
 
   // Real total revenue computed from Transaction History (income)
   const [totalRevenue, setTotalRevenue] = useState<number | null>(null);
@@ -1393,14 +1391,6 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {salesLoading && (
-            <div className="text-sm text-muted-foreground">
-              Loading sales...
-            </div>
-          )}
-          {salesError && (
-            <div className="text-sm text-red-600">{salesError}</div>
-          )}
           {derivedSales && (
             <>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
