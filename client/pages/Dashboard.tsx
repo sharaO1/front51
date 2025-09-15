@@ -46,6 +46,7 @@ import { Badge } from "@/components/ui/badge";
 import UserCredentials from "@/components/UserCredentials";
 import { useAuthStore } from "@/stores/authStore";
 import { API_BASE } from "@/lib/api";
+import { SalesSummaryResponse } from "@shared/api";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import AIChat from "@/components/AIChat";
 
@@ -106,6 +107,9 @@ export default function Dashboard() {
     }[];
     totals: { units: number; revenue: number; profit: number };
   } | null>(null);
+  const [salesSummary, setSalesSummary] = useState<
+    SalesSummaryResponse["result"] | null
+  >(null);
 
   const [salesTodayCount, setSalesTodayCount] = useState<number | null>(null);
   const [salesTodayChange, setSalesTodayChange] = useState<number | null>(null);
@@ -501,7 +505,10 @@ export default function Dashboard() {
           }),
           { units: 0, revenue: 0, profit: 0 },
         );
-        if (mounted) setDerivedSales({ products: productsAgg, totals });
+        if (mounted) {
+          setDerivedSales({ products: productsAgg, totals });
+          setSalesSummary({ products: productsAgg as any, totals });
+        }
       } catch {}
     })();
     return () => {
@@ -1051,7 +1058,9 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
                 ? `$${totalRevenue.toLocaleString()}`
                 : derivedSales
                   ? `$${derivedSales.totals.revenue.toLocaleString()}`
-                  : "—"}
+                  : salesSummary
+                    ? `$${salesSummary.totals.revenue.toLocaleString()}`
+                    : "—"}
             </div>
             <div className="flex items-center gap-2">
               <div className="flex items-center gap-1">
@@ -1391,7 +1400,7 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {derivedSales && (
+          {(derivedSales || salesSummary) && (
             <>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
                 <div className="p-3 rounded-lg border bg-white">
@@ -1400,7 +1409,7 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
                   </div>
                   <div className="text-xl font-semibold">
                     {(
-                      derivedSales?.totals.units ?? 0
+                      derivedSales?.totals.units ?? salesSummary?.totals.units ?? 0
                     ).toLocaleString()}
                   </div>
                 </div>
@@ -1411,7 +1420,7 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
                   <div className="text-xl font-semibold">
                     $
                     {(
-                      derivedSales?.totals.revenue || 0
+                      (derivedSales?.totals.revenue ?? salesSummary?.totals.revenue) || 0
                     ).toLocaleString()}
                   </div>
                 </div>
@@ -1422,7 +1431,7 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
                   <div className="text-xl font-semibold">
                     $
                     {(
-                      derivedSales?.totals.profit || 0
+                      (derivedSales?.totals.profit ?? salesSummary?.totals.profit) || 0
                     ).toLocaleString()}
                   </div>
                 </div>
@@ -1446,7 +1455,7 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {(derivedSales?.products || []).map((p) => {
+                  {(derivedSales?.products || salesSummary?.products || []).map((p) => {
                       const margin = p.revenue
                         ? (p.profit / p.revenue) * 100
                         : 0;
