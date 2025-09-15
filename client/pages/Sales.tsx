@@ -579,7 +579,9 @@ export default function Sales() {
           ? `${t("sales.last_month")} (${dateStr})`
           : `${t("finance.last_year", "Last Year")} (${dateStr})`;
 
-    const totals = data.reduce(
+    // KPIs should reflect only paid (ad-status) sales
+    const paidData = data.filter((inv) => inv.status === "paid");
+    const totals = paidData.reduce(
       (acc, inv) => {
         acc.subtotal += inv.subtotal;
         acc.tax += inv.taxAmount;
@@ -619,7 +621,7 @@ export default function Sales() {
               <div>
                 <h3>${t("dashboard.kpi_at_glance", "KPI at a glance")}</h3>
                 <div class="totals">
-                  <div class="row"><span>${t("sales.total_invoices")}</span><span class="right">${data.length}</span></div>
+                  <div class="row"><span>${t("sales.total_invoices")}</span><span class="right">${paidData.length}</span></div>
                   <div class="row"><span>${t("sales.total_revenue")}</span><span class="right">${formatCurrency(totals.total)}</span></div>
                   <div class="row"><span>${t("sales.subtotal")}</span><span class="right">${formatCurrency(totals.subtotal)}</span></div>
                   <div class="row"><span>${t("sales.tax")}</span><span class="right">${formatCurrency(totals.tax)}</span></div>
@@ -839,9 +841,11 @@ export default function Sales() {
   };
 
   const metrics = useMemo(() => {
+    // Only count revenue from paid invoices
     const revenue = invoices
-      .filter((i) => i.status !== "cancelled")
+      .filter((i) => i.status === "paid")
       .reduce((sum, i) => sum + (Number(i.total) || 0), 0);
+    // Pending is everything not paid and not cancelled
     const pending = invoices
       .filter((i) => i.status !== "paid" && i.status !== "cancelled")
       .reduce((sum, i) => sum + (Number(i.total) || 0), 0);
