@@ -75,7 +75,6 @@ export default function Dashboard() {
   const { user } = useAuthStore();
   const accessToken = useAuthStore((s) => s.accessToken);
 
-
   // Real total revenue computed from Transaction History (income)
   const [totalRevenue, setTotalRevenue] = useState<number | null>(null);
 
@@ -187,7 +186,10 @@ export default function Dashboard() {
           ? products.filter((p: any) => inFilial(p, managerFilialId))
           : products;
 
-        const index: Record<string, { name: string; unitPrice?: number; cost?: number }> = {};
+        const index: Record<
+          string,
+          { name: string; unitPrice?: number; cost?: number }
+        > = {};
         for (const p of scopedProducts) {
           const id = String(p.id ?? "");
           if (!id) continue;
@@ -473,7 +475,8 @@ export default function Dashboard() {
               r?.createdAtUtc ||
               Date.now(),
           );
-        const isSameDay = (a: Date, b: Date) => a.toDateString() === b.toDateString();
+        const isSameDay = (a: Date, b: Date) =>
+          a.toDateString() === b.toDateString();
         const today = new Date();
 
         const map = new Map<
@@ -495,10 +498,10 @@ export default function Dashboard() {
             if (!pid) continue;
             const qty = Number(it.quantity || 0) || 0;
             const rawTotal = Number(it.total);
-            const unitPrice = Number(
-              it.unitPrice ?? productIndex[pid]?.unitPrice ?? 0,
-            ) || 0;
-            const total = !isNaN(rawTotal) && rawTotal !== 0 ? rawTotal : qty * unitPrice;
+            const unitPrice =
+              Number(it.unitPrice ?? productIndex[pid]?.unitPrice ?? 0) || 0;
+            const total =
+              !isNaN(rawTotal) && rawTotal !== 0 ? rawTotal : qty * unitPrice;
             const effectiveUnit = qty > 0 ? total / qty : unitPrice;
             const cost = (() => {
               const c = Number(
@@ -651,7 +654,6 @@ export default function Dashboard() {
       mounted = false;
     };
   }, [accessToken]);
-
 
   // Compute real total revenue from transactions (income)
   useEffect(() => {
@@ -1467,7 +1469,9 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
                   </div>
                   <div className="text-xl font-semibold">
                     {(
-                      derivedSales?.totals.units ?? salesSummary?.totals.units ?? 0
+                      derivedSales?.totals.units ??
+                      salesSummary?.totals.units ??
+                      0
                     ).toLocaleString()}
                   </div>
                 </div>
@@ -1478,7 +1482,9 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
                   <div className="text-xl font-semibold">
                     $
                     {(
-                      (derivedSales?.totals.revenue ?? salesSummary?.totals.revenue) || 0
+                      (derivedSales?.totals.revenue ??
+                        salesSummary?.totals.revenue) ||
+                      0
                     ).toLocaleString()}
                   </div>
                 </div>
@@ -1512,10 +1518,12 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {(derivedSales?.products || salesSummary?.products || []).map((p) => {
-                      const margin = p.revenue && p.profit != null
-                        ? (p.profit / p.revenue) * 100
-                        : null;
+                  {(derivedSales?.products || salesSummary?.products || []).map(
+                    (p) => {
+                      const margin =
+                        p.revenue && p.profit != null
+                          ? (p.profit / p.revenue) * 100
+                          : null;
                       return (
                         <TableRow key={p.id}>
                           <TableCell className="font-medium">
@@ -1528,7 +1536,9 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
                             ${p.revenue.toLocaleString()}
                           </TableCell>
                           <TableCell className="text-right">
-                            {p.profit == null ? "—" : `$${p.profit.toLocaleString()}`}
+                            {p.profit == null
+                              ? "—"
+                              : `$${p.profit.toLocaleString()}`}
                           </TableCell>
                           <TableCell className="text-right">
                             {margin == null ? "—" : `${margin.toFixed(1)}%`}
