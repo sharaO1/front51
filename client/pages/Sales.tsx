@@ -679,33 +679,44 @@ export default function Sales() {
 
   const handleExportPDF = () => {
     let data = filteredInvoices;
-    const byDate = (d: string) => new Date(d).toISOString().slice(0, 10);
 
     const now = new Date();
-    const todayStr = byDate(now.toISOString());
-    const lastMonthDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-    const lastMonthStr = `${lastMonthDate.toISOString().slice(0, 7)}`; // YYYY-MM
-    const lastYearStr = String(now.getFullYear() - 1);
+    const isSameLocalDay = (a: Date, b: Date) =>
+      a.getFullYear() === b.getFullYear() &&
+      a.getMonth() === b.getMonth() &&
+      a.getDate() === b.getDate();
+
+    const lastMonthRef = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    const lastMonthYear = lastMonthRef.getFullYear();
+    const lastMonthIndex = lastMonthRef.getMonth(); // 0-11
+    const lastYear = now.getFullYear() - 1;
 
     if (pdfPeriod === "today") {
-      data = data.filter((i) => byDate(i.date) === todayStr);
+      data = data.filter((i) => isSameLocalDay(new Date(i.date), now));
     } else if (pdfPeriod === "last_month") {
-      data = data.filter((i) => byDate(i.date).slice(0, 7) === lastMonthStr);
+      data = data.filter((i) => {
+        const d = new Date(i.date);
+        return d.getFullYear() === lastMonthYear && d.getMonth() === lastMonthIndex;
+      });
     } else if (pdfPeriod === "last_year") {
-      data = data.filter(
-        (i) => new Date(i.date).getFullYear().toString() === lastYearStr,
-      );
+      data = data.filter((i) => new Date(i.date).getFullYear() === lastYear);
     }
 
-    const html = buildSalesReportHTML(
-      pdfPeriod,
+    const dateLabel =
       pdfPeriod === "today"
-        ? todayStr
+        ? new Intl.DateTimeFormat(i18n.language || "en", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+          }).format(now)
         : pdfPeriod === "last_month"
-          ? lastMonthStr
-          : lastYearStr,
-      data,
-    );
+          ? new Intl.DateTimeFormat(i18n.language || "en", {
+              year: "numeric",
+              month: "long",
+            }).format(new Date(lastMonthYear, lastMonthIndex, 1))
+          : String(lastYear);
+
+    const html = buildSalesReportHTML(pdfPeriod, dateLabel, data);
     openPrintWindow(html, `${t("navigation.sales")} ${t("common.export")} PDF`);
     closeExportLayers();
 
