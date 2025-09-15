@@ -698,7 +698,9 @@ export default function Sales() {
     } else if (pdfPeriod === "last_month") {
       data = data.filter((i) => {
         const d = new Date(i.date);
-        return d.getFullYear() === lastMonthYear && d.getMonth() === lastMonthIndex;
+        return (
+          d.getFullYear() === lastMonthYear && d.getMonth() === lastMonthIndex
+        );
       });
     } else if (pdfPeriod === "last_year") {
       const start = new Date(now);
@@ -1295,11 +1297,9 @@ export default function Sales() {
     const status: Invoice["status"] = isCancelled
       ? "cancelled"
       : (map[rawStatus] ??
-          (["draft", "sent", "paid", "overdue", "cancelled"].includes(
-            rawStatus,
-          )
-            ? (rawStatus as Invoice["status"])
-            : "draft"));
+        (["draft", "sent", "paid", "overdue", "cancelled"].includes(rawStatus)
+          ? (rawStatus as Invoice["status"])
+          : "draft"));
 
     return {
       id: String(r.id),
