@@ -611,7 +611,7 @@ export default function Sales() {
         <div class="card">
           <div class="header">
             <div>
-              <h1>${t("navigation.sales")} ��� ${t("dashboard.recent_activity", "Recent Activity")}</h1>
+              <h1>${t("navigation.sales")} — ${t("dashboard.recent_activity", "Recent Activity")}</h1>
               <div class="subtitle">${t("finance.report_title", "FINANCIAL REPORT").replace("FINANCIAL", t("navigation.sales"))}</div>
             </div>
             <div class="badge">${period === "today" ? t("sales.today") : period === "last_month" ? t("sales.last_month") : t("finance.last_12_months", "Last 12 Months")}</div>
@@ -2051,7 +2051,7 @@ export default function Sales() {
                         {t("sales.last_month")}
                       </SelectItem>
                       <SelectItem value="last_year">
-                        {t("finance.last_year", "Last Year")}
+                        {t("finance.last_12_months", "Last 12 Months")}
                       </SelectItem>
                     </SelectContent>
                   </Select>
