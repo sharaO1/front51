@@ -1126,7 +1126,11 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
               <div className="flex items-center gap-1">
                 <TrendingUp className="h-4 w-4 text-green-600" />
                 <span className="text-sm font-semibold text-green-600">
-                  +20.1%
+                  {(() => {
+                    const c = quickStats?.totalSales?.change ?? 0;
+                    const sign = c >= 0 ? "+" : "";
+                    return `${sign}${(Math.round(Math.abs(c) * 10) / 10).toFixed(1)}%`;
+                  })()}
                 </span>
               </div>
               <span className="text-sm text-muted-foreground">
@@ -1134,7 +1138,17 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
               </span>
             </div>
             <div className="mt-3 h-1 bg-gray-100 rounded-full overflow-hidden">
-              <div className="h-full bg-gradient-to-r from-green-500 to-emerald-500 rounded-full w-4/5 animate-pulse" />
+              <div
+                className="h-full bg-gradient-to-r from-green-500 to-emerald-500 rounded-full"
+                style={{
+                  width: `${(() => {
+                    const v = quickStats?.totalSales?.change ?? 0;
+                    const pct = Math.max(0, Math.min(100, Math.abs(Number.isFinite(v) ? v : 0)));
+                    const hasRevenue = typeof totalRevenue === "number" && totalRevenue > 0;
+                    return hasRevenue ? pct : 0;
+                  })()}%`,
+                }}
+              />
             </div>
           </CardContent>
         </Card>
@@ -1169,7 +1183,18 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
               </span>
             </div>
             <div className="mt-3 h-1 bg-gray-100 rounded-full overflow-hidden">
-              <div className="h-full bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full w-3/5 animate-pulse" />
+              <div
+                className="h-full bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full"
+                style={{
+                  width: `${(() => {
+                    const total = typeof totalProducts === "number" ? totalProducts : 0;
+                    const created = typeof newProductsThisMonth === "number" ? newProductsThisMonth : 0;
+                    if (total <= 0) return 0;
+                    const pct = (created / total) * 100;
+                    return Math.max(0, Math.min(100, Math.round(pct)));
+                  })()}%`,
+                }}
+              />
             </div>
           </CardContent>
         </Card>
@@ -1204,7 +1229,18 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
               </span>
             </div>
             <div className="mt-3 h-1 bg-gray-100 rounded-full overflow-hidden">
-              <div className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full w-4/6 animate-pulse" />
+              <div
+                className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"
+                style={{
+                  width: `${(() => {
+                    const total = typeof activeClients === "number" ? activeClients : 0;
+                    const added = typeof newClientsThisWeek === "number" ? newClientsThisWeek : 0;
+                    if (total <= 0) return 0;
+                    const pct = (added / total) * 100;
+                    return Math.max(0, Math.min(100, Math.round(pct)));
+                  })()}%`,
+                }}
+              />
             </div>
           </CardContent>
         </Card>
