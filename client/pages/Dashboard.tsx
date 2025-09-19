@@ -248,7 +248,10 @@ export default function Dashboard() {
         // build product categories distribution (support multiple backend shapes)
         const categoryMap = new Map<string, number>();
         for (const p of scopedProducts) {
-          const categoryId = (p as any).categoryId || (p as any).category_id || (p as any).categoryID;
+          const categoryId =
+            (p as any).categoryId ||
+            (p as any).category_id ||
+            (p as any).categoryID;
           let catName: string | undefined = undefined;
           if (categoryId) {
             try {
@@ -259,7 +262,11 @@ export default function Dashboard() {
           const raw =
             catName ||
             String(
-              (p as any).category || (p as any).categoryName || (p as any).type || (p as any).group || "Uncategorized",
+              (p as any).category ||
+                (p as any).categoryName ||
+                (p as any).type ||
+                (p as any).group ||
+                "Uncategorized",
             );
           const name = raw && raw.trim().length ? raw : "Uncategorized";
           categoryMap.set(name, (categoryMap.get(name) || 0) + 1);
@@ -1172,8 +1179,12 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
                 style={{
                   width: `${(() => {
                     const v = quickStats?.totalSales?.change ?? 0;
-                    const pct = Math.max(0, Math.min(100, Math.abs(Number.isFinite(v) ? v : 0)));
-                    const hasRevenue = typeof totalRevenue === "number" && totalRevenue > 0;
+                    const pct = Math.max(
+                      0,
+                      Math.min(100, Math.abs(Number.isFinite(v) ? v : 0)),
+                    );
+                    const hasRevenue =
+                      typeof totalRevenue === "number" && totalRevenue > 0;
                     return hasRevenue ? pct : 0;
                   })()}%`,
                 }}
@@ -1216,8 +1227,12 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
                 className="h-full bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full"
                 style={{
                   width: `${(() => {
-                    const total = typeof totalProducts === "number" ? totalProducts : 0;
-                    const created = typeof newProductsThisMonth === "number" ? newProductsThisMonth : 0;
+                    const total =
+                      typeof totalProducts === "number" ? totalProducts : 0;
+                    const created =
+                      typeof newProductsThisMonth === "number"
+                        ? newProductsThisMonth
+                        : 0;
                     if (total <= 0) return 0;
                     const pct = (created / total) * 100;
                     return Math.max(0, Math.min(100, Math.round(pct)));
@@ -1262,8 +1277,12 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
                 className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"
                 style={{
                   width: `${(() => {
-                    const total = typeof activeClients === "number" ? activeClients : 0;
-                    const added = typeof newClientsThisWeek === "number" ? newClientsThisWeek : 0;
+                    const total =
+                      typeof activeClients === "number" ? activeClients : 0;
+                    const added =
+                      typeof newClientsThisWeek === "number"
+                        ? newClientsThisWeek
+                        : 0;
                     if (total <= 0) return 0;
                     const pct = (added / total) * 100;
                     return Math.max(0, Math.min(100, Math.round(pct)));
