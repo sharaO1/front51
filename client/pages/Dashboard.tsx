@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   Card,
@@ -124,6 +124,24 @@ export default function Dashboard() {
   >([]);
   const [cashFlowLoading, setCashFlowLoading] = useState(false);
   const [cashFlowError, setCashFlowError] = useState<string | null>(null);
+
+  // Build real Sales Overview data from cash flow analytics
+  const computedSalesData = useMemo(
+    () =>
+      cashFlowData.map((d) => ({
+        name: d.month,
+        sales: Math.max(0, Math.round(d.totalIncome)),
+        profit: Math.max(
+          0,
+          Math.round(
+            typeof (d as any).totalProfit === "number"
+              ? (d as any).totalProfit
+              : d.totalIncome - d.totalExpense,
+          ),
+        ),
+      })),
+    [cashFlowData],
+  );
 
   // Quick Statistics (dynamic from backend)
   const [quickStats, setQuickStats] = useState({
@@ -952,7 +970,7 @@ export default function Dashboard() {
           salesGrowth: 12,
         },
       },
-      salesData: salesData,
+      salesData: computedSalesData,
       productCategories: productCategories,
       recentActivities: filteredActivities,
       lowStockItems: lowStockItems,
@@ -1384,7 +1402,7 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={salesData}>
+              <BarChart data={computedSalesData}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="name" />
                 <YAxis />
