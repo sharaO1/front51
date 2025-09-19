@@ -245,13 +245,24 @@ export default function Dashboard() {
 
         setTotalProducts(scopedProducts.length);
 
-        // build product categories distribution
+        // build product categories distribution (support multiple backend shapes)
         const categoryMap = new Map<string, number>();
         for (const p of scopedProducts) {
-          const cat = String(
-            p.category || p.categoryName || p.type || p.group || "Other",
-          );
-          categoryMap.set(cat, (categoryMap.get(cat) || 0) + 1);
+          const categoryId = (p as any).categoryId || (p as any).category_id || (p as any).categoryID;
+          let catName: string | undefined = undefined;
+          if (categoryId) {
+            try {
+              const { categoryIdToName } = await import("@/lib/categories");
+              catName = categoryIdToName(String(categoryId));
+            } catch {}
+          }
+          const raw =
+            catName ||
+            String(
+              (p as any).category || (p as any).categoryName || (p as any).type || (p as any).group || "Uncategorized",
+            );
+          const name = raw && raw.trim().length ? raw : "Uncategorized";
+          categoryMap.set(name, (categoryMap.get(name) || 0) + 1);
         }
         const palette = [
           "#0088FE",
