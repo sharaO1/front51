@@ -71,15 +71,27 @@ const App = () => {
 
     const now = Date.now();
     if (!expMs || expMs <= now) {
-      logout();
-      toast({ title: "Session expired", description: "Please sign in again." });
+      // Token already expired – try to refresh immediately
+      (async () => {
+        const { useAuthStore } = await import("./stores/authStore");
+        const ok = await useAuthStore.getState().refreshTokens();
+        if (!ok) {
+          logout();
+          toast({ title: "Session expired", description: "Please sign in again." });
+        }
+      })();
       return;
     }
 
     const delay = Math.max(0, expMs - now);
-    expiryTimerRef.current = setTimeout(() => {
-      logout();
-      toast({ title: "Session expired", description: "Please sign in again." });
+    expiryTimerRef.current = setTimeout(async () => {
+      const { useAuthStore } = await import("./stores/authStore");
+      const ok = await useAuthStore.getState().refreshTokens();
+      if (!ok) {
+        logout();
+        toast({ title: "Session expired", description: "Please sign in again." });
+      }
+      // If refresh succeeds, the effect will rerun due to accessToken change and reschedule
     }, delay);
 
     return () => {
