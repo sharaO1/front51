@@ -28,6 +28,8 @@ interface AuthState {
   forgotPassword: (email: string) => Promise<boolean>;
   updateUserRole: (newRole: Role) => void;
   updateUserAvatar: (avatarUrl: string) => void;
+  isTokenExpired: (token?: string | null) => boolean;
+  refreshTokens: () => Promise<boolean>;
 }
 
 function mapBackendRole(role: string): Role {
@@ -164,6 +166,43 @@ export const useAuthStore = create<AuthState>()(
         import("./rbacStore").then(({ useRBACStore }) => {
           useRBACStore.getState().reset();
         });
+      },
+
+      isTokenExpired: (token?: string | null) => {
+        if (!token) return true;
+        try {
+          const decoded = jwtDecode<{ exp?: number }>(token);
+          if (!decoded?.exp) return true;
+          const expMs = decoded.exp * 1000;
+          return Date.now() >= expMs;
+        } catch {
+          return true;
+        }
+      },
+
+      refreshTokens: async () => {
+        try {
+          const { refreshToken } = get();
+          if (!refreshToken) return false;
+
+          const res = await fetch(joinApi("/auth/refresh"), {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ refresh: refreshToken }),
+          });
+          const json = await res.json().catch(() => null as any);
+          if (!res.ok || !json?.ok || !json?.result?.accessToken) {
+            return false;
+          }
+
+          const newAccess: string = json.result.accessToken;
+          const newRefresh: string = json.result.refreshToken ?? refreshToken;
+
+          set({ accessToken: newAccess, refreshToken: newRefresh, isAuthenticated: true });
+          return true;
+        } catch (e) {
+          return false;
+        }
       },
 
       updateUserRole: (newRole: Role) => {
