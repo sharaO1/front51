@@ -263,7 +263,7 @@ export default function AIChat({
               m.id === aiId
                 ? {
                     ...m,
-                    text: "I couldn't reach the chat service. Please set VITE_CHAT_API_URL to your chat server or ensure /api/chat is available and CORS allows this origin.",
+                  text: "Failed connect to Network. Please check your Internet connection!!",
                   }
                 : m,
             ),
