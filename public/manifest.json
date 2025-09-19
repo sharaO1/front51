@@ -1,6 +1,6 @@
 {
-  "name": "Business Dashboard App",
-  "short_name": "Dashboard",
+  "name": "StockMind",
+  "short_name": "StockMind",
   "description": "Professional business dashboard with role-based access control and comprehensive analytics",
   "start_url": "/",
   "display": "standalone",
@@ -13,55 +13,13 @@
   "categories": ["business", "productivity", "finance"],
   "icons": [
     {
-      "src": "icons/app-icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
+      "src": "https://cdn.builder.io/api/v1/image/assets%2Fdd491365dd5149d196cb3c2260ab12fc%2F0f61aec966964a7299fe285967002d8f?format=png&width=192",
+      "sizes": "192x192",
+      "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "icons/icon-72x72.png",
-      "sizes": "72x72",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "icons/icon-96x96.png", 
-      "sizes": "96x96",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "icons/icon-128x128.png",
-      "sizes": "128x128", 
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "icons/icon-144x144.png",
-      "sizes": "144x144",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "icons/icon-152x152.png",
-      "sizes": "152x152",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "icons/icon-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "icons/icon-384x384.png",
-      "sizes": "384x384",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "icons/icon-512x512.png",
+      "src": "https://cdn.builder.io/api/v1/image/assets%2Fdd491365dd5149d196cb3c2260ab12fc%2F0f61aec966964a7299fe285967002d8f?format=png&width=512",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
@@ -76,7 +34,7 @@
       "label": "Dashboard overview with analytics and charts"
     },
     {
-      "src": "screenshots/mobile-dashboard.png", 
+      "src": "screenshots/mobile-dashboard.png",
       "sizes": "390x844",
       "type": "image/png",
       "form_factor": "narrow",
@@ -91,7 +49,7 @@
       "url": "/dashboard",
       "icons": [
         {
-          "src": "icons/icon-192x192.png",
+          "src": "https://cdn.builder.io/api/v1/image/assets%2Fdd491365dd5149d196cb3c2260ab12fc%2F0f61aec966964a7299fe285967002d8f?format=png&width=192",
           "sizes": "192x192",
           "type": "image/png"
         }
@@ -99,12 +57,12 @@
     },
     {
       "name": "Analytics",
-      "short_name": "Analytics", 
+      "short_name": "Analytics",
       "description": "View detailed analytics and reports",
       "url": "/dashboard#analytics",
       "icons": [
         {
-          "src": "icons/icon-192x192.png",
+          "src": "https://cdn.builder.io/api/v1/image/assets%2Fdd491365dd5149d196cb3c2260ab12fc%2F0f61aec966964a7299fe285967002d8f?format=png&width=192",
           "sizes": "192x192",
           "type": "image/png"
         }
