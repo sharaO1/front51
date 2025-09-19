@@ -1464,6 +1464,7 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
                   ))}
                 </Pie>
                 <Tooltip />
+                <Legend />
               </PieChart>
             </ResponsiveContainer>
           </CardContent>
