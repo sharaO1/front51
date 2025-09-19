@@ -154,7 +154,10 @@ export default function Layout({ children }: LayoutProps) {
               variant="ghost"
               size="sm"
               onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-              className="absolute -right-4 top-6 hidden lg:flex w-8 h-8 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-business hover:shadow-business-md transition-all duration-300 hover:scale-110"
+              className={cn(
+                "absolute hidden lg:flex w-8 h-8 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-business hover:shadow-business-md transition-all duration-300 hover:scale-110",
+                sidebarCollapsed ? "right-0 translate-x-1/2 top-4" : "-right-4 top-6",
+              )}
             >
               <Menu
                 className={cn(
