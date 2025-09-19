@@ -21,7 +21,9 @@ import NotFound from "./pages/NotFound";
 import { useThemeStore } from "./stores/themeStore";
 import { useAuthStore } from "./stores/authStore";
 import { useRBACStore } from "./stores/rbacStore";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import { jwtDecode } from "jwt-decode";
+import { useToast } from "@/hooks/use-toast";
 import {
   suppressDefaultPropsWarnings,
   suppressResizeObserverErrors,
@@ -29,25 +31,64 @@ import {
 import PWAInstallPrompt from "./components/PWAInstallPrompt";
 import Chat from "./pages/Chat";
 
+type AccessTokenPayload = { exp?: number };
+
 const App = () => {
   const { theme, setTheme } = useThemeStore();
-  const { isAuthenticated, user } = useAuthStore();
+  const { isAuthenticated, user, accessToken, logout } = useAuthStore();
   const { initializeFromAuth } = useRBACStore();
+  const { toast } = useToast();
+  const expiryTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    // Initialize theme on app load
     setTheme(theme);
 
-    // Initialize RBAC when user is available
     if (user) {
       initializeFromAuth(user);
     }
 
-    // Suppress React defaultProps warnings from recharts library
-    // This is a temporary fix until the library fully migrates to JavaScript default parameters
     suppressDefaultPropsWarnings();
     suppressResizeObserverErrors();
   }, [user, initializeFromAuth]);
+
+  useEffect(() => {
+    if (expiryTimerRef.current) {
+      clearTimeout(expiryTimerRef.current);
+      expiryTimerRef.current = null;
+    }
+
+    if (!isAuthenticated || !accessToken) return;
+
+    let expMs = 0;
+    try {
+      const decoded = jwtDecode<AccessTokenPayload>(accessToken);
+      if (decoded?.exp && typeof decoded.exp === "number") {
+        expMs = decoded.exp * 1000;
+      }
+    } catch {
+      expMs = 0;
+    }
+
+    const now = Date.now();
+    if (!expMs || expMs <= now) {
+      logout();
+      toast({ title: "Session expired", description: "Please sign in again." });
+      return;
+    }
+
+    const delay = Math.max(0, expMs - now);
+    expiryTimerRef.current = setTimeout(() => {
+      logout();
+      toast({ title: "Session expired", description: "Please sign in again." });
+    }, delay);
+
+    return () => {
+      if (expiryTimerRef.current) {
+        clearTimeout(expiryTimerRef.current);
+        expiryTimerRef.current = null;
+      }
+    };
+  }, [isAuthenticated, accessToken, logout, toast]);
 
   return (
     <TooltipProvider>
