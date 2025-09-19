@@ -1239,7 +1239,21 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
               </span>
             </div>
             <div className="mt-3 h-1 bg-gray-100 rounded-full overflow-hidden">
-              <div className="h-full bg-gradient-to-r from-orange-500 to-red-500 rounded-full w-2/3 animate-pulse" />
+              <div
+                className="h-full bg-gradient-to-r from-orange-500 to-red-500 rounded-full"
+                style={{
+                  width: `${(() => {
+                    const count = salesTodayCount;
+                    const change = salesTodayChange;
+                    if (typeof count === "number" && count <= 0) return 0;
+                    if (typeof change === "number" && isFinite(change)) {
+                      const pct = Math.max(0, Math.min(100, Math.abs(change)));
+                      return pct;
+                    }
+                    return 0;
+                  })()}%`,
+                }}
+              />
             </div>
           </CardContent>
         </Card>
