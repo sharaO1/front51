@@ -79,6 +79,39 @@ const getCandidateApiUrls = () => {
 const getCandidateResetUrls = () =>
   getCandidateApiUrls().map((u) => `${u.replace(/\/+$/, "")}/reset`);
 
+async function tryResetBackend(accessToken?: string | null) {
+  const headers: Record<string, string> = {};
+  if (accessToken) headers.Authorization = `Bearer ${accessToken}`;
+
+  // 1) Try explicit /reset endpoints
+  for (const url of getCandidateResetUrls()) {
+    try {
+      const res = await fetch(url, { method: "POST", headers });
+      if (res.ok) return true;
+    } catch {}
+  }
+
+  // 2) Fallback: send a reset command payload to chat endpoints
+  const payloads = [
+    { action: "reset" },
+    { reset: true },
+    { command: "reset" },
+  ];
+  for (const url of getCandidateApiUrls()) {
+    for (const body of payloads) {
+      try {
+        const res = await fetch(url, {
+          method: "POST",
+          headers: { ...headers, "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        });
+        if (res.ok) return true;
+      } catch {}
+    }
+  }
+  return false;
+}
+
 type AIChatProps = {
   variant?: "inline" | "floating"; // inline: renders inside layout. floating: shows a button and opens as a panel
   height?: string; // Tailwind height class for inline variant (e.g. "h-[70vh]")
@@ -129,6 +162,12 @@ export default function AIChat({
     scrollToBottom(true);
   }, [messages, isTyping, scrollToBottom, isFullScreen]);
 
+  // Always reset conversation when component mounts (e.g., after page refresh)
+  useEffect(() => {
+    tryResetBackend(accessToken);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => {
     if (isOpen) setTimeout(() => inputRef.current?.focus(), 50);
   }, [isOpen, isFullScreen]);
@@ -144,24 +183,9 @@ export default function AIChat({
     abortRef.current?.abort();
     scrollToBottom(true);
 
-    // Try notifying backend to reset server-side conversation
+    // Try notifying backend to reset server-side conversation (with fallbacks)
     try {
-      const urls = getCandidateResetUrls();
-      for (const url of urls) {
-        try {
-          const headers: Record<string, string> = {};
-          if (accessToken) headers.Authorization = `Bearer ${accessToken}`;
-          const res = await fetch(url, { method: "POST", headers });
-          if (!res.ok) continue;
-          const ct = res.headers.get("content-type") || "";
-          if (ct.includes("application/json")) {
-            await res.json();
-          }
-          break;
-        } catch {
-          continue;
-        }
-      }
+      await tryResetBackend(accessToken);
     } catch {
       // ignore errors; UI is already reset
     }
