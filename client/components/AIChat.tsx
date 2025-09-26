@@ -28,6 +28,17 @@ type ChatMessage = {
   text: string;
 };
 
+function formatMessage(t: string): string {
+  if (!t) return "";
+  let s = t.replace(/\r\n/g, "\n");
+  const PARA = "<<PARA>>";
+  s = s.replace(/\n{2,}/g, PARA); // keep real paragraph breaks
+  s = s.replace(/\n+/g, " "); // collapse single newlines to spaces
+  s = s.replace(/[\t ]{2,}/g, " ").trim();
+  s = s.replace(new RegExp(PARA, "g"), "\n\n");
+  return s;
+}
+
 const ENV_URL = (import.meta as any)?.env?.VITE_CHAT_API_URL as
   | string
   | undefined;
