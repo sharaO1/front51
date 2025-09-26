@@ -286,7 +286,7 @@ export default function AIChat({
               m.id === aiId
                 ? {
                     ...m,
-                  text: "Failed connect to Network. Please check your Internet connection!!",
+                    text: "Failed connect to Network. Please check your Internet connection!!",
                   }
                 : m,
             ),
