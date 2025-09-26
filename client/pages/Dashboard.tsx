@@ -1140,7 +1140,7 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
 
       {/* Enhanced KPI Cards with Glassmorphism */}
       <div className="grid gap-4 md:gap-6 [grid-auto-columns:85%] grid-flow-col overflow-x-auto snap-x snap-mandatory sm:[grid-auto-columns:initial] sm:grid-flow-row md:grid-cols-2 lg:grid-cols-4">
-        <Card className="relative overflow-hidden group border-0 bg-gradient-to-br from-white via-white to-green-50/30 backdrop-blur-xl shadow-business-lg hover:shadow-business-xl transition-all duration-500 hover:scale-[1.02] hover:-translate-y-1">
+        <Card className="snap-start relative overflow-hidden group border-0 bg-gradient-to-br from-white via-white to-green-50/30 backdrop-blur-xl shadow-business-lg hover:shadow-business-xl transition-all duration-500 hover:scale-[1.02] hover:-translate-y-1">
           <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-emerald-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4 relative z-10">
             <CardTitle className="text-sm font-semibold text-gray-700 tracking-tight">
@@ -1195,7 +1195,7 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
           </CardContent>
         </Card>
 
-        <Card className="relative overflow-hidden group border-0 bg-gradient-to-br from-white via-white to-blue-50/30 backdrop-blur-xl shadow-business-lg hover:shadow-business-xl transition-all duration-500 hover:scale-[1.02] hover:-translate-y-1">
+        <Card className="snap-start relative overflow-hidden group border-0 bg-gradient-to-br from-white via-white to-blue-50/30 backdrop-blur-xl shadow-business-lg hover:shadow-business-xl transition-all duration-500 hover:scale-[1.02] hover:-translate-y-1">
           <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4 relative z-10">
             <CardTitle className="text-sm font-semibold text-gray-700 tracking-tight">
@@ -1245,7 +1245,7 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
           </CardContent>
         </Card>
 
-        <Card className="relative overflow-hidden group border-0 bg-gradient-to-br from-white via-white to-purple-50/30 backdrop-blur-xl shadow-business-lg hover:shadow-business-xl transition-all duration-500 hover:scale-[1.02] hover:-translate-y-1">
+        <Card className="snap-start relative overflow-hidden group border-0 bg-gradient-to-br from-white via-white to-purple-50/30 backdrop-blur-xl shadow-business-lg hover:shadow-business-xl transition-all duration-500 hover:scale-[1.02] hover:-translate-y-1">
           <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4 relative z-10">
             <CardTitle className="text-sm font-semibold text-gray-700 tracking-tight">
@@ -1295,7 +1295,7 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
           </CardContent>
         </Card>
 
-        <Card className="relative overflow-hidden group border-0 bg-gradient-to-br from-white via-white to-orange-50/30 backdrop-blur-xl shadow-business-lg hover:shadow-business-xl transition-all duration-500 hover:scale-[1.02] hover:-translate-y-1">
+        <Card className="snap-start relative overflow-hidden group border-0 bg-gradient-to-br from-white via-white to-orange-50/30 backdrop-blur-xl shadow-business-lg hover:shadow-business-xl transition-all duration-500 hover:scale-[1.02] hover:-translate-y-1">
           <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 to-red-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4 relative z-10">
             <CardTitle className="text-sm font-semibold text-gray-700 tracking-tight">
