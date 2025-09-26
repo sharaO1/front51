@@ -8,6 +8,7 @@ import React, {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Bot,
   Send,
@@ -51,6 +52,13 @@ function formatMessage(t: string): string {
   return s;
 }
 
+function getInitials(name?: string | null, email?: string | null) {
+  const source = (name && name.trim()) || (email && email.split("@")[0]) || "U";
+  const parts = source.split(/\s+/).filter(Boolean);
+  if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+  return source.slice(0, 2).toUpperCase();
+}
+
 const ENV_URL = (import.meta as any)?.env?.VITE_CHAT_API_URL as
   | string
   | undefined;
@@ -90,6 +98,7 @@ export default function AIChat({
   const [isFullScreen, setIsFullScreen] = useState(false);
   const navigate = useNavigate();
   const accessToken = useAuthStore((s) => s.accessToken);
+  const user = useAuthStore((s) => s.user);
 
   const initialMessages = useMemo<ChatMessage[]>(
     () => [
@@ -466,9 +475,12 @@ export default function AIChat({
                         {formatMessage(m.text)}
                       </div>
                       {m.role === "user" && (
-                        <div className="mt-1 h-8 w-8 rounded-full bg-gray-500 flex items-center justify-center shadow">
-                          <UserIcon className="h-4 w-4 text-white" />
-                        </div>
+                        <Avatar className="mt-1 h-8 w-8">
+                          <AvatarImage src={user?.avatar || undefined} alt={user?.name || user?.email || "User"} />
+                          <AvatarFallback className="bg-gray-500 text-white text-xs font-medium">
+                            {getInitials(user?.name || null, user?.email || null)}
+                          </AvatarFallback>
+                        </Avatar>
                       )}
                     </div>
                   ))}
