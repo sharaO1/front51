@@ -156,7 +156,9 @@ export default function Layout({ children }: LayoutProps) {
               onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
               className={cn(
                 "absolute hidden lg:flex w-8 h-8 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-business hover:shadow-business-md transition-all duration-300 hover:scale-110",
-                sidebarCollapsed ? "right-0 translate-x-1/2 top-4" : "-right-4 top-6",
+                sidebarCollapsed
+                  ? "right-0 translate-x-1/2 top-4"
+                  : "-right-4 top-6",
               )}
             >
               <Menu
@@ -428,7 +430,11 @@ export default function Layout({ children }: LayoutProps) {
               { href: "/warehouse", icon: Package, label: "Warehouse" },
               { href: "/clients", icon: Users, label: "Clients" },
               { href: "/sales", icon: ShoppingCart, label: "Sales" },
-              { href: "/settings", icon: Settings, label: t("navigation.settings") },
+              {
+                href: "/settings",
+                icon: Settings,
+                label: t("navigation.settings"),
+              },
             ].map((item) => {
               const active = location.pathname === item.href;
               const Icon = item.icon;

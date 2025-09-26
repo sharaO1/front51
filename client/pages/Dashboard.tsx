@@ -1602,26 +1602,29 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
               </div>
               <div className="w-full overflow-x-auto">
                 <Table className="min-w-[640px]">
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>
-                      {t("warehouse.product_name") || "Product"}
-                    </TableHead>
-                    <TableHead className="text-right">
-                      {t("dashboard.products_sold")}
-                    </TableHead>
-                    <TableHead className="text-right">
-                      {t("finance.sales_revenue")}
-                    </TableHead>
-                    <TableHead className="text-right">
-                      {t("finance.profit")}
-                    </TableHead>
-                    <TableHead className="text-right">Margin %</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {(derivedSales?.products || salesSummary?.products || []).map(
-                    (p) => {
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>
+                        {t("warehouse.product_name") || "Product"}
+                      </TableHead>
+                      <TableHead className="text-right">
+                        {t("dashboard.products_sold")}
+                      </TableHead>
+                      <TableHead className="text-right">
+                        {t("finance.sales_revenue")}
+                      </TableHead>
+                      <TableHead className="text-right">
+                        {t("finance.profit")}
+                      </TableHead>
+                      <TableHead className="text-right">Margin %</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {(
+                      derivedSales?.products ||
+                      salesSummary?.products ||
+                      []
+                    ).map((p) => {
                       const margin =
                         p.revenue && p.profit != null
                           ? (p.profit / p.revenue) * 100
@@ -1647,10 +1650,9 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
                           </TableCell>
                         </TableRow>
                       );
-                    },
-                  )}
-                </TableBody>
-              </Table>
+                    })}
+                  </TableBody>
+                </Table>
               </div>
             </>
           )}
