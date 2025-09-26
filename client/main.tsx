@@ -25,6 +25,9 @@ function render() {
   root.render(<App />);
 }
 
+// Install global auth/refresh fetch interceptor, then render
+installAuthFetchInterceptor();
+
 // Initial render
 render();
 
