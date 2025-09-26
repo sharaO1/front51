@@ -451,7 +451,7 @@ export default function AIChat({
                             : "bg-white dark:bg-gray-800 border rounded-bl-md",
                         )}
                       >
-                        {m.text}
+                        {formatMessage(m.text)}
                       </div>
                       {m.role === "user" && (
                         <div className="mt-1 h-8 w-8 rounded-full bg-gray-500 flex items-center justify-center shadow">
