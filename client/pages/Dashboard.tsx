@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useIsMobile } from "@/hooks/use-mobile";
 import {
   Card,
   CardContent,
@@ -61,6 +62,7 @@ const salesData = [
 
 export default function Dashboard() {
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const [searchParams] = useSearchParams();
   const openChat = searchParams.get("chat") === "open";
 
@@ -1124,20 +1126,20 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
   };
 
   return (
-    <div className="space-y-8 animate-fade-in">
+    <div className="space-y-6 sm:space-y-8 animate-fade-in">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-border">
         <div className="space-y-2">
-          <h1 className="text-4xl font-bold tracking-tight bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
             {t("dashboard.title")}
           </h1>
-          <p className="text-muted-foreground text-lg">
+          <p className="text-muted-foreground text-sm sm:text-base lg:text-lg">
             {t("dashboard.subtitle")}
           </p>
         </div>
       </div>
 
       {/* Enhanced KPI Cards with Glassmorphism */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 md:gap-6 [grid-auto-columns:85%] grid-flow-col overflow-x-auto snap-x snap-mandatory sm:[grid-auto-columns:initial] sm:grid-flow-row md:grid-cols-2 lg:grid-cols-4">
         <Card className="relative overflow-hidden group border-0 bg-gradient-to-br from-white via-white to-green-50/30 backdrop-blur-xl shadow-business-lg hover:shadow-business-xl transition-all duration-500 hover:scale-[1.02] hover:-translate-y-1">
           <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-emerald-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4 relative z-10">
@@ -1371,7 +1373,7 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
             <div className="text-sm text-red-600">{cashFlowError}</div>
           )}
           {!cashFlowLoading && !cashFlowError && (
-            <ResponsiveContainer width="100%" height={320}>
+            <ResponsiveContainer width="100%" height={isMobile ? 220 : 320}>
               <LineChart
                 data={cashFlowData}
                 margin={{ top: 10, right: 20, left: 0, bottom: 0 }}
@@ -1431,7 +1433,7 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
             </div>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer width="100%" height={isMobile ? 220 : 300}>
               <BarChart data={computedSalesData}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="name" />
@@ -1464,7 +1466,7 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
             </div>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer width="100%" height={isMobile ? 220 : 300}>
               <PieChart>
                 <Pie
                   data={categoryDist}
@@ -1598,7 +1600,8 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
                   </div>
                 </div>
               </div>
-              <Table>
+              <div className="w-full overflow-x-auto">
+                <Table className="min-w-[640px]">
                 <TableHeader>
                   <TableRow>
                     <TableHead>
@@ -1648,6 +1651,7 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
                   )}
                 </TableBody>
               </Table>
+              </div>
             </>
           )}
         </CardContent>
