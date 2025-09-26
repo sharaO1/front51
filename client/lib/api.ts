@@ -71,7 +71,7 @@ export function installAuthFetchInterceptor() {
           const newToken = useAuthStore.getState().accessToken;
           if (newToken) headers.set("Authorization", `Bearer ${newToken}`);
           res = await originalFetch(input, { ...init, headers });
-          if (res.status === 401 || res.status === 403) {
+          if (res.status === 401 || res.status === 403 || res.status === 419 || res.status === 498) {
             useAuthStore.getState().logout();
           }
           return res;
