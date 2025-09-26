@@ -55,7 +55,7 @@ export function installAuthFetchInterceptor() {
 
       let res = await originalFetch(input, { ...init, headers });
 
-      if ((res.status === 401 || res.status === 403) && !skip) {
+      if ((res.status === 401 || res.status === 403 || res.status === 419 || res.status === 498) && !skip) {
         if (!refreshPromise) {
           const { useAuthStore } = await import("@/stores/authStore");
           refreshPromise = useAuthStore
