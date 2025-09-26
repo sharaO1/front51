@@ -7,10 +7,89 @@ export function joinApi(path: string) {
   return `${API_BASE}/${path}`;
 }
 
+function shouldSkipAuth(url: string) {
+  try {
+    const u = new URL(
+      url,
+      typeof window !== "undefined" ? window.location.origin : "http://localhost",
+    );
+    const p = u.pathname;
+    return (
+      p.includes("/auth/sign-in") ||
+      p.includes("/auth/refresh") ||
+      p.includes("/auth/logout")
+    );
+  } catch {
+    return (
+      url.includes("/auth/sign-in") ||
+      url.includes("/auth/refresh") ||
+      url.includes("/auth/logout")
+    );
+  }
+}
+
+let installOnce = false;
+let refreshPromise: Promise<boolean> | null = null;
+
+export function installAuthFetchInterceptor() {
+  if (installOnce) return;
+  installOnce = true;
+  const originalFetch = window.fetch.bind(window);
+
+  window.fetch = async (
+    input: RequestInfo | URL,
+    init: RequestInit = {},
+  ): Promise<Response> => {
+    const url = typeof input === "string" ? input : (input as any).url ?? String(input);
+    const skip = shouldSkipAuth(url);
+    const headers = new Headers(init.headers || {});
+
+    try {
+      if (!skip) {
+        const { useAuthStore } = await import("@/stores/authStore");
+        const token = useAuthStore.getState().accessToken;
+        if (token && !headers.has("Authorization")) {
+          headers.set("Authorization", `Bearer ${token}`);
+        }
+      }
+
+      let res = await originalFetch(input, { ...init, headers });
+
+      if ((res.status === 401 || res.status === 403) && !skip) {
+        if (!refreshPromise) {
+          const { useAuthStore } = await import("@/stores/authStore");
+          refreshPromise = useAuthStore
+            .getState()
+            .refreshTokens()
+            .finally(() => {
+              refreshPromise = null;
+            });
+        }
+        const ok = await refreshPromise;
+        if (ok) {
+          const { useAuthStore } = await import("@/stores/authStore");
+          const newToken = useAuthStore.getState().accessToken;
+          if (newToken) headers.set("Authorization", `Bearer ${newToken}`);
+          res = await originalFetch(input, { ...init, headers });
+          if (res.status === 401 || res.status === 403) {
+            useAuthStore.getState().logout();
+          }
+          return res;
+        } else {
+          const { useAuthStore } = await import("@/stores/authStore");
+          useAuthStore.getState().logout();
+        }
+      }
+
+      return res;
+    } catch {
+      return originalFetch(input, init);
+    }
+  };
+}
+
 // Extract a human-friendly error message from a fetch Response
-export async function getErrorMessageFromResponse(
-  res: Response,
-): Promise<string> {
+export async function getErrorMessageFromResponse(res: Response): Promise<string> {
   try {
     const contentType = res.headers.get("content-type") || "";
     if (contentType.includes("application/json")) {
@@ -38,12 +117,7 @@ export function extractErrorMessage(
   err: unknown,
   fallback = "Something went wrong",
 ) {
-  if (
-    err &&
-    typeof err === "object" &&
-    "message" in err &&
-    (err as any).message
-  ) {
+  if (err && typeof err === "object" && "message" in err && (err as any).message) {
     return String((err as any).message);
   }
   try {
