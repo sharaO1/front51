@@ -31,10 +31,22 @@ type ChatMessage = {
 function formatMessage(t: string): string {
   if (!t) return "";
   let s = t.replace(/\r\n/g, "\n");
+
+  // Normalize excessive breaks
+  s = s.replace(/\n{3,}/g, "\n\n");
+
+  // Remove single newlines inserted between non-space characters (token-per-line)
+  s = s.replace(/([^\s])\n([^\s])/g, "$1$2");
+
   const PARA = "<<PARA>>";
-  s = s.replace(/\n{2,}/g, PARA); // keep real paragraph breaks
-  s = s.replace(/\n+/g, " "); // collapse single newlines to spaces
+  // Preserve real paragraphs, then turn any remaining single newlines into spaces
+  s = s.replace(/\n{2,}/g, PARA);
+  s = s.replace(/\n/g, " ");
+
+  // Cleanup extra spaces
   s = s.replace(/[\t ]{2,}/g, " ").trim();
+
+  // Restore paragraph breaks
   s = s.replace(new RegExp(PARA, "g"), "\n\n");
   return s;
 }
