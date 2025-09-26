@@ -11,7 +11,9 @@ function shouldSkipAuth(url: string) {
   try {
     const u = new URL(
       url,
-      typeof window !== "undefined" ? window.location.origin : "http://localhost",
+      typeof window !== "undefined"
+        ? window.location.origin
+        : "http://localhost",
     );
     const p = u.pathname;
     return (
@@ -40,7 +42,8 @@ export function installAuthFetchInterceptor() {
     input: RequestInfo | URL,
     init: RequestInit = {},
   ): Promise<Response> => {
-    const url = typeof input === "string" ? input : (input as any).url ?? String(input);
+    const url =
+      typeof input === "string" ? input : ((input as any).url ?? String(input));
     const skip = shouldSkipAuth(url);
     const headers = new Headers(init.headers || {});
 
@@ -55,7 +58,13 @@ export function installAuthFetchInterceptor() {
 
       let res = await originalFetch(input, { ...init, headers });
 
-      if ((res.status === 401 || res.status === 403 || res.status === 419 || res.status === 498) && !skip) {
+      if (
+        (res.status === 401 ||
+          res.status === 403 ||
+          res.status === 419 ||
+          res.status === 498) &&
+        !skip
+      ) {
         if (!refreshPromise) {
           const { useAuthStore } = await import("@/stores/authStore");
           refreshPromise = useAuthStore
@@ -71,7 +80,12 @@ export function installAuthFetchInterceptor() {
           const newToken = useAuthStore.getState().accessToken;
           if (newToken) headers.set("Authorization", `Bearer ${newToken}`);
           res = await originalFetch(input, { ...init, headers });
-          if (res.status === 401 || res.status === 403 || res.status === 419 || res.status === 498) {
+          if (
+            res.status === 401 ||
+            res.status === 403 ||
+            res.status === 419 ||
+            res.status === 498
+          ) {
             useAuthStore.getState().logout();
           }
           return res;
@@ -89,7 +103,9 @@ export function installAuthFetchInterceptor() {
 }
 
 // Extract a human-friendly error message from a fetch Response
-export async function getErrorMessageFromResponse(res: Response): Promise<string> {
+export async function getErrorMessageFromResponse(
+  res: Response,
+): Promise<string> {
   try {
     const contentType = res.headers.get("content-type") || "";
     if (contentType.includes("application/json")) {
@@ -117,7 +133,12 @@ export function extractErrorMessage(
   err: unknown,
   fallback = "Something went wrong",
 ) {
-  if (err && typeof err === "object" && "message" in err && (err as any).message) {
+  if (
+    err &&
+    typeof err === "object" &&
+    "message" in err &&
+    (err as any).message
+  ) {
     return String((err as any).message);
   }
   try {
