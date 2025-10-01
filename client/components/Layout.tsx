@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useLocation, useSearchParams } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -49,6 +49,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import AvatarUpload from "@/components/AvatarUpload";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import AIChat from "@/components/AIChat";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -65,6 +66,8 @@ export default function Layout({ children }: LayoutProps) {
   const { toast } = useToast();
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const [searchParams] = useSearchParams();
+  const openChat = searchParams.get("chat") === "open";
 
   const allNavigation = [
     {
@@ -119,6 +122,15 @@ export default function Layout({ children }: LayoutProps) {
       if (sidebarOpen) setSidebarOpen(false);
     }
   };
+
+  useEffect(() => {
+    if (openChat) {
+      const params = new URLSearchParams(searchParams as any);
+      params.delete("chat");
+      const qs = params.toString();
+      navigate(`${location.pathname}${qs ? `?${qs}` : ""}`, { replace: true });
+    }
+  }, [openChat]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -457,6 +469,9 @@ export default function Layout({ children }: LayoutProps) {
           </nav>
         </footer>
       </div>
+
+      {/* Global floating AI Chat (hidden on Chat page) */}
+      <AIChat variant="floating" defaultOpen={openChat} showTrigger={location.pathname !== "/chat"} />
 
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
