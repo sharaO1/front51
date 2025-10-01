@@ -47,7 +47,7 @@ import UserCredentials from "@/components/UserCredentials";
 import { useAuthStore } from "@/stores/authStore";
 import { API_BASE } from "@/lib/api";
 import { SalesSummaryResponse } from "@shared/api";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const salesData = [
   { name: "Jan", sales: 4000, profit: 2400 },
@@ -61,15 +61,6 @@ const salesData = [
 export default function Dashboard() {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
-  const [searchParams] = useSearchParams();
-  const openChat = searchParams.get("chat") === "open";
-
-  // If chat was opened via URL, clean the param so refresh doesn't auto-open
-  useEffect(() => {
-    if (openChat) {
-      navigate("/dashboard", { replace: true });
-    }
-  }, [openChat, navigate]);
   const { toast } = useToast();
   const { t } = useTranslation();
   const { user } = useAuthStore();
