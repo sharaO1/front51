@@ -125,7 +125,7 @@ export default function Layout({ children }: LayoutProps) {
 
   useEffect(() => {
     if (openChat) {
-      const params = new URLSearchParams(searchParams as any);
+      const params = new URLSearchParams(searchParams);
       params.delete("chat");
       const qs = params.toString();
       navigate(`${location.pathname}${qs ? `?${qs}` : ""}`, { replace: true });
