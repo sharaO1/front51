@@ -374,7 +374,7 @@ export default function AIChat({
       {showFloatingButton && (
         <Button
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-6 h-14 w-14 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 shadow-lg transition-transform hover:scale-110 z-40"
+          className="fixed right-4 lg:right-6 bottom-[calc(env(safe-area-inset-bottom)+4.5rem)] lg:bottom-6 h-14 w-14 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 shadow-lg transition-transform hover:scale-110 z-50"
           aria-label="Open chat"
         >
           <MessageCircle className="h-6 w-6 text-white" />
@@ -391,7 +391,7 @@ export default function AIChat({
                 : isFullScreen
                   ? "fixed inset-0 z-50 p-0 bg-background overscroll-none touch-none"
                   : variant === "floating"
-                    ? "fixed bottom-6 right-6 z-50"
+                    ? "fixed right-4 lg:right-6 bottom-[calc(env(safe-area-inset-bottom)+4.5rem)] lg:bottom-6 z-50"
                     : "relative z-auto mt-6",
           )}
         >
