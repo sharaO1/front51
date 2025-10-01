@@ -31,7 +31,6 @@ import {
   TrendingDown,
   AlertTriangle,
   ShoppingCart,
-  MessageCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -49,7 +48,6 @@ import { useAuthStore } from "@/stores/authStore";
 import { API_BASE } from "@/lib/api";
 import { SalesSummaryResponse } from "@shared/api";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import AIChat from "@/components/AIChat";
 
 const salesData = [
   { name: "Jan", sales: 4000, profit: 2400 },
@@ -1770,17 +1768,6 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
         </Card>
       )}
 
-      {/* Floating chat panel, opened via URL param */}
-      <AIChat variant="floating" defaultOpen={openChat} showTrigger={false} />
-
-      {/* Corner AI button opens full-screen chat page */}
-      <Button
-        onClick={() => navigate("/chat")}
-        className="fixed bottom-6 right-6 h-14 w-14 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 shadow-lg transition-transform hover:scale-110 z-40"
-        aria-label="Open AI Chat"
-      >
-        <MessageCircle className="h-6 w-6 text-white" />
-      </Button>
     </div>
   );
 }
