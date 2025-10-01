@@ -92,11 +92,7 @@ async function tryResetBackend(accessToken?: string | null) {
   }
 
   // 2) Fallback: send a reset command payload to chat endpoints
-  const payloads = [
-    { action: "reset" },
-    { reset: true },
-    { command: "reset" },
-  ];
+  const payloads = [{ action: "reset" }, { reset: true }, { command: "reset" }];
   for (const url of getCandidateApiUrls()) {
     for (const body of payloads) {
       try {
@@ -500,9 +496,15 @@ export default function AIChat({
                       </div>
                       {m.role === "user" && (
                         <Avatar className="mt-1 h-8 w-8">
-                          <AvatarImage src={user?.avatar || undefined} alt={user?.name || user?.email || "User"} />
+                          <AvatarImage
+                            src={user?.avatar || undefined}
+                            alt={user?.name || user?.email || "User"}
+                          />
                           <AvatarFallback className="bg-gray-500 text-white text-xs font-medium">
-                            {getInitials(user?.name || null, user?.email || null)}
+                            {getInitials(
+                              user?.name || null,
+                              user?.email || null,
+                            )}
                           </AvatarFallback>
                         </Avatar>
                       )}

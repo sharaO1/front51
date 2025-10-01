@@ -1758,7 +1758,6 @@ ${data.recentActivities.map((activity: any) => `${activity.time} - ${activity.de
           </CardContent>
         </Card>
       )}
-
     </div>
   );
 }

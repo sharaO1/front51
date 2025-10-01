@@ -471,7 +471,11 @@ export default function Layout({ children }: LayoutProps) {
       </div>
 
       {/* Global floating AI Chat (hidden on Chat page) */}
-      <AIChat variant="floating" defaultOpen={openChat} showTrigger={location.pathname !== "/chat"} />
+      <AIChat
+        variant="floating"
+        defaultOpen={openChat}
+        showTrigger={location.pathname !== "/chat"}
+      />
 
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
