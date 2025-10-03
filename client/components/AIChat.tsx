@@ -262,8 +262,8 @@ export default function AIChat({
     ],
     [],
   );
-  const messages = useChatStore((s) => s.getMessages(userId));
-  const hydrated = useChatStore((s) => (s as any).hydrated);
+  const messages = useChatStore((s) => (s.messagesByUser?.[userId] ?? []));
+  const hydrated = useChatStore((s) => s.hydrated);
   const setStoreMessages = useChatStore((s) => s.setMessages);
   const replaceMessages = useChatStore((s) => s.replaceMessages);
   const [input, setInput] = useState("");
