@@ -156,6 +156,14 @@ export default function AIChat({
     scrollToBottom(true);
   }, [messages, isTyping, scrollToBottom, isFullScreen]);
 
+  // Initialize store with welcome message if empty
+  useEffect(() => {
+    if (!messages || messages.length === 0) {
+      replaceMessages(initialMessages);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Always reset conversation when component mounts (e.g., after page refresh)
   useEffect(() => {
     tryResetBackend(accessToken);
