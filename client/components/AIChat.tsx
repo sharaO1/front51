@@ -545,13 +545,14 @@ export default function AIChat({
                     variant="ghost"
                     size="sm"
                     onClick={() => {
+                      // Close UI immediately in all modes
+                      setIsFullScreen(false);
+                      setIsOpen(false);
                       // Fire-and-forget reset; do not block closing
                       clearChat();
                       if (page) {
                         if (window.history.length > 1) navigate(-1);
                         else navigate("/dashboard");
-                      } else {
-                        setIsOpen(false);
                       }
                     }}
                     className="h-8 w-8 rounded-full"
