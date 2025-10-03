@@ -356,9 +356,10 @@ export default function AIChat({
     return () => window.removeEventListener("keydown", onKey);
   }, [isFullScreen]);
 
-  // Lock page scroll when chat is open/fullscreen to avoid background moving
+  // Lock page scroll only for fullscreen or dedicated chat page, not for floating dock
   useEffect(() => {
-    if (isOpen || isFullScreen) {
+    const shouldLock = isFullScreen || (page && isOpen);
+    if (shouldLock) {
       const body = document.body;
       const html = document.documentElement;
       const prevBody = body.style.overflow;
@@ -370,7 +371,7 @@ export default function AIChat({
         html.style.overflow = prevHtml;
       };
     }
-  }, [isOpen, isFullScreen]);
+  }, [isOpen, isFullScreen, page]);
 
   return (
     <>
