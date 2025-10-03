@@ -437,7 +437,7 @@ export default function AIChat({
     }
   };
 
-  const showFloatingButton = variant === "floating" && !isOpen && showTrigger;
+  const showFloatingButton = (variant === "floating" || page) && !isOpen && showTrigger;
   const containerFixed = isFullScreen || (variant === "floating" && isOpen);
 
   // Exit fullscreen on Escape
@@ -549,15 +549,9 @@ export default function AIChat({
                     size="sm"
                     onClick={(e) => {
                       e.stopPropagation();
-                      // Close immediately
+                      // Hide chat only
                       setIsFullScreen(false);
-                      if (page) {
-                        setTimeout(() => clearChat(), 0);
-                        navigate("/dashboard");
-                      } else {
-                        setIsOpen(false);
-                        setTimeout(() => clearChat(), 0);
-                      }
+                      setIsOpen(false);
                     }}
                     className="h-8 w-8 rounded-full"
                     aria-label="Close chat"
