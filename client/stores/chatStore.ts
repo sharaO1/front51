@@ -36,7 +36,7 @@ export const useChatStore = create<ChatState>()(
     }),
     {
       name: "chat-storage",
-      partialize: (state) => ({ messages: state.messages, hydrated: state.hydrated }),
+      partialize: (state) => ({ messages: state.messages }),
       onRehydrateStorage: () => {
         return () => {
           // mark as hydrated after rehydration completes
