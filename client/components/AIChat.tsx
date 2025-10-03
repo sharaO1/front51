@@ -164,9 +164,11 @@ export default function AIChat({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Always reset conversation when component mounts (e.g., after page refresh)
+  // Reset backend conversation only when starting fresh (no prior messages)
   useEffect(() => {
-    tryResetBackend(accessToken);
+    if (!messages || messages.length <= 1) {
+      tryResetBackend(accessToken);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
