@@ -513,6 +513,7 @@ export default function AIChat({
               </CardTitle>
               <div className="absolute right-2 top-2 flex gap-1">
                 <Button
+                  type="button"
                   variant="ghost"
                   size="sm"
                   onClick={() => {
@@ -532,6 +533,7 @@ export default function AIChat({
                   )}
                 </Button>
                 <Button
+                  type="button"
                   variant="ghost"
                   size="sm"
                   onClick={clearChat}
@@ -542,18 +544,17 @@ export default function AIChat({
                 </Button>
                 {(variant === "floating" || page) && (
                   <Button
+                    type="button"
                     variant="ghost"
                     size="sm"
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.stopPropagation();
                       // Close UI immediately in all modes
                       setIsFullScreen(false);
                       setIsOpen(false);
                       // Fire-and-forget reset; do not block closing
-                      clearChat();
-                      if (page) {
-                        if (window.history.length > 1) navigate(-1);
-                        else navigate("/dashboard");
-                      }
+                      setTimeout(() => clearChat(), 0);
+                      // Do not navigate; hide on same page as requested
                     }}
                     className="h-8 w-8 rounded-full"
                     aria-label="Close chat"
