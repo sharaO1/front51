@@ -318,7 +318,7 @@ export default function AIChat({
         }
 
         if (!success) {
-          setMessages((prev) =>
+          setStoreMessages((prev) =>
             prev.map((m) =>
               m.id === aiId
                 ? {
