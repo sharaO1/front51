@@ -80,7 +80,7 @@ export const suppressResizeObserverErrors = () => {
     originalWarn.apply(console, args);
   };
 
-  // Additional safeguard: patch ResizeObserver prototype methods to avoid browser console errors
+  // Additional safeguard: patch ResizeObserver to avoid browser console errors and swallow callback errors
   try {
     const RO: any = (window as any).ResizeObserver;
     if (RO && RO.prototype) {
@@ -88,11 +88,11 @@ export const suppressResizeObserverErrors = () => {
       const origUnobserve = RO.prototype.unobserve;
       const origDisconnect = RO.prototype.disconnect;
 
+      // Patch prototype methods to safely call native implementations
       RO.prototype.observe = function (...args: any[]) {
         try {
           return origObserve.apply(this, args);
         } catch (err) {
-          // Silently ignore errors originating from ResizeObserver loop issues
           return;
         }
       };
@@ -112,6 +112,36 @@ export const suppressResizeObserverErrors = () => {
           return;
         }
       };
+
+      // Wrap constructor to catch errors thrown from user callbacks during delivery
+      try {
+        const OriginalRO = RO;
+        const WrappedRO = function (this: any, callback: any) {
+          if (!(this instanceof OriginalRO)) {
+            // @ts-ignore
+            return new (OriginalRO as any)(callback);
+          }
+          const wrappedCb = function (...cbArgs: any[]) {
+            try {
+              return callback && callback.apply(this, cbArgs);
+            } catch (err) {
+              // swallow ResizeObserver callback errors to prevent loop logs
+              return;
+            }
+          };
+          // Create instance with wrapped callback
+          const instance = new (OriginalRO as any)(wrappedCb);
+          // Copy prototype so instanceof checks still work
+          Object.setPrototypeOf(instance, WrappedRO.prototype);
+          return instance;
+        } as any;
+
+        WrappedRO.prototype = OriginalRO.prototype;
+        WrappedRO.toString = () => OriginalRO.toString();
+        (window as any).ResizeObserver = WrappedRO;
+      } catch (err) {
+        // ignore
+      }
     }
   } catch (e) {
     // ignore
