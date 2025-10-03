@@ -301,7 +301,7 @@ export default function AIChat({
                 textResp = await res.text();
               }
               if (typeof textResp === "string" && textResp.length > 0) {
-                setMessages((prev) =>
+                setStoreMessages((prev) =>
                   prev.map((m) =>
                     m.id === aiId ? { ...m, text: textResp } : m,
                   ),
