@@ -73,7 +73,10 @@ export const useChatStore = create<ChatState>()(
       partialize: (state) => ({ messagesByUser: state.messagesByUser }),
       onRehydrateStorage: () => {
         return () => {
-          useChatStore.setState({ hydrated: true });
+          // Defer setting hydrated to avoid synchronous nested updates during mount
+          setTimeout(() => {
+            useChatStore.setState({ hydrated: true });
+          }, 0);
         };
       },
     },
