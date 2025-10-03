@@ -9,6 +9,7 @@ export type ChatMessage = {
 
 type ChatState = {
   messages: ChatMessage[];
+  hydrated: boolean;
   setMessages: (
     updater: ChatMessage[] | ((prev: ChatMessage[]) => ChatMessage[]),
   ) => void;
@@ -20,6 +21,7 @@ export const useChatStore = create<ChatState>()(
   persist(
     (set, get) => ({
       messages: [],
+      hydrated: false,
       setMessages: (updater) =>
         set((state) => ({
           messages:
@@ -34,7 +36,13 @@ export const useChatStore = create<ChatState>()(
     }),
     {
       name: "chat-storage",
-      partialize: (state) => ({ messages: state.messages }),
+      partialize: (state) => ({ messages: state.messages, hydrated: state.hydrated }),
+      onRehydrateStorage: () => {
+        return () => {
+          // mark as hydrated after rehydration completes
+          useChatStore.setState({ hydrated: true });
+        };
+      },
     },
   ),
 );
