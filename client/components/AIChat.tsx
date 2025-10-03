@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import {
   Bot,
   Send,
@@ -27,24 +28,123 @@ import { useChatStore, ChatMessage } from "@/stores/chatStore";
 function formatMessage(t: string): string {
   if (!t) return "";
   let s = t.replace(/\r\n/g, "\n");
-
-  // Normalize excessive breaks
   s = s.replace(/\n{3,}/g, "\n\n");
-
-  // Remove single newlines inserted between non-space characters (token-per-line)
   s = s.replace(/([^\s])\n([^\s])/g, "$1$2");
-
   const PARA = "<<PARA>>";
-  // Preserve real paragraphs, then turn any remaining single newlines into spaces
   s = s.replace(/\n{2,}/g, PARA);
   s = s.replace(/\n/g, " ");
-
-  // Cleanup extra spaces
   s = s.replace(/[\t ]{2,}/g, " ").trim();
-
-  // Restore paragraph breaks
   s = s.replace(new RegExp(PARA, "g"), "\n\n");
   return s;
+}
+
+// Try to extract a JSON object/array from text (plain or fenced code block)
+function extractJsonFromText(text: string): any | null {
+  if (!text) return null;
+  const codeBlockMatch = text.match(/```json\s*([\s\S]*?)\s*```/i) || text.match(/```\s*([\s\S]*?)\s*```/i);
+  const candidates: string[] = [];
+  if (codeBlockMatch?.[1]) candidates.push(codeBlockMatch[1]);
+  candidates.push(text);
+  for (const c of candidates) {
+    try {
+      const trimmed = c.trim();
+      if (!trimmed) continue;
+      const parsed = JSON.parse(trimmed);
+      return parsed;
+    } catch {}
+  }
+  return null;
+}
+
+// Parse markdown table into columns and rows
+function parseMarkdownTable(text: string): { columns: string[]; rows: any[] } | null {
+  const lines = text.split(/\n+/).map((l) => l.trim()).filter(Boolean);
+  const tableStart = lines.findIndex((l) => /\|/.test(l));
+  if (tableStart < 0 || tableStart + 2 >= lines.length) return null;
+  const header = lines[tableStart];
+  const divider = lines[tableStart + 1];
+  if (!/\|/.test(divider) || !/-{3,}/.test(divider)) return null;
+  const cols = header.split("|").map((c) => c.trim()).filter(Boolean);
+  const rows: any[] = [];
+  for (let i = tableStart + 2; i < lines.length; i++) {
+    if (!/\|/.test(lines[i])) break;
+    const cells = lines[i].split("|").map((c) => c.trim()).filter(Boolean);
+    const row: any = {};
+    cols.forEach((col, idx) => {
+      row[col] = cells[idx] ?? "";
+    });
+    rows.push(row);
+  }
+  if (cols.length && rows.length) return { columns: cols, rows };
+  return null;
+}
+
+function getStructuredTable(text: string): { columns: string[]; rows: any[] } | null {
+  // 1) JSON with {type:'table', columns, rows} or {columns, rows} or array of objects
+  const data = extractJsonFromText(text);
+  if (data) {
+    if (Array.isArray(data)) {
+      const cols = Array.from(
+        data.reduce<Set<string>>((s, r) => {
+          Object.keys(r || {}).forEach((k) => s.add(k));
+          return s;
+        }, new Set<string>())
+      );
+      return { columns: cols, rows: data };
+    }
+    if (data && typeof data === "object") {
+      if (Array.isArray((data as any).rows) && ((data as any).columns || (data as any).headers)) {
+        const columns = (data as any).columns || (data as any).headers;
+        return { columns, rows: (data as any).rows };
+      }
+      if ((data as any).type === "table" && Array.isArray((data as any).data)) {
+        const rows = (data as any).data;
+        const cols = Array.from(
+          rows.reduce<Set<string>>((s: Set<string>, r: any) => {
+            Object.keys(r || {}).forEach((k) => s.add(k));
+            return s;
+          }, new Set<string>())
+        );
+        return { columns: cols, rows };
+      }
+    }
+  }
+  // 2) Markdown table fallback
+  const md = parseMarkdownTable(text);
+  if (md) return md;
+  return null;
+}
+
+function renderMessageContent(text: string) {
+  const table = getStructuredTable(text);
+  if (table) {
+    const { columns, rows } = table;
+    return (
+      <div className="overflow-x-auto max-w-full">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              {columns.map((col) => (
+                <TableHead key={col} className="whitespace-nowrap">{col}</TableHead>
+              ))}
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {rows.map((row, idx) => (
+              <TableRow key={idx}>
+                {columns.map((col) => (
+                  <TableCell key={col} className="whitespace-nowrap">
+                    {String(row?.[col] ?? "")}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    );
+  }
+  return <>{formatMessage(text)}</>;
 }
 
 function getInitials(name?: string | null, email?: string | null) {
@@ -500,7 +600,7 @@ export default function AIChat({
                             : "bg-white dark:bg-gray-800 border rounded-bl-md",
                         )}
                       >
-                        {formatMessage(m.text)}
+                        {m.role === "ai" ? renderMessageContent(m.text) : formatMessage(m.text)}
                       </div>
                       {m.role === "user" && (
                         <Avatar className="mt-1 h-8 w-8">
