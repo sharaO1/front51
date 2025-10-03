@@ -135,7 +135,9 @@ export default function AIChat({
     ],
     [],
   );
-  const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
+  const messages = useChatStore((s) => s.messages);
+  const setStoreMessages = useChatStore((s) => s.setMessages);
+  const replaceMessages = useChatStore((s) => s.replaceMessages);
   const [input, setInput] = useState("");
   const [isSending, setIsSending] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
