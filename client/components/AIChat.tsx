@@ -250,6 +250,7 @@ export default function AIChat({
   const navigate = useNavigate();
   const accessToken = useAuthStore((s) => s.accessToken);
   const user = useAuthStore((s) => s.user);
+  const userId = user?.id || "anon";
 
   const initialMessages = useMemo<ChatMessage[]>(
     () => [
@@ -261,7 +262,7 @@ export default function AIChat({
     ],
     [],
   );
-  const messages = useChatStore((s) => s.messages);
+  const messages = useChatStore((s) => s.getMessages(userId));
   const hydrated = useChatStore((s) => (s as any).hydrated);
   const setStoreMessages = useChatStore((s) => s.setMessages);
   const replaceMessages = useChatStore((s) => s.replaceMessages);
@@ -287,10 +288,27 @@ export default function AIChat({
   useEffect(() => {
     if (!hydrated) return;
     if (!messages || messages.length === 0) {
-      replaceMessages(initialMessages);
+      let migrated = false;
+      try {
+        const legacyRaw = localStorage.getItem("chat-storage");
+        if (legacyRaw) {
+          const parsed = JSON.parse(legacyRaw || "null");
+          const legacyMsgs = Array.isArray(parsed?.state?.messages)
+            ? (parsed.state.messages as ChatMessage[])
+            : [];
+          if (legacyMsgs.length) {
+            replaceMessages(legacyMsgs, userId);
+            localStorage.removeItem("chat-storage");
+            migrated = true;
+          }
+        }
+      } catch {}
+      if (!migrated) {
+        replaceMessages(initialMessages, userId);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hydrated]);
+  }, [hydrated, userId]);
 
   useEffect(() => {
     if (isOpen) setTimeout(() => inputRef.current?.focus(), 50);
@@ -300,6 +318,7 @@ export default function AIChat({
     // Reset UI immediately
     replaceMessages(
       initialMessages.map((m) => ({ ...m, id: `welcome-${Date.now()}` })),
+      userId,
     );
     setInput("");
     setIsTyping(false);
@@ -319,16 +338,18 @@ export default function AIChat({
     async (fullText: string) => {
       setIsTyping(true);
       const id = `ai-${Date.now()}`;
-      setStoreMessages((prev) => [...prev, { id, role: "ai", text: "" }]);
+      setStoreMessages((prev) => [...prev, { id, role: "ai", text: "" }], userId);
 
       await new Promise<void>((resolve) => {
         let i = 0;
         const interval = setInterval(() => {
           i += 1;
-          setStoreMessages((prev) =>
-            prev.map((m) =>
-              m.id === id ? { ...m, text: fullText.slice(0, i) } : m,
-            ),
+          setStoreMessages(
+            (prev) =>
+              prev.map((m) =>
+                m.id === id ? { ...m, text: fullText.slice(0, i) } : m,
+              ),
+            userId,
           );
           if (i >= fullText.length) {
             clearInterval(interval);
@@ -356,11 +377,14 @@ export default function AIChat({
         text: content,
       };
       const aiId = `ai-${Date.now()}`;
-      setStoreMessages((prev) => [
-        ...prev,
-        userMsg,
-        { id: aiId, role: "ai", text: "" },
-      ]);
+      setStoreMessages(
+        (prev) => [
+          ...prev,
+          userMsg,
+          { id: aiId, role: "ai", text: "" },
+        ],
+        userId,
+      );
       setInput("");
       setIsTyping(true);
 
@@ -396,8 +420,9 @@ export default function AIChat({
                 const { done, value } = await reader.read();
                 if (done) break;
                 acc += decoder.decode(value, { stream: true });
-                setStoreMessages((prev) =>
-                  prev.map((m) => (m.id === aiId ? { ...m, text: acc } : m)),
+                setStoreMessages(
+                  (prev) => prev.map((m) => (m.id === aiId ? { ...m, text: acc } : m)),
+                  userId,
                 );
                 scrollToBottom(true);
               }
@@ -421,10 +446,12 @@ export default function AIChat({
                 textResp = await res.text();
               }
               if (typeof textResp === "string" && textResp.length > 0) {
-                setStoreMessages((prev) =>
-                  prev.map((m) =>
-                    m.id === aiId ? { ...m, text: textResp } : m,
-                  ),
+                setStoreMessages(
+                  (prev) =>
+                    prev.map((m) =>
+                      m.id === aiId ? { ...m, text: textResp } : m,
+                    ),
+                  userId,
                 );
                 success = true;
                 break;
@@ -438,15 +465,17 @@ export default function AIChat({
         }
 
         if (!success) {
-          setStoreMessages((prev) =>
-            prev.map((m) =>
-              m.id === aiId
-                ? {
-                    ...m,
-                    text: "Failed connect to Network. Please check your Internet connection!!",
-                  }
-                : m,
-            ),
+          setStoreMessages(
+            (prev) =>
+              prev.map((m) =>
+                m.id === aiId
+                  ? {
+                      ...m,
+                      text: "Failed connect to Network. Please check your Internet connection!!",
+                    }
+                  : m,
+              ),
+            userId,
           );
         }
       } finally {
