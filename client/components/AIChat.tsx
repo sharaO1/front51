@@ -276,7 +276,7 @@ export default function AIChat({
                 const { done, value } = await reader.read();
                 if (done) break;
                 acc += decoder.decode(value, { stream: true });
-                setMessages((prev) =>
+                setStoreMessages((prev) =>
                   prev.map((m) => (m.id === aiId ? { ...m, text: acc } : m)),
                 );
                 scrollToBottom(true);
