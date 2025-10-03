@@ -285,10 +285,15 @@ export default function AIChat({
   }, [messages, isTyping, scrollToBottom, isFullScreen]);
 
   // Initialize store with welcome message only after hydration if empty
+  const initRef = useRef<{ userId: string | null }>({ userId: null });
   useEffect(() => {
     if (!hydrated) return;
-    if (!messages || messages.length === 0) {
-      let migrated = false;
+    if (initRef.current.userId === userId) return; // already initialized for this user
+
+    initRef.current.userId = userId;
+
+    (async () => {
+      // migrate legacy data if present
       try {
         const legacyRaw = localStorage.getItem("chat-storage");
         if (legacyRaw) {
@@ -297,16 +302,17 @@ export default function AIChat({
             ? (parsed.state.messages as ChatMessage[])
             : [];
           if (legacyMsgs.length) {
-            replaceMessages(legacyMsgs, userId);
+            // defer to next tick to avoid nested updates during mount
+            setTimeout(() => replaceMessages(legacyMsgs, userId), 0);
             localStorage.removeItem("chat-storage");
-            migrated = true;
+            return;
           }
         }
       } catch {}
-      if (!migrated) {
-        replaceMessages(initialMessages, userId);
-      }
-    }
+
+      // ensure default welcome message is set
+      setTimeout(() => replaceMessages(initialMessages, userId), 0);
+    })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hydrated, userId]);
 
