@@ -464,7 +464,7 @@ export default function AIChat({
                 <div className="h-2 bg-gradient-to-b from-transparent to-black/0 dark:to-white/0" />
                 <div
                   ref={listRef}
-                  className="flex-1 overflow-y-auto overscroll-contain px-4 pb-4 pt-[70px] space-y-3 bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-950"
+                  className="flex-1 overflow-y-auto overscroll-contain pt-[70px] space-y-3 bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-950"
                   onWheel={(e) => e.stopPropagation()}
                   onTouchMove={(e) => e.stopPropagation()}
                 >
