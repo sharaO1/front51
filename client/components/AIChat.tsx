@@ -205,7 +205,7 @@ export default function AIChat({
         let i = 0;
         const interval = setInterval(() => {
           i += 1;
-          setMessages((prev) =>
+          setStoreMessages((prev) =>
             prev.map((m) =>
               m.id === id ? { ...m, text: fullText.slice(0, i) } : m,
             ),
