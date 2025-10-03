@@ -24,11 +24,6 @@ import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/stores/authStore";
 import { useChatStore, ChatMessage } from "@/stores/chatStore";
 
-type ChatMessage = {
-  id: string;
-  role: "user" | "ai";
-  text: string;
-};
 
 function formatMessage(t: string): string {
   if (!t) return "";
