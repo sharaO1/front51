@@ -270,6 +270,7 @@ export default function AIChat({
   const hydrated = useChatStore((s) => s.hydrated);
   const setStoreMessages = useChatStore((s) => s.setMessages);
   const replaceMessages = useChatStore((s) => s.replaceMessages);
+  const clearFor = useChatStore((s) => s.clear);
   const [input, setInput] = useState("");
   const [isSending, setIsSending] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
@@ -292,12 +293,27 @@ export default function AIChat({
   const initRef = useRef<{ userId: string | null }>({ userId: null });
   useEffect(() => {
     if (!hydrated) return;
+    if (!user?.id) return; // wait for authenticated user to avoid saving under "anon"
     if (initRef.current.userId === userId) return; // already initialized for this user
 
     initRef.current.userId = userId;
 
+    // 1) if we have data under "anon" from earlier render, migrate it to this user
+    try {
+      const state = useChatStore.getState();
+      const anon = state.messagesByUser?.["anon"] || EMPTY_MESSAGES;
+      const existing = state.messagesByUser?.[userId] || EMPTY_MESSAGES;
+      if (anon.length && existing.length === 0) {
+        setTimeout(() => {
+          replaceMessages(anon, userId);
+          clearFor("anon");
+        }, 0);
+        return;
+      }
+    } catch {}
+
     (async () => {
-      // migrate legacy data if present
+      // 2) migrate legacy single-key storage if present
       try {
         const legacyRaw = localStorage.getItem("chat-storage");
         if (legacyRaw) {
@@ -306,19 +322,29 @@ export default function AIChat({
             ? (parsed.state.messages as ChatMessage[])
             : [];
           if (legacyMsgs.length) {
-            // defer to next tick to avoid nested updates during mount
-            setTimeout(() => replaceMessages(legacyMsgs, userId), 0);
+            // only write if user has no messages yet
+            const state = useChatStore.getState();
+            const existing = state.messagesByUser?.[userId] || EMPTY_MESSAGES;
+            if (existing.length === 0) {
+              setTimeout(() => replaceMessages(legacyMsgs, userId), 0);
+            }
             localStorage.removeItem("chat-storage");
             return;
           }
         }
       } catch {}
 
-      // ensure default welcome message is set
-      setTimeout(() => replaceMessages(initialMessages, userId), 0);
+      // 3) ensure default welcome message only if user has no messages
+      try {
+        const state = useChatStore.getState();
+        const existing = state.messagesByUser?.[userId] || EMPTY_MESSAGES;
+        if (existing.length === 0) {
+          setTimeout(() => replaceMessages(initialMessages, userId), 0);
+        }
+      } catch {}
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hydrated, userId]);
+  }, [hydrated, userId, user?.id]);
 
   useEffect(() => {
     if (isOpen) setTimeout(() => inputRef.current?.focus(), 50);
