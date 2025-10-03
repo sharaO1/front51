@@ -199,7 +199,7 @@ export default function AIChat({
     async (fullText: string) => {
       setIsTyping(true);
       const id = `ai-${Date.now()}`;
-      setMessages((prev) => [...prev, { id, role: "ai", text: "" }]);
+      setStoreMessages((prev) => [...prev, { id, role: "ai", text: "" }]);
 
       await new Promise<void>((resolve) => {
         let i = 0;
