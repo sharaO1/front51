@@ -30,6 +30,8 @@ type ChatState = {
   clear: (userId?: string | null) => void;
 };
 
+export const EMPTY_MESSAGES: ChatMessage[] = [];
+
 export const useChatStore = create<ChatState>()(
   persist(
     (set, get) => ({
