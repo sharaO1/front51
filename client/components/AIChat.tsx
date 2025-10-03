@@ -236,7 +236,7 @@ export default function AIChat({
         text: content,
       };
       const aiId = `ai-${Date.now()}`;
-      setMessages((prev) => [
+      setStoreMessages((prev) => [
         ...prev,
         userMsg,
         { id: aiId, role: "ai", text: "" },
