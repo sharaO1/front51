@@ -77,7 +77,10 @@ const App = () => {
         const ok = await useAuthStore.getState().refreshTokens();
         if (!ok) {
           logout();
-          toast({ title: "Session expired", description: "Please sign in again." });
+          toast({
+            title: "Session expired",
+            description: "Please sign in again.",
+          });
         }
       })();
       return;
@@ -89,7 +92,10 @@ const App = () => {
       const ok = await useAuthStore.getState().refreshTokens();
       if (!ok) {
         logout();
-        toast({ title: "Session expired", description: "Please sign in again." });
+        toast({
+          title: "Session expired",
+          description: "Please sign in again.",
+        });
       }
       // If refresh succeeds, the effect will rerun due to accessToken change and reschedule
     }, delay);
@@ -147,7 +153,9 @@ const App = () => {
                     <Route
                       path="/filials"
                       element={
-                        <RoleProtectedRoute requiredRoles={["super_admin", "admin"]}>
+                        <RoleProtectedRoute
+                          requiredRoles={["super_admin", "admin"]}
+                        >
                           <Filials />
                         </RoleProtectedRoute>
                       }

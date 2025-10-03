@@ -9,7 +9,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import {
   Bot,
   Send,
@@ -41,7 +48,9 @@ function formatMessage(t: string): string {
 // Try to extract a JSON object/array from text (plain or fenced code block)
 function extractJsonFromText(text: string): any | null {
   if (!text) return null;
-  const codeBlockMatch = text.match(/```json\s*([\s\S]*?)\s*```/i) || text.match(/```\s*([\s\S]*?)\s*```/i);
+  const codeBlockMatch =
+    text.match(/```json\s*([\s\S]*?)\s*```/i) ||
+    text.match(/```\s*([\s\S]*?)\s*```/i);
   const candidates: string[] = [];
   if (codeBlockMatch?.[1]) candidates.push(codeBlockMatch[1]);
   candidates.push(text);
@@ -57,18 +66,29 @@ function extractJsonFromText(text: string): any | null {
 }
 
 // Parse markdown table into columns and rows
-function parseMarkdownTable(text: string): { columns: string[]; rows: any[] } | null {
-  const lines = text.split(/\n+/).map((l) => l.trim()).filter(Boolean);
+function parseMarkdownTable(
+  text: string,
+): { columns: string[]; rows: any[] } | null {
+  const lines = text
+    .split(/\n+/)
+    .map((l) => l.trim())
+    .filter(Boolean);
   const tableStart = lines.findIndex((l) => /\|/.test(l));
   if (tableStart < 0 || tableStart + 2 >= lines.length) return null;
   const header = lines[tableStart];
   const divider = lines[tableStart + 1];
   if (!/\|/.test(divider) || !/-{3,}/.test(divider)) return null;
-  const cols = header.split("|").map((c) => c.trim()).filter(Boolean);
+  const cols = header
+    .split("|")
+    .map((c) => c.trim())
+    .filter(Boolean);
   const rows: any[] = [];
   for (let i = tableStart + 2; i < lines.length; i++) {
     if (!/\|/.test(lines[i])) break;
-    const cells = lines[i].split("|").map((c) => c.trim()).filter(Boolean);
+    const cells = lines[i]
+      .split("|")
+      .map((c) => c.trim())
+      .filter(Boolean);
     const row: any = {};
     cols.forEach((col, idx) => {
       row[col] = cells[idx] ?? "";
@@ -79,7 +99,9 @@ function parseMarkdownTable(text: string): { columns: string[]; rows: any[] } | 
   return null;
 }
 
-function getStructuredTable(text: string): { columns: string[]; rows: any[] } | null {
+function getStructuredTable(
+  text: string,
+): { columns: string[]; rows: any[] } | null {
   // 1) JSON with {type:'table', columns, rows} or {columns, rows} or array of objects
   const data = extractJsonFromText(text);
   if (data) {
@@ -88,12 +110,15 @@ function getStructuredTable(text: string): { columns: string[]; rows: any[] } | 
         data.reduce<Set<string>>((s, r) => {
           Object.keys(r || {}).forEach((k) => s.add(k));
           return s;
-        }, new Set<string>())
+        }, new Set<string>()),
       );
       return { columns: cols, rows: data };
     }
     if (data && typeof data === "object") {
-      if (Array.isArray((data as any).rows) && ((data as any).columns || (data as any).headers)) {
+      if (
+        Array.isArray((data as any).rows) &&
+        ((data as any).columns || (data as any).headers)
+      ) {
         const columns = (data as any).columns || (data as any).headers;
         return { columns, rows: (data as any).rows };
       }
@@ -103,7 +128,7 @@ function getStructuredTable(text: string): { columns: string[]; rows: any[] } | 
           rows.reduce<Set<string>>((s: Set<string>, r: any) => {
             Object.keys(r || {}).forEach((k) => s.add(k));
             return s;
-          }, new Set<string>())
+          }, new Set<string>()),
         );
         return { columns: cols, rows };
       }
@@ -125,7 +150,9 @@ function renderMessageContent(text: string) {
           <TableHeader>
             <TableRow>
               {columns.map((col) => (
-                <TableHead key={col} className="whitespace-nowrap">{col}</TableHead>
+                <TableHead key={col} className="whitespace-nowrap">
+                  {col}
+                </TableHead>
               ))}
             </TableRow>
           </TableHeader>
@@ -437,7 +464,8 @@ export default function AIChat({
     }
   };
 
-  const showFloatingButton = (variant === "floating" || page) && !isOpen && showTrigger;
+  const showFloatingButton =
+    (variant === "floating" || page) && !isOpen && showTrigger;
   const containerFixed = isFullScreen || (variant === "floating" && isOpen);
 
   // Exit fullscreen on Escape
@@ -595,7 +623,9 @@ export default function AIChat({
                             : "bg-white dark:bg-gray-800 border rounded-bl-md",
                         )}
                       >
-                        {m.role === "ai" ? renderMessageContent(m.text) : formatMessage(m.text)}
+                        {m.role === "ai"
+                          ? renderMessageContent(m.text)
+                          : formatMessage(m.text)}
                       </div>
                       {m.role === "user" && (
                         <Avatar className="mt-1 h-8 w-8">
