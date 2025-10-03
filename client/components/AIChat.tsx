@@ -30,7 +30,7 @@ import {
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/stores/authStore";
-import { useChatStore, ChatMessage } from "@/stores/chatStore";
+import { useChatStore, ChatMessage, EMPTY_MESSAGES } from "@/stores/chatStore";
 
 function formatMessage(t: string): string {
   if (!t) return "";
@@ -262,7 +262,11 @@ export default function AIChat({
     ],
     [],
   );
-  const messages = useChatStore((s) => (s.messagesByUser?.[userId] ?? []));
+  const selectMessages = useMemo(
+    () => (s: any) => s.messagesByUser?.[userId] ?? EMPTY_MESSAGES,
+    [userId],
+  );
+  const messages = useChatStore(selectMessages);
   const hydrated = useChatStore((s) => s.hydrated);
   const setStoreMessages = useChatStore((s) => s.setMessages);
   const replaceMessages = useChatStore((s) => s.replaceMessages);
