@@ -235,6 +235,7 @@ export default function AIChat({
     [],
   );
   const messages = useChatStore((s) => s.messages);
+  const hydrated = useChatStore((s) => (s as any).hydrated);
   const setStoreMessages = useChatStore((s) => s.setMessages);
   const replaceMessages = useChatStore((s) => s.replaceMessages);
   const [input, setInput] = useState("");
@@ -255,21 +256,14 @@ export default function AIChat({
     scrollToBottom(true);
   }, [messages, isTyping, scrollToBottom, isFullScreen]);
 
-  // Initialize store with welcome message if empty
+  // Initialize store with welcome message only after hydration if empty
   useEffect(() => {
+    if (!hydrated) return;
     if (!messages || messages.length === 0) {
       replaceMessages(initialMessages);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // Reset backend conversation only when starting fresh (no prior messages)
-  useEffect(() => {
-    if (!messages || messages.length <= 1) {
-      tryResetBackend(accessToken);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [hydrated]);
 
   useEffect(() => {
     if (isOpen) setTimeout(() => inputRef.current?.focus(), 50);
@@ -550,7 +544,8 @@ export default function AIChat({
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => {
+                    onClick={async () => {
+                      await clearChat();
                       if (page) {
                         if (window.history.length > 1) navigate(-1);
                         else navigate("/dashboard");
