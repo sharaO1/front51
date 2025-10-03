@@ -544,8 +544,9 @@ export default function AIChat({
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={async () => {
-                      await clearChat();
+                    onClick={() => {
+                      // Fire-and-forget reset; do not block closing
+                      clearChat();
                       if (page) {
                         if (window.history.length > 1) navigate(-1);
                         else navigate("/dashboard");
