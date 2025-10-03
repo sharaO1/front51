@@ -437,7 +437,7 @@ export default function AIChat({
     }
   };
 
-  const showFloatingButton = variant === "floating" && !isOpen && showTrigger;
+  const showFloatingButton = (variant === "floating" || page) && !isOpen && showTrigger;
   const containerFixed = isFullScreen || (variant === "floating" && isOpen);
 
   // Exit fullscreen on Escape
