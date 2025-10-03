@@ -24,7 +24,6 @@ import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/stores/authStore";
 import { useChatStore, ChatMessage } from "@/stores/chatStore";
 
-
 function formatMessage(t: string): string {
   if (!t) return "";
   let s = t.replace(/\r\n/g, "\n");
