@@ -178,7 +178,7 @@ export default function AIChat({
 
   const clearChat = useCallback(async () => {
     // Reset UI immediately
-    setMessages(
+    replaceMessages(
       initialMessages.map((m) => ({ ...m, id: `welcome-${Date.now()}` })),
     );
     setInput("");
