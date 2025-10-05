@@ -3490,13 +3490,29 @@ export default function Warehouse() {
 
       <div className="fixed bottom-24 right-4 z-40 sm:hidden">
         <div className="flex gap-2">
-          <Button className="shadow-business-lg" size="icon" aria-label="Stock In" onClick={() => openStockDialog("in")}>
+          <Button
+            className="shadow-business-lg"
+            size="icon"
+            aria-label="Stock In"
+            onClick={() => openStockDialog("in")}
+          >
             <ArrowUp className="h-5 w-5" />
           </Button>
-          <Button variant="destructive" className="shadow-business-lg" size="icon" aria-label="Stock Out" onClick={() => openStockDialog("out")}>
+          <Button
+            variant="destructive"
+            className="shadow-business-lg"
+            size="icon"
+            aria-label="Stock Out"
+            onClick={() => openStockDialog("out")}
+          >
             <ArrowDown className="h-5 w-5" />
           </Button>
-          <Button className="shadow-business-lg" size="icon" aria-label="Add Product" onClick={() => setIsAddDialogOpen(true)}>
+          <Button
+            className="shadow-business-lg"
+            size="icon"
+            aria-label="Add Product"
+            onClick={() => setIsAddDialogOpen(true)}
+          >
             <Plus className="h-5 w-5" />
           </Button>
         </div>
