@@ -734,7 +734,8 @@ export default function Sales() {
           </div>
           <div class="footer">${t("sales.report.generated_on", "Generated on")}: ${formatDateTime(new Date())}</div>
         </div>
-      </div>`;
+      </div>
+      <div class="stamp">${renderOfficialSealSVG("OLIMPY")}</div>`;
   };
 
   const handleExportPDF = () => {
@@ -867,7 +868,8 @@ export default function Sales() {
           ${inv.notes ? `<div class="section"><h3>${t("common.notes")}</h3><div class="muted">${inv.notes}</div></div>` : ""}
           <div class="footer">${t("sales.report.generated_on", "Generated on")}: ${formatDateTime(new Date())}</div>
         </div>
-      </div>`;
+      </div>
+      <div class="stamp">${renderOfficialSealSVG("OLIMPY")}</div>`;
 
     openPrintWindow(
       html,
