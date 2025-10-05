@@ -2334,7 +2334,7 @@ export default function Warehouse() {
         </div>
 
         {/* Action Buttons */}
-        <div className="flex items-center gap-3">
+        <div className="hidden sm:flex items-center gap-3">
           <Button
             variant="outline"
             className="bg-green-50 hover:bg-green-100 text-green-700 border-green-200"
@@ -3487,6 +3487,20 @@ export default function Warehouse() {
           </Card>
         </TabsContent>
       </Tabs>
+
+      <div className="fixed bottom-24 right-4 z-40 sm:hidden">
+        <div className="flex gap-2">
+          <Button className="shadow-business-lg" size="icon" aria-label="Stock In" onClick={() => openStockDialog("in")}>
+            <ArrowUp className="h-5 w-5" />
+          </Button>
+          <Button variant="destructive" className="shadow-business-lg" size="icon" aria-label="Stock Out" onClick={() => openStockDialog("out")}>
+            <ArrowDown className="h-5 w-5" />
+          </Button>
+          <Button className="shadow-business-lg" size="icon" aria-label="Add Product" onClick={() => setIsAddDialogOpen(true)}>
+            <Plus className="h-5 w-5" />
+          </Button>
+        </div>
+      </div>
 
       {/* Edit Product Dialog */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
