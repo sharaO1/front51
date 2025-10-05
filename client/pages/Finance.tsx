@@ -1742,7 +1742,11 @@ ${data.transactions
           </h1>
           <p className="text-muted-foreground">{t("finance.subtitle")}</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex items-center gap-2">
+          <Button onClick={() => setIsAddTransactionOpen(true)}>
+            <Plus className="mr-2 h-4 w-4" />
+            {t("finance.add_transaction")}
+          </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline">
@@ -1947,14 +1951,6 @@ ${data.transactions
           <Card>
             <CardHeader>
               <CardTitle>{t("finance.transaction_history")}</CardTitle>
-              <div className="flex sm:justify-end">
-                <Button
-                  className="w-full sm:w-auto"
-                  onClick={() => setIsAddTransactionOpen(true)}
-                >
-                  {t("finance.add_transaction")}
-                </Button>
-              </div>
               <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                 <div className="relative flex-1">
                   <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
