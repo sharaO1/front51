@@ -447,7 +447,7 @@ export default function Sales() {
       "discountAmount",
       "total",
     ];
-    const rows = filteredInvoices.map((inv) => ({
+    const rows = sortedInvoices.map((inv) => ({
       invoiceNumber: inv.invoiceNumber,
       date: new Date(inv.date).toISOString(),
       clientName: inv.clientName,
@@ -954,44 +954,60 @@ export default function Sales() {
       const today = new Date();
 
       switch (dateFilter) {
-        case "today":
-          matchesDate = invoiceDate.toDateString() === today.toDateString();
-          break;
-        case "yesterday":
-          const yesterday = new Date(today);
-          yesterday.setDate(today.getDate() - 1);
-          matchesDate = invoiceDate.toDateString() === yesterday.toDateString();
-          break;
-        case "this_week":
-          const weekStart = new Date(today);
-          weekStart.setDate(today.getDate() - today.getDay());
-          matchesDate = invoiceDate >= weekStart && invoiceDate <= today;
-          break;
-        case "this_month":
+        case "today": {
           matchesDate =
+            invoiceDate.getFullYear() === today.getFullYear() &&
             invoiceDate.getMonth() === today.getMonth() &&
-            invoiceDate.getFullYear() === today.getFullYear();
+            invoiceDate.getDate() === today.getDate();
           break;
-        case "last_month":
-          const lastMonth = new Date(today);
-          lastMonth.setMonth(today.getMonth() - 1);
-          matchesDate =
-            invoiceDate.getMonth() === lastMonth.getMonth() &&
-            invoiceDate.getFullYear() === lastMonth.getFullYear();
+        }
+        case "last_week": {
+          const start = new Date(today);
+          start.setDate(today.getDate() - 7);
+          start.setHours(0, 0, 0, 0);
+          const end = new Date(today);
+          end.setHours(23, 59, 59, 999);
+          matchesDate = invoiceDate >= start && invoiceDate <= end;
           break;
-        case "custom":
+        }
+        case "last_month": {
+          const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+          const start = new Date(lastMonth.getFullYear(), lastMonth.getMonth(), 1);
+          const end = new Date(lastMonth.getFullYear(), lastMonth.getMonth() + 1, 0, 23, 59, 59, 999);
+          matchesDate = invoiceDate >= start && invoiceDate <= end;
+          break;
+        }
+        case "last_year": {
+          const start = new Date(today);
+          start.setFullYear(today.getFullYear() - 1);
+          start.setHours(0, 0, 0, 0);
+          const end = new Date(today);
+          end.setHours(23, 59, 59, 999);
+          matchesDate = invoiceDate >= start && invoiceDate <= end;
+          break;
+        }
+        case "custom": {
           if (startDate && endDate) {
             const start = new Date(startDate);
             const end = new Date(endDate);
-            end.setHours(23, 59, 59, 999); // Include the entire end date
+            end.setHours(23, 59, 59, 999);
             matchesDate = invoiceDate >= start && invoiceDate <= end;
           }
           break;
+        }
       }
     }
 
     return matchesSearch && matchesStatus && matchesDate;
   });
+
+  const sortedInvoices = useMemo(
+    () =>
+      filteredInvoices
+        .slice()
+        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()),
+    [filteredInvoices],
+  );
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -2751,21 +2767,10 @@ export default function Sales() {
                 <SelectContent>
                   <SelectItem value="all">{t("sales.all_dates")}</SelectItem>
                   <SelectItem value="today">{t("sales.today")}</SelectItem>
-                  <SelectItem value="yesterday">
-                    {t("sales.yesterday")}
-                  </SelectItem>
-                  <SelectItem value="this_week">
-                    {t("sales.this_week")}
-                  </SelectItem>
-                  <SelectItem value="this_month">
-                    {t("sales.this_month")}
-                  </SelectItem>
-                  <SelectItem value="last_month">
-                    {t("sales.last_month")}
-                  </SelectItem>
-                  <SelectItem value="custom">
-                    {t("sales.custom_range")}
-                  </SelectItem>
+                  <SelectItem value="last_week">{t("sales.last_week")}</SelectItem>
+                  <SelectItem value="last_month">{t("sales.last_month")}</SelectItem>
+                  <SelectItem value="last_year">{t("sales.last_year")}</SelectItem>
+                  <SelectItem value="custom">{t("sales.custom_range")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -2850,7 +2855,7 @@ export default function Sales() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredInvoices.map((invoice) => (
+                {sortedInvoices.map((invoice) => (
                   <TableRow key={invoice.id}>
                     <TableCell className="font-medium">
                       {invoice.invoiceNumber}
@@ -2995,7 +3000,7 @@ export default function Sales() {
           </div>
 
           <div className="md:hidden space-y-3">
-            {filteredInvoices.map((invoice) => (
+            {sortedInvoices.map((invoice) => (
               <div
                 key={invoice.id}
                 className="rounded-xl border p-4 bg-card shadow-business"
