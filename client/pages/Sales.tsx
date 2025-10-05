@@ -564,7 +564,10 @@ export default function Sales() {
         h1 { font-size: 24px; margin: 0 0 8px; }
         .subtitle { color:#64748b; font-size: 14px; }
         .badge { display:inline-block; padding: 4px 10px; background: rgba(37,99,235,.08); color: var(--primary); border:1px solid rgba(37,99,235,.18); border-radius: 999px; font-weight: 600; font-size: 12px; }
-        .grid { display:grid; grid-template-columns: 1fr 1fr; gap:16px; }
+        .meta { text-align:right; }
+        .meta .date { font-size:14px; font-weight:700; color:#0f172a; }
+        .meta .generated { font-size:12px; color:#64748b; margin-top:4px; }
+        .grid { display:grid; grid-template-columns: 1fr; gap:16px; }
         .section h3 { margin: 0 0 8px; font-size: 14px; color:#334155; text-transform: uppercase; letter-spacing:.06em; }
         table { width:100%; border-collapse: collapse; font-size: 13px; }
         th, td { padding: 10px 12px; border-bottom: 1px solid #e5e7eb; text-align: left; }
@@ -691,7 +694,7 @@ export default function Sales() {
                 <div class="subtitle">${t("finance.report_title", "FINANCIAL REPORT").replace("FINANCIAL", t("navigation.sales"))}</div>
               </div>
             </div>
-            <div class="badge">${period === "today" ? t("sales.today") : period === "last_month" ? t("sales.last_month") : t("finance.last_12_months", "Last 12 Months")}</div>
+            <div class="meta"><div class="date">${t("common.date")}: ${periodLabel}</div><div class="generated">${t("sales.report.generated_on", "Generated on")}: ${formatDateTime(new Date())}</div></div>
           </div>
           <div class="section" style="margin:16px 0;">
             <div class="grid">
@@ -703,13 +706,6 @@ export default function Sales() {
                   <div class="row"><span>${t("sales.subtotal")}</span><span class="right">${formatCurrency(totals.subtotal)}</span></div>
                   <div class="row"><span>${t("sales.tax")}</span><span class="right">${formatCurrency(totals.tax)}</span></div>
                   <div class="row"><span>${t("sales.discount")}</span><span class="right">-${formatCurrency(totals.discount)}</span></div>
-                </div>
-              </div>
-              <div>
-                <h3>${t("common.date_time")}</h3>
-                <div class="totals">
-                  <div class="row"><span>${t("common.date")}</span><span class="right">${periodLabel}</span></div>
-                  <div class="row"><span>${t("sales.report.generated_on", "Generated on")}</span><span class="right">${formatDateTime(new Date())}</span></div>
                 </div>
               </div>
             </div>
