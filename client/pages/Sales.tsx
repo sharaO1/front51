@@ -559,8 +559,8 @@ export default function Sales() {
         .header { display:flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
         .brandwrap { display:flex; align-items:center; gap:12px; }
         .brand { width: 36px; height: 36px; border-radius: 8px; object-fit: contain; border: 1px solid #e5e7eb; background:#fff; }
-        .seal { width: 44px; height: 44px; border: 3px solid #2563eb; border-radius: 50%; display:flex; align-items:center; justify-content:center; background:#fff; box-shadow:0 0 0 4px rgba(37,99,235,.12); }
-        .seal .text { color:#2563eb; font-size:9px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; }
+        .stamp { position: fixed; right: 32px; bottom: 32px; width: 120px; height: 120px; z-index: 1000; opacity: 1; }
+        .stamp svg { width: 100%; height: 100%; }
         h1 { font-size: 24px; margin: 0 0 8px; }
         .subtitle { color:#64748b; font-size: 14px; }
         .badge { display:inline-block; padding: 4px 10px; background: rgba(37,99,235,.08); color: var(--primary); border:1px solid rgba(37,99,235,.18); border-radius: 999px; font-weight: 600; font-size: 12px; }
@@ -575,7 +575,7 @@ export default function Sales() {
         .totals { margin-top: 12px; }
         .totals .row { display:flex; justify-content: space-between; padding: 6px 0; }
         .footer { margin-top: 16px; color:#64748b; font-size:12px; }
-        @media print { .no-print { display:none; } body { background:white; } .card { box-shadow:none; border:0; } }
+        @media print { .no-print { display:none; } body { background:white; } .card { box-shadow:none; border:0; } .stamp { right: 24px; bottom: 24px; } }
       </style>
     </head><body>${html}</body></html>`);
     doc.close();
@@ -622,6 +622,26 @@ export default function Sales() {
       },
     ).format(new Date(d));
 
+  const renderOfficialSealSVG = (brand = "OLIMPY") => `
+    <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-label="Official Seal">
+      <defs>
+        <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#2563eb"/>
+          <stop offset="100%" stop-color="#1e40af"/>
+        </linearGradient>
+        <filter id="softShadow" x="-50%" y="-50%" width="200%" height="200%">
+          <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#1e3a8a" flood-opacity="0.25"/>
+        </filter>
+      </defs>
+      <circle cx="60" cy="60" r="56" fill="#ffffff" opacity="0.9"/>
+      <circle cx="60" cy="60" r="54" fill="none" stroke="url(#ringGrad)" stroke-width="6" filter="url(#softShadow)"/>
+      <circle cx="60" cy="60" r="40" fill="none" stroke="#93c5fd" stroke-width="2" stroke-dasharray="4 6"/>
+      <g font-family="Inter, system-ui, -apple-system, sans-serif" text-anchor="middle">
+        <text x="60" y="58" font-size="18" font-weight="800" fill="#1e3a8a" letter-spacing="1">${brand}</text>
+        <text x="60" y="76" font-size="10" font-weight="700" fill="#2563eb" letter-spacing=".3em">OFFICIAL SEAL</text>
+      </g>
+    </svg>`;
+
   const buildSalesReportHTML = (
     period: "today" | "last_month" | "last_year",
     dateStr: string,
@@ -666,7 +686,6 @@ export default function Sales() {
         <div class="card">
           <div class="header">
             <div class="brandwrap">
-              <div class="seal"><div class="text">${t("sales.official_seal", "Official Seal")}</div></div>
               <div>
                 <h1>${t("navigation.sales")} — ${t("dashboard.recent_activity", "Recent Activity")}</h1>
                 <div class="subtitle">${t("finance.report_title", "FINANCIAL REPORT").replace("FINANCIAL", t("navigation.sales"))}</div>
@@ -814,7 +833,6 @@ export default function Sales() {
         <div class="card">
           <div class="header">
             <div class="brandwrap">
-              <div class="seal"><div class="text">${t("sales.official_seal", "Official Seal")}</div></div>
               <div>
                 <h1>${t("sales.report.invoice_heading", "INVOICE")} ${inv.invoiceNumber}</h1>
                 <div class="subtitle">${t("sales.invoice_details")}</div>
