@@ -1511,8 +1511,27 @@ export default function Finance() {
     };
 
     if (format === "pdf") {
+      try {
+        setIsExportDialogOpen(false);
+        const el = document.activeElement as HTMLElement | null;
+        el?.blur?.();
+        document.body.style.pointerEvents = "";
+        document.body.style.overflow = "";
+        document.documentElement.style.overflow = "";
+      } catch {}
+
       const html = buildFinanceReportHTML(reportData);
       openPrintWindow(html, t("finance.export_pdf_title"));
+
+      const afterPrintCleanup = () => {
+        try {
+          document.body.style.pointerEvents = "";
+          document.body.style.overflow = "";
+          document.documentElement.style.overflow = "";
+        } catch {}
+        window.removeEventListener("afterprint", afterPrintCleanup);
+      };
+      window.addEventListener("afterprint", afterPrintCleanup);
     }
 
     toast({
