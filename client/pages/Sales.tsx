@@ -519,10 +519,17 @@ export default function Sales() {
       </table>
     </body></html>`;
 
-    const blob = new Blob([html], { type: "application/vnd.ms-excel;charset=utf-8;" });
+    const blob = new Blob([html], {
+      type: "application/vnd.ms-excel;charset=utf-8;",
+    });
     const today = new Date().toISOString().slice(0, 10);
     downloadBlob(blob, `sales-report-${today}.xls`);
-    toast({ title: t("common.export"), description: t("dashboard.export_as_excel", { defaultValue: "Excel downloaded" }) });
+    toast({
+      title: t("common.export"),
+      description: t("dashboard.export_as_excel", {
+        defaultValue: "Excel downloaded",
+      }),
+    });
   };
 
   // Open a print window using a hidden iframe (reduces browser freezes)
@@ -1614,11 +1621,14 @@ export default function Sales() {
           <DropdownMenu open={exportMenuOpen} onOpenChange={setExportMenuOpen}>
             <DropdownMenuTrigger asChild>
               <Button variant="outline">
-                <Download className="mr-2 h-4 w-4" /> {t("dashboard.export_report")}
+                <Download className="mr-2 h-4 w-4" />{" "}
+                {t("dashboard.export_report")}
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel>{t("dashboard.export_options")}</DropdownMenuLabel>
+              <DropdownMenuLabel>
+                {t("dashboard.export_options")}
+              </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 onSelect={(e) => {
