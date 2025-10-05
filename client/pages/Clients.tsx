@@ -426,7 +426,7 @@ export default function Clients() {
         </div>
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
           <DialogTrigger asChild>
-            <Button>
+            <Button className="hidden sm:inline-flex">
               <Plus className="mr-2 h-4 w-4" />
               {t("clients.add_client")}
             </Button>
@@ -636,7 +636,7 @@ export default function Clients() {
       <Card>
         <CardHeader>
           <CardTitle>{t("clients.client_directory")}</CardTitle>
-          <div className="flex gap-4">
+          <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
             <div className="relative flex-1">
               <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
@@ -647,7 +647,7 @@ export default function Clients() {
               />
             </div>
             <Select value={typeFilter} onValueChange={setTypeFilter}>
-              <SelectTrigger className="w-[150px]">
+              <SelectTrigger className="w-full sm:w-[150px]">
                 <Filter className="mr-2 h-4 w-4" />
                 <SelectValue placeholder={t("clients.type")} />
               </SelectTrigger>
@@ -663,7 +663,7 @@ export default function Clients() {
               </SelectContent>
             </Select>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-[150px]">
+              <SelectTrigger className="w-full sm:w-[150px]">
                 <SelectValue placeholder={t("common.status")} />
               </SelectTrigger>
               <SelectContent>
@@ -676,7 +676,88 @@ export default function Clients() {
           </div>
         </CardHeader>
         <CardContent>
-          <Table>
+          <div className="sm:hidden space-y-3">
+            {sortedClients.map((client) => (
+              <div key={client.id} className="rounded-xl border bg-card p-3 shadow-sm">
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <div className="font-semibold">{client.name}</div>
+                    <div className="text-xs text-muted-foreground">
+                      {t("common.total")}: ${client.totalPurchases.toLocaleString()}
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap gap-1 justify-end">
+                    {getTypeBadge(client.type)}
+                    {getStatusBadge(client.status)}
+                  </div>
+                </div>
+                <div className="mt-2 grid grid-cols-1 gap-1 text-sm">
+                  <div className="flex items-center gap-2 truncate">
+                    <Mail className="h-3 w-3" />
+                    {client.email}
+                  </div>
+                  <div className="flex items-center gap-2 truncate">
+                    <Phone className="h-3 w-3" />
+                    {client.phone}
+                  </div>
+                </div>
+                <div className="mt-2 flex items-center justify-between gap-3 text-sm">
+                  <div>
+                    <div className="font-medium">${client.currentDebt.toLocaleString()}</div>
+                    <div className="text-xs text-muted-foreground">
+                      {t("clients.credit_limit")}: ${client.creditLimit.toLocaleString()}
+                    </div>
+                  </div>
+                  <div className="flex gap-1">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      aria-label="View"
+                      onClick={() => {
+                        setSelectedClient(client);
+                        setIsViewDialogOpen(true);
+                      }}
+                    >
+                      <Eye className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      aria-label="Edit"
+                      onClick={() => {
+                        setSelectedClient(client);
+                        setIsEditDialogOpen(true);
+                      }}
+                    >
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                    {client.status === "overdue" && (
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        aria-label="Remind"
+                        className="text-orange-600"
+                        onClick={() => sendReminder(client)}
+                      >
+                        <Send className="h-4 w-4" />
+                      </Button>
+                    )}
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      aria-label="Delete"
+                      className="text-red-600"
+                      onClick={() => handleDeleteClient(client.id)}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="-mx-2 sm:mx-0 overflow-x-auto hidden sm:block">
+            <Table>
             <TableHeader>
               <TableRow>
                 <TableHead
@@ -814,6 +895,7 @@ export default function Clients() {
               ))}
             </TableBody>
           </Table>
+          </div>
         </CardContent>
       </Card>
 
@@ -1039,6 +1121,12 @@ export default function Clients() {
           )}
         </DialogContent>
       </Dialog>
+
+      <div className="fixed bottom-24 right-4 z-40 sm:hidden">
+        <Button size="icon" className="shadow-business-lg" aria-label="Add Client" onClick={() => setIsAddDialogOpen(true)}>
+          <Plus className="h-5 w-5" />
+        </Button>
+      </div>
     </div>
   );
 }
