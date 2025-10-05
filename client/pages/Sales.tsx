@@ -1350,7 +1350,6 @@ export default function Sales() {
       setInvoices([invoice, ...invoices]);
       clearNewInvoice();
       setIsCreateDialogOpen(false);
-
     } catch (e: any) {
       toast({
         title: "Failed",

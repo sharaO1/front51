@@ -1882,7 +1882,10 @@ ${data.transactions
             <CardHeader>
               <CardTitle>{t("finance.transaction_history")}</CardTitle>
               <div className="flex sm:justify-end">
-                <Button className="w-full sm:w-auto" onClick={() => setIsAddTransactionOpen(true)}>
+                <Button
+                  className="w-full sm:w-auto"
+                  onClick={() => setIsAddTransactionOpen(true)}
+                >
                   {t("finance.add_transaction")}
                 </Button>
               </div>
@@ -1964,92 +1967,92 @@ ${data.transactions
             </CardHeader>
             <CardContent>
               <div className="w-full overflow-x-auto">
-              <Table className="min-w-[720px] sm:min-w-0">
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>{t("common.date")}</TableHead>
-                    <TableHead>{t("clients.type")}</TableHead>
-                    <TableHead>{t("warehouse.category")}</TableHead>
-                    <TableHead>{t("common.description")}</TableHead>
-                    <TableHead>{t("common.amount")}</TableHead>
-                    <TableHead>{t("common.status")}</TableHead>
-                    <TableHead>{t("common.actions")}</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredTransactions.map((transaction) => (
-                    <TableRow key={transaction.id}>
-                      <TableCell>{transaction.date}</TableCell>
-                      <TableCell>
-                        <Badge
-                          variant={
-                            transaction.type === "income"
-                              ? "default"
-                              : "secondary"
-                          }
-                          className={
-                            transaction.type === "income"
-                              ? "bg-green-100 text-green-800"
-                              : "bg-red-100 text-red-800"
-                          }
-                        >
-                          {transaction.type === "income"
-                            ? t("finance.income")
-                            : t("finance.expense")}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        {translateCategory(transaction.category)}
-                      </TableCell>
-                      <TableCell>
-                        <div>
-                          <div className="font-medium">
-                            {formatDescription(transaction.description)}
-                          </div>
-                          {transaction.performedBy && (
-                            <div className="text-sm text-muted-foreground">
-                              {t("finance.performed_by")}:{" "}
-                              {getPerformedByDisplay(transaction.performedBy)}
-                            </div>
-                          )}
-                        </div>
-                      </TableCell>
-                      <TableCell
-                        className={`font-medium ${transaction.type === "income" ? "text-green-600" : "text-red-600"}`}
-                      >
-                        {transaction.type === "income" ? "+" : "-"}$
-                        {transaction.amount.toLocaleString()}
-                      </TableCell>
-                      <TableCell>
-                        {getStatusBadge(transaction.status)}
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex gap-1">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => {
-                              setSelectedTransaction(transaction);
-                              setIsViewTransactionOpen(true);
-                            }}
-                          >
-                            <Eye className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() =>
-                              openEditTransactionDialog(transaction)
+                <Table className="min-w-[720px] sm:min-w-0">
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>{t("common.date")}</TableHead>
+                      <TableHead>{t("clients.type")}</TableHead>
+                      <TableHead>{t("warehouse.category")}</TableHead>
+                      <TableHead>{t("common.description")}</TableHead>
+                      <TableHead>{t("common.amount")}</TableHead>
+                      <TableHead>{t("common.status")}</TableHead>
+                      <TableHead>{t("common.actions")}</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredTransactions.map((transaction) => (
+                      <TableRow key={transaction.id}>
+                        <TableCell>{transaction.date}</TableCell>
+                        <TableCell>
+                          <Badge
+                            variant={
+                              transaction.type === "income"
+                                ? "default"
+                                : "secondary"
+                            }
+                            className={
+                              transaction.type === "income"
+                                ? "bg-green-100 text-green-800"
+                                : "bg-red-100 text-red-800"
                             }
                           >
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                            {transaction.type === "income"
+                              ? t("finance.income")
+                              : t("finance.expense")}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          {translateCategory(transaction.category)}
+                        </TableCell>
+                        <TableCell>
+                          <div>
+                            <div className="font-medium">
+                              {formatDescription(transaction.description)}
+                            </div>
+                            {transaction.performedBy && (
+                              <div className="text-sm text-muted-foreground">
+                                {t("finance.performed_by")}:{" "}
+                                {getPerformedByDisplay(transaction.performedBy)}
+                              </div>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell
+                          className={`font-medium ${transaction.type === "income" ? "text-green-600" : "text-red-600"}`}
+                        >
+                          {transaction.type === "income" ? "+" : "-"}$
+                          {transaction.amount.toLocaleString()}
+                        </TableCell>
+                        <TableCell>
+                          {getStatusBadge(transaction.status)}
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex gap-1">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => {
+                                setSelectedTransaction(transaction);
+                                setIsViewTransactionOpen(true);
+                              }}
+                            >
+                              <Eye className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() =>
+                                openEditTransactionDialog(transaction)
+                              }
+                            >
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
               </div>
             </CardContent>
           </Card>
@@ -2466,25 +2469,34 @@ ${data.transactions
       </Tabs>
 
       {/* Add Transaction Dialog */}
-      <Dialog open={isAddTransactionOpen} onOpenChange={setIsAddTransactionOpen}>
+      <Dialog
+        open={isAddTransactionOpen}
+        onOpenChange={setIsAddTransactionOpen}
+      >
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle>{t("finance.add_new_transaction")}</DialogTitle>
-            <DialogDescription>{t("finance.record_transaction")}</DialogDescription>
+            <DialogDescription>
+              {t("finance.record_transaction")}
+            </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="add-type">{t("finance.transaction_type")}</Label>
               <Select
                 value={newTransaction.type}
-                onValueChange={(value) => setNewTransaction({ ...newTransaction, type: value as any })}
+                onValueChange={(value) =>
+                  setNewTransaction({ ...newTransaction, type: value as any })
+                }
               >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="income">{t("finance.income")}</SelectItem>
-                  <SelectItem value="expense">{t("finance.expense")}</SelectItem>
+                  <SelectItem value="expense">
+                    {t("finance.expense")}
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -2494,7 +2506,12 @@ ${data.transactions
                 id="add-category"
                 placeholder={t("finance.category_placeholder")}
                 value={newTransaction.category || ""}
-                onChange={(e) => setNewTransaction({ ...newTransaction, category: e.target.value })}
+                onChange={(e) =>
+                  setNewTransaction({
+                    ...newTransaction,
+                    category: e.target.value,
+                  })
+                }
               />
             </div>
             <div className="space-y-2">
@@ -2502,7 +2519,12 @@ ${data.transactions
               <Input
                 id="add-description"
                 value={newTransaction.description || ""}
-                onChange={(e) => setNewTransaction({ ...newTransaction, description: e.target.value })}
+                onChange={(e) =>
+                  setNewTransaction({
+                    ...newTransaction,
+                    description: e.target.value,
+                  })
+                }
               />
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -2522,11 +2544,16 @@ ${data.transactions
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="add-paymentMethod">{t("sales.payment_method")}</Label>
+                <Label htmlFor="add-paymentMethod">
+                  {t("sales.payment_method")}
+                </Label>
                 <Select
                   value={newTransaction.paymentMethod}
                   onValueChange={(value) =>
-                    setNewTransaction({ ...newTransaction, paymentMethod: value as any })
+                    setNewTransaction({
+                      ...newTransaction,
+                      paymentMethod: value as any,
+                    })
                   }
                 >
                   <SelectTrigger>
@@ -2535,22 +2562,33 @@ ${data.transactions
                   <SelectContent>
                     <SelectItem value="cash">{t("sales.cash")}</SelectItem>
                     <SelectItem value="card">{t("sales.card")}</SelectItem>
-                    <SelectItem value="bank_transfer">{t("sales.bank_transfer")}</SelectItem>
+                    <SelectItem value="bank_transfer">
+                      {t("sales.bank_transfer")}
+                    </SelectItem>
                     <SelectItem value="check">{t("finance.check")}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="add-performedBy">{t("finance.performed_by_optional")}</Label>
+              <Label htmlFor="add-performedBy">
+                {t("finance.performed_by_optional")}
+              </Label>
               <Input
                 id="add-performedBy"
                 value={newTransaction.performedBy || ""}
-                onChange={(e) => setNewTransaction({ ...newTransaction, performedBy: e.target.value })}
+                onChange={(e) =>
+                  setNewTransaction({
+                    ...newTransaction,
+                    performedBy: e.target.value,
+                  })
+                }
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="add-tags">{t("common.tags", { defaultValue: "Tags" })}</Label>
+              <Label htmlFor="add-tags">
+                {t("common.tags", { defaultValue: "Tags" })}
+              </Label>
               <Input
                 id="add-tags"
                 placeholder="tag1, tag2"
@@ -2567,7 +2605,9 @@ ${data.transactions
               />
             </div>
             <div className="flex gap-2">
-              <Button className="flex-1" onClick={addTransaction}>{t("common.save")}</Button>
+              <Button className="flex-1" onClick={addTransaction}>
+                {t("common.save")}
+              </Button>
               <Button
                 variant="outline"
                 onClick={() => {
