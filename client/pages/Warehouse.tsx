@@ -2775,7 +2775,7 @@ export default function Warehouse() {
           <Card>
             <CardHeader>
               <CardTitle>{t("warehouse.product_inventory")}</CardTitle>
-              <div className="flex gap-4">
+              <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
                 <div className="relative flex-1">
                   <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                   <Input
@@ -2826,7 +2826,8 @@ export default function Warehouse() {
               </div>
             </CardHeader>
             <CardContent>
-              <Table>
+              <div className="-mx-2 sm:mx-0 overflow-x-auto">
+                <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead>{t("warehouse.product_name")}</TableHead>
@@ -2953,7 +2954,8 @@ export default function Warehouse() {
                     </TableRow>
                   ))}
                 </TableBody>
-              </Table>
+                </Table>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
@@ -2966,20 +2968,20 @@ export default function Warehouse() {
               <CardDescription>
                 {t("warehouse.track_all_activities")}
               </CardDescription>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-2">
                 <input
                   id="movementFrom"
                   type="date"
                   value={movementFrom || ""}
                   onChange={(e) => setMovementFrom(e.target.value || null)}
-                  className="h-9 rounded-md border px-2"
+                  className="h-9 rounded-md border px-2 w-full sm:w-auto"
                 />
                 <input
                   id="movementTo"
                   type="date"
                   value={movementTo || ""}
                   onChange={(e) => setMovementTo(e.target.value || null)}
-                  className="h-9 rounded-md border px-2"
+                  className="h-9 rounded-md border px-2 w-full sm:w-auto"
                 />
                 <Button
                   variant="ghost"
@@ -3007,7 +3009,8 @@ export default function Warehouse() {
               </div>
             </CardHeader>
             <CardContent>
-              <Table>
+              <div className="-mx-2 sm:mx-0 overflow-x-auto">
+                <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead>{t("common.date_time")}</TableHead>
@@ -3184,7 +3187,8 @@ export default function Warehouse() {
                     </TableRow>
                   ))}
                 </TableBody>
-              </Table>
+                </Table>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
@@ -3197,7 +3201,7 @@ export default function Warehouse() {
                 <History className="h-5 w-5" />
                 {t("warehouse.history")}
               </CardTitle>
-              <div className="flex gap-4 items-center">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-center">
                 <Select value={historyFilter} onValueChange={setHistoryFilter}>
                   <SelectTrigger className="w-[150px]">
                     <Filter className="mr-2 h-4 w-4" />
@@ -3231,20 +3235,20 @@ export default function Warehouse() {
                   </SelectContent>
                 </Select>
 
-                <div className="flex items-center gap-2">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-2">
                   <input
                     id="historyFrom"
                     type="date"
                     value={historyFrom || ""}
                     onChange={(e) => setHistoryFrom(e.target.value || null)}
-                    className="h-9 rounded-md border px-2"
+                    className="h-9 rounded-md border px-2 w-full sm:w-auto"
                   />
                   <input
                     id="historyTo"
                     type="date"
                     value={historyTo || ""}
                     onChange={(e) => setHistoryTo(e.target.value || null)}
-                    className="h-9 rounded-md border px-2"
+                    className="h-9 rounded-md border px-2 w-full sm:w-auto"
                   />
                   <Button
                     variant="ghost"
@@ -3276,7 +3280,8 @@ export default function Warehouse() {
               </div>
             </CardHeader>
             <CardContent>
-              <Table>
+              <div className="-mx-2 sm:mx-0 overflow-x-auto">
+                <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead>{t("common.date_time")}</TableHead>
@@ -3482,7 +3487,8 @@ export default function Warehouse() {
                     </TableRow>
                   ))}
                 </TableBody>
-              </Table>
+                </Table>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
