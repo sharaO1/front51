@@ -2089,7 +2089,7 @@ ${data.transactions
                           {getStatusBadge(transaction.status)}
                         </TableCell>
                         <TableCell>
-                          <div className="flex gap-1">
+                          <div className="hidden sm:flex gap-1">
                             <Button
                               variant="outline"
                               size="sm"
@@ -2109,6 +2109,37 @@ ${data.transactions
                             >
                               <Edit className="h-4 w-4" />
                             </Button>
+                          </div>
+                          <div className="sm:hidden">
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button size="sm" variant="outline" className="px-2">
+                                  {t("common.actions")}
+                                  <ChevronDown className="ml-1 h-3 w-3" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuItem
+                                  onClick={() => {
+                                    setSelectedTransaction(transaction);
+                                    setIsViewTransactionOpen(true);
+                                  }}
+                                  className="cursor-pointer"
+                                >
+                                  <Eye className="h-4 w-4 mr-2" />
+                                  {t("common.view")}
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                  onClick={() =>
+                                    openEditTransactionDialog(transaction)
+                                  }
+                                  className="cursor-pointer"
+                                >
+                                  <Edit className="h-4 w-4 mr-2" />
+                                  {t("common.edit")}
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
                           </div>
                         </TableCell>
                       </TableRow>
@@ -2345,7 +2376,7 @@ ${data.transactions
                       </TableCell>
                       <TableCell>{getLoanStatusBadge(loan.status)}</TableCell>
                       <TableCell>
-                        <div className="flex gap-1">
+                        <div className="hidden sm:flex gap-1">
                           <Button
                             variant="outline"
                             size="sm"
@@ -2369,6 +2400,32 @@ ${data.transactions
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
+                        </div>
+                        <div className="sm:hidden">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button size="sm" variant="outline" className="px-2">
+                                {t("common.actions")}
+                                <ChevronDown className="ml-1 h-3 w-3" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem onClick={() => openEditLoanDialog(loan)} className="cursor-pointer">
+                                <Edit className="h-4 w-4 mr-2" />
+                                {t("common.edit")}
+                              </DropdownMenuItem>
+                              {loan.status !== "returned" && (
+                                <DropdownMenuItem onClick={() => markLoanReturned(loan.id)} className="cursor-pointer">
+                                  <CheckCircle2 className="h-4 w-4 mr-2" />
+                                  {t("common.mark_as_returned", { defaultValue: "Mark as returned" })}
+                                </DropdownMenuItem>
+                              )}
+                              <DropdownMenuItem onClick={() => deleteLoan(loan.id)} className="cursor-pointer">
+                                <Trash2 className="h-4 w-4 mr-2" />
+                                {t("common.delete")}
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
                         </div>
                       </TableCell>
                     </TableRow>
