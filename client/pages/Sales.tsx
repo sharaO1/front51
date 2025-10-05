@@ -696,8 +696,9 @@ export default function Sales() {
 
     const totalPages = pages.length;
     const tables = pages
-      .map((group, idx) => `
-        ${idx > 0 ? '<div class="page-break"></div>' : ''}
+      .map(
+        (group, idx) => `
+        ${idx > 0 ? '<div class="page-break"></div>' : ""}
         <div class="page-head">
           <div><strong>${t("navigation.sales")} — ${t("dashboard.recent_activity", "Recent Activity")}</strong></div>
           <div class="meta-small">${t("common.date")}: ${periodLabel} • ${t("sales.report.generated_on", "Generated on")}: ${formatDateTime(new Date())} • ${t("common.page", { defaultValue: "Page" })} ${idx + 1}/${totalPages}</div>
@@ -715,7 +716,8 @@ export default function Sales() {
             </thead>
             <tbody>${renderRows(group) || `<tr><td colspan="5" class="muted">${t("clients.no_products", "No data")}</td></tr>`}</tbody>
           </table>
-        </div>`)
+        </div>`,
+      )
       .join("");
 
     return `
@@ -815,9 +817,28 @@ export default function Sales() {
       }
 
       // Last 12 months (rolling): from first day of the month 12 months ago to end of current month
-      const start = new Date(now.getFullYear() - 1, now.getMonth(), 1, 0, 0, 0, 0);
-      const end = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
-      const fmt = new Intl.DateTimeFormat(i18n.language || "en", { month: "short", year: "numeric" });
+      const start = new Date(
+        now.getFullYear() - 1,
+        now.getMonth(),
+        1,
+        0,
+        0,
+        0,
+        0,
+      );
+      const end = new Date(
+        now.getFullYear(),
+        now.getMonth() + 1,
+        0,
+        23,
+        59,
+        59,
+        999,
+      );
+      const fmt = new Intl.DateTimeFormat(i18n.language || "en", {
+        month: "short",
+        year: "numeric",
+      });
       const label = `${fmt.format(start)} – ${fmt.format(end)}`;
       return { start, end, label };
     };
@@ -1002,9 +1023,25 @@ export default function Sales() {
           break;
         }
         case "last_month": {
-          const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
-          const start = new Date(lastMonth.getFullYear(), lastMonth.getMonth(), 1);
-          const end = new Date(lastMonth.getFullYear(), lastMonth.getMonth() + 1, 0, 23, 59, 59, 999);
+          const lastMonth = new Date(
+            today.getFullYear(),
+            today.getMonth() - 1,
+            1,
+          );
+          const start = new Date(
+            lastMonth.getFullYear(),
+            lastMonth.getMonth(),
+            1,
+          );
+          const end = new Date(
+            lastMonth.getFullYear(),
+            lastMonth.getMonth() + 1,
+            0,
+            23,
+            59,
+            59,
+            999,
+          );
           matchesDate = invoiceDate >= start && invoiceDate <= end;
           break;
         }
@@ -1036,7 +1073,9 @@ export default function Sales() {
     () =>
       filteredInvoices
         .slice()
-        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()),
+        .sort(
+          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+        ),
     [filteredInvoices],
   );
 
@@ -2807,10 +2846,18 @@ export default function Sales() {
                 <SelectContent>
                   <SelectItem value="all">{t("sales.all_dates")}</SelectItem>
                   <SelectItem value="today">{t("sales.today")}</SelectItem>
-                  <SelectItem value="last_week">{t("sales.last_week")}</SelectItem>
-                  <SelectItem value="last_month">{t("sales.last_month")}</SelectItem>
-                  <SelectItem value="last_year">{t("sales.last_year")}</SelectItem>
-                  <SelectItem value="custom">{t("sales.custom_range")}</SelectItem>
+                  <SelectItem value="last_week">
+                    {t("sales.last_week")}
+                  </SelectItem>
+                  <SelectItem value="last_month">
+                    {t("sales.last_month")}
+                  </SelectItem>
+                  <SelectItem value="last_year">
+                    {t("sales.last_year")}
+                  </SelectItem>
+                  <SelectItem value="custom">
+                    {t("sales.custom_range")}
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -2852,7 +2899,9 @@ export default function Sales() {
                       if (s > e) {
                         toast({
                           title: t("common.error", { defaultValue: "Error" }),
-                          description: t("warehouse.invalid_date_range", { defaultValue: "Invalid date range" }),
+                          description: t("warehouse.invalid_date_range", {
+                            defaultValue: "Invalid date range",
+                          }),
                           variant: "destructive",
                         });
                         return;
