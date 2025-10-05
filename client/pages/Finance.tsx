@@ -64,6 +64,8 @@ import {
   Handshake,
   Clock,
   CheckCircle2,
+  CheckCircle2,
+  Plus,
 } from "lucide-react";
 import {
   AlertDialog,
@@ -1881,6 +1883,11 @@ ${data.transactions
           <Card>
             <CardHeader>
               <CardTitle>{t("finance.transaction_history")}</CardTitle>
+              <div className="flex sm:justify-end">
+                <Button className="w-full sm:w-auto" onClick={() => setIsAddTransactionOpen(true)}>
+                  {t("finance.add_transaction")}
+                </Button>
+              </div>
               <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                 <div className="relative flex-1">
                   <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -2459,6 +2466,123 @@ ${data.transactions
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* Add Transaction Dialog */}
+      <Dialog open={isAddTransactionOpen} onOpenChange={setIsAddTransactionOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>{t("finance.add_new_transaction")}</DialogTitle>
+            <DialogDescription>{t("finance.record_transaction")}</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="add-type">{t("finance.transaction_type")}</Label>
+              <Select
+                value={newTransaction.type}
+                onValueChange={(value) => setNewTransaction({ ...newTransaction, type: value as any })}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="income">{t("finance.income")}</SelectItem>
+                  <SelectItem value="expense">{t("finance.expense")}</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="add-category">{t("warehouse.category")}</Label>
+              <Input
+                id="add-category"
+                placeholder={t("finance.category_placeholder")}
+                value={newTransaction.category || ""}
+                onChange={(e) => setNewTransaction({ ...newTransaction, category: e.target.value })}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="add-description">{t("common.description")}</Label>
+              <Input
+                id="add-description"
+                value={newTransaction.description || ""}
+                onChange={(e) => setNewTransaction({ ...newTransaction, description: e.target.value })}
+              />
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="add-amount">{t("finance.amount_label")}</Label>
+                <Input
+                  id="add-amount"
+                  type="number"
+                  step="0.01"
+                  value={newTransaction.amount ?? 0}
+                  onChange={(e) =>
+                    setNewTransaction({
+                      ...newTransaction,
+                      amount: parseFloat(e.target.value) || 0,
+                    })
+                  }
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="add-paymentMethod">{t("sales.payment_method")}</Label>
+                <Select
+                  value={newTransaction.paymentMethod}
+                  onValueChange={(value) =>
+                    setNewTransaction({ ...newTransaction, paymentMethod: value as any })
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="cash">{t("sales.cash")}</SelectItem>
+                    <SelectItem value="card">{t("sales.card")}</SelectItem>
+                    <SelectItem value="bank_transfer">{t("sales.bank_transfer")}</SelectItem>
+                    <SelectItem value="check">{t("finance.check")}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="add-performedBy">{t("finance.performed_by_optional")}</Label>
+              <Input
+                id="add-performedBy"
+                value={newTransaction.performedBy || ""}
+                onChange={(e) => setNewTransaction({ ...newTransaction, performedBy: e.target.value })}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="add-tags">{t("common.tags", { defaultValue: "Tags" })}</Label>
+              <Input
+                id="add-tags"
+                placeholder="tag1, tag2"
+                value={(newTransaction.tags || []).join(", ")}
+                onChange={(e) =>
+                  setNewTransaction({
+                    ...newTransaction,
+                    tags: e.target.value
+                      .split(",")
+                      .map((s) => s.trim())
+                      .filter(Boolean),
+                  })
+                }
+              />
+            </div>
+            <div className="flex gap-2">
+              <Button className="flex-1" onClick={addTransaction}>{t("common.save")}</Button>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  clearNewTransaction();
+                  setIsAddTransactionOpen(false);
+                }}
+              >
+                {t("common.cancel")}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Edit Transaction Dialog */}
       <Dialog
