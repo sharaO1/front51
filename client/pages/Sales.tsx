@@ -2268,187 +2268,220 @@ export default function Sales() {
         <CardContent>
           <div className="hidden md:block">
             <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>{t("sales.invoice_number")}</TableHead>
-                <TableHead>{t("sales.client")}</TableHead>
-                <TableHead>{t("employees.employee")}</TableHead>
-                <TableHead>{t("common.date")}</TableHead>
-                <TableHead>{t("common.amount")}</TableHead>
-                <TableHead>{t("common.status")}</TableHead>
-                <TableHead>{t("common.actions")}</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredInvoices.map((invoice) => (
-                <TableRow key={invoice.id}>
-                  <TableCell className="font-medium">
-                    {invoice.invoiceNumber}
-                  </TableCell>
-                  <TableCell>
-                    <div>
-                      <div className="font-medium">{invoice.clientName}</div>
-                      <div className="text-sm text-muted-foreground">
-                        {invoice.clientEmail}
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      {invoice.employeeName ? (
-                        <>
-                          <Avatar className="h-6 w-6">
-                            <AvatarImage
-                              src={invoice.employeeAvatar}
-                              alt={invoice.employeeName}
-                            />
-                            <AvatarFallback className="text-xs">
-                              {invoice.employeeName
-                                .split(" ")
-                                .map((n) => n[0])
-                                .join("")
-                                .toUpperCase()}
-                            </AvatarFallback>
-                          </Avatar>
-                          <span className="text-sm">
-                            {invoice.employeeName}
-                          </span>
-                        </>
-                      ) : (
-                        <span className="text-sm text-muted-foreground">
-                          {t("sales.no_employee")}
-                        </span>
-                      )}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div>
-                      <div>
-                        {new Intl.DateTimeFormat(i18n.language || "en", {
-                          year: "numeric",
-                          month: "2-digit",
-                          day: "2-digit",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                          second: "2-digit",
-                        }).format(new Date(invoice.date))}
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="font-medium">
-                      ${invoice.total.toFixed(2)}
-                    </div>
-                    <div className="text-sm text-muted-foreground">
-                      {t(`sales.${invoice.paymentMethod}`)}
-                    </div>
-                  </TableCell>
-                  <TableCell>{getStatusBadge(invoice.status)}</TableCell>
-                  <TableCell>
-                    <div className="flex gap-1">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                          setSelectedInvoice(invoice);
-                          setIsViewDialogOpen(true);
-                        }}
-                      >
-                        <Eye className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                          toast({
-                            title: "Invoice downloaded",
-                            description:
-                              "Invoice PDF has been generated and downloaded.",
-                          });
-                        }}
-                      >
-                        <Download className="h-4 w-4" />
-                      </Button>
-                      {invoice.status === "draft" && (
-                        <>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            disabled={updatingIds.has(invoice.id)}
-                            onClick={() =>
-                              updateInvoiceStatus(invoice.id, "sent")
-                            }
-                          >
-                            {t("sales.send")}
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            disabled={updatingIds.has(invoice.id)}
-                            onClick={() => openCancelDialog(invoice)}
-                            className="text-red-600 hover:text-red-700"
-                          >
-                            <X className="h-4 w-4" />
-                          </Button>
-                        </>
-                      )}
-                      {invoice.status === "sent" && (
-                        <>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            disabled={updatingIds.has(invoice.id)}
-                            onClick={() =>
-                              updateInvoiceStatus(invoice.id, "paid")
-                            }
-                            className="text-green-600"
-                          >
-                            {t("sales.mark_paid")}
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            disabled={updatingIds.has(invoice.id)}
-                            onClick={() => openCancelDialog(invoice)}
-                            className="text-red-600 hover:text-red-700"
-                          >
-                            <X className="h-4 w-4" />
-                          </Button>
-                        </>
-                      )}
-                    </div>
-                  </TableCell>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>{t("sales.invoice_number")}</TableHead>
+                  <TableHead>{t("sales.client")}</TableHead>
+                  <TableHead>{t("employees.employee")}</TableHead>
+                  <TableHead>{t("common.date")}</TableHead>
+                  <TableHead>{t("common.amount")}</TableHead>
+                  <TableHead>{t("common.status")}</TableHead>
+                  <TableHead>{t("common.actions")}</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {filteredInvoices.map((invoice) => (
+                  <TableRow key={invoice.id}>
+                    <TableCell className="font-medium">
+                      {invoice.invoiceNumber}
+                    </TableCell>
+                    <TableCell>
+                      <div>
+                        <div className="font-medium">{invoice.clientName}</div>
+                        <div className="text-sm text-muted-foreground">
+                          {invoice.clientEmail}
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        {invoice.employeeName ? (
+                          <>
+                            <Avatar className="h-6 w-6">
+                              <AvatarImage
+                                src={invoice.employeeAvatar}
+                                alt={invoice.employeeName}
+                              />
+                              <AvatarFallback className="text-xs">
+                                {invoice.employeeName
+                                  .split(" ")
+                                  .map((n) => n[0])
+                                  .join("")
+                                  .toUpperCase()}
+                              </AvatarFallback>
+                            </Avatar>
+                            <span className="text-sm">
+                              {invoice.employeeName}
+                            </span>
+                          </>
+                        ) : (
+                          <span className="text-sm text-muted-foreground">
+                            {t("sales.no_employee")}
+                          </span>
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div>
+                        <div>
+                          {new Intl.DateTimeFormat(i18n.language || "en", {
+                            year: "numeric",
+                            month: "2-digit",
+                            day: "2-digit",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            second: "2-digit",
+                          }).format(new Date(invoice.date))}
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="font-medium">
+                        ${invoice.total.toFixed(2)}
+                      </div>
+                      <div className="text-sm text-muted-foreground">
+                        {t(`sales.${invoice.paymentMethod}`)}
+                      </div>
+                    </TableCell>
+                    <TableCell>{getStatusBadge(invoice.status)}</TableCell>
+                    <TableCell>
+                      <div className="flex gap-1">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            setSelectedInvoice(invoice);
+                            setIsViewDialogOpen(true);
+                          }}
+                        >
+                          <Eye className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            toast({
+                              title: "Invoice downloaded",
+                              description:
+                                "Invoice PDF has been generated and downloaded.",
+                            });
+                          }}
+                        >
+                          <Download className="h-4 w-4" />
+                        </Button>
+                        {invoice.status === "draft" && (
+                          <>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              disabled={updatingIds.has(invoice.id)}
+                              onClick={() =>
+                                updateInvoiceStatus(invoice.id, "sent")
+                              }
+                            >
+                              {t("sales.send")}
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              disabled={updatingIds.has(invoice.id)}
+                              onClick={() => openCancelDialog(invoice)}
+                              className="text-red-600 hover:text-red-700"
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                          </>
+                        )}
+                        {invoice.status === "sent" && (
+                          <>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              disabled={updatingIds.has(invoice.id)}
+                              onClick={() =>
+                                updateInvoiceStatus(invoice.id, "paid")
+                              }
+                              className="text-green-600"
+                            >
+                              {t("sales.mark_paid")}
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              disabled={updatingIds.has(invoice.id)}
+                              onClick={() => openCancelDialog(invoice)}
+                              className="text-red-600 hover:text-red-700"
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                          </>
+                        )}
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           </div>
 
           <div className="md:hidden space-y-3">
             {filteredInvoices.map((invoice) => (
-              <div key={invoice.id} className="rounded-xl border p-4 bg-card shadow-business">
+              <div
+                key={invoice.id}
+                className="rounded-xl border p-4 bg-card shadow-business"
+              >
                 <div className="flex items-center justify-between gap-3">
                   <div>
-                    <div className="text-xs text-muted-foreground">{t("sales.invoice_number")}</div>
-                    <div className="text-base font-semibold">{invoice.invoiceNumber}</div>
+                    <div className="text-xs text-muted-foreground">
+                      {t("sales.invoice_number")}
+                    </div>
+                    <div className="text-base font-semibold">
+                      {invoice.invoiceNumber}
+                    </div>
                   </div>
                   {getStatusBadge(invoice.status)}
                 </div>
                 <div className="mt-3">
                   <div className="font-medium">{invoice.clientName}</div>
                   {invoice.clientEmail ? (
-                    <div className="text-xs text-muted-foreground">{invoice.clientEmail}</div>
+                    <div className="text-xs text-muted-foreground">
+                      {invoice.clientEmail}
+                    </div>
                   ) : null}
                 </div>
                 <div className="mt-3 flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">{formatDateTime(invoice.date)}</span>
-                  <span className="font-semibold">{formatCurrency(invoice.total)}</span>
+                  <span className="text-muted-foreground">
+                    {formatDateTime(invoice.date)}
+                  </span>
+                  <span className="font-semibold">
+                    {formatCurrency(invoice.total)}
+                  </span>
                 </div>
                 <div className="mt-4 grid grid-cols-2 gap-2">
-                  <Button variant="outline" size="sm" onClick={() => { setSelectedInvoice(invoice); setIsViewDialogOpen(true); }}>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      setSelectedInvoice(invoice);
+                      setIsViewDialogOpen(true);
+                    }}
+                  >
                     <Eye className="h-4 w-4" /> {t("common.view", "View")}
                   </Button>
-                  <Button variant="outline" size="sm" onClick={() => { buildInvoicePDF(invoice); toast({ title: t("sales.toast.invoice_downloaded_title"), description: t("sales.toast.invoice_downloaded_desc_number", { number: invoice.invoiceNumber }) }); }}>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      buildInvoicePDF(invoice);
+                      toast({
+                        title: t("sales.toast.invoice_downloaded_title"),
+                        description: t(
+                          "sales.toast.invoice_downloaded_desc_number",
+                          { number: invoice.invoiceNumber },
+                        ),
+                      });
+                    }}
+                  >
                     <Download className="h-4 w-4" /> PDF
                   </Button>
                 </div>
@@ -2456,14 +2489,49 @@ export default function Sales() {
                   <div className="mt-2 grid grid-cols-2 gap-2">
                     {invoice.status === "draft" && (
                       <>
-                        <Button variant="outline" size="sm" disabled={updatingIds.has(invoice.id)} onClick={() => updateInvoiceStatus(invoice.id, "sent")}>{t("sales.send")}</Button>
-                        <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700" disabled={updatingIds.has(invoice.id)} onClick={() => openCancelDialog(invoice)}>{t("common.cancel")}</Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          disabled={updatingIds.has(invoice.id)}
+                          onClick={() =>
+                            updateInvoiceStatus(invoice.id, "sent")
+                          }
+                        >
+                          {t("sales.send")}
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="text-red-600 hover:text-red-700"
+                          disabled={updatingIds.has(invoice.id)}
+                          onClick={() => openCancelDialog(invoice)}
+                        >
+                          {t("common.cancel")}
+                        </Button>
                       </>
                     )}
                     {invoice.status === "sent" && (
                       <>
-                        <Button variant="outline" size="sm" className="text-green-600" disabled={updatingIds.has(invoice.id)} onClick={() => updateInvoiceStatus(invoice.id, "paid")}>{t("sales.mark_paid")}</Button>
-                        <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700" disabled={updatingIds.has(invoice.id)} onClick={() => openCancelDialog(invoice)}>{t("common.cancel")}</Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="text-green-600"
+                          disabled={updatingIds.has(invoice.id)}
+                          onClick={() =>
+                            updateInvoiceStatus(invoice.id, "paid")
+                          }
+                        >
+                          {t("sales.mark_paid")}
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="text-red-600 hover:text-red-700"
+                          disabled={updatingIds.has(invoice.id)}
+                          onClick={() => openCancelDialog(invoice)}
+                        >
+                          {t("common.cancel")}
+                        </Button>
                       </>
                     )}
                   </div>
