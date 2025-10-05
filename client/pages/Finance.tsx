@@ -1532,8 +1532,15 @@ export default function Finance() {
           document.documentElement.style.overflow = "";
         } catch {}
         window.removeEventListener("afterprint", afterPrintCleanup);
+        document.removeEventListener("visibilitychange", onVisChange);
+      };
+      const onVisChange = () => {
+        if (document.visibilityState === "visible") {
+          afterPrintCleanup();
+        }
       };
       window.addEventListener("afterprint", afterPrintCleanup);
+      document.addEventListener("visibilitychange", onVisChange);
     }
 
     toast({
