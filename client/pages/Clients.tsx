@@ -678,12 +678,16 @@ export default function Clients() {
         <CardContent>
           <div className="sm:hidden space-y-3">
             {sortedClients.map((client) => (
-              <div key={client.id} className="rounded-xl border bg-card p-3 shadow-sm">
+              <div
+                key={client.id}
+                className="rounded-xl border bg-card p-3 shadow-sm"
+              >
                 <div className="flex items-start justify-between gap-2">
                   <div>
                     <div className="font-semibold">{client.name}</div>
                     <div className="text-xs text-muted-foreground">
-                      {t("common.total")}: ${client.totalPurchases.toLocaleString()}
+                      {t("common.total")}: $
+                      {client.totalPurchases.toLocaleString()}
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-1 justify-end">
@@ -703,9 +707,12 @@ export default function Clients() {
                 </div>
                 <div className="mt-2 flex items-center justify-between gap-3 text-sm">
                   <div>
-                    <div className="font-medium">${client.currentDebt.toLocaleString()}</div>
+                    <div className="font-medium">
+                      ${client.currentDebt.toLocaleString()}
+                    </div>
                     <div className="text-xs text-muted-foreground">
-                      {t("clients.credit_limit")}: ${client.creditLimit.toLocaleString()}
+                      {t("clients.credit_limit")}: $
+                      {client.creditLimit.toLocaleString()}
                     </div>
                   </div>
                   <div className="flex gap-1">
@@ -758,143 +765,145 @@ export default function Clients() {
           </div>
           <div className="-mx-2 sm:mx-0 overflow-x-auto hidden sm:block">
             <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead
-                  aria-sort={sortKey === "name" ? sortOrder : undefined}
-                >
-                  <button
-                    type="button"
-                    className="inline-flex items-center gap-1"
-                    onClick={() => handleSort("name")}
+              <TableHeader>
+                <TableRow>
+                  <TableHead
+                    aria-sort={sortKey === "name" ? sortOrder : undefined}
                   >
-                    {t("clients.client")}
-                    <span>{headerSortIndicator("name")}</span>
-                  </button>
-                </TableHead>
-                <TableHead
-                  aria-sort={sortKey === "type" ? sortOrder : undefined}
-                >
-                  <button
-                    type="button"
-                    className="inline-flex items-center gap-1"
-                    onClick={() => handleSort("type")}
+                    <button
+                      type="button"
+                      className="inline-flex items-center gap-1"
+                      onClick={() => handleSort("name")}
+                    >
+                      {t("clients.client")}
+                      <span>{headerSortIndicator("name")}</span>
+                    </button>
+                  </TableHead>
+                  <TableHead
+                    aria-sort={sortKey === "type" ? sortOrder : undefined}
                   >
-                    {t("clients.type")}
-                    <span>{headerSortIndicator("type")}</span>
-                  </button>
-                </TableHead>
-                <TableHead>{t("clients.contact")}</TableHead>
-                <TableHead
-                  aria-sort={sortKey === "currentDebt" ? sortOrder : undefined}
-                >
-                  <button
-                    type="button"
-                    className="inline-flex items-center gap-1"
-                    onClick={() => handleSort("currentDebt")}
+                    <button
+                      type="button"
+                      className="inline-flex items-center gap-1"
+                      onClick={() => handleSort("type")}
+                    >
+                      {t("clients.type")}
+                      <span>{headerSortIndicator("type")}</span>
+                    </button>
+                  </TableHead>
+                  <TableHead>{t("clients.contact")}</TableHead>
+                  <TableHead
+                    aria-sort={
+                      sortKey === "currentDebt" ? sortOrder : undefined
+                    }
                   >
-                    {t("clients.debt")}
-                    <span>{headerSortIndicator("currentDebt")}</span>
-                  </button>
-                </TableHead>
-                <TableHead
-                  aria-sort={sortKey === "status" ? sortOrder : undefined}
-                >
-                  <button
-                    type="button"
-                    className="inline-flex items-center gap-1"
-                    onClick={() => handleSort("status")}
+                    <button
+                      type="button"
+                      className="inline-flex items-center gap-1"
+                      onClick={() => handleSort("currentDebt")}
+                    >
+                      {t("clients.debt")}
+                      <span>{headerSortIndicator("currentDebt")}</span>
+                    </button>
+                  </TableHead>
+                  <TableHead
+                    aria-sort={sortKey === "status" ? sortOrder : undefined}
                   >
-                    {t("common.status")}
-                    <span>{headerSortIndicator("status")}</span>
-                  </button>
-                </TableHead>
-                <TableHead>{t("common.actions")}</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {sortedClients.map((client) => (
-                <TableRow key={client.id}>
-                  <TableCell>
-                    <div>
-                      <div className="font-medium">{client.name}</div>
-                      <div className="text-sm text-muted-foreground">
-                        {t("common.total")}: $
-                        {client.totalPurchases.toLocaleString()}
+                    <button
+                      type="button"
+                      className="inline-flex items-center gap-1"
+                      onClick={() => handleSort("status")}
+                    >
+                      {t("common.status")}
+                      <span>{headerSortIndicator("status")}</span>
+                    </button>
+                  </TableHead>
+                  <TableHead>{t("common.actions")}</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {sortedClients.map((client) => (
+                  <TableRow key={client.id}>
+                    <TableCell>
+                      <div>
+                        <div className="font-medium">{client.name}</div>
+                        <div className="text-sm text-muted-foreground">
+                          {t("common.total")}: $
+                          {client.totalPurchases.toLocaleString()}
+                        </div>
                       </div>
-                    </div>
-                  </TableCell>
-                  <TableCell>{getTypeBadge(client.type)}</TableCell>
-                  <TableCell>
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-1 text-sm">
-                        <Mail className="h-3 w-3" />
-                        {client.email}
+                    </TableCell>
+                    <TableCell>{getTypeBadge(client.type)}</TableCell>
+                    <TableCell>
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-1 text-sm">
+                          <Mail className="h-3 w-3" />
+                          {client.email}
+                        </div>
+                        <div className="flex items-center gap-1 text-sm">
+                          <Phone className="h-3 w-3" />
+                          {client.phone}
+                        </div>
                       </div>
-                      <div className="flex items-center gap-1 text-sm">
-                        <Phone className="h-3 w-3" />
-                        {client.phone}
+                    </TableCell>
+                    <TableCell>
+                      <div>
+                        <div className="font-medium">
+                          ${client.currentDebt.toLocaleString()}
+                        </div>
+                        <div className="text-sm text-muted-foreground">
+                          {t("clients.credit_limit")}: $
+                          {client.creditLimit.toLocaleString()}
+                        </div>
                       </div>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div>
-                      <div className="font-medium">
-                        ${client.currentDebt.toLocaleString()}
-                      </div>
-                      <div className="text-sm text-muted-foreground">
-                        {t("clients.credit_limit")}: $
-                        {client.creditLimit.toLocaleString()}
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell>{getStatusBadge(client.status)}</TableCell>
-                  <TableCell>
-                    <div className="flex gap-1">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                          setSelectedClient(client);
-                          setIsViewDialogOpen(true);
-                        }}
-                      >
-                        <Eye className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                          setSelectedClient(client);
-                          setIsEditDialogOpen(true);
-                        }}
-                      >
-                        <Edit className="h-4 w-4" />
-                      </Button>
-                      {client.status === "overdue" && (
+                    </TableCell>
+                    <TableCell>{getStatusBadge(client.status)}</TableCell>
+                    <TableCell>
+                      <div className="flex gap-1">
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => sendReminder(client)}
-                          className="text-orange-600"
+                          onClick={() => {
+                            setSelectedClient(client);
+                            setIsViewDialogOpen(true);
+                          }}
                         >
-                          <Send className="h-4 w-4" />
+                          <Eye className="h-4 w-4" />
                         </Button>
-                      )}
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleDeleteClient(client.id)}
-                        className="text-red-600"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            setSelectedClient(client);
+                            setIsEditDialogOpen(true);
+                          }}
+                        >
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                        {client.status === "overdue" && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => sendReminder(client)}
+                            className="text-orange-600"
+                          >
+                            <Send className="h-4 w-4" />
+                          </Button>
+                        )}
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleDeleteClient(client.id)}
+                          className="text-red-600"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           </div>
         </CardContent>
       </Card>
@@ -1123,7 +1132,12 @@ export default function Clients() {
       </Dialog>
 
       <div className="fixed bottom-24 right-4 z-40 sm:hidden">
-        <Button size="icon" className="shadow-business-lg" aria-label="Add Client" onClick={() => setIsAddDialogOpen(true)}>
+        <Button
+          size="icon"
+          className="shadow-business-lg"
+          aria-label="Add Client"
+          onClick={() => setIsAddDialogOpen(true)}
+        >
           <Plus className="h-5 w-5" />
         </Button>
       </div>

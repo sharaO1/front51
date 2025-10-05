@@ -2828,132 +2828,132 @@ export default function Warehouse() {
             <CardContent>
               <div className="-mx-2 sm:mx-0 overflow-x-auto">
                 <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>{t("warehouse.product_name")}</TableHead>
-                    <TableHead>{t("warehouse.sku")}</TableHead>
-                    <TableHead>{t("warehouse.category")}</TableHead>
-                    <TableHead>{t("warehouse.quantity")}</TableHead>
-                    <TableHead>{t("common.status")}</TableHead>
-                    <TableHead>{t("warehouse.value")}</TableHead>
-                    <TableHead>{t("common.actions")}</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredProducts.map((product) => (
-                    <TableRow key={product.id}>
-                      <TableCell>
-                        <div>
-                          <div className="font-medium">{product.name}</div>
-                          <div className="text-sm text-muted-foreground">
-                            {product.brand}
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="font-mono text-sm">{product.sku}</div>
-                      </TableCell>
-                      <TableCell>{product.category}</TableCell>
-                      <TableCell>
-                        <div className="font-medium">{product.quantity}</div>
-                        <div className="text-xs text-muted-foreground">
-                          {t("warehouse.min_stock")}: {product.minStock} |{" "}
-                          {t("warehouse.max_stock")}: {product.maxStock}
-                        </div>
-                      </TableCell>
-                      <TableCell>{getStatusBadge(product.status)}</TableCell>
-                      <TableCell>
-                        <div className="font-medium">
-                          ${product.sellingPrice.toLocaleString()}
-                        </div>
-                        <div className="text-xs text-muted-foreground">
-                          @${product.costPrice}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex gap-1">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => {
-                              setSelectedProduct(product);
-                              setIsViewDialogOpen(true);
-                            }}
-                          >
-                            <Eye className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => {
-                              setEditingProduct(product);
-                              setNewProduct({
-                                name: product.name,
-                                category: product.category,
-                                brand: product.brand,
-                                sku: product.sku,
-                                description: product.description,
-                                quantity: product.quantity,
-                                minStock: product.minStock,
-                                maxStock: product.maxStock,
-                                costPrice: product.costPrice,
-                                sellingPrice: product.sellingPrice,
-                                supplier: product.supplier,
-                                suppliers: product.supplier
-                                  ? String(product.supplier)
-                                      .split(",")
-                                      .map((p) => p.trim())
-                                      .filter(Boolean)
-                                  : [],
-                                location: product.location,
-                                expiryDate: product.expiryDate,
-                                tags: product.tags,
-                                status: product.status,
-                              });
-                              setIsEditDialogOpen(true);
-                            }}
-                          >
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                          <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                              <Button variant="outline" size="sm">
-                                <Trash2 className="h-4 w-4" />
-                              </Button>
-                            </AlertDialogTrigger>
-
-                            <AlertDialogContent>
-                              <AlertDialogHeader>
-                                <AlertDialogTitle>
-                                  {t("warehouse.delete_product_title")}
-                                </AlertDialogTitle>
-                                <AlertDialogDescription>
-                                  {t("warehouse.delete_product_confirm", {
-                                    name: product.name,
-                                  })}
-                                  {product.name}{" "}
-                                </AlertDialogDescription>
-                              </AlertDialogHeader>
-                              <AlertDialogFooter>
-                                <AlertDialogCancel>
-                                  {t("common.cancel")}
-                                </AlertDialogCancel>
-                                <AlertDialogAction
-                                  className={buttonVariants({
-                                    variant: "destructive",
-                                  })}
-                                  onClick={() => deleteProduct(product.id)}
-                                >
-                                  {t("common.delete")}
-                                </AlertDialogAction>
-                              </AlertDialogFooter>
-                            </AlertDialogContent>
-                          </AlertDialog>
-                        </div>
-                      </TableCell>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>{t("warehouse.product_name")}</TableHead>
+                      <TableHead>{t("warehouse.sku")}</TableHead>
+                      <TableHead>{t("warehouse.category")}</TableHead>
+                      <TableHead>{t("warehouse.quantity")}</TableHead>
+                      <TableHead>{t("common.status")}</TableHead>
+                      <TableHead>{t("warehouse.value")}</TableHead>
+                      <TableHead>{t("common.actions")}</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredProducts.map((product) => (
+                      <TableRow key={product.id}>
+                        <TableCell>
+                          <div>
+                            <div className="font-medium">{product.name}</div>
+                            <div className="text-sm text-muted-foreground">
+                              {product.brand}
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="font-mono text-sm">{product.sku}</div>
+                        </TableCell>
+                        <TableCell>{product.category}</TableCell>
+                        <TableCell>
+                          <div className="font-medium">{product.quantity}</div>
+                          <div className="text-xs text-muted-foreground">
+                            {t("warehouse.min_stock")}: {product.minStock} |{" "}
+                            {t("warehouse.max_stock")}: {product.maxStock}
+                          </div>
+                        </TableCell>
+                        <TableCell>{getStatusBadge(product.status)}</TableCell>
+                        <TableCell>
+                          <div className="font-medium">
+                            ${product.sellingPrice.toLocaleString()}
+                          </div>
+                          <div className="text-xs text-muted-foreground">
+                            @${product.costPrice}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex gap-1">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => {
+                                setSelectedProduct(product);
+                                setIsViewDialogOpen(true);
+                              }}
+                            >
+                              <Eye className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => {
+                                setEditingProduct(product);
+                                setNewProduct({
+                                  name: product.name,
+                                  category: product.category,
+                                  brand: product.brand,
+                                  sku: product.sku,
+                                  description: product.description,
+                                  quantity: product.quantity,
+                                  minStock: product.minStock,
+                                  maxStock: product.maxStock,
+                                  costPrice: product.costPrice,
+                                  sellingPrice: product.sellingPrice,
+                                  supplier: product.supplier,
+                                  suppliers: product.supplier
+                                    ? String(product.supplier)
+                                        .split(",")
+                                        .map((p) => p.trim())
+                                        .filter(Boolean)
+                                    : [],
+                                  location: product.location,
+                                  expiryDate: product.expiryDate,
+                                  tags: product.tags,
+                                  status: product.status,
+                                });
+                                setIsEditDialogOpen(true);
+                              }}
+                            >
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                            <AlertDialog>
+                              <AlertDialogTrigger asChild>
+                                <Button variant="outline" size="sm">
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </AlertDialogTrigger>
+
+                              <AlertDialogContent>
+                                <AlertDialogHeader>
+                                  <AlertDialogTitle>
+                                    {t("warehouse.delete_product_title")}
+                                  </AlertDialogTitle>
+                                  <AlertDialogDescription>
+                                    {t("warehouse.delete_product_confirm", {
+                                      name: product.name,
+                                    })}
+                                    {product.name}{" "}
+                                  </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                  <AlertDialogCancel>
+                                    {t("common.cancel")}
+                                  </AlertDialogCancel>
+                                  <AlertDialogAction
+                                    className={buttonVariants({
+                                      variant: "destructive",
+                                    })}
+                                    onClick={() => deleteProduct(product.id)}
+                                  >
+                                    {t("common.delete")}
+                                  </AlertDialogAction>
+                                </AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialog>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
                 </Table>
               </div>
             </CardContent>
@@ -3011,182 +3011,185 @@ export default function Warehouse() {
             <CardContent>
               <div className="-mx-2 sm:mx-0 overflow-x-auto">
                 <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>{t("common.date_time")}</TableHead>
-                    <TableHead>{t("warehouse.product_name")}</TableHead>
-                    <TableHead>{t("warehouse.type")}</TableHead>
-                    <TableHead>{t("warehouse.store_location")}</TableHead>
-                    <TableHead>{t("warehouse.quantity")}</TableHead>
-                    <TableHead>{t("warehouse.details")}</TableHead>
-                    <TableHead>{t("warehouse.reference")}</TableHead>
-                    <TableHead>{t("warehouse.stock_change")}</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredMovements.map((movement) => (
-                    <TableRow key={movement.id}>
-                      <TableCell>
-                        <div>
-                          <div className="font-medium">{movement.date}</div>
-                          <div className="text-sm text-muted-foreground">
-                            {movement.time}
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>{t("common.date_time")}</TableHead>
+                      <TableHead>{t("warehouse.product_name")}</TableHead>
+                      <TableHead>{t("warehouse.type")}</TableHead>
+                      <TableHead>{t("warehouse.store_location")}</TableHead>
+                      <TableHead>{t("warehouse.quantity")}</TableHead>
+                      <TableHead>{t("warehouse.details")}</TableHead>
+                      <TableHead>{t("warehouse.reference")}</TableHead>
+                      <TableHead>{t("warehouse.stock_change")}</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredMovements.map((movement) => (
+                      <TableRow key={movement.id}>
+                        <TableCell>
+                          <div>
+                            <div className="font-medium">{movement.date}</div>
+                            <div className="text-sm text-muted-foreground">
+                              {movement.time}
+                            </div>
                           </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="font-medium">
-                          {movement.productName}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        {getMovementTypeBadge(movement.type)}
-                      </TableCell>
-                      <TableCell>
-                        <div className="text-sm">
+                        </TableCell>
+                        <TableCell>
                           <div className="font-medium">
-                            {movement.storeName}
+                            {movement.productName}
                           </div>
-                          {movement.type === "transfer" &&
-                            movement.fromStore &&
-                            movement.toStore && (
-                              <div className="text-xs text-muted-foreground">
-                                {movement.toStore} → {movement.fromStore}
-                              </div>
-                            )}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div
-                          className={`font-medium ${
-                            movement.type === "stock_in"
-                              ? "text-green-600"
-                              : movement.type === "stock_out"
-                                ? "text-red-600"
-                                : movement.type === "transfer"
-                                  ? "text-blue-600"
-                                  : "text-orange-600"
-                          }`}
-                        >
-                          {movement.type === "stock_in"
-                            ? "+"
-                            : movement.type === "stock_out"
-                              ? "-"
-                              : movement.type === "transfer"
-                                ? "↔"
-                                : "±"}
-                          {movement.quantity}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="">
-                          <div className="font-medium">
-                            {movement.type === "stock_in"
-                              ? movement.partyName ||
-                                movement.fromStore ||
-                                t("warehouse.from")
-                              : movement.party ||
-                                movement.reason ||
-                                t("warehouse.details")}
-                          </div>
-
-                          {/* Directional info and reason */}
-                          <div className="text-xs text-muted-foreground mt-1">
+                        </TableCell>
+                        <TableCell>
+                          {getMovementTypeBadge(movement.type)}
+                        </TableCell>
+                        <TableCell>
+                          <div className="text-sm">
+                            <div className="font-medium">
+                              {movement.storeName}
+                            </div>
                             {movement.type === "transfer" &&
                               movement.fromStore &&
                               movement.toStore && (
+                                <div className="text-xs text-muted-foreground">
+                                  {movement.toStore} → {movement.fromStore}
+                                </div>
+                              )}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div
+                            className={`font-medium ${
+                              movement.type === "stock_in"
+                                ? "text-green-600"
+                                : movement.type === "stock_out"
+                                  ? "text-red-600"
+                                  : movement.type === "transfer"
+                                    ? "text-blue-600"
+                                    : "text-orange-600"
+                            }`}
+                          >
+                            {movement.type === "stock_in"
+                              ? "+"
+                              : movement.type === "stock_out"
+                                ? "-"
+                                : movement.type === "transfer"
+                                  ? "↔"
+                                  : "±"}
+                            {movement.quantity}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="">
+                            <div className="font-medium">
+                              {movement.type === "stock_in"
+                                ? movement.partyName ||
+                                  movement.fromStore ||
+                                  t("warehouse.from")
+                                : movement.party ||
+                                  movement.reason ||
+                                  t("warehouse.details")}
+                            </div>
+
+                            {/* Directional info and reason */}
+                            <div className="text-xs text-muted-foreground mt-1">
+                              {movement.type === "transfer" &&
+                                movement.fromStore &&
+                                movement.toStore && (
+                                  <>
+                                    {t("warehouse.from")}: {movement.fromStore}
+                                    <br />
+                                    {t("warehouse.to")}: {movement.toStore}
+                                  </>
+                                )}
+
+                              {movement.type === "stock_in" && (
                                 <>
-                                  {t("warehouse.from")}: {movement.fromStore}
-                                  <br />
-                                  {t("warehouse.to")}: {movement.toStore}
+                                  {movement.partyName && (
+                                    <span>
+                                      {t("warehouse.from")}:{" "}
+                                      {movement.partyName}
+                                    </span>
+                                  )}
+                                  {!movement.partyName &&
+                                    movement.fromStore && (
+                                      <span>
+                                        {t("warehouse.from")}:{" "}
+                                        {movement.fromStore}
+                                      </span>
+                                    )}
+                                  {!movement.partyName &&
+                                    !movement.fromStore &&
+                                    movement.reason && (
+                                      <span>
+                                        {t("warehouse.reason")}:{" "}
+                                        {formatReason(movement.reason)}
+                                      </span>
+                                    )}
+
+                                  {movement.reason &&
+                                    String(movement.reason)
+                                      .toLowerCase()
+                                      .includes("transfer") && (
+                                      <>
+                                        <br />
+                                        {t("warehouse.reason")}:{" "}
+                                        {t("warehouse.transfer")}
+                                      </>
+                                    )}
                                 </>
                               )}
 
-                            {movement.type === "stock_in" && (
-                              <>
-                                {movement.partyName && (
-                                  <span>
-                                    {t("warehouse.from")}: {movement.partyName}
-                                  </span>
-                                )}
-                                {!movement.partyName && movement.fromStore && (
-                                  <span>
-                                    {t("warehouse.from")}: {movement.fromStore}
-                                  </span>
-                                )}
-                                {!movement.partyName &&
-                                  !movement.fromStore &&
-                                  movement.reason && (
+                              {movement.type === "stock_out" && (
+                                <>
+                                  {movement.partyName ? (
                                     <span>
-                                      {t("warehouse.reason")}:{" "}
-                                      {formatReason(movement.reason)}
+                                      {t("warehouse.to")}: {movement.partyName}
                                     </span>
-                                  )}
-
-                                {movement.reason &&
-                                  String(movement.reason)
-                                    .toLowerCase()
-                                    .includes("transfer") && (
-                                    <>
-                                      <br />
-                                      {t("warehouse.reason")}:{" "}
-                                      {t("warehouse.transfer")}
-                                    </>
-                                  )}
-                              </>
-                            )}
-
-                            {movement.type === "stock_out" && (
-                              <>
-                                {movement.partyName ? (
-                                  <span>
-                                    {t("warehouse.to")}: {movement.partyName}
-                                  </span>
-                                ) : movement.toStore ? (
-                                  <span>
-                                    {t("warehouse.to")}: {movement.toStore}
-                                  </span>
-                                ) : null}
-                                {movement.reason &&
-                                  String(movement.reason)
-                                    .toLowerCase()
-                                    .includes("discard") && (
-                                    <>
-                                      <br />
-                                      {t("warehouse.reason")}:{" "}
-                                      {formatReason(movement.reason)}
-                                    </>
-                                  )}
-                              </>
-                            )}
-                          </div>
-
-                          {/* Notes */}
-                          {movement.notes && (
-                            <div className="text-xs text-muted-foreground mt-1">
-                              {t("warehouse.notes")}: {movement.notes}
+                                  ) : movement.toStore ? (
+                                    <span>
+                                      {t("warehouse.to")}: {movement.toStore}
+                                    </span>
+                                  ) : null}
+                                  {movement.reason &&
+                                    String(movement.reason)
+                                      .toLowerCase()
+                                      .includes("discard") && (
+                                      <>
+                                        <br />
+                                        {t("warehouse.reason")}:{" "}
+                                        {formatReason(movement.reason)}
+                                      </>
+                                    )}
+                                </>
+                              )}
                             </div>
-                          )}
 
-                          {/* Performed by */}
-                          <div className="text-xs text-muted-foreground mt-1">
-                            {t("warehouse.by")}: {movement.performedBy}
+                            {/* Notes */}
+                            {movement.notes && (
+                              <div className="text-xs text-muted-foreground mt-1">
+                                {t("warehouse.notes")}: {movement.notes}
+                              </div>
+                            )}
+
+                            {/* Performed by */}
+                            <div className="text-xs text-muted-foreground mt-1">
+                              {t("warehouse.by")}: {movement.performedBy}
+                            </div>
                           </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="text-sm font-mono">
-                          {movement.reference || "—"}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="text-sm font-mono">
-                          {movement.previousQuantity} → {movement.newQuantity}
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
+                        </TableCell>
+                        <TableCell>
+                          <div className="text-sm font-mono">
+                            {movement.reference || "—"}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="text-sm font-mono">
+                            {movement.previousQuantity} → {movement.newQuantity}
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
                 </Table>
               </div>
             </CardContent>
@@ -3282,211 +3285,213 @@ export default function Warehouse() {
             <CardContent>
               <div className="-mx-2 sm:mx-0 overflow-x-auto">
                 <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>{t("common.date_time")}</TableHead>
-                    <TableHead>{t("warehouse.action")}</TableHead>
-                    <TableHead>{t("warehouse.entity")}</TableHead>
-                    <TableHead>{t("common.description")}</TableHead>
-                    <TableHead>{t("warehouse.store_details")}</TableHead>
-                    <TableHead>{t("warehouse.reference")}</TableHead>
-                    <TableHead>{t("warehouse.performed_by")}</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredHistory.map((history) => (
-                    <TableRow key={history.id}>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <Calendar className="h-4 w-4 text-muted-foreground" />
-                          <div>
-                            <div className="font-medium">{history.date}</div>
-                            <div className="text-sm text-muted-foreground">
-                              {history.time}
-                            </div>
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>{getActionBadge(history.action)}</TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          {history.entityType === "product" ? (
-                            <Package2 className="h-4 w-4" />
-                          ) : (
-                            <Package className="h-4 w-4" />
-                          )}
-                          <div>
-                            <div className="font-medium">
-                              {history.entityName}
-                            </div>
-                            <div className="text-sm text-muted-foreground capitalize">
-                              {history.entityType}
-                            </div>
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="text-sm">{history.description}</div>
-                        {history.details?.notes && (
-                          <div className="text-xs text-muted-foreground mt-1">
-                            {history.details.notes}
-                          </div>
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        <div className="text-sm">
-                          {/* Show store information for stock movements */}
-                          {(history.action === "stock_in" ||
-                            history.action === "stock_out" ||
-                            history.action === "transfer" ||
-                            history.action === "adjustment") && (
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>{t("common.date_time")}</TableHead>
+                      <TableHead>{t("warehouse.action")}</TableHead>
+                      <TableHead>{t("warehouse.entity")}</TableHead>
+                      <TableHead>{t("common.description")}</TableHead>
+                      <TableHead>{t("warehouse.store_details")}</TableHead>
+                      <TableHead>{t("warehouse.reference")}</TableHead>
+                      <TableHead>{t("warehouse.performed_by")}</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredHistory.map((history) => (
+                      <TableRow key={history.id}>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <Calendar className="h-4 w-4 text-muted-foreground" />
                             <div>
-                              {/* If party indicates other filial, show filialId name and "from → to" */}
-                              {history.details?.party &&
-                              String(history.details.party)
-                                .toLowerCase()
-                                .includes("filial") &&
-                              history.details?.filialId &&
-                              history.details?.partyType ? (
-                                (() => {
-                                  const destId = String(
-                                    history.details.filialId,
-                                  );
-                                  const srcId = String(
-                                    history.details.partyType,
-                                  );
-                                  const dest =
-                                    filialOptions.find(
-                                      (f) => String(f.id) === destId,
-                                    ) || null;
-                                  const src =
-                                    filialOptions.find(
-                                      (f) => String(f.id) === srcId,
-                                    ) || null;
-                                  const destName = dest ? dest.name : destId;
-                                  const srcName = src ? src.name : srcId;
-                                  return (
-                                    <div>
+                              <div className="font-medium">{history.date}</div>
+                              <div className="text-sm text-muted-foreground">
+                                {history.time}
+                              </div>
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell>{getActionBadge(history.action)}</TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            {history.entityType === "product" ? (
+                              <Package2 className="h-4 w-4" />
+                            ) : (
+                              <Package className="h-4 w-4" />
+                            )}
+                            <div>
+                              <div className="font-medium">
+                                {history.entityName}
+                              </div>
+                              <div className="text-sm text-muted-foreground capitalize">
+                                {history.entityType}
+                              </div>
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="text-sm">{history.description}</div>
+                          {history.details?.notes && (
+                            <div className="text-xs text-muted-foreground mt-1">
+                              {history.details.notes}
+                            </div>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          <div className="text-sm">
+                            {/* Show store information for stock movements */}
+                            {(history.action === "stock_in" ||
+                              history.action === "stock_out" ||
+                              history.action === "transfer" ||
+                              history.action === "adjustment") && (
+                              <div>
+                                {/* If party indicates other filial, show filialId name and "from → to" */}
+                                {history.details?.party &&
+                                String(history.details.party)
+                                  .toLowerCase()
+                                  .includes("filial") &&
+                                history.details?.filialId &&
+                                history.details?.partyType ? (
+                                  (() => {
+                                    const destId = String(
+                                      history.details.filialId,
+                                    );
+                                    const srcId = String(
+                                      history.details.partyType,
+                                    );
+                                    const dest =
+                                      filialOptions.find(
+                                        (f) => String(f.id) === destId,
+                                      ) || null;
+                                    const src =
+                                      filialOptions.find(
+                                        (f) => String(f.id) === srcId,
+                                      ) || null;
+                                    const destName = dest ? dest.name : destId;
+                                    const srcName = src ? src.name : srcId;
+                                    return (
+                                      <div>
+                                        <div className="font-medium">
+                                          {destName}
+                                        </div>
+                                        <div className="text-xs text-muted-foreground">
+                                          {destName} → {srcName}
+                                        </div>
+                                      </div>
+                                    );
+                                  })()
+                                ) : (
+                                  // Default behavior
+                                  <>
+                                    {history.details?.storeName ? (
                                       <div className="font-medium">
-                                        {destName}
+                                        {history.details.storeName}
                                       </div>
+                                    ) : history.details?.party ? (
+                                      <div className="font-medium">
+                                        {formatParty(history.details.party)}
+                                        {history.details.partyType
+                                          ? ` • ${history.details.partyType}`
+                                          : ""}
+                                      </div>
+                                    ) : null}
+
+                                    {history.action === "transfer" &&
+                                      history.details?.fromStore &&
+                                      history.details?.toStore && (
+                                        <div className="text-xs text-muted-foreground">
+                                          {history.details.toStore.name} →{" "}
+                                          {history.details.fromStore.name}
+                                        </div>
+                                      )}
+
+                                    {/* Show party and partyType in history (do not show Qty) */}
+                                    {history.details?.party &&
+                                    history.details?.partyType ? (
                                       <div className="text-xs text-muted-foreground">
-                                        {destName} → {srcName}
+                                        {formatParty(history.details.party)}:{" "}
+                                        {(() => {
+                                          const pt = String(
+                                            history.details.partyType,
+                                          );
+                                          // Prefer client lookup first (partyType may be client id even if party says Other Filial)
+                                          const c = clientOptions.find(
+                                            (c) =>
+                                              String(c.id) === pt ||
+                                              String(c.name) === pt,
+                                          );
+                                          if (c) return c.name;
+                                          const f = filialOptions.find(
+                                            (f) =>
+                                              String(f.id) === pt ||
+                                              String(f.name) === pt,
+                                          );
+                                          return f ? f.name : pt;
+                                        })()}
                                       </div>
-                                    </div>
-                                  );
-                                })()
-                              ) : (
-                                // Default behavior
-                                <>
-                                  {history.details?.storeName ? (
-                                    <div className="font-medium">
-                                      {history.details.storeName}
-                                    </div>
-                                  ) : history.details?.party ? (
-                                    <div className="font-medium">
-                                      {formatParty(history.details.party)}
-                                      {history.details.partyType
-                                        ? ` • ${history.details.partyType}`
-                                        : ""}
-                                    </div>
-                                  ) : null}
-
-                                  {history.action === "transfer" &&
-                                    history.details?.fromStore &&
-                                    history.details?.toStore && (
+                                    ) : history.details?.party ? (
                                       <div className="text-xs text-muted-foreground">
-                                        {history.details.toStore.name} →{" "}
-                                        {history.details.fromStore.name}
+                                        {formatParty(history.details.party)}
                                       </div>
-                                    )}
-
-                                  {/* Show party and partyType in history (do not show Qty) */}
-                                  {history.details?.party &&
-                                  history.details?.partyType ? (
-                                    <div className="text-xs text-muted-foreground">
-                                      {formatParty(history.details.party)}:{" "}
-                                      {(() => {
-                                        const pt = String(
-                                          history.details.partyType,
-                                        );
-                                        // Prefer client lookup first (partyType may be client id even if party says Other Filial)
-                                        const c = clientOptions.find(
-                                          (c) =>
-                                            String(c.id) === pt ||
-                                            String(c.name) === pt,
-                                        );
-                                        if (c) return c.name;
-                                        const f = filialOptions.find(
-                                          (f) =>
-                                            String(f.id) === pt ||
-                                            String(f.name) === pt,
-                                        );
-                                        return f ? f.name : pt;
-                                      })()}
-                                    </div>
-                                  ) : history.details?.party ? (
-                                    <div className="text-xs text-muted-foreground">
-                                      {formatParty(history.details.party)}
-                                    </div>
-                                  ) : history.details?.partyType ? (
-                                    <div className="text-xs text-muted-foreground">
-                                      {(() => {
-                                        const pt = String(
-                                          history.details.partyType,
-                                        );
-                                        // Prefer client lookup first
-                                        const c = clientOptions.find(
-                                          (c) =>
-                                            String(c.id) === pt ||
-                                            String(c.name) === pt,
-                                        );
-                                        if (c) return c.name;
-                                        const f = filialOptions.find(
-                                          (f) =>
-                                            String(f.id) === pt ||
-                                            String(f.name) === pt,
-                                        );
-                                        return f ? f.name : pt;
-                                      })()}
-                                    </div>
-                                  ) : null}
-                                </>
-                              )}
-                            </div>
-                          )}
-
-                          {/* Show product details for product operations */}
-                          {history.action === "create" && history.details && (
-                            <div className="text-xs text-muted-foreground">
-                              {t("warehouse.category")}:{" "}
-                              {history.details.category}
-                              {history.details.brand &&
-                                ` | ${t("warehouse.brand")}: ${history.details.brand}`}
-                            </div>
-                          )}
-                          {history.action === "edit" &&
-                            history.details?.updatedFields && (
-                              <div className="text-xs text-muted-foreground">
-                                {t("warehouse.updated_fields_available")}
+                                    ) : history.details?.partyType ? (
+                                      <div className="text-xs text-muted-foreground">
+                                        {(() => {
+                                          const pt = String(
+                                            history.details.partyType,
+                                          );
+                                          // Prefer client lookup first
+                                          const c = clientOptions.find(
+                                            (c) =>
+                                              String(c.id) === pt ||
+                                              String(c.name) === pt,
+                                          );
+                                          if (c) return c.name;
+                                          const f = filialOptions.find(
+                                            (f) =>
+                                              String(f.id) === pt ||
+                                              String(f.name) === pt,
+                                          );
+                                          return f ? f.name : pt;
+                                        })()}
+                                      </div>
+                                    ) : null}
+                                  </>
+                                )}
                               </div>
                             )}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="text-sm font-mono">
-                          {history.details?.reference || "—"}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <User className="h-4 w-4 text-muted-foreground" />
-                          <span className="text-sm">{history.performedBy}</span>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
+
+                            {/* Show product details for product operations */}
+                            {history.action === "create" && history.details && (
+                              <div className="text-xs text-muted-foreground">
+                                {t("warehouse.category")}:{" "}
+                                {history.details.category}
+                                {history.details.brand &&
+                                  ` | ${t("warehouse.brand")}: ${history.details.brand}`}
+                              </div>
+                            )}
+                            {history.action === "edit" &&
+                              history.details?.updatedFields && (
+                                <div className="text-xs text-muted-foreground">
+                                  {t("warehouse.updated_fields_available")}
+                                </div>
+                              )}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="text-sm font-mono">
+                            {history.details?.reference || "—"}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <User className="h-4 w-4 text-muted-foreground" />
+                            <span className="text-sm">
+                              {history.performedBy}
+                            </span>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
                 </Table>
               </div>
             </CardContent>
