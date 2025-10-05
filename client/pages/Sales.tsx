@@ -659,34 +659,65 @@ export default function Sales() {
           ? `${t("sales.last_month")} (${dateStr})`
           : `${t("finance.last_12_months", "Last 12 Months")} (${dateStr})`;
 
-    // Show ONLY Paid invoices and Borrow records (do not include others)
-    const visible = data.filter((inv) => inv.status === "paid" || !!inv.borrow);
-    const totals = visible.reduce(
+    // Include all invoices for the report (no status filtering)
+    const sorted = data
+      .slice()
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+    const totals = sorted.reduce(
       (acc, inv) => {
-        acc.subtotal += inv.subtotal;
-        acc.tax += inv.taxAmount;
-        acc.discount += inv.discountAmount;
-        acc.total += inv.total;
+        acc.subtotal += Number(inv.subtotal) || 0;
+        acc.tax += Number(inv.taxAmount) || 0;
+        acc.discount += Number(inv.discountAmount) || 0;
+        acc.total += Number(inv.total) || 0;
         return acc;
       },
       { subtotal: 0, tax: 0, discount: 0, total: 0 },
     );
 
-    const rows = visible
-      .slice()
-      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-      .map(
-        (inv) => `<tr>
+    const PAGE_SIZE = 40; // auto-split into multiple printed pages
+    const pages: Invoice[][] = [];
+    for (let i = 0; i < sorted.length; i += PAGE_SIZE) {
+      pages.push(sorted.slice(i, i + PAGE_SIZE));
+    }
+
+    const renderRows = (items: Invoice[]) =>
+      items
+        .map(
+          (inv) => `<tr>
           <td>${inv.invoiceNumber}</td>
           <td>${inv.clientName}</td>
           <td>${formatDateTime(inv.date)}</td>
           <td class="right">${formatCurrency(inv.total)}</td>
           <td><span class="badge">${inv.borrow ? t("finance.borrow", "Borrow") : t(`status.${inv.status}`)}</span></td>
         </tr>`,
-      )
+        )
+        .join("");
+
+    const tables = pages
+      .map((group, idx) => `
+        ${idx > 0 ? '<div class="page-break"></div>' : ''}
+        <div class="section">
+          <h3>${t("dashboard.recent_activity", "Recent Activity")}${
+            idx > 0 ? " (continued)" : ""
+          }</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>${t("sales.invoice_number")}</th>
+                <th>${t("clients.client", "Client")}</th>
+                <th>${t("common.date")}</th>
+                <th class="right">${t("common.amount")}</th>
+                <th>${t("common.status")}</th>
+              </tr>
+            </thead>
+            <tbody>${renderRows(group) || `<tr><td colspan="5" class="muted">${t("clients.no_products", "No data")}</td></tr>`}</tbody>
+          </table>
+        </div>`)
       .join("");
 
     return `
+      <style>@media print{ .page-break{ page-break-before: always; } thead{display:table-header-group} tfoot{display:table-footer-group} }</style>
       <div class="container">
         <div class="card">
           <div class="header">
@@ -703,7 +734,7 @@ export default function Sales() {
               <div>
                 <h3>${t("dashboard.kpi_at_glance", "KPI at a glance")}</h3>
                 <div class="totals">
-                  <div class="row"><span>${t("sales.total_invoices")}</span><span class="right">${visible.length}</span></div>
+                  <div class="row"><span>${t("sales.total_invoices")}</span><span class="right">${sorted.length}</span></div>
                   <div class="row"><span>${t("sales.total_revenue")}</span><span class="right">${formatCurrency(totals.total)}</span></div>
                   <div class="row"><span>${t("sales.subtotal")}</span><span class="right">${formatCurrency(totals.subtotal)}</span></div>
                   <div class="row"><span>${t("sales.tax")}</span><span class="right">${formatCurrency(totals.tax)}</span></div>
@@ -712,43 +743,7 @@ export default function Sales() {
               </div>
             </div>
           </div>
-          <div class="section">
-            <h3>${t("dashboard.recent_activity", "Recent Activity")}</h3>
-            <table>
-              <thead>
-                <tr>
-                  <th>${t("sales.invoice_number")}</th>
-                  <th>${t("clients.client", "Client")}</th>
-                  <th>${t("common.date")}</th>
-                  <th class="right">${t("common.amount")}</th>
-                  <th>${t("common.status")}</th>
-                </tr>
-              </thead>
-              <tbody>${rows || `<tr><td colspan="5" class="muted">${t("clients.no_products", "No data")}</td></tr>`}</tbody>
-              <tfoot>
-                <tr>
-                  <td colspan="3" class="right">${t("sales.subtotal")}</td>
-                  <td class="right">${formatCurrency(totals.subtotal)}</td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <td colspan="3" class="right">${t("sales.tax")}</td>
-                  <td class="right">${formatCurrency(totals.tax)}</td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <td colspan="3" class="right">${t("sales.discount")}</td>
-                  <td class="right">-${formatCurrency(totals.discount)}</td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <td colspan="3" class="right">${t("common.total").toUpperCase()}</td>
-                  <td class="right">${formatCurrency(totals.total)}</td>
-                  <td></td>
-                </tr>
-              </tfoot>
-            </table>
-          </div>
+          ${tables}
           <div class="footer">${t("sales.report.generated_on", "Generated on")}: ${formatDateTime(new Date())}</div>
         </div>
       </div>
@@ -804,11 +799,11 @@ export default function Sales() {
         return { start, end, label };
       }
 
-      // previous calendar year (Jan 1 – Dec 31)
-      const year = now.getFullYear() - 1;
-      const start = new Date(year, 0, 1, 0, 0, 0, 0);
-      const end = new Date(year, 11, 31, 23, 59, 59, 999);
-      const label = String(year);
+      // Last 12 months (rolling): from first day of the month 12 months ago to end of current month
+      const start = new Date(now.getFullYear() - 1, now.getMonth(), 1, 0, 0, 0, 0);
+      const end = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
+      const fmt = new Intl.DateTimeFormat(i18n.language || "en", { month: "short", year: "numeric" });
+      const label = `${fmt.format(start)} – ${fmt.format(end)}`;
       return { start, end, label };
     };
 
