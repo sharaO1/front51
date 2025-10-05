@@ -311,7 +311,10 @@ export default function UserManagement() {
               {isMobile ? (
                 <div className="space-y-3">
                   {filteredUsers.map((user) => (
-                    <div key={user.id} className="border rounded-lg p-3 bg-card">
+                    <div
+                      key={user.id}
+                      className="border rounded-lg p-3 bg-card"
+                    >
                       <div className="flex items-center gap-3">
                         <Avatar className="h-10 w-10">
                           <AvatarImage src={user.avatar} />
@@ -324,7 +327,9 @@ export default function UserManagement() {
                           </AvatarFallback>
                         </Avatar>
                         <div className="flex-1 min-w-0">
-                          <div className="font-medium truncate">{user.name}</div>
+                          <div className="font-medium truncate">
+                            {user.name}
+                          </div>
                           <div className="text-xs text-muted-foreground truncate">
                             {user.email}
                           </div>
@@ -340,36 +345,76 @@ export default function UserManagement() {
                         <div className="ml-auto">
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                              <Button variant="outline" size="sm" className="gap-2">
-                                <MoreHorizontal className="h-4 w-4" /> {t("admin.users.table.actions")}
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="gap-2"
+                              >
+                                <MoreHorizontal className="h-4 w-4" />{" "}
+                                {t("admin.users.table.actions")}
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
                               <DropdownMenuLabel>
                                 {t("admin.users.menu.actions")}
                               </DropdownMenuLabel>
-                              <DropdownMenuItem onClick={() => { setSelectedUser(user); setIsPermissionDialogOpen(true); }}>
-                                <Eye className="mr-2 h-4 w-4" /> {t("admin.users.menu.view_permissions")}
+                              <DropdownMenuItem
+                                onClick={() => {
+                                  setSelectedUser(user);
+                                  setIsPermissionDialogOpen(true);
+                                }}
+                              >
+                                <Eye className="mr-2 h-4 w-4" />{" "}
+                                {t("admin.users.menu.view_permissions")}
                               </DropdownMenuItem>
                               {canManageUser(user.id, user.role) && (
                                 <>
-                                  <DropdownMenuItem onClick={() => { setSelectedUser(user); setIsRoleDialogOpen(true); }}>
-                                    <Edit className="mr-2 h-4 w-4" /> {t("admin.users.menu.change_role")}
+                                  <DropdownMenuItem
+                                    onClick={() => {
+                                      setSelectedUser(user);
+                                      setIsRoleDialogOpen(true);
+                                    }}
+                                  >
+                                    <Edit className="mr-2 h-4 w-4" />{" "}
+                                    {t("admin.users.menu.change_role")}
                                   </DropdownMenuItem>
                                   <DropdownMenuSeparator />
                                   {user.status === "active" && (
                                     <>
-                                      <DropdownMenuItem onClick={() => handleStatusChange(user.id, "inactive")}>
-                                        <UserX className="mr-2 h-4 w-4" /> {t("admin.users.menu.deactivate")}
+                                      <DropdownMenuItem
+                                        onClick={() =>
+                                          handleStatusChange(
+                                            user.id,
+                                            "inactive",
+                                          )
+                                        }
+                                      >
+                                        <UserX className="mr-2 h-4 w-4" />{" "}
+                                        {t("admin.users.menu.deactivate")}
                                       </DropdownMenuItem>
-                                      <DropdownMenuItem onClick={() => handleStatusChange(user.id, "suspended")} className="text-red-600">
-                                        <Ban className="mr-2 h-4 w-4" /> {t("admin.users.menu.suspend")}
+                                      <DropdownMenuItem
+                                        onClick={() =>
+                                          handleStatusChange(
+                                            user.id,
+                                            "suspended",
+                                          )
+                                        }
+                                        className="text-red-600"
+                                      >
+                                        <Ban className="mr-2 h-4 w-4" />{" "}
+                                        {t("admin.users.menu.suspend")}
                                       </DropdownMenuItem>
                                     </>
                                   )}
                                   {user.status !== "active" && (
-                                    <DropdownMenuItem onClick={() => handleStatusChange(user.id, "active")} className="text-green-600">
-                                      <UserCheck className="mr-2 h-4 w-4" /> {t("admin.users.menu.activate")}
+                                    <DropdownMenuItem
+                                      onClick={() =>
+                                        handleStatusChange(user.id, "active")
+                                      }
+                                      className="text-green-600"
+                                    >
+                                      <UserCheck className="mr-2 h-4 w-4" />{" "}
+                                      {t("admin.users.menu.activate")}
                                     </DropdownMenuItem>
                                   )}
                                 </>
@@ -388,7 +433,9 @@ export default function UserManagement() {
                       <TableRow>
                         <TableHead>{t("admin.users.table.user")}</TableHead>
                         <TableHead>{t("admin.users.table.role")}</TableHead>
-                        <TableHead>{t("admin.users.table.department")}</TableHead>
+                        <TableHead>
+                          {t("admin.users.table.department")}
+                        </TableHead>
                         <TableHead>{t("admin.users.table.status")}</TableHead>
                         <TableHead className="text-right">
                           {t("admin.users.table.actions")}
@@ -440,14 +487,24 @@ export default function UserManagement() {
                                 <DropdownMenuLabel>
                                   {t("admin.users.menu.actions")}
                                 </DropdownMenuLabel>
-                                <DropdownMenuItem onClick={() => { setSelectedUser(user); setIsPermissionDialogOpen(true); }}>
+                                <DropdownMenuItem
+                                  onClick={() => {
+                                    setSelectedUser(user);
+                                    setIsPermissionDialogOpen(true);
+                                  }}
+                                >
                                   <Eye className="mr-2 h-4 w-4" />
                                   {t("admin.users.menu.view_permissions")}
                                 </DropdownMenuItem>
 
                                 {canManageUser(user.id, user.role) && (
                                   <>
-                                    <DropdownMenuItem onClick={() => { setSelectedUser(user); setIsRoleDialogOpen(true); }}>
+                                    <DropdownMenuItem
+                                      onClick={() => {
+                                        setSelectedUser(user);
+                                        setIsRoleDialogOpen(true);
+                                      }}
+                                    >
                                       <Edit className="mr-2 h-4 w-4" />
                                       {t("admin.users.menu.change_role")}
                                     </DropdownMenuItem>
@@ -455,11 +512,26 @@ export default function UserManagement() {
 
                                     {user.status === "active" && (
                                       <>
-                                        <DropdownMenuItem onClick={() => handleStatusChange(user.id, "inactive")}>
+                                        <DropdownMenuItem
+                                          onClick={() =>
+                                            handleStatusChange(
+                                              user.id,
+                                              "inactive",
+                                            )
+                                          }
+                                        >
                                           <UserX className="mr-2 h-4 w-4" />
                                           {t("admin.users.menu.deactivate")}
                                         </DropdownMenuItem>
-                                        <DropdownMenuItem onClick={() => handleStatusChange(user.id, "suspended")} className="text-red-600">
+                                        <DropdownMenuItem
+                                          onClick={() =>
+                                            handleStatusChange(
+                                              user.id,
+                                              "suspended",
+                                            )
+                                          }
+                                          className="text-red-600"
+                                        >
                                           <Ban className="mr-2 h-4 w-4" />
                                           {t("admin.users.menu.suspend")}
                                         </DropdownMenuItem>
@@ -467,7 +539,12 @@ export default function UserManagement() {
                                     )}
 
                                     {user.status !== "active" && (
-                                      <DropdownMenuItem onClick={() => handleStatusChange(user.id, "active")} className="text-green-600">
+                                      <DropdownMenuItem
+                                        onClick={() =>
+                                          handleStatusChange(user.id, "active")
+                                        }
+                                        className="text-green-600"
+                                      >
                                         <UserCheck className="mr-2 h-4 w-4" />
                                         {t("admin.users.menu.activate")}
                                       </DropdownMenuItem>
