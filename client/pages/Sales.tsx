@@ -468,28 +468,47 @@ export default function Sales() {
     toast({ title: "Exported", description: "Sales CSV downloaded." });
   };
 
-  const handleExportJSON = () => {
+  const handleExportJSON = () => {};
+
+  const handleExportExcel = () => {
     setExportMenuOpen(false);
-    const data = JSON.stringify(
-      filteredInvoices.map((inv) => ({
-        ...inv,
-        items: inv.items.map((it) => ({
-          id: it.id,
-          productId: it.productId,
-          productName: it.productName,
-          quantity: it.quantity,
-          unitPrice: it.unitPrice,
-          discount: it.discount,
-          total: it.total,
-        })),
-      })),
-      null,
-      2,
-    );
-    const blob = new Blob([data], { type: "application/json" });
+    const headers = [
+      t("sales.invoice_number"),
+      t("clients.client", { defaultValue: "Client" }),
+      t("common.date"),
+      t("common.amount"),
+      t("common.status"),
+    ];
+    const rows = filteredInvoices
+      .slice()
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+      .map(
+        (inv) =>
+          `<tr>
+            <td>${inv.invoiceNumber}</td>
+            <td>${inv.clientName}</td>
+            <td>${formatDateTime(inv.date)}</td>
+            <td>${inv.total.toFixed(2)}</td>
+            <td>${inv.borrow ? t("finance.borrow", "Borrow") : t(`status.${inv.status}`)}</td>
+          </tr>`,
+      )
+      .join("");
+
+    const html = `<!doctype html><html><head><meta charset="utf-8" /><style>
+      table{border-collapse:collapse;font-family:Inter,Arial,sans-serif}
+      th,td{border:1px solid #e5e7eb;padding:8px 10px;text-align:left;font-size:12px}
+      th{background:#f8fafc}
+    </style></head><body>
+      <table>
+        <thead><tr>${headers.map((h) => `<th>${h}</th>`).join("")}</tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </body></html>`;
+
+    const blob = new Blob([html], { type: "application/vnd.ms-excel;charset=utf-8;" });
     const today = new Date().toISOString().slice(0, 10);
-    downloadBlob(blob, `sales-report-${today}.json`);
-    toast({ title: "Exported", description: "Sales JSON downloaded." });
+    downloadBlob(blob, `sales-report-${today}.xls`);
+    toast({ title: t("common.export"), description: t("dashboard.export_as_excel", { defaultValue: "Excel downloaded" }) });
   };
 
   // Open a print window using a hidden iframe (reduces browser freezes)
@@ -590,9 +609,9 @@ export default function Sales() {
           ? `${t("sales.last_month")} (${dateStr})`
           : `${t("finance.last_12_months", "Last 12 Months")} (${dateStr})`;
 
-    // KPIs should reflect only paid (ad-status) sales
-    const paidData = data.filter((inv) => inv.status === "paid");
-    const totals = paidData.reduce(
+    // Show ONLY Paid invoices and Borrow records (do not include others)
+    const visible = data.filter((inv) => inv.status === "paid" || !!inv.borrow);
+    const totals = visible.reduce(
       (acc, inv) => {
         acc.subtotal += inv.subtotal;
         acc.tax += inv.taxAmount;
@@ -603,7 +622,7 @@ export default function Sales() {
       { subtotal: 0, tax: 0, discount: 0, total: 0 },
     );
 
-    const rows = data
+    const rows = visible
       .slice()
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
       .map(
@@ -612,7 +631,7 @@ export default function Sales() {
           <td>${inv.clientName}</td>
           <td>${formatDateTime(inv.date)}</td>
           <td class="right">${formatCurrency(inv.total)}</td>
-          <td><span class="badge">${t(`status.${inv.status}`)}</span></td>
+          <td><span class="badge">${inv.borrow ? t("finance.borrow", "Borrow") : t(`status.${inv.status}`)}</span></td>
         </tr>`,
       )
       .join("");
@@ -1589,18 +1608,10 @@ export default function Sales() {
               <DropdownMenuItem
                 onSelect={(e) => {
                   e.preventDefault();
-                  handleExportCSV();
+                  handleExportExcel();
                 }}
               >
-                <FileSpreadsheet className="mr-2 h-4 w-4" /> CSV
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onSelect={(e) => {
-                  e.preventDefault();
-                  handleExportJSON();
-                }}
-              >
-                <FileJson className="mr-2 h-4 w-4" /> JSON
+                <FileSpreadsheet className="mr-2 h-4 w-4" /> Excel
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
