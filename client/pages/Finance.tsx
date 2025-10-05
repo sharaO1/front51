@@ -1521,7 +1521,9 @@ export default function Finance() {
       } catch {}
 
       const html = buildFinanceReportHTML(reportData);
-      openPrintWindow(html, t("finance.export_pdf_title"));
+      setTimeout(() => {
+        openPrintWindow(html, t("finance.export_pdf_title"));
+      }, 50);
 
       const afterPrintCleanup = () => {
         try {

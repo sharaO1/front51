@@ -852,8 +852,10 @@ export default function Sales() {
     });
 
     const html = buildSalesReportHTML(pdfPeriod, label, data);
-    openPrintWindow(html, `${t("navigation.sales")} ${t("common.export")} PDF`);
     closeExportLayers();
+    setTimeout(() => {
+      openPrintWindow(html, `${t("navigation.sales")} ${t("common.export")} PDF`);
+    }, 50);
 
     toast({
       title: t("common.export"),
