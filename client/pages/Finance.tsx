@@ -1932,7 +1932,7 @@ ${data.transactions
       </div>
 
       <Tabs defaultValue="transactions" className="space-y-4">
-        <TabsList className="flex w-full overflow-x-auto sm:overflow-visible">
+        <TabsList>
           <TabsTrigger value="transactions">
             {t("finance.transactions")}
           </TabsTrigger>
