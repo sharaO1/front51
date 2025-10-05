@@ -1351,10 +1351,6 @@ export default function Sales() {
       clearNewInvoice();
       setIsCreateDialogOpen(false);
 
-      toast({
-        title: "Invoice created",
-        description: `Sent to backend and saved as ${invoice.invoiceNumber}.`,
-      });
     } catch (e: any) {
       toast({
         title: "Failed",

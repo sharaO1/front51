@@ -99,10 +99,6 @@ export default function Layout({ children }: LayoutProps) {
 
   const handleLanguageChange = (newLanguage: string) => {
     setLanguage(newLanguage);
-    toast({
-      title: "Language changed",
-      description: `Language switched to ${newLanguage === "en" ? "English" : newLanguage === "tg" ? "Тоҷикӣ" : "Русский"}`,
-    });
   };
 
   const handleAvatarUpdate = (avatarUrl: string) => {
