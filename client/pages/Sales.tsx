@@ -854,7 +854,10 @@ export default function Sales() {
     const html = buildSalesReportHTML(pdfPeriod, label, data);
     closeExportLayers();
     setTimeout(() => {
-      openPrintWindow(html, `${t("navigation.sales")} ${t("common.export")} PDF`);
+      openPrintWindow(
+        html,
+        `${t("navigation.sales")} ${t("common.export")} PDF`,
+      );
     }, 50);
 
     toast({
@@ -3304,18 +3307,31 @@ export default function Sales() {
                 {/* Mobile list */}
                 <div className="md:hidden space-y-3">
                   {selectedInvoice.items.map((item) => (
-                    <div key={item.id} className="rounded-lg border p-3 bg-card">
+                    <div
+                      key={item.id}
+                      className="rounded-lg border p-3 bg-card"
+                    >
                       <div className="flex items-start justify-between">
                         <div className="font-medium">{item.productName}</div>
-                        <div className="text-sm text-muted-foreground">{t("sales.qty")}: {item.quantity}</div>
+                        <div className="text-sm text-muted-foreground">
+                          {t("sales.qty")}: {item.quantity}
+                        </div>
                       </div>
                       <div className="mt-2 grid grid-cols-2 gap-2 text-sm">
-                        <div className="text-muted-foreground">{t("sales.unit_price")}</div>
-                        <div className="text-right">${item.unitPrice.toFixed(2)}</div>
-                        <div className="text-muted-foreground">{t("sales.discount")}</div>
+                        <div className="text-muted-foreground">
+                          {t("sales.unit_price")}
+                        </div>
+                        <div className="text-right">
+                          ${item.unitPrice.toFixed(2)}
+                        </div>
+                        <div className="text-muted-foreground">
+                          {t("sales.discount")}
+                        </div>
                         <div className="text-right">{item.discount}%</div>
                         <div className="font-medium">{t("common.total")}</div>
-                        <div className="text-right font-semibold">${item.total.toFixed(2)}</div>
+                        <div className="text-right font-semibold">
+                          ${item.total.toFixed(2)}
+                        </div>
                       </div>
                     </div>
                   ))}

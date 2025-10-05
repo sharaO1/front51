@@ -2113,7 +2113,11 @@ ${data.transactions
                           <div className="sm:hidden">
                             <DropdownMenu>
                               <DropdownMenuTrigger asChild>
-                                <Button size="sm" variant="outline" className="px-2">
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  className="px-2"
+                                >
                                   {t("common.actions")}
                                   <ChevronDown className="ml-1 h-3 w-3" />
                                 </Button>
@@ -2404,23 +2408,38 @@ ${data.transactions
                         <div className="sm:hidden">
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                              <Button size="sm" variant="outline" className="px-2">
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className="px-2"
+                              >
                                 {t("common.actions")}
                                 <ChevronDown className="ml-1 h-3 w-3" />
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
-                              <DropdownMenuItem onClick={() => openEditLoanDialog(loan)} className="cursor-pointer">
+                              <DropdownMenuItem
+                                onClick={() => openEditLoanDialog(loan)}
+                                className="cursor-pointer"
+                              >
                                 <Edit className="h-4 w-4 mr-2" />
                                 {t("common.edit")}
                               </DropdownMenuItem>
                               {loan.status !== "returned" && (
-                                <DropdownMenuItem onClick={() => markLoanReturned(loan.id)} className="cursor-pointer">
+                                <DropdownMenuItem
+                                  onClick={() => markLoanReturned(loan.id)}
+                                  className="cursor-pointer"
+                                >
                                   <CheckCircle2 className="h-4 w-4 mr-2" />
-                                  {t("common.mark_as_returned", { defaultValue: "Mark as returned" })}
+                                  {t("common.mark_as_returned", {
+                                    defaultValue: "Mark as returned",
+                                  })}
                                 </DropdownMenuItem>
                               )}
-                              <DropdownMenuItem onClick={() => deleteLoan(loan.id)} className="cursor-pointer">
+                              <DropdownMenuItem
+                                onClick={() => deleteLoan(loan.id)}
+                                className="cursor-pointer"
+                              >
                                 <Trash2 className="h-4 w-4 mr-2" />
                                 {t("common.delete")}
                               </DropdownMenuItem>
