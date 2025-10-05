@@ -1302,7 +1302,7 @@ export default function Finance() {
     const money = (n: number) => `$${Number(n || 0).toLocaleString()}`;
     const sanitize = (s: string) => {
       if (!s) return s;
-      return String(s).replace(/[A-Z0-9_-]{8,}/g, "••••••");
+      return String(s).replace(/[A-Z0-9_-]{8,}/g, "•••��••");
     };
     const renderOfficialSealSVG = (brand = "OLIMPY") => `
       <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-label="Official Seal">
@@ -1523,16 +1523,27 @@ export default function Finance() {
       const html = buildFinanceReportHTML(reportData);
       setTimeout(() => {
         openPrintWindow(html, t("finance.export_pdf_title"));
-      }, 50);
+      }, 200);
 
       const afterPrintCleanup = () => {
         try {
           document.body.style.pointerEvents = "";
           document.body.style.overflow = "";
           document.documentElement.style.overflow = "";
+          Array.from(document.body.children).forEach((el) => {
+            if ((el as HTMLElement).getAttribute) {
+              (el as HTMLElement).removeAttribute("aria-hidden");
+              (el as HTMLElement).removeAttribute("inert");
+            }
+          });
         } catch {}
         window.removeEventListener("afterprint", afterPrintCleanup);
         document.removeEventListener("visibilitychange", onVisChange);
+        setTimeout(() => {
+          try {
+            document.body.style.pointerEvents = "";
+          } catch {}
+        }, 0);
       };
       const onVisChange = () => {
         if (document.visibilityState === "visible") {
@@ -1750,7 +1761,7 @@ ${data.transactions
                   {t("finance.reports_analytics")}
                 </div>
                 <DropdownMenuItem
-                  onClick={() => setIsExportDialogOpen(true)}
+                  onClick={() => setTimeout(() => setIsExportDialogOpen(true), 10)}
                   className="cursor-pointer"
                 >
                   <FileSpreadsheet className="mr-2 h-4 w-4" />
