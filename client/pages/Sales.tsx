@@ -264,8 +264,10 @@ export default function Sales() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [dateFilter, setDateFilter] = useState("all");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  const [startDate, setStartDate] = useState(""); // applied values
+  const [endDate, setEndDate] = useState(""); // applied values
+  const [tempStartDate, setTempStartDate] = useState(""); // editing values
+  const [tempEndDate, setTempEndDate] = useState(""); // editing values
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
   const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
@@ -2759,7 +2761,16 @@ export default function Sales() {
                   </SelectItem>
                 </SelectContent>
               </Select>
-              <Select value={dateFilter} onValueChange={setDateFilter}>
+              <Select
+                value={dateFilter}
+                onValueChange={(v) => {
+                  setDateFilter(v);
+                  if (v !== "custom") {
+                    setTempStartDate("");
+                    setTempEndDate("");
+                  }
+                }}
+              >
                 <SelectTrigger className="w-full sm:w-[150px]">
                   <Calendar className="mr-2 h-4 w-4" />
                   <SelectValue placeholder={t("sales.date_range")} />
@@ -2777,7 +2788,7 @@ export default function Sales() {
 
             {/* Custom Date Range */}
             {dateFilter === "custom" && (
-              <div className="flex gap-4 items-center p-4 bg-muted rounded-lg">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 sm:items-center p-4 bg-muted rounded-lg">
                 <div className="flex items-center gap-2">
                   <Label htmlFor="startDate" className="text-sm font-medium">
                     {t("sales.from")}:
@@ -2785,9 +2796,9 @@ export default function Sales() {
                   <Input
                     id="startDate"
                     type="date"
-                    value={startDate}
-                    onChange={(e) => setStartDate(e.target.value)}
-                    className="w-auto"
+                    value={tempStartDate}
+                    onChange={(e) => setTempStartDate(e.target.value)}
+                    className="w-full sm:w-auto"
                   />
                 </div>
                 <div className="flex items-center gap-2">
@@ -2797,22 +2808,47 @@ export default function Sales() {
                   <Input
                     id="endDate"
                     type="date"
-                    value={endDate}
-                    onChange={(e) => setEndDate(e.target.value)}
-                    className="w-auto"
+                    value={tempEndDate}
+                    onChange={(e) => setTempEndDate(e.target.value)}
+                    className="w-full sm:w-auto"
                   />
                 </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => {
-                    setDateFilter("all");
-                    setStartDate("");
-                    setEndDate("");
-                  }}
-                >
-                  {t("common.clear")}
-                </Button>
+                <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    onClick={() => {
+                      if (!tempStartDate || !tempEndDate) return;
+                      const s = new Date(tempStartDate);
+                      const e = new Date(tempEndDate);
+                      if (s > e) {
+                        toast({
+                          title: t("common.error", { defaultValue: "Error" }),
+                          description: t("warehouse.invalid_date_range", { defaultValue: "Invalid date range" }),
+                          variant: "destructive",
+                        });
+                        return;
+                      }
+                      setStartDate(tempStartDate);
+                      setEndDate(tempEndDate);
+                    }}
+                    disabled={!tempStartDate || !tempEndDate}
+                  >
+                    {t("common.apply")}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      setDateFilter("all");
+                      setStartDate("");
+                      setEndDate("");
+                      setTempStartDate("");
+                      setTempEndDate("");
+                    }}
+                  >
+                    {t("common.clear")}
+                  </Button>
+                </div>
               </div>
             )}
 
