@@ -1673,7 +1673,7 @@ ${data.transactions
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">
             {t("finance.title")}
@@ -1866,7 +1866,7 @@ ${data.transactions
       </div>
 
       <Tabs defaultValue="transactions" className="space-y-4">
-        <TabsList>
+        <TabsList className="flex w-full overflow-x-auto sm:overflow-visible">
           <TabsTrigger value="transactions">
             {t("finance.transactions")}
           </TabsTrigger>
@@ -1881,7 +1881,7 @@ ${data.transactions
           <Card>
             <CardHeader>
               <CardTitle>{t("finance.transaction_history")}</CardTitle>
-              <div className="flex gap-4">
+              <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                 <div className="relative flex-1">
                   <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                   <Input
@@ -1892,7 +1892,7 @@ ${data.transactions
                   />
                 </div>
                 <Select value={typeFilter} onValueChange={setTypeFilter}>
-                  <SelectTrigger className="w-[130px]">
+                  <SelectTrigger className="w-full sm:w-[130px]">
                     <Filter className="mr-2 h-4 w-4" />
                     <SelectValue placeholder={t("common.type")} />
                   </SelectTrigger>
@@ -1912,7 +1912,7 @@ ${data.transactions
                   value={categoryFilter}
                   onValueChange={setCategoryFilter}
                 >
-                  <SelectTrigger className="w-[150px]">
+                  <SelectTrigger className="w-full sm:w-[150px]">
                     <SelectValue placeholder={t("warehouse.category")} />
                   </SelectTrigger>
                   <SelectContent>
@@ -1934,7 +1934,7 @@ ${data.transactions
                   </SelectContent>
                 </Select>
                 <Select value={timeFilter} onValueChange={setTimeFilter}>
-                  <SelectTrigger className="w-[150px]">
+                  <SelectTrigger className="w-full sm:w-[150px]">
                     <Clock className="mr-2 h-4 w-4" />
                     <SelectValue placeholder={t("common.date_time")} />
                   </SelectTrigger>
@@ -1958,7 +1958,8 @@ ${data.transactions
               </div>
             </CardHeader>
             <CardContent>
-              <Table>
+              <div className="w-full overflow-x-auto">
+              <Table className="min-w-[720px] sm:min-w-0">
                 <TableHeader>
                   <TableRow>
                     <TableHead>{t("common.date")}</TableHead>
@@ -2044,6 +2045,7 @@ ${data.transactions
                   ))}
                 </TableBody>
               </Table>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
