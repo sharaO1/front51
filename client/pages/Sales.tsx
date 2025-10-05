@@ -756,52 +756,71 @@ export default function Sales() {
   };
 
   const handleExportPDF = () => {
-    let data = filteredInvoices;
-
     const now = new Date();
-    const isSameLocalDay = (a: Date, b: Date) =>
-      a.getFullYear() === b.getFullYear() &&
-      a.getMonth() === b.getMonth() &&
-      a.getDate() === b.getDate();
 
-    const lastMonthRef = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-    const lastMonthYear = lastMonthRef.getFullYear();
-    const lastMonthIndex = lastMonthRef.getMonth(); // 0-11
-    const lastYear = now.getFullYear() - 1;
+    const startOfDay = (d: Date) =>
+      new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0, 0);
+    const endOfDay = (d: Date) =>
+      new Date(d.getFullYear(), d.getMonth(), d.getDate(), 23, 59, 59, 999);
 
-    if (pdfPeriod === "today") {
-      data = data.filter((i) => isSameLocalDay(new Date(i.date), now));
-    } else if (pdfPeriod === "last_month") {
-      data = data.filter((i) => {
-        const d = new Date(i.date);
-        return (
-          d.getFullYear() === lastMonthYear && d.getMonth() === lastMonthIndex
+    const getPeriodRange = (
+      period: "today" | "last_month" | "last_year",
+    ): { start: Date; end: Date; label: string } => {
+      if (period === "today") {
+        const start = startOfDay(now);
+        const end = endOfDay(now);
+        const label = new Intl.DateTimeFormat(i18n.language || "en", {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+        }).format(now);
+        return { start, end, label };
+      }
+
+      if (period === "last_month") {
+        const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+        const start = new Date(
+          lastMonth.getFullYear(),
+          lastMonth.getMonth(),
+          1,
+          0,
+          0,
+          0,
+          0,
         );
-      });
-    } else if (pdfPeriod === "last_year") {
-      const start = new Date(now);
-      start.setFullYear(now.getFullYear() - 1);
-      data = data.filter((i) => {
-        const d = new Date(i.date);
-        return d >= start && d <= now;
-      });
-    }
+        const end = new Date(
+          lastMonth.getFullYear(),
+          lastMonth.getMonth() + 1,
+          0,
+          23,
+          59,
+          59,
+          999,
+        );
+        const label = new Intl.DateTimeFormat(i18n.language || "en", {
+          year: "numeric",
+          month: "long",
+        }).format(lastMonth);
+        return { start, end, label };
+      }
 
-    const dateLabel =
-      pdfPeriod === "today"
-        ? new Intl.DateTimeFormat(i18n.language || "en", {
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-          }).format(now)
-        : pdfPeriod === "last_month"
-          ? new Intl.DateTimeFormat(i18n.language || "en", {
-              year: "numeric",
-              month: "long",
-            }).format(new Date(lastMonthYear, lastMonthIndex, 1))
-          : `${new Intl.DateTimeFormat(i18n.language || "en", { month: "short", year: "numeric" }).format(new Date(now.getFullYear() - 1, now.getMonth(), 1))} – ${new Intl.DateTimeFormat(i18n.language || "en", { month: "short", year: "numeric" }).format(new Date(now.getFullYear(), now.getMonth(), 1))}`;
+      // previous calendar year (Jan 1 – Dec 31)
+      const year = now.getFullYear() - 1;
+      const start = new Date(year, 0, 1, 0, 0, 0, 0);
+      const end = new Date(year, 11, 31, 23, 59, 59, 999);
+      const label = String(year);
+      return { start, end, label };
+    };
 
-    const html = buildSalesReportHTML(pdfPeriod, dateLabel, data);
+    const { start, end, label } = getPeriodRange(pdfPeriod);
+
+    // Export should ignore table search/status filters; use full dataset
+    const data = invoices.filter((i) => {
+      const d = new Date(i.date);
+      return d >= start && d <= end;
+    });
+
+    const html = buildSalesReportHTML(pdfPeriod, label, data);
     openPrintWindow(html, `${t("navigation.sales")} ${t("common.export")} PDF`);
     closeExportLayers();
 
