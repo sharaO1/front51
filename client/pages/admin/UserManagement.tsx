@@ -361,7 +361,11 @@ export default function UserManagement() {
                               <DropdownMenuItem
                                 onClick={() => {
                                   setSelectedUser(user);
-                                  setIsPermissionDialogOpen(true);
+                                  try {
+                                    const el = document.activeElement as HTMLElement | null;
+                                    el?.blur?.();
+                                  } catch {}
+                                  setTimeout(() => setIsPermissionDialogOpen(true), 10);
                                 }}
                               >
                                 <Eye className="mr-2 h-4 w-4" />{" "}
@@ -488,11 +492,15 @@ export default function UserManagement() {
                                   {t("admin.users.menu.actions")}
                                 </DropdownMenuLabel>
                                 <DropdownMenuItem
-                                  onClick={() => {
-                                    setSelectedUser(user);
-                                    setIsPermissionDialogOpen(true);
-                                  }}
-                                >
+                                onClick={() => {
+                                  setSelectedUser(user);
+                                  try {
+                                    const el = document.activeElement as HTMLElement | null;
+                                    el?.blur?.();
+                                  } catch {}
+                                  setTimeout(() => setIsPermissionDialogOpen(true), 10);
+                                }}
+                              >
                                   <Eye className="mr-2 h-4 w-4" />
                                   {t("admin.users.menu.view_permissions")}
                                 </DropdownMenuItem>
