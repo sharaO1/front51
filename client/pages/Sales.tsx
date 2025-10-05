@@ -3243,7 +3243,7 @@ export default function Sales() {
           {selectedInvoice && (
             <div className="space-y-6">
               {/* Invoice Header */}
-              <div className="grid grid-cols-2 gap-6 p-4 bg-muted rounded-lg">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 p-4 bg-muted rounded-lg">
                 <div>
                   <h3 className="font-semibold mb-2">
                     {t("sales.invoice_information")}
@@ -3290,7 +3290,7 @@ export default function Sales() {
 
               {/* Employee Information */}
               {selectedInvoice.employeeName && (
-                <div className="p-4 bg-blue-50 rounded-lg">
+                <div className="p-4 bg-blue-50 rounded-lg text-sm">
                   <h3 className="font-semibold mb-2">
                     {t("employees.sales_team")}
                   </h3>
@@ -3301,32 +3301,54 @@ export default function Sales() {
               {/* Invoice Items */}
               <div>
                 <h3 className="font-semibold mb-4">Invoice Items</h3>
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>{t("sales.product_name")}</TableHead>
-                      <TableHead>{t("sales.qty")}</TableHead>
-                      <TableHead>{t("sales.unit_price")}</TableHead>
-                      <TableHead>{t("sales.discount")}</TableHead>
-                      <TableHead>{t("common.total")}</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {selectedInvoice.items.map((item) => (
-                      <TableRow key={item.id}>
-                        <TableCell>{item.productName}</TableCell>
-                        <TableCell>{item.quantity}</TableCell>
-                        <TableCell>${item.unitPrice.toFixed(2)}</TableCell>
-                        <TableCell>{item.discount}%</TableCell>
-                        <TableCell>${item.total.toFixed(2)}</TableCell>
+                {/* Mobile list */}
+                <div className="md:hidden space-y-3">
+                  {selectedInvoice.items.map((item) => (
+                    <div key={item.id} className="rounded-lg border p-3 bg-card">
+                      <div className="flex items-start justify-between">
+                        <div className="font-medium">{item.productName}</div>
+                        <div className="text-sm text-muted-foreground">{t("sales.qty")}: {item.quantity}</div>
+                      </div>
+                      <div className="mt-2 grid grid-cols-2 gap-2 text-sm">
+                        <div className="text-muted-foreground">{t("sales.unit_price")}</div>
+                        <div className="text-right">${item.unitPrice.toFixed(2)}</div>
+                        <div className="text-muted-foreground">{t("sales.discount")}</div>
+                        <div className="text-right">{item.discount}%</div>
+                        <div className="font-medium">{t("common.total")}</div>
+                        <div className="text-right font-semibold">${item.total.toFixed(2)}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                {/* Desktop table */}
+                <div className="hidden md:block">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>{t("sales.product_name")}</TableHead>
+                        <TableHead>{t("sales.qty")}</TableHead>
+                        <TableHead>{t("sales.unit_price")}</TableHead>
+                        <TableHead>{t("sales.discount")}</TableHead>
+                        <TableHead>{t("common.total")}</TableHead>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                    </TableHeader>
+                    <TableBody>
+                      {selectedInvoice.items.map((item) => (
+                        <TableRow key={item.id}>
+                          <TableCell>{item.productName}</TableCell>
+                          <TableCell>{item.quantity}</TableCell>
+                          <TableCell>${item.unitPrice.toFixed(2)}</TableCell>
+                          <TableCell>{item.discount}%</TableCell>
+                          <TableCell>${item.total.toFixed(2)}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
               </div>
 
               {/* Invoice Totals */}
-              <div className="border rounded-lg p-4 space-y-2 bg-muted">
+              <div className="border rounded-lg p-4 space-y-2 bg-muted text-sm">
                 <div className="flex justify-between">
                   <span>Subtotal:</span>
                   <span>${selectedInvoice.subtotal.toFixed(2)}</span>
