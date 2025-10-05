@@ -376,7 +376,11 @@ export default function UserManagement() {
                                   <DropdownMenuItem
                                     onClick={() => {
                                       setSelectedUser(user);
-                                      setIsRoleDialogOpen(true);
+                                      try {
+                                        const el = document.activeElement as HTMLElement | null;
+                                        el?.blur?.();
+                                      } catch {}
+                                      setTimeout(() => setIsRoleDialogOpen(true), 10);
                                     }}
                                   >
                                     <Edit className="mr-2 h-4 w-4" />{" "}
@@ -508,11 +512,15 @@ export default function UserManagement() {
                                 {canManageUser(user.id, user.role) && (
                                   <>
                                     <DropdownMenuItem
-                                      onClick={() => {
-                                        setSelectedUser(user);
-                                        setIsRoleDialogOpen(true);
-                                      }}
-                                    >
+                                    onClick={() => {
+                                      setSelectedUser(user);
+                                      try {
+                                        const el = document.activeElement as HTMLElement | null;
+                                        el?.blur?.();
+                                      } catch {}
+                                      setTimeout(() => setIsRoleDialogOpen(true), 10);
+                                    }}
+                                  >
                                       <Edit className="mr-2 h-4 w-4" />
                                       {t("admin.users.menu.change_role")}
                                     </DropdownMenuItem>
