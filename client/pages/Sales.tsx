@@ -651,7 +651,7 @@ export default function Sales() {
               <div>
                 <h3>${t("dashboard.kpi_at_glance", "KPI at a glance")}</h3>
                 <div class="totals">
-                  <div class="row"><span>${t("sales.total_invoices")}</span><span class="right">${paidData.length}</span></div>
+                  <div class="row"><span>${t("sales.total_invoices")}</span><span class="right">${visible.length}</span></div>
                   <div class="row"><span>${t("sales.total_revenue")}</span><span class="right">${formatCurrency(totals.total)}</span></div>
                   <div class="row"><span>${t("sales.subtotal")}</span><span class="right">${formatCurrency(totals.subtotal)}</span></div>
                   <div class="row"><span>${t("sales.tax")}</span><span class="right">${formatCurrency(totals.tax)}</span></div>
