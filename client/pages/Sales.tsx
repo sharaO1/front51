@@ -1555,7 +1555,7 @@ export default function Sales() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">
             {t("sales.title")}
@@ -2145,7 +2145,7 @@ export default function Sales() {
         <CardHeader>
           <CardTitle>{t("sales.sales_invoices")}</CardTitle>
           <div className="space-y-4">
-            <div className="flex gap-4">
+            <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
               <div className="relative flex-1">
                 <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
@@ -2156,7 +2156,7 @@ export default function Sales() {
                 />
               </div>
               <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="w-[150px]">
+                <SelectTrigger className="w-full sm:w-[150px]">
                   <Filter className="mr-2 h-4 w-4" />
                   <SelectValue placeholder={t("common.status")} />
                 </SelectTrigger>
@@ -2174,7 +2174,7 @@ export default function Sales() {
                 </SelectContent>
               </Select>
               <Select value={dateFilter} onValueChange={setDateFilter}>
-                <SelectTrigger className="w-[150px]">
+                <SelectTrigger className="w-full sm:w-[150px]">
                   <Calendar className="mr-2 h-4 w-4" />
                   <SelectValue placeholder={t("sales.date_range")} />
                 </SelectTrigger>
@@ -2266,7 +2266,8 @@ export default function Sales() {
           </div>
         </CardHeader>
         <CardContent>
-          <Table>
+          <div className="hidden md:block">
+            <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>{t("sales.invoice_number")}</TableHead>
@@ -2421,6 +2422,55 @@ export default function Sales() {
               ))}
             </TableBody>
           </Table>
+          </div>
+
+          <div className="md:hidden space-y-3">
+            {filteredInvoices.map((invoice) => (
+              <div key={invoice.id} className="rounded-xl border p-4 bg-card shadow-business">
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <div className="text-xs text-muted-foreground">{t("sales.invoice_number")}</div>
+                    <div className="text-base font-semibold">{invoice.invoiceNumber}</div>
+                  </div>
+                  {getStatusBadge(invoice.status)}
+                </div>
+                <div className="mt-3">
+                  <div className="font-medium">{invoice.clientName}</div>
+                  {invoice.clientEmail ? (
+                    <div className="text-xs text-muted-foreground">{invoice.clientEmail}</div>
+                  ) : null}
+                </div>
+                <div className="mt-3 flex items-center justify-between text-sm">
+                  <span className="text-muted-foreground">{formatDateTime(invoice.date)}</span>
+                  <span className="font-semibold">{formatCurrency(invoice.total)}</span>
+                </div>
+                <div className="mt-4 grid grid-cols-2 gap-2">
+                  <Button variant="outline" size="sm" onClick={() => { setSelectedInvoice(invoice); setIsViewDialogOpen(true); }}>
+                    <Eye className="h-4 w-4" /> {t("common.view", "View")}
+                  </Button>
+                  <Button variant="outline" size="sm" onClick={() => { buildInvoicePDF(invoice); toast({ title: t("sales.toast.invoice_downloaded_title"), description: t("sales.toast.invoice_downloaded_desc_number", { number: invoice.invoiceNumber }) }); }}>
+                    <Download className="h-4 w-4" /> PDF
+                  </Button>
+                </div>
+                {(invoice.status === "draft" || invoice.status === "sent") && (
+                  <div className="mt-2 grid grid-cols-2 gap-2">
+                    {invoice.status === "draft" && (
+                      <>
+                        <Button variant="outline" size="sm" disabled={updatingIds.has(invoice.id)} onClick={() => updateInvoiceStatus(invoice.id, "sent")}>{t("sales.send")}</Button>
+                        <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700" disabled={updatingIds.has(invoice.id)} onClick={() => openCancelDialog(invoice)}>{t("common.cancel")}</Button>
+                      </>
+                    )}
+                    {invoice.status === "sent" && (
+                      <>
+                        <Button variant="outline" size="sm" className="text-green-600" disabled={updatingIds.has(invoice.id)} onClick={() => updateInvoiceStatus(invoice.id, "paid")}>{t("sales.mark_paid")}</Button>
+                        <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700" disabled={updatingIds.has(invoice.id)} onClick={() => openCancelDialog(invoice)}>{t("common.cancel")}</Button>
+                      </>
+                    )}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
         </CardContent>
       </Card>
 
