@@ -1571,11 +1571,11 @@ export default function Sales() {
           <DropdownMenu open={exportMenuOpen} onOpenChange={setExportMenuOpen}>
             <DropdownMenuTrigger asChild>
               <Button variant="outline">
-                <Download className="mr-2 h-4 w-4" /> Export
+                <Download className="mr-2 h-4 w-4" /> {t("dashboard.export_report")}
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Export filtered</DropdownMenuLabel>
+              <DropdownMenuLabel>{t("dashboard.export_options")}</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 onSelect={(e) => {
@@ -1585,6 +1585,22 @@ export default function Sales() {
                 }}
               >
                 <Receipt className="mr-2 h-4 w-4" /> PDF
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onSelect={(e) => {
+                  e.preventDefault();
+                  handleExportCSV();
+                }}
+              >
+                <FileSpreadsheet className="mr-2 h-4 w-4" /> CSV
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onSelect={(e) => {
+                  e.preventDefault();
+                  handleExportJSON();
+                }}
+              >
+                <FileJson className="mr-2 h-4 w-4" /> JSON
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
