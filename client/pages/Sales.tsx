@@ -694,13 +694,15 @@ export default function Sales() {
         )
         .join("");
 
+    const totalPages = pages.length;
     const tables = pages
       .map((group, idx) => `
         ${idx > 0 ? '<div class="page-break"></div>' : ''}
+        <div class="page-head">
+          <div><strong>${t("navigation.sales")} — ${t("dashboard.recent_activity", "Recent Activity")}</strong></div>
+          <div class="meta-small">${t("common.date")}: ${periodLabel} • ${t("sales.report.generated_on", "Generated on")}: ${formatDateTime(new Date())} • ${t("common.page", { defaultValue: "Page" })} ${idx + 1}/${totalPages}</div>
+        </div>
         <div class="section">
-          <h3>${t("dashboard.recent_activity", "Recent Activity")}${
-            idx > 0 ? " (continued)" : ""
-          }</h3>
           <table>
             <thead>
               <tr>
@@ -717,7 +719,20 @@ export default function Sales() {
       .join("");
 
     return `
-      <style>@media print{ .page-break{ page-break-before: always; } thead{display:table-header-group} tfoot{display:table-footer-group} }</style>
+      <style>
+        body{font-family:Inter,Arial,sans-serif}
+        @media print{ .page-break{ page-break-before: always; } thead{display:table-header-group} tfoot{display:table-footer-group} }
+        .page-head{display:flex;justify-content:space-between;align-items:flex-end;margin:8px 0 6px;border-bottom:1px solid #e5e7eb;padding-bottom:6px}
+        .page-head .meta-small{color:#64748b;font-size:12px}
+        table{border-collapse:collapse;width:100%}
+        th,td{border-bottom:1px solid #e5e7eb;padding:10px 12px;text-align:left;font-size:12px}
+        tbody tr:nth-child(even){background:#f8fafc}
+        th:nth-child(1){width:18%}
+        th:nth-child(2){width:32%}
+        th:nth-child(3){width:22%}
+        th:nth-child(4){width:14%}
+        th:nth-child(5){width:14%}
+      </style>
       <div class="container">
         <div class="card">
           <div class="header">
