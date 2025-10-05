@@ -495,10 +495,22 @@ export default function Sales() {
       .join("");
 
     const html = `<!doctype html><html><head><meta charset="utf-8" /><style>
-      table{border-collapse:collapse;font-family:Inter,Arial,sans-serif}
+      body{font-family:Inter,Arial,sans-serif}
+      .header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+      .brand{width:36px;height:36px;border-radius:8px;border:1px solid #e5e7eb;object-fit:contain}
+      h1{font-size:16px;margin:0}
+      .subtitle{color:#64748b;font-size:12px}
+      table{border-collapse:collapse;width:100%}
       th,td{border:1px solid #e5e7eb;padding:8px 10px;text-align:left;font-size:12px}
       th{background:#f8fafc}
     </style></head><body>
+      <div class="header">
+        <img src="/icons/app-icon.svg" alt="Brand" class="brand"/>
+        <div>
+          <h1>${t("navigation.sales")} — ${t("dashboard.recent_activity", "Recent Activity")}</h1>
+          <div class="subtitle">${new Date().toLocaleString(i18n.language || "en")}</div>
+        </div>
+      </div>
       <table>
         <thead><tr>${headers.map((h) => `<th>${h}</th>`).join("")}</tr></thead>
         <tbody>${rows}</tbody>
@@ -536,6 +548,8 @@ export default function Sales() {
         .container { max-width: 1000px; margin: 24px auto; padding: 24px; }
         .card { background: white; border: 1px solid #e5e7eb; border-radius: 12px; padding: 24px; box-shadow: 0 2px 6px rgba(0,0,0,.04); }
         .header { display:flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+        .brandwrap { display:flex; align-items:center; gap:12px; }
+        .brand { width: 36px; height: 36px; border-radius: 8px; object-fit: contain; border: 1px solid #e5e7eb; background:#fff; }
         h1 { font-size: 24px; margin: 0 0 8px; }
         .subtitle { color:#64748b; font-size: 14px; }
         .badge { display:inline-block; padding: 4px 10px; background: rgba(37,99,235,.08); color: var(--primary); border:1px solid rgba(37,99,235,.18); border-radius: 999px; font-weight: 600; font-size: 12px; }
@@ -640,9 +654,12 @@ export default function Sales() {
       <div class="container">
         <div class="card">
           <div class="header">
-            <div>
-              <h1>${t("navigation.sales")} — ${t("dashboard.recent_activity", "Recent Activity")}</h1>
-              <div class="subtitle">${t("finance.report_title", "FINANCIAL REPORT").replace("FINANCIAL", t("navigation.sales"))}</div>
+            <div class="brandwrap">
+              <img src="/icons/app-icon.svg" alt="Brand" class="brand"/>
+              <div>
+                <h1>${t("navigation.sales")} — ${t("dashboard.recent_activity", "Recent Activity")}</h1>
+                <div class="subtitle">${t("finance.report_title", "FINANCIAL REPORT").replace("FINANCIAL", t("navigation.sales"))}</div>
+              </div>
             </div>
             <div class="badge">${period === "today" ? t("sales.today") : period === "last_month" ? t("sales.last_month") : t("finance.last_12_months", "Last 12 Months")}</div>
           </div>
@@ -784,9 +801,12 @@ export default function Sales() {
       <div class="container">
         <div class="card">
           <div class="header">
-            <div>
-              <h1>${t("sales.report.invoice_heading", "INVOICE")} ${inv.invoiceNumber}</h1>
-              <div class="subtitle">${t("sales.invoice_details")}</div>
+            <div class="brandwrap">
+              <img src="/icons/app-icon.svg" alt="Brand" class="brand"/>
+              <div>
+                <h1>${t("sales.report.invoice_heading", "INVOICE")} ${inv.invoiceNumber}</h1>
+                <div class="subtitle">${t("sales.invoice_details")}</div>
+              </div>
             </div>
             <div class="badge">${t(`status.${inv.status}`)}</div>
           </div>
