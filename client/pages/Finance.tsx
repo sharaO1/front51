@@ -1761,7 +1761,9 @@ ${data.transactions
                   {t("finance.reports_analytics")}
                 </div>
                 <DropdownMenuItem
-                  onClick={() => setTimeout(() => setIsExportDialogOpen(true), 10)}
+                  onClick={() =>
+                    setTimeout(() => setIsExportDialogOpen(true), 10)
+                  }
                   className="cursor-pointer"
                 >
                   <FileSpreadsheet className="mr-2 h-4 w-4" />

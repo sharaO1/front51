@@ -362,10 +362,14 @@ export default function UserManagement() {
                                 onClick={() => {
                                   setSelectedUser(user);
                                   try {
-                                    const el = document.activeElement as HTMLElement | null;
+                                    const el =
+                                      document.activeElement as HTMLElement | null;
                                     el?.blur?.();
                                   } catch {}
-                                  setTimeout(() => setIsPermissionDialogOpen(true), 10);
+                                  setTimeout(
+                                    () => setIsPermissionDialogOpen(true),
+                                    10,
+                                  );
                                 }}
                               >
                                 <Eye className="mr-2 h-4 w-4" />{" "}
@@ -377,10 +381,14 @@ export default function UserManagement() {
                                     onClick={() => {
                                       setSelectedUser(user);
                                       try {
-                                        const el = document.activeElement as HTMLElement | null;
+                                        const el =
+                                          document.activeElement as HTMLElement | null;
                                         el?.blur?.();
                                       } catch {}
-                                      setTimeout(() => setIsRoleDialogOpen(true), 10);
+                                      setTimeout(
+                                        () => setIsRoleDialogOpen(true),
+                                        10,
+                                      );
                                     }}
                                   >
                                     <Edit className="mr-2 h-4 w-4" />{" "}
@@ -496,15 +504,19 @@ export default function UserManagement() {
                                   {t("admin.users.menu.actions")}
                                 </DropdownMenuLabel>
                                 <DropdownMenuItem
-                                onClick={() => {
-                                  setSelectedUser(user);
-                                  try {
-                                    const el = document.activeElement as HTMLElement | null;
-                                    el?.blur?.();
-                                  } catch {}
-                                  setTimeout(() => setIsPermissionDialogOpen(true), 10);
-                                }}
-                              >
+                                  onClick={() => {
+                                    setSelectedUser(user);
+                                    try {
+                                      const el =
+                                        document.activeElement as HTMLElement | null;
+                                      el?.blur?.();
+                                    } catch {}
+                                    setTimeout(
+                                      () => setIsPermissionDialogOpen(true),
+                                      10,
+                                    );
+                                  }}
+                                >
                                   <Eye className="mr-2 h-4 w-4" />
                                   {t("admin.users.menu.view_permissions")}
                                 </DropdownMenuItem>
@@ -512,15 +524,19 @@ export default function UserManagement() {
                                 {canManageUser(user.id, user.role) && (
                                   <>
                                     <DropdownMenuItem
-                                    onClick={() => {
-                                      setSelectedUser(user);
-                                      try {
-                                        const el = document.activeElement as HTMLElement | null;
-                                        el?.blur?.();
-                                      } catch {}
-                                      setTimeout(() => setIsRoleDialogOpen(true), 10);
-                                    }}
-                                  >
+                                      onClick={() => {
+                                        setSelectedUser(user);
+                                        try {
+                                          const el =
+                                            document.activeElement as HTMLElement | null;
+                                          el?.blur?.();
+                                        } catch {}
+                                        setTimeout(
+                                          () => setIsRoleDialogOpen(true),
+                                          10,
+                                        );
+                                      }}
+                                    >
                                       <Edit className="mr-2 h-4 w-4" />
                                       {t("admin.users.menu.change_role")}
                                     </DropdownMenuItem>
