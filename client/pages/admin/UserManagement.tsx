@@ -59,6 +59,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/stores/authStore";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export default function UserManagement() {
   const {
@@ -78,6 +79,7 @@ export default function UserManagement() {
   const [isPermissionDialogOpen, setIsPermissionDialogOpen] = useState(false);
   const { toast } = useToast();
   const { t } = useTranslation();
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     (async () => {
@@ -203,6 +205,12 @@ export default function UserManagement() {
         <div className="space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-4">
             <UserCreateDialog
+              trigger={
+                <Button className="w-full sm:w-auto flex items-center gap-2">
+                  <Plus className="h-4 w-4" />
+                  {t("admin.users.create.add_user_btn")}
+                </Button>
+              }
               onUserCreated={async () => {
                 const res = await loadUsers();
                 if (!res.ok) {
@@ -299,137 +307,182 @@ export default function UserManagement() {
                 </div>
               </div>
 
-              {/* Users Table */}
-              <div className="rounded-md border">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>{t("admin.users.table.user")}</TableHead>
-                      <TableHead>{t("admin.users.table.role")}</TableHead>
-                      <TableHead>{t("admin.users.table.department")}</TableHead>
-                      <TableHead>{t("admin.users.table.status")}</TableHead>
-                      <TableHead className="text-right">
-                        {t("admin.users.table.actions")}
-                      </TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filteredUsers.map((user) => (
-                      <TableRow key={user.id}>
-                        <TableCell>
-                          <div className="flex items-center gap-3">
-                            <Avatar className="h-8 w-8">
-                              <AvatarImage src={user.avatar} />
-                              <AvatarFallback>
-                                {user.name
-                                  .split(" ")
-                                  .map((n) => n[0])
-                                  .join("")
-                                  .toUpperCase()}
-                              </AvatarFallback>
-                            </Avatar>
-                            <div>
-                              <div className="font-medium">{user.name}</div>
-                              <div className="text-sm text-muted-foreground">
-                                {user.email}
-                              </div>
-                            </div>
+              {/* Users List/Table */}
+              {isMobile ? (
+                <div className="space-y-3">
+                  {filteredUsers.map((user) => (
+                    <div key={user.id} className="border rounded-lg p-3 bg-card">
+                      <div className="flex items-center gap-3">
+                        <Avatar className="h-10 w-10">
+                          <AvatarImage src={user.avatar} />
+                          <AvatarFallback>
+                            {user.name
+                              .split(" ")
+                              .map((n) => n[0])
+                              .join("")
+                              .toUpperCase()}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1 min-w-0">
+                          <div className="font-medium truncate">{user.name}</div>
+                          <div className="text-xs text-muted-foreground truncate">
+                            {user.email}
                           </div>
-                        </TableCell>
-                        <TableCell>
-                          <RoleBadge role={user.role} size="sm" />
-                        </TableCell>
-                        <TableCell>
-                          {user.department ? (
-                            <Badge variant="outline">{user.department}</Badge>
-                          ) : (
-                            <span className="text-muted-foreground">-</span>
-                          )}
-                        </TableCell>
-                        <TableCell>{getStatusBadge(user.status)}</TableCell>
-                        <TableCell className="text-right">
+                        </div>
+                        <div>{getStatusBadge(user.status)}</div>
+                      </div>
+
+                      <div className="mt-3 flex flex-wrap items-center gap-2">
+                        <RoleBadge role={user.role} size="sm" />
+                        {user.department ? (
+                          <Badge variant="outline">{user.department}</Badge>
+                        ) : null}
+                        <div className="ml-auto">
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" className="h-8 w-8 p-0">
-                                <MoreHorizontal className="h-4 w-4" />
+                              <Button variant="outline" size="sm" className="gap-2">
+                                <MoreHorizontal className="h-4 w-4" /> {t("admin.users.table.actions")}
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
                               <DropdownMenuLabel>
                                 {t("admin.users.menu.actions")}
                               </DropdownMenuLabel>
-                              <DropdownMenuItem
-                                onClick={() => {
-                                  setSelectedUser(user);
-                                  setIsPermissionDialogOpen(true);
-                                }}
-                              >
-                                <Eye className="mr-2 h-4 w-4" />
-                                {t("admin.users.menu.view_permissions")}
+                              <DropdownMenuItem onClick={() => { setSelectedUser(user); setIsPermissionDialogOpen(true); }}>
+                                <Eye className="mr-2 h-4 w-4" /> {t("admin.users.menu.view_permissions")}
                               </DropdownMenuItem>
-
                               {canManageUser(user.id, user.role) && (
                                 <>
-                                  <DropdownMenuItem
-                                    onClick={() => {
-                                      setSelectedUser(user);
-                                      setIsRoleDialogOpen(true);
-                                    }}
-                                  >
-                                    <Edit className="mr-2 h-4 w-4" />
-                                    {t("admin.users.menu.change_role")}
+                                  <DropdownMenuItem onClick={() => { setSelectedUser(user); setIsRoleDialogOpen(true); }}>
+                                    <Edit className="mr-2 h-4 w-4" /> {t("admin.users.menu.change_role")}
                                   </DropdownMenuItem>
                                   <DropdownMenuSeparator />
-
                                   {user.status === "active" && (
                                     <>
-                                      <DropdownMenuItem
-                                        onClick={() =>
-                                          handleStatusChange(
-                                            user.id,
-                                            "inactive",
-                                          )
-                                        }
-                                      >
-                                        <UserX className="mr-2 h-4 w-4" />
-                                        {t("admin.users.menu.deactivate")}
+                                      <DropdownMenuItem onClick={() => handleStatusChange(user.id, "inactive")}>
+                                        <UserX className="mr-2 h-4 w-4" /> {t("admin.users.menu.deactivate")}
                                       </DropdownMenuItem>
-                                      <DropdownMenuItem
-                                        onClick={() =>
-                                          handleStatusChange(
-                                            user.id,
-                                            "suspended",
-                                          )
-                                        }
-                                        className="text-red-600"
-                                      >
-                                        <Ban className="mr-2 h-4 w-4" />
-                                        {t("admin.users.menu.suspend")}
+                                      <DropdownMenuItem onClick={() => handleStatusChange(user.id, "suspended")} className="text-red-600">
+                                        <Ban className="mr-2 h-4 w-4" /> {t("admin.users.menu.suspend")}
                                       </DropdownMenuItem>
                                     </>
                                   )}
-
                                   {user.status !== "active" && (
-                                    <DropdownMenuItem
-                                      onClick={() =>
-                                        handleStatusChange(user.id, "active")
-                                      }
-                                      className="text-green-600"
-                                    >
-                                      <UserCheck className="mr-2 h-4 w-4" />
-                                      {t("admin.users.menu.activate")}
+                                    <DropdownMenuItem onClick={() => handleStatusChange(user.id, "active")} className="text-green-600">
+                                      <UserCheck className="mr-2 h-4 w-4" /> {t("admin.users.menu.activate")}
                                     </DropdownMenuItem>
                                   )}
                                 </>
                               )}
                             </DropdownMenuContent>
                           </DropdownMenu>
-                        </TableCell>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="rounded-md border">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>{t("admin.users.table.user")}</TableHead>
+                        <TableHead>{t("admin.users.table.role")}</TableHead>
+                        <TableHead>{t("admin.users.table.department")}</TableHead>
+                        <TableHead>{t("admin.users.table.status")}</TableHead>
+                        <TableHead className="text-right">
+                          {t("admin.users.table.actions")}
+                        </TableHead>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
+                    </TableHeader>
+                    <TableBody>
+                      {filteredUsers.map((user) => (
+                        <TableRow key={user.id}>
+                          <TableCell>
+                            <div className="flex items-center gap-3">
+                              <Avatar className="h-8 w-8">
+                                <AvatarImage src={user.avatar} />
+                                <AvatarFallback>
+                                  {user.name
+                                    .split(" ")
+                                    .map((n) => n[0])
+                                    .join("")
+                                    .toUpperCase()}
+                                </AvatarFallback>
+                              </Avatar>
+                              <div>
+                                <div className="font-medium">{user.name}</div>
+                                <div className="text-sm text-muted-foreground">
+                                  {user.email}
+                                </div>
+                              </div>
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <RoleBadge role={user.role} size="sm" />
+                          </TableCell>
+                          <TableCell>
+                            {user.department ? (
+                              <Badge variant="outline">{user.department}</Badge>
+                            ) : (
+                              <span className="text-muted-foreground">-</span>
+                            )}
+                          </TableCell>
+                          <TableCell>{getStatusBadge(user.status)}</TableCell>
+                          <TableCell className="text-right">
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" className="h-8 w-8 p-0">
+                                  <MoreHorizontal className="h-4 w-4" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuLabel>
+                                  {t("admin.users.menu.actions")}
+                                </DropdownMenuLabel>
+                                <DropdownMenuItem onClick={() => { setSelectedUser(user); setIsPermissionDialogOpen(true); }}>
+                                  <Eye className="mr-2 h-4 w-4" />
+                                  {t("admin.users.menu.view_permissions")}
+                                </DropdownMenuItem>
+
+                                {canManageUser(user.id, user.role) && (
+                                  <>
+                                    <DropdownMenuItem onClick={() => { setSelectedUser(user); setIsRoleDialogOpen(true); }}>
+                                      <Edit className="mr-2 h-4 w-4" />
+                                      {t("admin.users.menu.change_role")}
+                                    </DropdownMenuItem>
+                                    <DropdownMenuSeparator />
+
+                                    {user.status === "active" && (
+                                      <>
+                                        <DropdownMenuItem onClick={() => handleStatusChange(user.id, "inactive")}>
+                                          <UserX className="mr-2 h-4 w-4" />
+                                          {t("admin.users.menu.deactivate")}
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => handleStatusChange(user.id, "suspended")} className="text-red-600">
+                                          <Ban className="mr-2 h-4 w-4" />
+                                          {t("admin.users.menu.suspend")}
+                                        </DropdownMenuItem>
+                                      </>
+                                    )}
+
+                                    {user.status !== "active" && (
+                                      <DropdownMenuItem onClick={() => handleStatusChange(user.id, "active")} className="text-green-600">
+                                        <UserCheck className="mr-2 h-4 w-4" />
+                                        {t("admin.users.menu.activate")}
+                                      </DropdownMenuItem>
+                                    )}
+                                  </>
+                                )}
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              )}
             </CardContent>
           </Card>
 
