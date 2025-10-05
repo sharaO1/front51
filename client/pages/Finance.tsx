@@ -1270,7 +1270,9 @@ export default function Finance() {
         th { background: var(--muted); color:#334155; font-weight:600; }
         .right { text-align:right; }
         .muted { color:#64748b; }
-        @media print { .card { box-shadow:none; border:0; } }
+        .stamp { position: fixed; right: 32px; bottom: 32px; width: 120px; height: 120px; z-index: 1000; opacity: 1; }
+        .stamp svg { width: 100%; height: 100%; }
+        @media print { .card { box-shadow:none; border:0; } .stamp { right: 24px; bottom: 24px; } }
       </style>
     </head><body>${html}</body></html>`);
     doc.close();
@@ -1302,6 +1304,26 @@ export default function Finance() {
       if (!s) return s;
       return String(s).replace(/[A-Z0-9_-]{8,}/g, "••••••");
     };
+    const renderOfficialSealSVG = (brand = "OLIMPY") => `
+      <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-label="Official Seal">
+        <defs>
+          <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#2563eb"/>
+            <stop offset="100%" stop-color="#1e40af"/>
+          </linearGradient>
+          <filter id="softShadow" x="-50%" y="-50%" width="200%" height="200%">
+            <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#1e3a8a" flood-opacity="0.25"/>
+          </filter>
+        </defs>
+        <circle cx="60" cy="60" r="56" fill="#ffffff" opacity="0.9"/>
+        <circle cx="60" cy="60" r="54" fill="none" stroke="url(#ringGrad)" stroke-width="6" filter="url(#softShadow)"/>
+        <circle cx="60" cy="60" r="40" fill="none" stroke="#93c5fd" stroke-width="2" stroke-dasharray="4 6"/>
+        <g font-family="Inter, system-ui, -apple-system, sans-serif" text-anchor="middle">
+          <text x="60" y="58" font-size="18" font-weight="800" fill="#1e3a8a" letter-spacing="1">${brand}</text>
+          <text x="60" y="76" font-size="10" font-weight="700" fill="#2563eb" letter-spacing=".3em">OFFICIAL SEAL</text>
+        </g>
+      </svg>`;
+
     const txRows = data.transactions
       .slice(0, 50)
       .map((row: any) => {
@@ -1329,7 +1351,7 @@ export default function Finance() {
             <div>
               <h1>${t("finance.report_title", { defaultValue: "FINANCIAL REPORT" })}</h1>
               <div class="subtitle">${t("finance.generated_at", { defaultValue: "Generated" })}: ${new Date(data.generatedAt).toLocaleString(i18n.language || "en")}</div>
-              ${data.periodLabel ? `<div class="subtitle">${t("common.period", { defaultValue: "Period" })}: ${data.periodLabel}</div>` : ""}
+              ${data.periodLabel ? `<div class=\"subtitle\">${t("common.period", { defaultValue: "Period" })}: ${data.periodLabel}</div>` : ""}
             </div>
           </div>
           <div class="grid">
@@ -1348,12 +1370,13 @@ export default function Finance() {
               <h3>${t("finance.recent_transactions", { defaultValue: "RECENT TRANSACTIONS" })}</h3>
               <table>
                 <thead><tr><th>${t("common.date")}</th><th>${t("finance.transaction_type")}</th><th>${t("warehouse.category")}</th><th>${t("common.description")}</th><th class="right">${t("common.amount")}</th></tr></thead>
-                <tbody>${txRows || `<tr><td colspan="5" class="muted">${t("clients.no_products", { defaultValue: "No data" })}</td></tr>`}</tbody>
+                <tbody>${txRows || `<tr><td colspan=\"5\" class=\"muted\">${t("clients.no_products", { defaultValue: "No data" })}</td></tr>`}</tbody>
               </table>
             </div>
           </div>
         </div>
-      </div>`;
+      </div>
+      <div class="stamp">${renderOfficialSealSVG("OLIMPY")}</div>`;
   };
 
   const addLoan = () => {
@@ -1761,13 +1784,15 @@ ${data.transactions
                     />
                   </div>
                 )}
-                {exportPeriod === "monthly" && (
+                {exportPeriod === "yearly" && (
                   <div className="space-y-2">
-                    <Label>{t("dashboard.this_month")}</Label>
+                    <Label>{t("common.year", { defaultValue: "Year" })}</Label>
                     <Input
-                      type="month"
-                      value={exportMonth}
-                      onChange={(e) => setExportMonth(e.target.value)}
+                      type="number"
+                      min="2000"
+                      max="2100"
+                      value={exportYear}
+                      onChange={(e) => setExportYear(e.target.value)}
                     />
                   </div>
                 )}
