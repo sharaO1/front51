@@ -65,7 +65,15 @@ import {
 import { FileSpreadsheet, FileJson } from "lucide-react";
 import { useAuthStore } from "@/stores/authStore";
 import { useTranslation } from "react-i18next";
-import { Drawer, DrawerTrigger, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription, DrawerFooter } from "@/components/ui/drawer";
+import {
+  Drawer,
+  DrawerTrigger,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerDescription,
+  DrawerFooter,
+} from "@/components/ui/drawer";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 interface InvoiceItem {
@@ -1582,7 +1590,10 @@ export default function Sales() {
           </DropdownMenu>
 
           {isMobile ? (
-            <Drawer open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+            <Drawer
+              open={isCreateDialogOpen}
+              onOpenChange={setIsCreateDialogOpen}
+            >
               <DrawerTrigger asChild>
                 <Button>
                   <Plus className="mr-2 h-4 w-4" />
@@ -1592,18 +1603,44 @@ export default function Sales() {
               <DrawerContent className="h-[85vh]">
                 <DrawerHeader>
                   <DrawerTitle>{t("sales.create_new_invoice")}</DrawerTitle>
-                  <DrawerDescription>{t("sales.generate_invoice")}</DrawerDescription>
+                  <DrawerDescription>
+                    {t("sales.generate_invoice")}
+                  </DrawerDescription>
                 </DrawerHeader>
                 <div className="px-4 pb-4 overflow-y-auto space-y-6">
                   {/* Client Information */}
                   <div className="space-y-4">
                     <div className="flex flex-wrap items-center gap-2">
-                      <input type="radio" id="existing-client" name="client-type" checked={useExistingClient} onChange={() => setUseExistingClient(true)} className="h-4 w-4" />
-                      <Label htmlFor="existing-client">{t("sales.select_existing_client")}</Label>
-                      <input type="radio" id="new-client" name="client-type" checked={!useExistingClient} onChange={() => setUseExistingClient(false)} className="h-4 w-4 ml-2" />
-                      <Label htmlFor="new-client">{t("sales.enter_new_client")}</Label>
+                      <input
+                        type="radio"
+                        id="existing-client"
+                        name="client-type"
+                        checked={useExistingClient}
+                        onChange={() => setUseExistingClient(true)}
+                        className="h-4 w-4"
+                      />
+                      <Label htmlFor="existing-client">
+                        {t("sales.select_existing_client")}
+                      </Label>
+                      <input
+                        type="radio"
+                        id="new-client"
+                        name="client-type"
+                        checked={!useExistingClient}
+                        onChange={() => setUseExistingClient(false)}
+                        className="h-4 w-4 ml-2"
+                      />
+                      <Label htmlFor="new-client">
+                        {t("sales.enter_new_client")}
+                      </Label>
                       <label className="ml-2 flex items-center space-x-2 text-sm">
-                        <input id="for-borrow" type="checkbox" checked={forBorrow} onChange={(e) => setForBorrow(e.target.checked)} className="h-4 w-4" />
+                        <input
+                          id="for-borrow"
+                          type="checkbox"
+                          checked={forBorrow}
+                          onChange={(e) => setForBorrow(e.target.checked)}
+                          className="h-4 w-4"
+                        />
                         <span>{t("sales.for_borrow")}</span>
                       </label>
                     </div>
@@ -1611,28 +1648,43 @@ export default function Sales() {
                     {useExistingClient ? (
                       <div className="grid grid-cols-1 gap-4">
                         <div className="space-y-2">
-                          <Label htmlFor="client">{forBorrow ? `${t("sales.select_client")} *` : t("sales.select_client")}</Label>
-                          <Select value={newInvoice.clientId || ""} onValueChange={(value) => {
-                            const selectedClient = clients.find((c) => c.id === value);
-                            if (selectedClient) {
-                              setNewInvoice({
-                                ...newInvoice,
-                                clientId: selectedClient.id,
-                                clientName: selectedClient.name,
-                                clientEmail: selectedClient.email || "",
-                                clientType: selectedClient.type || "retail",
-                              });
-                            }
-                          }}>
+                          <Label htmlFor="client">
+                            {forBorrow
+                              ? `${t("sales.select_client")} *`
+                              : t("sales.select_client")}
+                          </Label>
+                          <Select
+                            value={newInvoice.clientId || ""}
+                            onValueChange={(value) => {
+                              const selectedClient = clients.find(
+                                (c) => c.id === value,
+                              );
+                              if (selectedClient) {
+                                setNewInvoice({
+                                  ...newInvoice,
+                                  clientId: selectedClient.id,
+                                  clientName: selectedClient.name,
+                                  clientEmail: selectedClient.email || "",
+                                  clientType: selectedClient.type || "retail",
+                                });
+                              }
+                            }}
+                          >
                             <SelectTrigger>
-                              <SelectValue placeholder={t("sales.choose_client")} />
+                              <SelectValue
+                                placeholder={t("sales.choose_client")}
+                              />
                             </SelectTrigger>
                             <SelectContent>
                               {clients.map((client) => (
                                 <SelectItem key={client.id} value={client.id}>
                                   <div className="flex flex-col">
-                                    <span className="font-medium">{client.name}</span>
-                                    <span className="text-sm text-muted-foreground">{client.email} • {client.type}</span>
+                                    <span className="font-medium">
+                                      {client.name}
+                                    </span>
+                                    <span className="text-sm text-muted-foreground">
+                                      {client.email} • {client.type}
+                                    </span>
                                   </div>
                                 </SelectItem>
                               ))}
@@ -1643,16 +1695,37 @@ export default function Sales() {
                     ) : (
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="space-y-2 sm:col-span-2">
-                          <Label htmlFor="clientName">{forBorrow ? `${t("sales.client_name")} *` : t("sales.client_name")}</Label>
-                          <Input id="clientName" placeholder={t("sales.enter_client_name") as string} value={newInvoice.clientName || ""} onChange={(e) => setNewInvoice({ ...newInvoice, clientName: e.target.value })} />
+                          <Label htmlFor="clientName">
+                            {forBorrow
+                              ? `${t("sales.client_name")} *`
+                              : t("sales.client_name")}
+                          </Label>
+                          <Input
+                            id="clientName"
+                            placeholder={t("sales.enter_client_name") as string}
+                            value={newInvoice.clientName || ""}
+                            onChange={(e) =>
+                              setNewInvoice({
+                                ...newInvoice,
+                                clientName: e.target.value,
+                              })
+                            }
+                          />
                         </div>
                       </div>
                     )}
 
                     {forBorrow && (
                       <div className="mt-3 w-full sm:w-1/3">
-                        <Label htmlFor="return-date">{t("sales.return_date")} *</Label>
-                        <Input id="return-date" type="date" value={borrowReturnDate} onChange={(e) => setBorrowReturnDate(e.target.value)} />
+                        <Label htmlFor="return-date">
+                          {t("sales.return_date")} *
+                        </Label>
+                        <Input
+                          id="return-date"
+                          type="date"
+                          value={borrowReturnDate}
+                          onChange={(e) => setBorrowReturnDate(e.target.value)}
+                        />
                       </div>
                     )}
                   </div>
@@ -1660,16 +1733,34 @@ export default function Sales() {
                   {/* Payment */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="paymentMethod">{t("sales.payment_method")}</Label>
-                      <Select value={newInvoice.paymentMethod} onValueChange={(value) => setNewInvoice({ ...newInvoice, paymentMethod: value as any })}>
+                      <Label htmlFor="paymentMethod">
+                        {t("sales.payment_method")}
+                      </Label>
+                      <Select
+                        value={newInvoice.paymentMethod}
+                        onValueChange={(value) =>
+                          setNewInvoice({
+                            ...newInvoice,
+                            paymentMethod: value as any,
+                          })
+                        }
+                      >
                         <SelectTrigger>
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="cash">{t("sales.cash")}</SelectItem>
-                          <SelectItem value="card">{t("sales.card")}</SelectItem>
-                          <SelectItem value="bank_transfer">{t("sales.bank_transfer")}</SelectItem>
-                          <SelectItem value="credit">{t("sales.credit")}</SelectItem>
+                          <SelectItem value="cash">
+                            {t("sales.cash")}
+                          </SelectItem>
+                          <SelectItem value="card">
+                            {t("sales.card")}
+                          </SelectItem>
+                          <SelectItem value="bank_transfer">
+                            {t("sales.bank_transfer")}
+                          </SelectItem>
+                          <SelectItem value="credit">
+                            {t("sales.credit")}
+                          </SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -1677,18 +1768,35 @@ export default function Sales() {
 
                   {/* Add Item Section */}
                   <div className="border rounded-lg p-4 space-y-4">
-                    <h3 className="font-semibold flex items-center gap-2"><Plus className="h-4 w-4" />{t("sales.add_invoice_item")}</h3>
+                    <h3 className="font-semibold flex items-center gap-2">
+                      <Plus className="h-4 w-4" />
+                      {t("sales.add_invoice_item")}
+                    </h3>
                     <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
                       <div className="space-y-2">
-                        <Label htmlFor="product">{t("sales.select_product")} *</Label>
-                        <Select value={currentItem.productId || ""} onValueChange={(value) => {
-                          const selectedProduct = products.find((p) => p.id === value);
-                          if (selectedProduct) {
-                            setCurrentItem({ ...currentItem, productId: selectedProduct.id, productName: selectedProduct.name, unitPrice: selectedProduct.unitPrice });
-                          }
-                        }}>
+                        <Label htmlFor="product">
+                          {t("sales.select_product")} *
+                        </Label>
+                        <Select
+                          value={currentItem.productId || ""}
+                          onValueChange={(value) => {
+                            const selectedProduct = products.find(
+                              (p) => p.id === value,
+                            );
+                            if (selectedProduct) {
+                              setCurrentItem({
+                                ...currentItem,
+                                productId: selectedProduct.id,
+                                productName: selectedProduct.name,
+                                unitPrice: selectedProduct.unitPrice,
+                              });
+                            }
+                          }}
+                        >
                           <SelectTrigger>
-                            <SelectValue placeholder={t("sales.choose_product")} />
+                            <SelectValue
+                              placeholder={t("sales.choose_product")}
+                            />
                           </SelectTrigger>
                           <SelectContent>
                             {products.map((product) => {
@@ -1696,8 +1804,18 @@ export default function Sales() {
                               return (
                                 <SelectItem key={product.id} value={product.id}>
                                   <div className="flex flex-col">
-                                    <span className="font-medium capitalize">{product.name}</span>
-                                    <span className="text-sm text-muted-foreground">${price.toFixed(2)}{product.category ? (<span className="ml-2"> • {product.category}</span>) : null}</span>
+                                    <span className="font-medium capitalize">
+                                      {product.name}
+                                    </span>
+                                    <span className="text-sm text-muted-foreground">
+                                      ${price.toFixed(2)}
+                                      {product.category ? (
+                                        <span className="ml-2">
+                                          {" "}
+                                          • {product.category}
+                                        </span>
+                                      ) : null}
+                                    </span>
                                   </div>
                                 </SelectItem>
                               );
@@ -1706,35 +1824,76 @@ export default function Sales() {
                         </Select>
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="quantity">{t("employees.quantity_label")}</Label>
-                        <Input id="quantity" type="number" min="1" value={currentItem.quantity} onChange={(e) => setCurrentItem({ ...currentItem, quantity: parseInt(e.target.value) || 1 })} />
+                        <Label htmlFor="quantity">
+                          {t("employees.quantity_label")}
+                        </Label>
+                        <Input
+                          id="quantity"
+                          type="number"
+                          min="1"
+                          value={currentItem.quantity}
+                          onChange={(e) =>
+                            setCurrentItem({
+                              ...currentItem,
+                              quantity: parseInt(e.target.value) || 1,
+                            })
+                          }
+                        />
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="discount">{t("sales.discount")}</Label>
-                        <Input id="discount" type="number" min="0" max="100" value={currentItem.discount} onChange={(e) => setCurrentItem({ ...currentItem, discount: parseFloat(e.target.value) || 0 })} />
+                        <Input
+                          id="discount"
+                          type="number"
+                          min="0"
+                          max="100"
+                          value={currentItem.discount}
+                          onChange={(e) =>
+                            setCurrentItem({
+                              ...currentItem,
+                              discount: parseFloat(e.target.value) || 0,
+                            })
+                          }
+                        />
                       </div>
                       <div className="space-y-2">
                         <Label>{t("common.total")}</Label>
-                        <div className="h-10 px-3 py-2 border rounded-md bg-muted flex items-center font-medium">${calculateItemTotal(currentItem).toFixed(2)}</div>
+                        <div className="h-10 px-3 py-2 border rounded-md bg-muted flex items-center font-medium">
+                          ${calculateItemTotal(currentItem).toFixed(2)}
+                        </div>
                       </div>
                     </div>
                     {currentItem.productId && (
                       <div className="text-sm text-muted-foreground bg-muted p-3 rounded-lg">
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                          <div><strong>{t("sales.product_name")}:</strong> {currentItem.productName}</div>
-                          <div><strong>{t("sales.unit_price")}:</strong> ${currentItem.unitPrice?.toFixed(2)}</div>
+                          <div>
+                            <strong>{t("sales.product_name")}:</strong>{" "}
+                            {currentItem.productName}
+                          </div>
+                          <div>
+                            <strong>{t("sales.unit_price")}:</strong> $
+                            {currentItem.unitPrice?.toFixed(2)}
+                          </div>
                         </div>
                       </div>
                     )}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      <Button onClick={addItemToInvoice}><Plus className="mr-2 h-4 w-4" />{t("sales.add_item")}</Button>
-                      <Button variant="outline" onClick={clearCurrentItem}><X className="mr-2 h-4 w-4" />{t("sales.cancel_item")}</Button>
+                      <Button onClick={addItemToInvoice}>
+                        <Plus className="mr-2 h-4 w-4" />
+                        {t("sales.add_item")}
+                      </Button>
+                      <Button variant="outline" onClick={clearCurrentItem}>
+                        <X className="mr-2 h-4 w-4" />
+                        {t("sales.cancel_item")}
+                      </Button>
                     </div>
                   </div>
 
                   {newInvoice.items && newInvoice.items.length > 0 && (
                     <div className="space-y-4">
-                      <h3 className="font-semibold">{t("sales.invoice_items")}</h3>
+                      <h3 className="font-semibold">
+                        {t("sales.invoice_items")}
+                      </h3>
                       <Table>
                         <TableHeader>
                           <TableRow>
@@ -1751,11 +1910,18 @@ export default function Sales() {
                             <TableRow key={item.id}>
                               <TableCell>{item.productName}</TableCell>
                               <TableCell>{item.quantity}</TableCell>
-                              <TableCell>${item.unitPrice.toFixed(2)}</TableCell>
+                              <TableCell>
+                                ${item.unitPrice.toFixed(2)}
+                              </TableCell>
                               <TableCell>{item.discount}%</TableCell>
                               <TableCell>${item.total.toFixed(2)}</TableCell>
                               <TableCell>
-                                <Button variant="outline" size="sm" onClick={() => removeItemFromInvoice(item.id)} className="text-red-600 hover:text-red-700">
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => removeItemFromInvoice(item.id)}
+                                  className="text-red-600 hover:text-red-700"
+                                >
                                   <Trash2 className="h-4 w-4" />
                                 </Button>
                               </TableCell>
@@ -1767,30 +1933,80 @@ export default function Sales() {
                       <div className="border rounded-lg p-4 space-y-4">
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                           <div className="space-y-2">
-                            <Label htmlFor="taxRate">{t("sales.tax_rate")}</Label>
-                            <Input id="taxRate" type="number" min="0" max="100" step="0.1" value={newInvoice.taxRate} onChange={(e) => {
-                              const taxRate = parseFloat(e.target.value) || 0;
-                              const { subtotal, taxAmount, total } = calculateInvoiceTotal(newInvoice.items!, taxRate, newInvoice.discountAmount);
-                              setNewInvoice({ ...newInvoice, taxRate, taxAmount, total });
-                            }} />
+                            <Label htmlFor="taxRate">
+                              {t("sales.tax_rate")}
+                            </Label>
+                            <Input
+                              id="taxRate"
+                              type="number"
+                              min="0"
+                              max="100"
+                              step="0.1"
+                              value={newInvoice.taxRate}
+                              onChange={(e) => {
+                                const taxRate = parseFloat(e.target.value) || 0;
+                                const { subtotal, taxAmount, total } =
+                                  calculateInvoiceTotal(
+                                    newInvoice.items!,
+                                    taxRate,
+                                    newInvoice.discountAmount,
+                                  );
+                                setNewInvoice({
+                                  ...newInvoice,
+                                  taxRate,
+                                  taxAmount,
+                                  total,
+                                });
+                              }}
+                            />
                           </div>
                           <div className="space-y-2">
-                            <Label htmlFor="discountAmount">{t("sales.additional_discount")}</Label>
-                            <Input id="discountAmount" type="number" min="0" step="0.01" value={newInvoice.discountAmount} onChange={(e) => {
-                              const discountAmount = parseFloat(e.target.value) || 0;
-                              const { subtotal, taxAmount, total } = calculateInvoiceTotal(newInvoice.items!, newInvoice.taxRate, discountAmount);
-                              setNewInvoice({ ...newInvoice, discountAmount, total });
-                            }} />
+                            <Label htmlFor="discountAmount">
+                              {t("sales.additional_discount")}
+                            </Label>
+                            <Input
+                              id="discountAmount"
+                              type="number"
+                              min="0"
+                              step="0.01"
+                              value={newInvoice.discountAmount}
+                              onChange={(e) => {
+                                const discountAmount =
+                                  parseFloat(e.target.value) || 0;
+                                const { subtotal, taxAmount, total } =
+                                  calculateInvoiceTotal(
+                                    newInvoice.items!,
+                                    newInvoice.taxRate,
+                                    discountAmount,
+                                  );
+                                setNewInvoice({
+                                  ...newInvoice,
+                                  discountAmount,
+                                  total,
+                                });
+                              }}
+                            />
                           </div>
                           <div className="space-y-2">
                             <Label>{t("sales.final_total")}</Label>
-                            <div className="h-10 px-3 py-2 border rounded-md bg-primary/10 flex items-center font-semibold">${(newInvoice.total || 0).toFixed(2)}</div>
+                            <div className="h-10 px-3 py-2 border rounded-md bg-primary/10 flex items-center font-semibold">
+                              ${(newInvoice.total || 0).toFixed(2)}
+                            </div>
                           </div>
                         </div>
                         <div className="text-sm text-muted-foreground space-y-1">
-                          <div>{t("sales.subtotal")}: ${(newInvoice.subtotal || 0).toFixed(2)}</div>
-                          <div>{t("sales.tax")} ({newInvoice.taxRate}%): ${(newInvoice.taxAmount || 0).toFixed(2)}</div>
-                          <div>{t("sales.discount")}: -${(newInvoice.discountAmount || 0).toFixed(2)}</div>
+                          <div>
+                            {t("sales.subtotal")}: $
+                            {(newInvoice.subtotal || 0).toFixed(2)}
+                          </div>
+                          <div>
+                            {t("sales.tax")} ({newInvoice.taxRate}%): $
+                            {(newInvoice.taxAmount || 0).toFixed(2)}
+                          </div>
+                          <div>
+                            {t("sales.discount")}: -$
+                            {(newInvoice.discountAmount || 0).toFixed(2)}
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -1798,22 +2014,48 @@ export default function Sales() {
 
                   <div className="space-y-2">
                     <Label htmlFor="notes">{t("common.notes")}</Label>
-                    <Textarea id="notes" placeholder={t("sales.additional_notes_placeholder") as string} value={newInvoice.notes} onChange={(e) => setNewInvoice({ ...newInvoice, notes: e.target.value })} rows={3} />
+                    <Textarea
+                      id="notes"
+                      placeholder={
+                        t("sales.additional_notes_placeholder") as string
+                      }
+                      value={newInvoice.notes}
+                      onChange={(e) =>
+                        setNewInvoice({ ...newInvoice, notes: e.target.value })
+                      }
+                      rows={3}
+                    />
                   </div>
                 </div>
                 <DrawerFooter className="border-t">
-                  <Button className="w-full" onClick={createInvoice} disabled={isSubmitting}>
+                  <Button
+                    className="w-full"
+                    onClick={createInvoice}
+                    disabled={isSubmitting}
+                  >
                     <Receipt className="mr-2 h-4 w-4" />
-                    {isSubmitting ? t("common.loading") : t("sales.create_invoice")}
+                    {isSubmitting
+                      ? t("common.loading")
+                      : t("sales.create_invoice")}
                   </Button>
-                  <Button variant="outline" onClick={() => { clearNewInvoice(); setIsCreateDialogOpen(false); }} className="w-full text-red-600 hover:text-red-700">
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      clearNewInvoice();
+                      setIsCreateDialogOpen(false);
+                    }}
+                    className="w-full text-red-600 hover:text-red-700"
+                  >
                     <X className="mr-2 h-4 w-4" /> {t("common.cancel")}
                   </Button>
                 </DrawerFooter>
               </DrawerContent>
             </Drawer>
           ) : (
-            <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+            <Dialog
+              open={isCreateDialogOpen}
+              onOpenChange={setIsCreateDialogOpen}
+            >
               <DialogTrigger asChild>
                 <Button>
                   <Plus className="mr-2 h-4 w-4" />
@@ -1823,19 +2065,45 @@ export default function Sales() {
               <DialogContent className="w-[100vw] sm:max-w-4xl max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
                   <DialogTitle>{t("sales.create_new_invoice")}</DialogTitle>
-                  <DialogDescription>{t("sales.generate_invoice")}</DialogDescription>
+                  <DialogDescription>
+                    {t("sales.generate_invoice")}
+                  </DialogDescription>
                 </DialogHeader>
                 {/* Reuse same content as drawer */}
                 <div className="space-y-6 px-1 sm:px-0">
                   {/* Client Information */}
                   <div className="space-y-4">
                     <div className="flex flex-wrap items-center gap-2">
-                      <input type="radio" id="existing-client" name="client-type" checked={useExistingClient} onChange={() => setUseExistingClient(true)} className="h-4 w-4" />
-                      <Label htmlFor="existing-client">{t("sales.select_existing_client")}</Label>
-                      <input type="radio" id="new-client" name="client-type" checked={!useExistingClient} onChange={() => setUseExistingClient(false)} className="h-4 w-4 ml-2" />
-                      <Label htmlFor="new-client">{t("sales.enter_new_client")}</Label>
+                      <input
+                        type="radio"
+                        id="existing-client"
+                        name="client-type"
+                        checked={useExistingClient}
+                        onChange={() => setUseExistingClient(true)}
+                        className="h-4 w-4"
+                      />
+                      <Label htmlFor="existing-client">
+                        {t("sales.select_existing_client")}
+                      </Label>
+                      <input
+                        type="radio"
+                        id="new-client"
+                        name="client-type"
+                        checked={!useExistingClient}
+                        onChange={() => setUseExistingClient(false)}
+                        className="h-4 w-4 ml-2"
+                      />
+                      <Label htmlFor="new-client">
+                        {t("sales.enter_new_client")}
+                      </Label>
                       <label className="ml-2 flex items-center space-x-2 text-sm">
-                        <input id="for-borrow" type="checkbox" checked={forBorrow} onChange={(e) => setForBorrow(e.target.checked)} className="h-4 w-4" />
+                        <input
+                          id="for-borrow"
+                          type="checkbox"
+                          checked={forBorrow}
+                          onChange={(e) => setForBorrow(e.target.checked)}
+                          className="h-4 w-4"
+                        />
                         <span>{t("sales.for_borrow")}</span>
                       </label>
                     </div>
@@ -1843,22 +2111,43 @@ export default function Sales() {
                     {useExistingClient ? (
                       <div className="grid grid-cols-1 gap-4">
                         <div className="space-y-2">
-                          <Label htmlFor="client">{forBorrow ? `${t("sales.select_client")} *` : t("sales.select_client")}</Label>
-                          <Select value={newInvoice.clientId || ""} onValueChange={(value) => {
-                            const selectedClient = clients.find((c) => c.id === value);
-                            if (selectedClient) {
-                              setNewInvoice({ ...newInvoice, clientId: selectedClient.id, clientName: selectedClient.name, clientEmail: selectedClient.email || "", clientType: selectedClient.type || "retail" });
-                            }
-                          }}>
+                          <Label htmlFor="client">
+                            {forBorrow
+                              ? `${t("sales.select_client")} *`
+                              : t("sales.select_client")}
+                          </Label>
+                          <Select
+                            value={newInvoice.clientId || ""}
+                            onValueChange={(value) => {
+                              const selectedClient = clients.find(
+                                (c) => c.id === value,
+                              );
+                              if (selectedClient) {
+                                setNewInvoice({
+                                  ...newInvoice,
+                                  clientId: selectedClient.id,
+                                  clientName: selectedClient.name,
+                                  clientEmail: selectedClient.email || "",
+                                  clientType: selectedClient.type || "retail",
+                                });
+                              }
+                            }}
+                          >
                             <SelectTrigger>
-                              <SelectValue placeholder={t("sales.choose_client")} />
+                              <SelectValue
+                                placeholder={t("sales.choose_client")}
+                              />
                             </SelectTrigger>
                             <SelectContent>
                               {clients.map((client) => (
                                 <SelectItem key={client.id} value={client.id}>
                                   <div className="flex flex-col">
-                                    <span className="font-medium">{client.name}</span>
-                                    <span className="text-sm text-muted-foreground">{client.email} • {client.type}</span>
+                                    <span className="font-medium">
+                                      {client.name}
+                                    </span>
+                                    <span className="text-sm text-muted-foreground">
+                                      {client.email} • {client.type}
+                                    </span>
                                   </div>
                                 </SelectItem>
                               ))}
@@ -1869,16 +2158,37 @@ export default function Sales() {
                     ) : (
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="space-y-2 sm:col-span-2">
-                          <Label htmlFor="clientName">{forBorrow ? `${t("sales.client_name")} *` : t("sales.client_name")}</Label>
-                          <Input id="clientName" placeholder={t("sales.enter_client_name") as string} value={newInvoice.clientName || ""} onChange={(e) => setNewInvoice({ ...newInvoice, clientName: e.target.value })} />
+                          <Label htmlFor="clientName">
+                            {forBorrow
+                              ? `${t("sales.client_name")} *`
+                              : t("sales.client_name")}
+                          </Label>
+                          <Input
+                            id="clientName"
+                            placeholder={t("sales.enter_client_name") as string}
+                            value={newInvoice.clientName || ""}
+                            onChange={(e) =>
+                              setNewInvoice({
+                                ...newInvoice,
+                                clientName: e.target.value,
+                              })
+                            }
+                          />
                         </div>
                       </div>
                     )}
 
                     {forBorrow && (
                       <div className="mt-3 w-full sm:w-1/3">
-                        <Label htmlFor="return-date">{t("sales.return_date")} *</Label>
-                        <Input id="return-date" type="date" value={borrowReturnDate} onChange={(e) => setBorrowReturnDate(e.target.value)} />
+                        <Label htmlFor="return-date">
+                          {t("sales.return_date")} *
+                        </Label>
+                        <Input
+                          id="return-date"
+                          type="date"
+                          value={borrowReturnDate}
+                          onChange={(e) => setBorrowReturnDate(e.target.value)}
+                        />
                       </div>
                     )}
                   </div>
@@ -1886,16 +2196,34 @@ export default function Sales() {
                   {/* Payment */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="paymentMethod">{t("sales.payment_method")}</Label>
-                      <Select value={newInvoice.paymentMethod} onValueChange={(value) => setNewInvoice({ ...newInvoice, paymentMethod: value as any })}>
+                      <Label htmlFor="paymentMethod">
+                        {t("sales.payment_method")}
+                      </Label>
+                      <Select
+                        value={newInvoice.paymentMethod}
+                        onValueChange={(value) =>
+                          setNewInvoice({
+                            ...newInvoice,
+                            paymentMethod: value as any,
+                          })
+                        }
+                      >
                         <SelectTrigger>
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="cash">{t("sales.cash")}</SelectItem>
-                          <SelectItem value="card">{t("sales.card")}</SelectItem>
-                          <SelectItem value="bank_transfer">{t("sales.bank_transfer")}</SelectItem>
-                          <SelectItem value="credit">{t("sales.credit")}</SelectItem>
+                          <SelectItem value="cash">
+                            {t("sales.cash")}
+                          </SelectItem>
+                          <SelectItem value="card">
+                            {t("sales.card")}
+                          </SelectItem>
+                          <SelectItem value="bank_transfer">
+                            {t("sales.bank_transfer")}
+                          </SelectItem>
+                          <SelectItem value="credit">
+                            {t("sales.credit")}
+                          </SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -1903,18 +2231,35 @@ export default function Sales() {
 
                   {/* Add Item Section */}
                   <div className="border rounded-lg p-4 space-y-4">
-                    <h3 className="font-semibold flex items-center gap-2"><Plus className="h-4 w-4" />{t("sales.add_invoice_item")}</h3>
+                    <h3 className="font-semibold flex items-center gap-2">
+                      <Plus className="h-4 w-4" />
+                      {t("sales.add_invoice_item")}
+                    </h3>
                     <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
                       <div className="space-y-2">
-                        <Label htmlFor="product">{t("sales.select_product")} *</Label>
-                        <Select value={currentItem.productId || ""} onValueChange={(value) => {
-                          const selectedProduct = products.find((p) => p.id === value);
-                          if (selectedProduct) {
-                            setCurrentItem({ ...currentItem, productId: selectedProduct.id, productName: selectedProduct.name, unitPrice: selectedProduct.unitPrice });
-                          }
-                        }}>
+                        <Label htmlFor="product">
+                          {t("sales.select_product")} *
+                        </Label>
+                        <Select
+                          value={currentItem.productId || ""}
+                          onValueChange={(value) => {
+                            const selectedProduct = products.find(
+                              (p) => p.id === value,
+                            );
+                            if (selectedProduct) {
+                              setCurrentItem({
+                                ...currentItem,
+                                productId: selectedProduct.id,
+                                productName: selectedProduct.name,
+                                unitPrice: selectedProduct.unitPrice,
+                              });
+                            }
+                          }}
+                        >
                           <SelectTrigger>
-                            <SelectValue placeholder={t("sales.choose_product")} />
+                            <SelectValue
+                              placeholder={t("sales.choose_product")}
+                            />
                           </SelectTrigger>
                           <SelectContent>
                             {products.map((product) => {
@@ -1922,8 +2267,18 @@ export default function Sales() {
                               return (
                                 <SelectItem key={product.id} value={product.id}>
                                   <div className="flex flex-col">
-                                    <span className="font-medium capitalize">{product.name}</span>
-                                    <span className="text-sm text-muted-foreground">${price.toFixed(2)}{product.category ? (<span className="ml-2"> • {product.category}</span>) : null}</span>
+                                    <span className="font-medium capitalize">
+                                      {product.name}
+                                    </span>
+                                    <span className="text-sm text-muted-foreground">
+                                      ${price.toFixed(2)}
+                                      {product.category ? (
+                                        <span className="ml-2">
+                                          {" "}
+                                          • {product.category}
+                                        </span>
+                                      ) : null}
+                                    </span>
                                   </div>
                                 </SelectItem>
                               );
@@ -1932,35 +2287,76 @@ export default function Sales() {
                         </Select>
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="quantity">{t("employees.quantity_label")}</Label>
-                        <Input id="quantity" type="number" min="1" value={currentItem.quantity} onChange={(e) => setCurrentItem({ ...currentItem, quantity: parseInt(e.target.value) || 1 })} />
+                        <Label htmlFor="quantity">
+                          {t("employees.quantity_label")}
+                        </Label>
+                        <Input
+                          id="quantity"
+                          type="number"
+                          min="1"
+                          value={currentItem.quantity}
+                          onChange={(e) =>
+                            setCurrentItem({
+                              ...currentItem,
+                              quantity: parseInt(e.target.value) || 1,
+                            })
+                          }
+                        />
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="discount">{t("sales.discount")}</Label>
-                        <Input id="discount" type="number" min="0" max="100" value={currentItem.discount} onChange={(e) => setCurrentItem({ ...currentItem, discount: parseFloat(e.target.value) || 0 })} />
+                        <Input
+                          id="discount"
+                          type="number"
+                          min="0"
+                          max="100"
+                          value={currentItem.discount}
+                          onChange={(e) =>
+                            setCurrentItem({
+                              ...currentItem,
+                              discount: parseFloat(e.target.value) || 0,
+                            })
+                          }
+                        />
                       </div>
                       <div className="space-y-2">
                         <Label>{t("common.total")}</Label>
-                        <div className="h-10 px-3 py-2 border rounded-md bg-muted flex items-center font-medium">${calculateItemTotal(currentItem).toFixed(2)}</div>
+                        <div className="h-10 px-3 py-2 border rounded-md bg-muted flex items-center font-medium">
+                          ${calculateItemTotal(currentItem).toFixed(2)}
+                        </div>
                       </div>
                     </div>
                     {currentItem.productId && (
                       <div className="text-sm text-muted-foreground bg-muted p-3 rounded-lg">
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                          <div><strong>{t("sales.product_name")}:</strong> {currentItem.productName}</div>
-                          <div><strong>{t("sales.unit_price")}:</strong> ${currentItem.unitPrice?.toFixed(2)}</div>
+                          <div>
+                            <strong>{t("sales.product_name")}:</strong>{" "}
+                            {currentItem.productName}
+                          </div>
+                          <div>
+                            <strong>{t("sales.unit_price")}:</strong> $
+                            {currentItem.unitPrice?.toFixed(2)}
+                          </div>
                         </div>
                       </div>
                     )}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      <Button onClick={addItemToInvoice}><Plus className="mr-2 h-4 w-4" />{t("sales.add_item")}</Button>
-                      <Button variant="outline" onClick={clearCurrentItem}><X className="mr-2 h-4 w-4" />{t("sales.cancel_item")}</Button>
+                      <Button onClick={addItemToInvoice}>
+                        <Plus className="mr-2 h-4 w-4" />
+                        {t("sales.add_item")}
+                      </Button>
+                      <Button variant="outline" onClick={clearCurrentItem}>
+                        <X className="mr-2 h-4 w-4" />
+                        {t("sales.cancel_item")}
+                      </Button>
                     </div>
                   </div>
 
                   {newInvoice.items && newInvoice.items.length > 0 && (
                     <div className="space-y-4">
-                      <h3 className="font-semibold">{t("sales.invoice_items")}</h3>
+                      <h3 className="font-semibold">
+                        {t("sales.invoice_items")}
+                      </h3>
                       <Table>
                         <TableHeader>
                           <TableRow>
@@ -1977,11 +2373,18 @@ export default function Sales() {
                             <TableRow key={item.id}>
                               <TableCell>{item.productName}</TableCell>
                               <TableCell>{item.quantity}</TableCell>
-                              <TableCell>${item.unitPrice.toFixed(2)}</TableCell>
+                              <TableCell>
+                                ${item.unitPrice.toFixed(2)}
+                              </TableCell>
                               <TableCell>{item.discount}%</TableCell>
                               <TableCell>${item.total.toFixed(2)}</TableCell>
                               <TableCell>
-                                <Button variant="outline" size="sm" onClick={() => removeItemFromInvoice(item.id)} className="text-red-600 hover:text-red-700">
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => removeItemFromInvoice(item.id)}
+                                  className="text-red-600 hover:text-red-700"
+                                >
                                   <Trash2 className="h-4 w-4" />
                                 </Button>
                               </TableCell>
@@ -1993,30 +2396,80 @@ export default function Sales() {
                       <div className="border rounded-lg p-4 space-y-4">
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                           <div className="space-y-2">
-                            <Label htmlFor="taxRate">{t("sales.tax_rate")}</Label>
-                            <Input id="taxRate" type="number" min="0" max="100" step="0.1" value={newInvoice.taxRate} onChange={(e) => {
-                              const taxRate = parseFloat(e.target.value) || 0;
-                              const { subtotal, taxAmount, total } = calculateInvoiceTotal(newInvoice.items!, taxRate, newInvoice.discountAmount);
-                              setNewInvoice({ ...newInvoice, taxRate, taxAmount, total });
-                            }} />
+                            <Label htmlFor="taxRate">
+                              {t("sales.tax_rate")}
+                            </Label>
+                            <Input
+                              id="taxRate"
+                              type="number"
+                              min="0"
+                              max="100"
+                              step="0.1"
+                              value={newInvoice.taxRate}
+                              onChange={(e) => {
+                                const taxRate = parseFloat(e.target.value) || 0;
+                                const { subtotal, taxAmount, total } =
+                                  calculateInvoiceTotal(
+                                    newInvoice.items!,
+                                    taxRate,
+                                    newInvoice.discountAmount,
+                                  );
+                                setNewInvoice({
+                                  ...newInvoice,
+                                  taxRate,
+                                  taxAmount,
+                                  total,
+                                });
+                              }}
+                            />
                           </div>
                           <div className="space-y-2">
-                            <Label htmlFor="discountAmount">{t("sales.additional_discount")}</Label>
-                            <Input id="discountAmount" type="number" min="0" step="0.01" value={newInvoice.discountAmount} onChange={(e) => {
-                              const discountAmount = parseFloat(e.target.value) || 0;
-                              const { subtotal, taxAmount, total } = calculateInvoiceTotal(newInvoice.items!, newInvoice.taxRate, discountAmount);
-                              setNewInvoice({ ...newInvoice, discountAmount, total });
-                            }} />
+                            <Label htmlFor="discountAmount">
+                              {t("sales.additional_discount")}
+                            </Label>
+                            <Input
+                              id="discountAmount"
+                              type="number"
+                              min="0"
+                              step="0.01"
+                              value={newInvoice.discountAmount}
+                              onChange={(e) => {
+                                const discountAmount =
+                                  parseFloat(e.target.value) || 0;
+                                const { subtotal, taxAmount, total } =
+                                  calculateInvoiceTotal(
+                                    newInvoice.items!,
+                                    newInvoice.taxRate,
+                                    discountAmount,
+                                  );
+                                setNewInvoice({
+                                  ...newInvoice,
+                                  discountAmount,
+                                  total,
+                                });
+                              }}
+                            />
                           </div>
                           <div className="space-y-2">
                             <Label>{t("sales.final_total")}</Label>
-                            <div className="h-10 px-3 py-2 border rounded-md bg-primary/10 flex items-center font-semibold">${(newInvoice.total || 0).toFixed(2)}</div>
+                            <div className="h-10 px-3 py-2 border rounded-md bg-primary/10 flex items-center font-semibold">
+                              ${(newInvoice.total || 0).toFixed(2)}
+                            </div>
                           </div>
                         </div>
                         <div className="text-sm text-muted-foreground space-y-1">
-                          <div>{t("sales.subtotal")}: ${(newInvoice.subtotal || 0).toFixed(2)}</div>
-                          <div>{t("sales.tax")} ({newInvoice.taxRate}%): ${(newInvoice.taxAmount || 0).toFixed(2)}</div>
-                          <div>{t("sales.discount")}: -${(newInvoice.discountAmount || 0).toFixed(2)}</div>
+                          <div>
+                            {t("sales.subtotal")}: $
+                            {(newInvoice.subtotal || 0).toFixed(2)}
+                          </div>
+                          <div>
+                            {t("sales.tax")} ({newInvoice.taxRate}%): $
+                            {(newInvoice.taxAmount || 0).toFixed(2)}
+                          </div>
+                          <div>
+                            {t("sales.discount")}: -$
+                            {(newInvoice.discountAmount || 0).toFixed(2)}
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -2024,15 +2477,38 @@ export default function Sales() {
 
                   <div className="space-y-2">
                     <Label htmlFor="notes">{t("common.notes")}</Label>
-                    <Textarea id="notes" placeholder={t("sales.additional_notes_placeholder") as string} value={newInvoice.notes} onChange={(e) => setNewInvoice({ ...newInvoice, notes: e.target.value })} rows={3} />
+                    <Textarea
+                      id="notes"
+                      placeholder={
+                        t("sales.additional_notes_placeholder") as string
+                      }
+                      value={newInvoice.notes}
+                      onChange={(e) =>
+                        setNewInvoice({ ...newInvoice, notes: e.target.value })
+                      }
+                      rows={3}
+                    />
                   </div>
 
                   <div className="flex gap-2">
-                    <Button className="flex-1" onClick={createInvoice} disabled={isSubmitting}>
+                    <Button
+                      className="flex-1"
+                      onClick={createInvoice}
+                      disabled={isSubmitting}
+                    >
                       <Receipt className="mr-2 h-4 w-4" />
-                      {isSubmitting ? t("common.loading") : t("sales.create_invoice")}
+                      {isSubmitting
+                        ? t("common.loading")
+                        : t("sales.create_invoice")}
                     </Button>
-                    <Button variant="outline" onClick={() => { clearNewInvoice(); setIsCreateDialogOpen(false); }} className="text-red-600 hover:text-red-700">
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        clearNewInvoice();
+                        setIsCreateDialogOpen(false);
+                      }}
+                      className="text-red-600 hover:text-red-700"
+                    >
                       <X className="mr-2 h-4 w-4" /> {t("common.cancel")}
                     </Button>
                   </div>
