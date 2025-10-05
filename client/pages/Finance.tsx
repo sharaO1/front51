@@ -1351,7 +1351,7 @@ export default function Finance() {
             <div>
               <h1>${t("finance.report_title", { defaultValue: "FINANCIAL REPORT" })}</h1>
               <div class="subtitle">${t("finance.generated_at", { defaultValue: "Generated" })}: ${new Date(data.generatedAt).toLocaleString(i18n.language || "en")}</div>
-              ${data.periodLabel ? `<div class=\"subtitle\">${t("common.period", { defaultValue: "Period" })}: ${data.periodLabel}</div>` : ""}
+              ${data.periodLabel ? `<div class="subtitle">${t("common.period", { defaultValue: "Period" })}: ${data.periodLabel}</div>` : ""}
             </div>
           </div>
           <div class="grid">
@@ -1370,7 +1370,7 @@ export default function Finance() {
               <h3>${t("finance.recent_transactions", { defaultValue: "RECENT TRANSACTIONS" })}</h3>
               <table>
                 <thead><tr><th>${t("common.date")}</th><th>${t("finance.transaction_type")}</th><th>${t("warehouse.category")}</th><th>${t("common.description")}</th><th class="right">${t("common.amount")}</th></tr></thead>
-                <tbody>${txRows || `<tr><td colspan=\"5\" class=\"muted\">${t("clients.no_products", { defaultValue: "No data" })}</td></tr>`}</tbody>
+                <tbody>${txRows || `<tr><td colspan="5" class="muted">${t("clients.no_products", { defaultValue: "No data" })}</td></tr>`}</tbody>
               </table>
             </div>
           </div>
