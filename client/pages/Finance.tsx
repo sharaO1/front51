@@ -64,8 +64,6 @@ import {
   Handshake,
   Clock,
   CheckCircle2,
-  CheckCircle2,
-  Plus,
 } from "lucide-react";
 import {
   AlertDialog,
