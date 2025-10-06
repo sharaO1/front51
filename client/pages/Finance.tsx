@@ -353,7 +353,9 @@ export default function Finance() {
         if (accessToken) headers["Authorization"] = `Bearer ${accessToken}`;
         let json: any = null;
         try {
-          json = await apiFetch<any>(`/transactions/analytics`, { headers }).catch(() => null);
+          json = await apiFetch<any>(`/transactions/analytics`, {
+            headers,
+          }).catch(() => null);
         } catch (err) {
           throw new Error(String(err) || "Failed to load analytics");
         }
@@ -435,7 +437,9 @@ export default function Finance() {
         if (accessToken) headers["Authorization"] = `Bearer ${accessToken}`;
         let json: any = null;
         try {
-          json = await apiFetch<any>(`/transactions`, { headers }).catch(() => null);
+          json = await apiFetch<any>(`/transactions`, { headers }).catch(
+            () => null,
+          );
         } catch (err) {
           // keep mock data on failure
           console.warn("Failed to fetch transactions:", err);
@@ -469,7 +473,10 @@ export default function Finance() {
         await Promise.all(
           userIds.map(async (id: string) => {
             try {
-              const uJson = await apiFetch<any>(`/users/${encodeURIComponent(id)}`, { headers }).catch(() => null);
+              const uJson = await apiFetch<any>(
+                `/users/${encodeURIComponent(id)}`,
+                { headers },
+              ).catch(() => null);
               if (uJson?.ok && uJson.result) {
                 const u = uJson.result;
                 usersMapLocal[id] = (u.name ||
@@ -807,7 +814,9 @@ export default function Finance() {
 
     (async () => {
       try {
-        const data = await apiFetch<any>(`/borrow`, { headers }).catch(() => null as any);
+        const data = await apiFetch<any>(`/borrow`, { headers }).catch(
+          () => null as any,
+        );
         const list: any[] = (data && (data.result || data.data || data)) || [];
         if (mounted && Array.isArray(list)) setLoans(list.map(normalizeBorrow));
       } catch (err) {
@@ -824,7 +833,6 @@ export default function Finance() {
   const [selectedLoan, setSelectedLoan] = useState<LoanRecord | null>(null);
   const [isEditLoanOpen, setIsEditLoanOpen] = useState(false);
 
-  
   const [newLoan, setNewLoan] = useState<Partial<LoanRecord>>({
     type: "borrow",
     amount: 0,
@@ -2167,7 +2175,8 @@ ${data.transactions
                                 <DropdownMenuItem
                                   onClick={() =>
                                     setTimeout(
-                                      () => openEditTransactionDialog(transaction),
+                                      () =>
+                                        openEditTransactionDialog(transaction),
                                       10,
                                     )
                                   }
@@ -2453,7 +2462,9 @@ ${data.transactions
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
                               <DropdownMenuItem
-                                onClick={() => setTimeout(() => openEditLoanDialog(loan), 10)}
+                                onClick={() =>
+                                  setTimeout(() => openEditLoanDialog(loan), 10)
+                                }
                                 className="cursor-pointer"
                               >
                                 <Edit className="h-4 w-4 mr-2" />
@@ -2461,7 +2472,12 @@ ${data.transactions
                               </DropdownMenuItem>
                               {loan.status !== "returned" && (
                                 <DropdownMenuItem
-                                  onClick={() => setTimeout(() => markLoanReturned(loan.id), 10)}
+                                  onClick={() =>
+                                    setTimeout(
+                                      () => markLoanReturned(loan.id),
+                                      10,
+                                    )
+                                  }
                                   className="cursor-pointer"
                                 >
                                   <CheckCircle2 className="h-4 w-4 mr-2" />
@@ -2471,7 +2487,9 @@ ${data.transactions
                                 </DropdownMenuItem>
                               )}
                               <DropdownMenuItem
-                                onClick={() => setTimeout(() => deleteLoan(loan.id), 10)}
+                                onClick={() =>
+                                  setTimeout(() => deleteLoan(loan.id), 10)
+                                }
                                 className="cursor-pointer"
                               >
                                 <Trash2 className="h-4 w-4 mr-2" />
@@ -2801,7 +2819,9 @@ ${data.transactions
       >
         <DialogContent className="max-w-md p-4 sm:p-6">
           <DialogHeader>
-            <DialogTitle className="text-base sm:text-lg">{t("finance.edit_transaction")}</DialogTitle>
+            <DialogTitle className="text-base sm:text-lg">
+              {t("finance.edit_transaction")}
+            </DialogTitle>
             <DialogDescription className="text-xs sm:text-sm">
               {t("finance.edit_transaction_note")}
             </DialogDescription>
@@ -2809,17 +2829,30 @@ ${data.transactions
           <div className="space-y-4">
             <div className="rounded-lg border bg-card p-3 sm:p-4">
               <div className="flex items-center justify-between">
-                <div className="text-sm text-muted-foreground">{t("warehouse.category")}</div>
-                <Badge variant={newTransaction.type === "income" ? "success" : "destructive"}>
-                  {newTransaction.type === "income" ? t("finance.income") : t("finance.expense")}
+                <div className="text-sm text-muted-foreground">
+                  {t("warehouse.category")}
+                </div>
+                <Badge
+                  variant={
+                    newTransaction.type === "income" ? "success" : "destructive"
+                  }
+                >
+                  {newTransaction.type === "income"
+                    ? t("finance.income")
+                    : t("finance.expense")}
                 </Badge>
               </div>
               <div className="mt-1 font-medium truncate">
-                {newTransaction.category || t("common.unnamed", { defaultValue: "Unnamed" })}
+                {newTransaction.category ||
+                  t("common.unnamed", { defaultValue: "Unnamed" })}
               </div>
               <div className="mt-2 flex items-end justify-between">
-                <div className="text-xs text-muted-foreground">{t("common.date")}</div>
-                <div className="text-lg font-bold">${Number(newTransaction.amount || 0).toLocaleString()}</div>
+                <div className="text-xs text-muted-foreground">
+                  {t("common.date")}
+                </div>
+                <div className="text-lg font-bold">
+                  ${Number(newTransaction.amount || 0).toLocaleString()}
+                </div>
               </div>
             </div>
             <div className="space-y-2">
@@ -2855,7 +2888,11 @@ ${data.transactions
                   })
                 }
               />
-              <p className="text-[11px] text-muted-foreground">{t("finance.category_help", { defaultValue: "e.g. Marketing, Utilities" })}</p>
+              <p className="text-[11px] text-muted-foreground">
+                {t("finance.category_help", {
+                  defaultValue: "e.g. Marketing, Utilities",
+                })}
+              </p>
             </div>
             <div className="space-y-1">
               <Label htmlFor="edit-description">
@@ -2863,7 +2900,9 @@ ${data.transactions
               </Label>
               <Input
                 id="edit-description"
-                placeholder={t("finance.description_placeholder", { defaultValue: "What is this for?" })}
+                placeholder={t("finance.description_placeholder", {
+                  defaultValue: "What is this for?",
+                })}
                 value={newTransaction.description}
                 onChange={(e) =>
                   setNewTransaction({
@@ -2872,7 +2911,11 @@ ${data.transactions
                   })
                 }
               />
-              <p className="text-[11px] text-muted-foreground">{t("finance.description_help", { defaultValue: "Short note to remember later" })}</p>
+              <p className="text-[11px] text-muted-foreground">
+                {t("finance.description_help", {
+                  defaultValue: "Short note to remember later",
+                })}
+              </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
@@ -3150,14 +3193,18 @@ ${data.transactions
       >
         <DialogContent className="max-w-md p-4 sm:p-6">
           <DialogHeader>
-            <DialogTitle className="text-base sm:text-lg">{t("finance.transaction_details")}</DialogTitle>
+            <DialogTitle className="text-base sm:text-lg">
+              {t("finance.transaction_details")}
+            </DialogTitle>
           </DialogHeader>
           {selectedTransaction && (
             <>
               <div className="rounded-lg border p-4 bg-muted">
                 <div className="flex items-center justify-between">
                   <div className="text-xs uppercase tracking-wide text-muted-foreground">
-                    {selectedTransaction.type === "income" ? t("finance.income") : t("finance.expense")}
+                    {selectedTransaction.type === "income"
+                      ? t("finance.income")
+                      : t("finance.expense")}
                   </div>
                   {getStatusBadge(selectedTransaction.status)}
                 </div>
@@ -3171,27 +3218,37 @@ ${data.transactions
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="rounded-lg border p-3">
-                  <div className="text-xs text-muted-foreground">{t("sales.payment_method")}</div>
+                  <div className="text-xs text-muted-foreground">
+                    {t("sales.payment_method")}
+                  </div>
                   <div className="mt-1 capitalize">
                     {selectedTransaction.paymentMethod.replace("_", " ")}
                   </div>
                 </div>
                 <div className="rounded-lg border p-3">
-                  <div className="text-xs text-muted-foreground">{t("finance.performed_by")}</div>
+                  <div className="text-xs text-muted-foreground">
+                    {t("finance.performed_by")}
+                  </div>
                   <div className="mt-1">
-                    {getPerformedByDisplay(selectedTransaction.performedBy) || "-"}
+                    {getPerformedByDisplay(selectedTransaction.performedBy) ||
+                      "-"}
                   </div>
                 </div>
-                {selectedTransaction.tags && selectedTransaction.tags.length > 0 && (
-                  <div className="rounded-lg border p-3 sm:col-span-2">
-                    <div className="text-xs text-muted-foreground">{t("common.tags", { defaultValue: "Tags" })}</div>
-                    <div className="mt-1 flex flex-wrap gap-2">
-                      {selectedTransaction.tags.map((tag, i) => (
-                        <Badge key={i} variant="secondary">{tag}</Badge>
-                      ))}
+                {selectedTransaction.tags &&
+                  selectedTransaction.tags.length > 0 && (
+                    <div className="rounded-lg border p-3 sm:col-span-2">
+                      <div className="text-xs text-muted-foreground">
+                        {t("common.tags", { defaultValue: "Tags" })}
+                      </div>
+                      <div className="mt-1 flex flex-wrap gap-2">
+                        {selectedTransaction.tags.map((tag, i) => (
+                          <Badge key={i} variant="secondary">
+                            {tag}
+                          </Badge>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
               </div>
             </>
           )}

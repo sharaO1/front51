@@ -1,4 +1,5 @@
-export const API_BASE = import.meta.env.VITE_BACKEND_URL ?? "http://localhost:5002/api";
+export const API_BASE =
+  import.meta.env.VITE_BACKEND_URL ?? "http://localhost:5002/api";
 
 export function joinApi(path: string) {
   if (!path) return API_BASE;
@@ -10,7 +11,9 @@ function shouldSkipAuth(url: string) {
   try {
     const u = new URL(
       url,
-      typeof window !== "undefined" ? window.location.origin : "http://localhost",
+      typeof window !== "undefined"
+        ? window.location.origin
+        : "http://localhost",
     );
     const p = u.pathname;
     return (
