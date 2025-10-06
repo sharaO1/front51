@@ -2956,7 +2956,16 @@ export default function Sales() {
         </CardHeader>
         <CardContent>
           <div className="hidden md:block">
-            <Table className="min-w-[1100px] [&_th]:px-6 [&_td]:px-6 lg:[&_th]:px-8 lg:[&_td]:px-8 whitespace-nowrap">
+            <Table className="w-full table-fixed [&_th]:px-4 [&_td]:px-4 lg:[&_th]:px-6 lg:[&_td]:px-6 whitespace-nowrap">
+              <colgroup>
+                <col className="w-[13%]" />
+                <col className="w-[18%]" />
+                <col className="w-[18%]" />
+                <col className="w-[16%]" />
+                <col className="w-[12%]" />
+                <col className="w-[11%]" />
+                <col className="w-[12%]" />
+              </colgroup>
               <TableHeader>
                 <TableRow>
                   <TableHead>{t("sales.invoice_number")}</TableHead>
@@ -2965,7 +2974,7 @@ export default function Sales() {
                   <TableHead>{t("common.date")}</TableHead>
                   <TableHead>{t("common.amount")}</TableHead>
                   <TableHead>{t("common.status")}</TableHead>
-                  <TableHead>{t("common.actions")}</TableHead>
+                  <TableHead className="text-right">{t("common.actions")}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -3033,8 +3042,8 @@ export default function Sales() {
                       </div>
                     </TableCell>
                     <TableCell>{getStatusBadge(invoice.status)}</TableCell>
-                    <TableCell>
-                      <div className="flex gap-1">
+                    <TableCell className="text-right">
+                      <div className="flex gap-1 justify-end">
                         <Button
                           variant="outline"
                           size="sm"
