@@ -351,16 +351,15 @@ export default function Finance() {
           "Content-Type": "application/json",
         };
         if (accessToken) headers["Authorization"] = `Bearer ${accessToken}`;
-        const res = await fetch(`${API_BASE}/transactions/analytics`, {
-          headers,
-        });
-        const json = await res.json().catch(() => null as any);
+        let json: any = null;
+        try {
+          json = await apiFetch<any>(`/transactions/analytics`, { headers }).catch(() => null);
+        } catch (err) {
+          throw new Error(String(err) || "Failed to load analytics");
+        }
         const list: any[] = (json && (json.result || json.data || [])) || [];
-        if (!res.ok || !json?.ok || !Array.isArray(list)) {
-          throw new Error(
-            (json && (json.error || json.message)) ||
-              "Failed to load analytics",
-          );
+        if (!Array.isArray(list)) {
+          throw new Error("Failed to load analytics");
         }
         const toMonthLabel = (m: any) => {
           const n = Number(m);
@@ -404,9 +403,13 @@ export default function Finance() {
           "Content-Type": "application/json",
         };
         if (accessToken) headers["Authorization"] = `Bearer ${accessToken}`;
-        const res = await fetch(`${API_BASE}/clients`, { headers });
-        const json = await res.json().catch(() => null as any);
-        if (!res.ok || !json?.ok || !Array.isArray(json.result)) return;
+        let json: any = null;
+        try {
+          json = await apiFetch<any>(`/clients`, { headers }).catch(() => null);
+        } catch (err) {
+          // ignore clients load errors
+        }
+        if (!json?.ok || !Array.isArray(json.result)) return;
         const map: Record<string, string> = {};
         json.result.forEach((c: any) => {
           map[c.id] =
@@ -430,9 +433,15 @@ export default function Finance() {
           "Content-Type": "application/json",
         };
         if (accessToken) headers["Authorization"] = `Bearer ${accessToken}`;
-        const res = await fetch(`${API_BASE}/transactions`, { headers });
-        const json = await res.json().catch(() => null as any);
-        if (!res.ok || !json?.ok || !Array.isArray(json.result)) {
+        let json: any = null;
+        try {
+          json = await apiFetch<any>(`/transactions`, { headers }).catch(() => null);
+        } catch (err) {
+          // keep mock data on failure
+          console.warn("Failed to fetch transactions:", err);
+          return;
+        }
+        if (!json?.ok || !Array.isArray(json.result)) {
           // keep mock data on failure
           return;
         }
@@ -460,12 +469,8 @@ export default function Finance() {
         await Promise.all(
           userIds.map(async (id: string) => {
             try {
-              const uRes = await fetch(
-                `${API_BASE}/users/${encodeURIComponent(id)}`,
-                { headers },
-              );
-              const uJson = await uRes.json().catch(() => null as any);
-              if (uRes.ok && uJson?.ok && uJson.result) {
+              const uJson = await apiFetch<any>(`/users/${encodeURIComponent(id)}`, { headers }).catch(() => null);
+              if (uJson?.ok && uJson.result) {
                 const u = uJson.result;
                 usersMapLocal[id] = (u.name ||
                   u.userName ||
