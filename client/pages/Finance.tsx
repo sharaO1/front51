@@ -38,7 +38,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import DetailCard from "@/components/DetailCard";
-import { API_BASE, getErrorMessageFromResponse } from "@/lib/api";
+import { API_BASE, getErrorMessageFromResponse, apiFetch } from "@/lib/api";
 import { useAuthStore } from "@/stores/authStore";
 import {
   Plus,
