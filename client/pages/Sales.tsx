@@ -2966,7 +2966,9 @@ export default function Sales() {
                     <TableHead>{t("common.date")}</TableHead>
                     <TableHead>{t("common.amount")}</TableHead>
                     <TableHead>{t("common.status")}</TableHead>
-                    <TableHead className="w-[140px]">{t("common.actions")}</TableHead>
+                    <TableHead className="w-[140px]">
+                      {t("common.actions")}
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -3049,18 +3051,23 @@ export default function Sales() {
                             <Eye className="h-4 w-4" />
                           </Button>
                           <Button
-  variant="outline"
-  size="sm"
-  onClick={() => {
-    buildInvoicePDF(invoice);
-    toast({
-      title: t("sales.toast.invoice_downloaded_title"),
-      description: t("sales.toast.invoice_downloaded_desc_number", { number: invoice.invoiceNumber }),
-    });
-  }}
->
-  <Download className="h-4 w-4" />
-</Button>
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              buildInvoicePDF(invoice);
+                              toast({
+                                title: t(
+                                  "sales.toast.invoice_downloaded_title",
+                                ),
+                                description: t(
+                                  "sales.toast.invoice_downloaded_desc_number",
+                                  { number: invoice.invoiceNumber },
+                                ),
+                              });
+                            }}
+                          >
+                            <Download className="h-4 w-4" />
+                          </Button>
                           {invoice.status === "draft" && (
                             <>
                               <Button
