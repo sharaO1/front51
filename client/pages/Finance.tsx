@@ -2807,6 +2807,21 @@ ${data.transactions
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
+            <div className="rounded-lg border bg-card p-3 sm:p-4">
+              <div className="flex items-center justify-between">
+                <div className="text-sm text-muted-foreground">{t("warehouse.category")}</div>
+                <Badge variant={newTransaction.type === "income" ? "success" : "destructive"}>
+                  {newTransaction.type === "income" ? t("finance.income") : t("finance.expense")}
+                </Badge>
+              </div>
+              <div className="mt-1 font-medium truncate">
+                {newTransaction.category || t("common.unnamed", { defaultValue: "Unnamed" })}
+              </div>
+              <div className="mt-2 flex items-end justify-between">
+                <div className="text-xs text-muted-foreground">{t("common.date")}</div>
+                <div className="text-lg font-bold">${Number(newTransaction.amount || 0).toLocaleString()}</div>
+              </div>
+            </div>
             <div className="space-y-2">
               <Label htmlFor="edit-type">{t("finance.transaction_type")}</Label>
               <Select
