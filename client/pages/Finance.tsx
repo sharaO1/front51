@@ -807,8 +807,7 @@ export default function Finance() {
 
     (async () => {
       try {
-        const res = await fetch(`${API_BASE}/borrow`, { headers });
-        const data = await res.json().catch(() => null as any);
+        const data = await apiFetch<any>(`/borrow`, { headers }).catch(() => null as any);
         const list: any[] = (data && (data.result || data.data || data)) || [];
         if (mounted && Array.isArray(list)) setLoans(list.map(normalizeBorrow));
       } catch (err) {
