@@ -2842,10 +2842,11 @@ ${data.transactions
                 </SelectContent>
               </Select>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-1">
               <Label htmlFor="edit-category">{t("warehouse.category")}</Label>
               <Input
                 id="edit-category"
+                placeholder={t("finance.category_placeholder")}
                 value={newTransaction.category}
                 onChange={(e) =>
                   setNewTransaction({
@@ -2854,13 +2855,15 @@ ${data.transactions
                   })
                 }
               />
+              <p className="text-[11px] text-muted-foreground">{t("finance.category_help", { defaultValue: "e.g. Marketing, Utilities" })}</p>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-1">
               <Label htmlFor="edit-description">
                 {t("common.description")}
               </Label>
               <Input
                 id="edit-description"
+                placeholder={t("finance.description_placeholder", { defaultValue: "What is this for?" })}
                 value={newTransaction.description}
                 onChange={(e) =>
                   setNewTransaction({
@@ -2869,8 +2872,9 @@ ${data.transactions
                   })
                 }
               />
+              <p className="text-[11px] text-muted-foreground">{t("finance.description_help", { defaultValue: "Short note to remember later" })}</p>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="edit-amount">{t("finance.amount_label")}</Label>
                 <Input
@@ -2914,7 +2918,7 @@ ${data.transactions
                 </Select>
               </div>
             </div>
-            <div className="flex gap-2">
+            <div className="flex flex-col sm:flex-row gap-2">
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <Button className="flex-1">
