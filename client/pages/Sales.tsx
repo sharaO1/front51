@@ -2956,16 +2956,8 @@ export default function Sales() {
         </CardHeader>
         <CardContent>
           <div className="hidden md:block">
-            <Table className="w-full table-fixed [&_th]:px-4 [&_td]:px-4 lg:[&_th]:px-6 lg:[&_td]:px-6 whitespace-nowrap">
-              <colgroup>
-                <col className="w-[13%]" />
-                <col className="w-[18%]" />
-                <col className="w-[18%]" />
-                <col className="w-[16%]" />
-                <col className="w-[12%]" />
-                <col className="w-[11%]" />
-                <col className="w-[12%]" />
-              </colgroup>
+            <div className="w-full overflow-x-auto">
+              <Table className="min-w-[1100px] [&_th]:px-6 [&_td]:px-6 whitespace-nowrap">
               <TableHeader>
                 <TableRow>
                   <TableHead>{t("sales.invoice_number")}</TableHead>
@@ -3120,6 +3112,7 @@ export default function Sales() {
                 ))}
               </TableBody>
             </Table>
+            </div>
           </div>
 
           <div className="md:hidden space-y-3">
