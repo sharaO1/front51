@@ -2956,7 +2956,7 @@ export default function Sales() {
         </CardHeader>
         <CardContent>
           <div className="hidden md:block">
-            <Table>
+            <Table className="min-w-[1100px] [&_th]:px-6 [&_td]:px-6 lg:[&_th]:px-8 lg:[&_td]:px-8 whitespace-nowrap">
               <TableHeader>
                 <TableRow>
                   <TableHead>{t("sales.invoice_number")}</TableHead>
