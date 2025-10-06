@@ -2966,7 +2966,7 @@ export default function Sales() {
                   <TableHead>{t("common.date")}</TableHead>
                   <TableHead>{t("common.amount")}</TableHead>
                   <TableHead>{t("common.status")}</TableHead>
-                  <TableHead className="text-right">{t("common.actions")}</TableHead>
+                  <TableHead>{t("common.actions")}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -3034,8 +3034,8 @@ export default function Sales() {
                       </div>
                     </TableCell>
                     <TableCell>{getStatusBadge(invoice.status)}</TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex gap-1 justify-end">
+                    <TableCell>
+                      <div className="flex gap-1">
                         <Button
                           variant="outline"
                           size="sm"
