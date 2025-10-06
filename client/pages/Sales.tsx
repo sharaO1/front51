@@ -3036,8 +3036,8 @@ export default function Sales() {
                         </div>
                       </TableCell>
                       <TableCell>{getStatusBadge(invoice.status)}</TableCell>
-                      <TableCell>
-                        <div className="flex gap-1">
+                      <TableCell className="w-[140px]">
+                        <div className="flex gap-1 justify-end">
                           <Button
                             variant="outline"
                             size="sm"
