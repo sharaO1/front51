@@ -824,29 +824,7 @@ export default function Finance() {
   const [selectedLoan, setSelectedLoan] = useState<LoanRecord | null>(null);
   const [isEditLoanOpen, setIsEditLoanOpen] = useState(false);
 
-  // Prevent mobile stuck state by controlling body scroll during overlays
-  useEffect(() => {
-    const anyOpen =
-      isAddTransactionOpen ||
-      isEditTransactionOpen ||
-      isViewTransactionOpen ||
-      isAddLoanOpen ||
-      isEditLoanOpen ||
-      isExportDialogOpen;
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = anyOpen ? "hidden" : prev || "";
-    return () => {
-      document.body.style.overflow = prev || "";
-    };
-  }, [
-    isAddTransactionOpen,
-    isEditTransactionOpen,
-    isViewTransactionOpen,
-    isAddLoanOpen,
-    isEditLoanOpen,
-    isExportDialogOpen,
-  ]);
-
+  
   const [newLoan, setNewLoan] = useState<Partial<LoanRecord>>({
     type: "borrow",
     amount: 0,
@@ -894,6 +872,29 @@ export default function Finance() {
   const [exportYear, setExportYear] = useState<string>(
     String(new Date().getFullYear()),
   );
+
+  // Prevent mobile stuck state by controlling body scroll during overlays
+  useEffect(() => {
+    const anyOpen =
+      isAddTransactionOpen ||
+      isEditTransactionOpen ||
+      isViewTransactionOpen ||
+      isAddLoanOpen ||
+      isEditLoanOpen ||
+      isExportDialogOpen;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = anyOpen ? "hidden" : prev || "";
+    return () => {
+      document.body.style.overflow = prev || "";
+    };
+  }, [
+    isAddTransactionOpen,
+    isEditTransactionOpen,
+    isViewTransactionOpen,
+    isAddLoanOpen,
+    isEditLoanOpen,
+    isExportDialogOpen,
+  ]);
 
   const filteredTransactions = transactions
     .filter((transaction) => {
