@@ -2799,10 +2799,10 @@ ${data.transactions
         open={isEditTransactionOpen}
         onOpenChange={setIsEditTransactionOpen}
       >
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-md p-4 sm:p-6">
           <DialogHeader>
-            <DialogTitle>{t("finance.edit_transaction")}</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-base sm:text-lg">{t("finance.edit_transaction")}</DialogTitle>
+            <DialogDescription className="text-xs sm:text-sm">
               {t("finance.edit_transaction_note")}
             </DialogDescription>
           </DialogHeader>
