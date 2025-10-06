@@ -2957,7 +2957,7 @@ export default function Sales() {
         <CardContent>
           <div className="hidden md:block">
             <div className="w-full overflow-x-auto">
-              <Table containerClassName="overflow-x-hidden" className="w-full sm:min-w-0 [&_th]:px-4 [&_td]:px-4 md:[&_th]:px-6 md:[&_td]:px-6">
+              <Table className="min-w-[720px] sm:min-w-0 table-fixed [&_th]:px-4 [&_td]:px-4 md:[&_th]:px-6 md:[&_td]:px-6">
                 <TableHeader>
                   <TableRow>
                     <TableHead>{t("sales.invoice_number")}</TableHead>
