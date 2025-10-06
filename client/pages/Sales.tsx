@@ -3049,18 +3049,18 @@ export default function Sales() {
                             <Eye className="h-4 w-4" />
                           </Button>
                           <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => {
-                              toast({
-                                title: "Invoice downloaded",
-                                description:
-                                  "Invoice PDF has been generated and downloaded.",
-                              });
-                            }}
-                          >
-                            <Download className="h-4 w-4" />
-                          </Button>
+  variant="outline"
+  size="sm"
+  onClick={() => {
+    buildInvoicePDF(invoice);
+    toast({
+      title: t("sales.toast.invoice_downloaded_title"),
+      description: t("sales.toast.invoice_downloaded_desc_number", { number: invoice.invoiceNumber }),
+    });
+  }}
+>
+  <Download className="h-4 w-4" />
+</Button>
                           {invoice.status === "draft" && (
                             <>
                               <Button
