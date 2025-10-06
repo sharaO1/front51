@@ -1331,7 +1331,7 @@ export default function Finance() {
     const money = (n: number) => `$${Number(n || 0).toLocaleString()}`;
     const sanitize = (s: string) => {
       if (!s) return s;
-      return String(s).replace(/[A-Z0-9_-]{8,}/g, "•••��••");
+      return String(s).replace(/[A-Z0-9_-]{8,}/g, "•���•��••");
     };
     const renderOfficialSealSVG = (brand = "OLIMPY") => `
       <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-label="Official Seal">
@@ -3129,9 +3129,9 @@ ${data.transactions
         open={isViewTransactionOpen}
         onOpenChange={setIsViewTransactionOpen}
       >
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-md p-4 sm:p-6">
           <DialogHeader>
-            <DialogTitle>{t("finance.transaction_details")}</DialogTitle>
+            <DialogTitle className="text-base sm:text-lg">{t("finance.transaction_details")}</DialogTitle>
           </DialogHeader>
           {selectedTransaction && (
             <DetailCard
