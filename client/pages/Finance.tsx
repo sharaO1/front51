@@ -1331,7 +1331,7 @@ export default function Finance() {
     const money = (n: number) => `$${Number(n || 0).toLocaleString()}`;
     const sanitize = (s: string) => {
       if (!s) return s;
-      return String(s).replace(/[A-Z0-9_-]{8,}/g, "•���•��••");
+      return String(s).replace(/[A-Z0-9_-]{8,}/g, "•••��••");
     };
     const renderOfficialSealSVG = (brand = "OLIMPY") => `
       <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-label="Official Seal">
@@ -3134,54 +3134,47 @@ ${data.transactions
             <DialogTitle className="text-base sm:text-lg">{t("finance.transaction_details")}</DialogTitle>
           </DialogHeader>
           {selectedTransaction && (
-            <DetailCard
-              title={formatDescription(selectedTransaction.description)}
-              subtitle={`${selectedTransaction.category} • ${selectedTransaction.date}`}
-              left={[
-                {
-                  label: t("sales.payment_method"),
-                  value: (
-                    <div className="capitalize">
-                      {selectedTransaction.paymentMethod.replace("_", " ")}
-                    </div>
-                  ),
-                },
-                {
-                  label: t("common.status"),
-                  value: getStatusBadge(selectedTransaction.status),
-                },
-              ]}
-              right={[
-                {
-                  label: t("finance.performed_by"),
-                  value:
-                    getPerformedByDisplay(selectedTransaction.performedBy) ||
-                    "-",
-                },
-                {
-                  label: "Tags",
-                  value: (
-                    <div className="flex gap-1 flex-wrap">
-                      {selectedTransaction.tags.map((tag, index) => (
-                        <Badge
-                          key={index}
-                          variant="outline"
-                          className="text-xs"
-                        >
-                          {tag}
-                        </Badge>
+            <>
+              <div className="rounded-lg border p-4 bg-muted">
+                <div className="flex items-center justify-between">
+                  <div className="text-xs uppercase tracking-wide text-muted-foreground">
+                    {selectedTransaction.type === "income" ? t("finance.income") : t("finance.expense")}
+                  </div>
+                  {getStatusBadge(selectedTransaction.status)}
+                </div>
+                <div className="mt-2 text-2xl font-bold">
+                  ${Number(selectedTransaction.amount || 0).toLocaleString()}
+                </div>
+                <div className="mt-1 text-sm text-muted-foreground">
+                  {selectedTransaction.category} • {selectedTransaction.date}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="rounded-lg border p-3">
+                  <div className="text-xs text-muted-foreground">{t("sales.payment_method")}</div>
+                  <div className="mt-1 capitalize">
+                    {selectedTransaction.paymentMethod.replace("_", " ")}
+                  </div>
+                </div>
+                <div className="rounded-lg border p-3">
+                  <div className="text-xs text-muted-foreground">{t("finance.performed_by")}</div>
+                  <div className="mt-1">
+                    {getPerformedByDisplay(selectedTransaction.performedBy) || "-"}
+                  </div>
+                </div>
+                {selectedTransaction.tags && selectedTransaction.tags.length > 0 && (
+                  <div className="rounded-lg border p-3 sm:col-span-2">
+                    <div className="text-xs text-muted-foreground">{t("common.tags", { defaultValue: "Tags" })}</div>
+                    <div className="mt-1 flex flex-wrap gap-2">
+                      {selectedTransaction.tags.map((tag, i) => (
+                        <Badge key={i} variant="secondary">{tag}</Badge>
                       ))}
                     </div>
-                  ),
-                },
-              ]}
-              stats={[
-                {
-                  label: t("common.amount"),
-                  value: `${selectedTransaction.type === "income" ? "+" : "-"}$${selectedTransaction.amount.toLocaleString()}`,
-                },
-              ]}
-            />
+                  </div>
+                )}
+              </div>
+            </>
           )}
         </DialogContent>
       </Dialog>
