@@ -2966,7 +2966,7 @@ export default function Sales() {
                     <TableHead>{t("common.date")}</TableHead>
                     <TableHead>{t("common.amount")}</TableHead>
                     <TableHead>{t("common.status")}</TableHead>
-                    <TableHead>{t("common.actions")}</TableHead>
+                    <TableHead className="w-[140px]">{t("common.actions")}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
