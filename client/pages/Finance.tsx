@@ -2154,8 +2154,10 @@ ${data.transactions
                               <DropdownMenuContent align="end">
                                 <DropdownMenuItem
                                   onClick={() => {
-                                    setSelectedTransaction(transaction);
-                                    setIsViewTransactionOpen(true);
+                                    setTimeout(() => {
+                                      setSelectedTransaction(transaction);
+                                      setIsViewTransactionOpen(true);
+                                    }, 10);
                                   }}
                                   className="cursor-pointer"
                                 >
@@ -2164,7 +2166,10 @@ ${data.transactions
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
                                   onClick={() =>
-                                    openEditTransactionDialog(transaction)
+                                    setTimeout(
+                                      () => openEditTransactionDialog(transaction),
+                                      10,
+                                    )
                                   }
                                   className="cursor-pointer"
                                 >
@@ -2448,7 +2453,7 @@ ${data.transactions
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
                               <DropdownMenuItem
-                                onClick={() => openEditLoanDialog(loan)}
+                                onClick={() => setTimeout(() => openEditLoanDialog(loan), 10)}
                                 className="cursor-pointer"
                               >
                                 <Edit className="h-4 w-4 mr-2" />
@@ -2456,7 +2461,7 @@ ${data.transactions
                               </DropdownMenuItem>
                               {loan.status !== "returned" && (
                                 <DropdownMenuItem
-                                  onClick={() => markLoanReturned(loan.id)}
+                                  onClick={() => setTimeout(() => markLoanReturned(loan.id), 10)}
                                   className="cursor-pointer"
                                 >
                                   <CheckCircle2 className="h-4 w-4 mr-2" />
@@ -2466,7 +2471,7 @@ ${data.transactions
                                 </DropdownMenuItem>
                               )}
                               <DropdownMenuItem
-                                onClick={() => deleteLoan(loan.id)}
+                                onClick={() => setTimeout(() => deleteLoan(loan.id), 10)}
                                 className="cursor-pointer"
                               >
                                 <Trash2 className="h-4 w-4 mr-2" />
