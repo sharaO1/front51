@@ -1908,38 +1908,40 @@ export default function Sales() {
 
                   {/* Payment */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="paymentMethod">
-                        {t("sales.payment_method")}
-                      </Label>
-                      <Select
-                        value={newInvoice.paymentMethod}
-                        onValueChange={(value) =>
-                          setNewInvoice({
-                            ...newInvoice,
-                            paymentMethod: value as any,
-                          })
-                        }
-                      >
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="cash">
-                            {t("sales.cash")}
-                          </SelectItem>
-                          <SelectItem value="card">
-                            {t("sales.card")}
-                          </SelectItem>
-                          <SelectItem value="bank_transfer">
-                            {t("sales.bank_transfer")}
-                          </SelectItem>
-                          <SelectItem value="credit">
-                            {t("sales.credit")}
-                          </SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
+                    {!forBorrow && (
+                      <div className="space-y-2">
+                        <Label htmlFor="paymentMethod">
+                          {t("sales.payment_method")}
+                        </Label>
+                        <Select
+                          value={newInvoice.paymentMethod}
+                          onValueChange={(value) =>
+                            setNewInvoice({
+                              ...newInvoice,
+                              paymentMethod: value as any,
+                            })
+                          }
+                        >
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="cash">
+                              {t("sales.cash")}
+                            </SelectItem>
+                            <SelectItem value="card">
+                              {t("sales.card")}
+                            </SelectItem>
+                            <SelectItem value="bank_transfer">
+                              {t("sales.bank_transfer")}
+                            </SelectItem>
+                            <SelectItem value="credit">
+                              {t("sales.credit")}
+                            </SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    )}
                   </div>
 
                   {/* Add Item Section */}
@@ -2371,38 +2373,40 @@ export default function Sales() {
 
                   {/* Payment */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="paymentMethod">
-                        {t("sales.payment_method")}
-                      </Label>
-                      <Select
-                        value={newInvoice.paymentMethod}
-                        onValueChange={(value) =>
-                          setNewInvoice({
-                            ...newInvoice,
-                            paymentMethod: value as any,
-                          })
-                        }
-                      >
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="cash">
-                            {t("sales.cash")}
-                          </SelectItem>
-                          <SelectItem value="card">
-                            {t("sales.card")}
-                          </SelectItem>
-                          <SelectItem value="bank_transfer">
-                            {t("sales.bank_transfer")}
-                          </SelectItem>
-                          <SelectItem value="credit">
-                            {t("sales.credit")}
-                          </SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
+                    {!forBorrow && (
+                      <div className="space-y-2">
+                        <Label htmlFor="paymentMethod">
+                          {t("sales.payment_method")}
+                        </Label>
+                        <Select
+                          value={newInvoice.paymentMethod}
+                          onValueChange={(value) =>
+                            setNewInvoice({
+                              ...newInvoice,
+                              paymentMethod: value as any,
+                            })
+                          }
+                        >
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="cash">
+                              {t("sales.cash")}
+                            </SelectItem>
+                            <SelectItem value="card">
+                              {t("sales.card")}
+                            </SelectItem>
+                            <SelectItem value="bank_transfer">
+                              {t("sales.bank_transfer")}
+                            </SelectItem>
+                            <SelectItem value="credit">
+                              {t("sales.credit")}
+                            </SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    )}
                   </div>
 
                   {/* Add Item Section */}
