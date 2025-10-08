@@ -1090,7 +1090,14 @@ export default function Sales() {
     [filteredInvoices],
   );
 
-  const getStatusBadge = (status: string) => {
+  const getStatusBadge = (status: string, borrow?: boolean) => {
+    if (borrow) {
+      return (
+        <Badge variant="default" className="bg-purple-100 text-purple-800">
+          {t("finance.borrow", "Borrow")}
+        </Badge>
+      );
+    }
     switch (status) {
       case "draft":
         return (
@@ -3043,7 +3050,7 @@ export default function Sales() {
                           {t(`sales.${invoice.paymentMethod}`)}
                         </div>
                       </TableCell>
-                      <TableCell>{getStatusBadge(invoice.status)}</TableCell>
+                      <TableCell>{getStatusBadge(invoice.status, invoice.borrow)}</TableCell>
                       <TableCell className="w-[140px]">
                         <div className="flex gap-1 justify-end">
                           <Button
@@ -3145,7 +3152,7 @@ export default function Sales() {
                       {invoice.invoiceNumber}
                     </div>
                   </div>
-                  {getStatusBadge(invoice.status)}
+                  {getStatusBadge(invoice.status, invoice.borrow)}
                 </div>
                 <div className="mt-3">
                   <div className="font-medium">{invoice.clientName}</div>
@@ -3286,7 +3293,7 @@ export default function Sales() {
                     </div>
                     <div>
                       {t("common.status")}:{" "}
-                      {getStatusBadge(selectedInvoice.status)}
+                      {getStatusBadge(selectedInvoice.status, selectedInvoice.borrow)}
                     </div>
                   </div>
                 </div>
