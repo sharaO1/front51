@@ -449,20 +449,22 @@ export default function Sales() {
       "discountAmount",
       "total",
     ];
-    const rows = sortedInvoices.filter((inv) => inv.status === "paid" || inv.borrow).map((inv) => ({
-      invoiceNumber: inv.invoiceNumber,
-      date: new Date(inv.date).toISOString(),
-      clientName: inv.clientName,
-      clientEmail: inv.clientEmail,
-      employeeName: inv.employeeName || "",
-      status: inv.status,
-      paymentMethod: inv.paymentMethod,
-      subtotal: inv.subtotal,
-      taxRate: inv.taxRate,
-      taxAmount: inv.taxAmount,
-      discountAmount: inv.discountAmount,
-      total: inv.total,
-    }));
+    const rows = sortedInvoices
+      .filter((inv) => inv.status === "paid" || inv.borrow)
+      .map((inv) => ({
+        invoiceNumber: inv.invoiceNumber,
+        date: new Date(inv.date).toISOString(),
+        clientName: inv.clientName,
+        clientEmail: inv.clientEmail,
+        employeeName: inv.employeeName || "",
+        status: inv.status,
+        paymentMethod: inv.paymentMethod,
+        subtotal: inv.subtotal,
+        taxRate: inv.taxRate,
+        taxAmount: inv.taxAmount,
+        discountAmount: inv.discountAmount,
+        total: inv.total,
+      }));
     const csv = toCSV(rows, headers);
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
     const today = new Date().toISOString().slice(0, 10);
