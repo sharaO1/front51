@@ -3079,16 +3079,18 @@ export default function Sales() {
                       </TableCell>
                       <TableCell className="w-[140px]">
                         <div className="flex gap-1 justify-end">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => {
-                              setSelectedInvoice(invoice);
-                              setIsViewDialogOpen(true);
-                            }}
-                          >
-                            <Eye className="h-4 w-4" />
-                          </Button>
+                          {canDownloadInvoice(invoice) && (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => {
+                                setSelectedInvoice(invoice);
+                                setIsViewDialogOpen(true);
+                              }}
+                            >
+                              <Eye className="h-4 w-4" />
+                            </Button>
+                          )}
                           {canDownloadInvoice(invoice) && (
                             <Button
                               variant="outline"
@@ -3198,18 +3200,18 @@ export default function Sales() {
                     {formatCurrency(invoice.total)}
                   </span>
                 </div>
-                <div className={`mt-4 grid gap-2 ${canDownloadInvoice(invoice) ? "grid-cols-2" : "grid-cols-1"}`}>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => {
-                      setSelectedInvoice(invoice);
-                      setIsViewDialogOpen(true);
-                    }}
-                  >
-                    <Eye className="h-4 w-4" /> {t("common.view", "View")}
-                  </Button>
-                  {canDownloadInvoice(invoice) && (
+                {canDownloadInvoice(invoice) && (
+                  <div className="mt-4 grid gap-2 grid-cols-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        setSelectedInvoice(invoice);
+                        setIsViewDialogOpen(true);
+                      }}
+                    >
+                      <Eye className="h-4 w-4" /> {t("common.view", "View")}
+                    </Button>
                     <Button
                       variant="outline"
                       size="sm"
@@ -3226,8 +3228,8 @@ export default function Sales() {
                     >
                       <Download className="h-4 w-4" /> PDF
                     </Button>
-                  )}
-                </div>
+                  </div>
+                )}
                 {(invoice.status === "draft" || invoice.status === "sent") && (
                   <div className="mt-2 grid grid-cols-2 gap-2">
                     {invoice.status === "draft" && (
