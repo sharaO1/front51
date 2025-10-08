@@ -349,7 +349,9 @@ export default function Sales() {
       `${t("common.name")}: ${inv.clientName}`,
       `${t("common.email")}: ${inv.clientEmail}`,
       `${t("clients.type", "Type")}: ${t(`clients.${inv.clientType}`)}`,
-      !inv.borrow ? `${t("sales.payment_method")}: ${t(`sales.${inv.paymentMethod}`)}` : "",
+      !inv.borrow
+        ? `${t("sales.payment_method")}: ${t(`sales.${inv.paymentMethod}`)}`
+        : "",
     ].join("\n");
 
     const detailsSection = [
@@ -1299,7 +1301,7 @@ export default function Sales() {
       taxAmount: Number(newInvoice.taxAmount ?? 0),
       discountAmount: Number(newInvoice.discountAmount ?? 0),
       total: Number(newInvoice.total ?? 0),
-      paymentMethod: forBorrow ? null : (newInvoice.paymentMethod || "cash"),
+      paymentMethod: forBorrow ? null : newInvoice.paymentMethod || "cash",
       notes: newInvoice.notes || "",
       borrow: !!forBorrow,
       returnDate: forBorrow ? borrowReturnDate : undefined,
@@ -1814,7 +1816,14 @@ export default function Sales() {
                           id="for-borrow"
                           type="checkbox"
                           checked={forBorrow}
-                          onChange={(e) => { setForBorrow(e.target.checked); if (e.target.checked) setNewInvoice({ ...newInvoice, paymentMethod: undefined as any }); }}
+                          onChange={(e) => {
+                            setForBorrow(e.target.checked);
+                            if (e.target.checked)
+                              setNewInvoice({
+                                ...newInvoice,
+                                paymentMethod: undefined as any,
+                              });
+                          }}
                           className="h-4 w-4"
                         />
                         <span>{t("sales.for_borrow")}</span>
@@ -2279,7 +2288,14 @@ export default function Sales() {
                           id="for-borrow"
                           type="checkbox"
                           checked={forBorrow}
-                          onChange={(e) => { setForBorrow(e.target.checked); if (e.target.checked) setNewInvoice({ ...newInvoice, paymentMethod: undefined as any }); }}
+                          onChange={(e) => {
+                            setForBorrow(e.target.checked);
+                            if (e.target.checked)
+                              setNewInvoice({
+                                ...newInvoice,
+                                paymentMethod: undefined as any,
+                              });
+                          }}
                           className="h-4 w-4"
                         />
                         <span>{t("sales.for_borrow")}</span>
@@ -3056,7 +3072,9 @@ export default function Sales() {
                           </div>
                         )}
                       </TableCell>
-                      <TableCell>{getStatusBadge(invoice.status, invoice.borrow)}</TableCell>
+                      <TableCell>
+                        {getStatusBadge(invoice.status, invoice.borrow)}
+                      </TableCell>
                       <TableCell className="w-[140px]">
                         <div className="flex gap-1 justify-end">
                           <Button
@@ -3299,7 +3317,10 @@ export default function Sales() {
                     </div>
                     <div>
                       {t("common.status")}:{" "}
-                      {getStatusBadge(selectedInvoice.status, selectedInvoice.borrow)}
+                      {getStatusBadge(
+                        selectedInvoice.status,
+                        selectedInvoice.borrow,
+                      )}
                     </div>
                   </div>
                 </div>
