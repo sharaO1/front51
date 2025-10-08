@@ -449,7 +449,7 @@ export default function Sales() {
       "discountAmount",
       "total",
     ];
-    const rows = sortedInvoices.map((inv) => ({
+    const rows = sortedInvoices.filter((inv) => inv.status === "paid" || inv.borrow).map((inv) => ({
       invoiceNumber: inv.invoiceNumber,
       date: new Date(inv.date).toISOString(),
       clientName: inv.clientName,
@@ -482,6 +482,7 @@ export default function Sales() {
       t("common.status"),
     ];
     const rows = filteredInvoices
+      .filter((inv) => inv.status === "paid" || inv.borrow)
       .slice()
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
       .map(
@@ -659,8 +660,9 @@ export default function Sales() {
           ? `${t("sales.last_month")} (${dateStr})`
           : `${t("finance.last_12_months", "Last 12 Months")} (${dateStr})`;
 
-    // Include all invoices for the report (no status filtering)
-    const sorted = data
+    // Include only paid or borrow invoices in the report
+    const included = data.filter((i) => i.status === "paid" || i.borrow);
+    const sorted = included
       .slice()
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
@@ -846,10 +848,12 @@ export default function Sales() {
     const { start, end, label } = getPeriodRange(pdfPeriod);
 
     // Export should ignore table search/status filters; use full dataset
-    const data = invoices.filter((i) => {
-      const d = new Date(i.date);
-      return d >= start && d <= end;
-    });
+    const data = invoices
+      .filter((i) => {
+        const d = new Date(i.date);
+        return d >= start && d <= end;
+      })
+      .filter((i) => i.status === "paid" || i.borrow);
 
     const html = buildSalesReportHTML(pdfPeriod, label, data);
     closeExportLayers();
