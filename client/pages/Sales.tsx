@@ -1135,6 +1135,8 @@ export default function Sales() {
     }
   };
 
+  const canDownloadInvoice = (inv: Invoice) => Boolean(inv.borrow) || inv.status === "paid";
+
   const calculateItemTotal = (item: Partial<InvoiceItem>) => {
     const quantity = item.quantity || 0;
     const unitPrice = item.unitPrice || 0;
@@ -3090,7 +3092,9 @@ export default function Sales() {
                           <Button
                             variant="outline"
                             size="sm"
+                            disabled={!canDownloadInvoice(invoice)}
                             onClick={() => {
+                              if (!canDownloadInvoice(invoice)) return;
                               buildInvoicePDF(invoice);
                               toast({
                                 title: t(
@@ -3208,7 +3212,9 @@ export default function Sales() {
                   <Button
                     variant="outline"
                     size="sm"
+                    disabled={!canDownloadInvoice(invoice)}
                     onClick={() => {
+                      if (!canDownloadInvoice(invoice)) return;
                       buildInvoicePDF(invoice);
                       toast({
                         title: t("sales.toast.invoice_downloaded_title"),
@@ -3488,8 +3494,9 @@ export default function Sales() {
               <div className="flex gap-2">
                 <Button
                   className="flex-1"
+                  disabled={!selectedInvoice || !canDownloadInvoice(selectedInvoice)}
                   onClick={() => {
-                    if (!selectedInvoice) return;
+                    if (!selectedInvoice || !canDownloadInvoice(selectedInvoice)) return;
                     buildInvoicePDF(selectedInvoice);
                     toast({
                       title: t("sales.toast.invoice_downloaded_title"),
