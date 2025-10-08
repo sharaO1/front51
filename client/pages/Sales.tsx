@@ -3492,24 +3492,25 @@ export default function Sales() {
                 )}
 
               <div className="flex gap-2">
-                <Button
-                  className="flex-1"
-                  disabled={!selectedInvoice || !canDownloadInvoice(selectedInvoice)}
-                  onClick={() => {
-                    if (!selectedInvoice || !canDownloadInvoice(selectedInvoice)) return;
-                    buildInvoicePDF(selectedInvoice);
-                    toast({
-                      title: t("sales.toast.invoice_downloaded_title"),
-                      description: t(
-                        "sales.toast.invoice_downloaded_desc_number",
-                        { number: selectedInvoice.invoiceNumber },
-                      ),
-                    });
-                  }}
-                >
-                  <Download className="mr-2 h-4 w-4" />
-                  {t("sales.download_pdf")}
-                </Button>
+                {selectedInvoice && canDownloadInvoice(selectedInvoice) && (
+                  <Button
+                    className="flex-1"
+                    onClick={() => {
+                      if (!selectedInvoice) return;
+                      buildInvoicePDF(selectedInvoice);
+                      toast({
+                        title: t("sales.toast.invoice_downloaded_title"),
+                        description: t(
+                          "sales.toast.invoice_downloaded_desc_number",
+                          { number: selectedInvoice.invoiceNumber },
+                        ),
+                      });
+                    }}
+                  >
+                    <Download className="mr-2 h-4 w-4" />
+                    {t("sales.download_pdf")}
+                  </Button>
+                )}
                 {selectedInvoice.status !== "cancelled" &&
                   selectedInvoice.status !== "paid" && (
                     <Button
