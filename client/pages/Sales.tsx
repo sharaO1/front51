@@ -1814,7 +1814,7 @@ export default function Sales() {
                           id="for-borrow"
                           type="checkbox"
                           checked={forBorrow}
-                          onChange={(e) => setForBorrow(e.target.checked)}
+                          onChange={(e) => { setForBorrow(e.target.checked); if (e.target.checked) setNewInvoice({ ...newInvoice, paymentMethod: undefined as any }); }}
                           className="h-4 w-4"
                         />
                         <span>{t("sales.for_borrow")}</span>
@@ -2279,7 +2279,7 @@ export default function Sales() {
                           id="for-borrow"
                           type="checkbox"
                           checked={forBorrow}
-                          onChange={(e) => setForBorrow(e.target.checked)}
+                          onChange={(e) => { setForBorrow(e.target.checked); if (e.target.checked) setNewInvoice({ ...newInvoice, paymentMethod: undefined as any }); }}
                           className="h-4 w-4"
                         />
                         <span>{t("sales.for_borrow")}</span>
