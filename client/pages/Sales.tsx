@@ -907,7 +907,7 @@ export default function Sales() {
                   <div class="row"><span>${t("common.name")}</span><span class="right">${inv.clientName}</span></div>
                   <div class="row"><span>${t("common.email")}</span><span class="right">${inv.clientEmail || "-"}</span></div>
                   <div class="row"><span>${t("clients.type", "Type")}</span><span class="right">${t(`clients.${inv.clientType}`)}</span></div>
-                  <div class="row"><span>${t("sales.payment_method")}</span><span class="right">${t(`sales.${inv.paymentMethod}`)}</span></div>
+                  ${!inv.borrow ? `<div class="row"><span>${t("sales.payment_method")}</span><span class="right">${t(`sales.${inv.paymentMethod}`)}</span></div>` : ""}
                 </div>
               </div>
               <div>
