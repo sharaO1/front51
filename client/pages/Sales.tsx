@@ -3050,9 +3050,11 @@ export default function Sales() {
                         <div className="font-medium">
                           ${invoice.total.toFixed(2)}
                         </div>
-                        <div className="text-sm text-muted-foreground">
-                          {t(`sales.${invoice.paymentMethod}`)}
-                        </div>
+                        {!invoice.borrow && (
+                          <div className="text-sm text-muted-foreground">
+                            {t(`sales.${invoice.paymentMethod}`)}
+                          </div>
+                        )}
                       </TableCell>
                       <TableCell>{getStatusBadge(invoice.status, invoice.borrow)}</TableCell>
                       <TableCell className="w-[140px]">
