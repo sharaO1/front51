@@ -3089,26 +3089,26 @@ export default function Sales() {
                           >
                             <Eye className="h-4 w-4" />
                           </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            disabled={!canDownloadInvoice(invoice)}
-                            onClick={() => {
-                              if (!canDownloadInvoice(invoice)) return;
-                              buildInvoicePDF(invoice);
-                              toast({
-                                title: t(
-                                  "sales.toast.invoice_downloaded_title",
-                                ),
-                                description: t(
-                                  "sales.toast.invoice_downloaded_desc_number",
-                                  { number: invoice.invoiceNumber },
-                                ),
-                              });
-                            }}
-                          >
-                            <Download className="h-4 w-4" />
-                          </Button>
+                          {canDownloadInvoice(invoice) && (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => {
+                                buildInvoicePDF(invoice);
+                                toast({
+                                  title: t(
+                                    "sales.toast.invoice_downloaded_title",
+                                  ),
+                                  description: t(
+                                    "sales.toast.invoice_downloaded_desc_number",
+                                    { number: invoice.invoiceNumber },
+                                  ),
+                                });
+                              }}
+                            >
+                              <Download className="h-4 w-4" />
+                            </Button>
+                          )}
                           {invoice.status === "draft" && (
                             <>
                               <Button
