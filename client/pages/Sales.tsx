@@ -1299,7 +1299,7 @@ export default function Sales() {
       taxAmount: Number(newInvoice.taxAmount ?? 0),
       discountAmount: Number(newInvoice.discountAmount ?? 0),
       total: Number(newInvoice.total ?? 0),
-      paymentMethod: newInvoice.paymentMethod || "cash",
+      paymentMethod: forBorrow ? null : (newInvoice.paymentMethod || "cash"),
       notes: newInvoice.notes || "",
       borrow: !!forBorrow,
       returnDate: forBorrow ? borrowReturnDate : undefined,
