@@ -349,7 +349,7 @@ export default function Sales() {
       `${t("common.name")}: ${inv.clientName}`,
       `${t("common.email")}: ${inv.clientEmail}`,
       `${t("clients.type", "Type")}: ${t(`clients.${inv.clientType}`)}`,
-      `${t("sales.payment_method")}: ${t(`sales.${inv.paymentMethod}`)}`,
+      !inv.borrow ? `${t("sales.payment_method")}: ${t(`sales.${inv.paymentMethod}`)}` : "",
     ].join("\n");
 
     const detailsSection = [
