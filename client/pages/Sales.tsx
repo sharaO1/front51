@@ -3311,10 +3311,12 @@ export default function Sales() {
                     <div className="capitalize">
                       {t(`clients.${selectedInvoice.clientType}`)}
                     </div>
-                    <div className="capitalize">
-                      {t("sales.payment")}:{" "}
-                      {t(`sales.${selectedInvoice.paymentMethod}`)}
-                    </div>
+                    {!selectedInvoice.borrow && (
+                      <div className="capitalize">
+                        {t("sales.payment")}:{" "}
+                        {t(`sales.${selectedInvoice.paymentMethod}`)}
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
