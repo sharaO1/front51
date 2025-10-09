@@ -1475,7 +1475,7 @@ export default function Sales() {
     const status: Invoice["status"] = isCancelled
       ? "cancelled"
       : (map[rawStatus] ??
-        (["draft", "sent", "paid", "overdue", "cancelled"].includes(rawStatus)
+        (["draft", "sent", "borrow", "paid", "overdue", "cancelled"].includes(rawStatus)
           ? (rawStatus as Invoice["status"])
           : "draft"));
 
