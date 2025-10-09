@@ -436,15 +436,11 @@ export default function Layout({ children }: LayoutProps) {
         <footer className="fixed inset-x-0 bottom-0 z-40 border-t border-gray-200/60 dark:border-gray-700/60 bg-white/90 dark:bg-gray-900/90 backdrop-blur supports-[backdrop-filter]:bg-white/60 lg:hidden">
           <nav className="grid grid-cols-5 h-16">
             {[
-              { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
-              { href: "/warehouse", icon: Package, label: "Warehouse" },
-              { href: "/clients", icon: Users, label: "Clients" },
-              { href: "/sales", icon: ShoppingCart, label: "Sales" },
-              {
-              href: "/finance",
-              icon: DollarSign,
-              label: t("navigation.finance"),
-            },
+              { href: "/dashboard", icon: LayoutDashboard, label: t("navigation.dashboard") },
+              { href: "/warehouse", icon: Package, label: t("navigation.warehouse") },
+              { href: "/clients", icon: Users, label: t("navigation.clients") },
+              { href: "/sales", icon: ShoppingCart, label: t("navigation.sales") },
+              { href: "/finance", icon: DollarSign, label: t("navigation.finance") },
             ].map((item) => {
               const active = location.pathname === item.href;
               const Icon = item.icon;
