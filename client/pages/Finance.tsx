@@ -2076,7 +2076,10 @@ ${data.transactions
             </CardHeader>
             <CardContent>
               <div className="w-full overflow-x-auto">
-                <Table containerClassName="hidden md:block" className="min-w-[720px] sm:min-w-0">
+                <Table
+                  containerClassName="hidden md:block"
+                  className="min-w-[720px] sm:min-w-0"
+                >
                   <TableHeader>
                     <TableRow>
                       <TableHead>{t("common.date")}</TableHead>
@@ -2213,7 +2216,9 @@ ${data.transactions
                   >
                     <div className="flex items-center justify-between gap-3">
                       <div className="text-sm text-muted-foreground">
-                        {new Date(transaction.date).toLocaleDateString(i18n.language || "en")}
+                        {new Date(transaction.date).toLocaleDateString(
+                          i18n.language || "en",
+                        )}
                       </div>
                       <div className="flex items-center gap-2">
                         {getStatusBadge(transaction.status)}
@@ -2222,8 +2227,16 @@ ${data.transactions
                     <div className="mt-2 flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <Badge
-                          variant={transaction.type === "income" ? "default" : "secondary"}
-                          className={transaction.type === "income" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}
+                          variant={
+                            transaction.type === "income"
+                              ? "default"
+                              : "secondary"
+                          }
+                          className={
+                            transaction.type === "income"
+                              ? "bg-green-100 text-green-800"
+                              : "bg-red-100 text-red-800"
+                          }
                         >
                           {transaction.type === "income"
                             ? t("finance.income")
@@ -2236,7 +2249,8 @@ ${data.transactions
                       <div
                         className={`font-semibold ${transaction.type === "income" ? "text-green-600" : "text-red-600"}`}
                       >
-                        {transaction.type === "income" ? "+" : "-"}${transaction.amount.toLocaleString()}
+                        {transaction.type === "income" ? "+" : "-"}$
+                        {transaction.amount.toLocaleString()}
                       </div>
                     </div>
                     <div className="mt-2 text-sm font-medium">
@@ -2248,7 +2262,8 @@ ${data.transactions
                       </span>
                       {transaction.performedBy ? (
                         <span>
-                          {t("finance.performed_by")}: {getPerformedByDisplay(transaction.performedBy)}
+                          {t("finance.performed_by")}:{" "}
+                          {getPerformedByDisplay(transaction.performedBy)}
                         </span>
                       ) : null}
                     </div>
@@ -2586,7 +2601,10 @@ ${data.transactions
               {/* Mobile list (Debts & Lends) */}
               <div className="md:hidden space-y-3 mt-3">
                 {loans.map((loan) => (
-                  <div key={loan.id} className="rounded-xl border p-4 bg-card shadow-business">
+                  <div
+                    key={loan.id}
+                    className="rounded-xl border p-4 bg-card shadow-business"
+                  >
                     <div className="flex items-center justify-between gap-3">
                       <div className="text-sm text-muted-foreground">
                         {new Intl.DateTimeFormat(i18n.language || "en", {
@@ -2601,32 +2619,58 @@ ${data.transactions
                     </div>
                     <div className="mt-2 flex items-center justify-between">
                       <Badge
-                        variant={loan.type === "borrow" ? "secondary" : "default"}
-                        className={loan.type === "borrow" ? "bg-blue-100 text-blue-800" : "bg-purple-100 text-purple-800"}
+                        variant={
+                          loan.type === "borrow" ? "secondary" : "default"
+                        }
+                        className={
+                          loan.type === "borrow"
+                            ? "bg-blue-100 text-blue-800"
+                            : "bg-purple-100 text-purple-800"
+                        }
                       >
-                        {loan.type === "borrow" ? t("finance.borrow") : t("finance.lend")}
+                        {loan.type === "borrow"
+                          ? t("finance.borrow")
+                          : t("finance.lend")}
                       </Badge>
-                      <div className="font-semibold">${(loan.amount ?? 0).toFixed(2)}</div>
+                      <div className="font-semibold">
+                        ${(loan.amount ?? 0).toFixed(2)}
+                      </div>
                     </div>
                     <div className="mt-2">
                       <div className="font-medium">{loan.partyName}</div>
-                      <div className="text-xs text-muted-foreground capitalize">{loan.partyType}</div>
+                      <div className="text-xs text-muted-foreground capitalize">
+                        {loan.partyType}
+                      </div>
                     </div>
                     <div className="mt-1 text-xs text-muted-foreground flex items-center gap-2">
                       <Clock className="h-3 w-3" />
                       <span>{loan.dueDate}</span>
                     </div>
                     <div className="mt-3 grid grid-cols-3 gap-2">
-                      <Button variant="outline" size="sm" onClick={() => openEditLoanDialog(loan)}>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => openEditLoanDialog(loan)}
+                      >
                         <Edit className="h-4 w-4" /> {t("common.edit")}
                       </Button>
                       {loan.status !== "returned" && (
-                        <Button variant="outline" size="sm" onClick={() => markLoanReturned(loan.id)}>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => markLoanReturned(loan.id)}
+                        >
                           <CheckCircle2 className="h-4 w-4" />
-                          {t("common.mark_as_returned", { defaultValue: "Returned" })}
+                          {t("common.mark_as_returned", {
+                            defaultValue: "Returned",
+                          })}
                         </Button>
                       )}
-                      <Button variant="outline" size="sm" onClick={() => deleteLoan(loan.id)}>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => deleteLoan(loan.id)}
+                      >
                         <Trash2 className="h-4 w-4" /> {t("common.delete")}
                       </Button>
                     </div>

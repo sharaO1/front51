@@ -2256,7 +2256,9 @@ export default function Employees() {
                     }}
                     onEdit={(emp) => openEditEmployeeDialog(emp as any)}
                     onDelete={(id) => deleteEmployee(id)}
-                    onStatusChange={(id, status) => updateEmployeeStatus(id, status)}
+                    onStatusChange={(id, status) =>
+                      updateEmployeeStatus(id, status)
+                    }
                   />
                 ))}
               </div>
@@ -2683,7 +2685,10 @@ export default function Employees() {
               </Table>
               <div className="md:hidden space-y-3 mt-3">
                 {getTodaysAttendance().map(({ employee, attendance }) => (
-                  <div key={employee.id} className="rounded-xl border p-4 bg-card shadow-business">
+                  <div
+                    key={employee.id}
+                    className="rounded-xl border p-4 bg-card shadow-business"
+                  >
                     <div className="flex items-center gap-3">
                       <Avatar className="h-10 w-10">
                         <AvatarFallback>
@@ -2691,46 +2696,78 @@ export default function Employees() {
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex-1">
-                        <div className="font-medium">{employee.firstName} {employee.lastName}</div>
-                        <div className="text-xs text-muted-foreground">{employee.employeeId} • {employee.department}</div>
+                        <div className="font-medium">
+                          {employee.firstName} {employee.lastName}
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          {employee.employeeId} • {employee.department}
+                        </div>
                       </div>
                       <div>
                         {attendance?.status === "present" && (
-                          <Badge className="bg-green-100 text-green-800 text-xs">{t("status.present")}</Badge>
+                          <Badge className="bg-green-100 text-green-800 text-xs">
+                            {t("status.present")}
+                          </Badge>
                         )}
                         {attendance?.status === "absent" && (
-                          <Badge variant="destructive" className="text-xs">{t("status.absent")}</Badge>
+                          <Badge variant="destructive" className="text-xs">
+                            {t("status.absent")}
+                          </Badge>
                         )}
                         {attendance?.status === "late" && (
-                          <Badge className="bg-yellow-100 text-yellow-800 text-xs">{t("status.late")}</Badge>
+                          <Badge className="bg-yellow-100 text-yellow-800 text-xs">
+                            {t("status.late")}
+                          </Badge>
                         )}
                         {attendance?.status === "half_day" && (
-                          <Badge variant="outline" className="text-xs">{t("status.half_day")}</Badge>
+                          <Badge variant="outline" className="text-xs">
+                            {t("status.half_day")}
+                          </Badge>
                         )}
                         {attendance?.status === "on_break" && (
-                          <Badge variant="outline" className="text-xs">{t("status.on_break")}</Badge>
+                          <Badge variant="outline" className="text-xs">
+                            {t("status.on_break")}
+                          </Badge>
                         )}
                         {!attendance && (
-                          <Badge variant="secondary" className="text-xs">{t("employees.not_marked")}</Badge>
+                          <Badge variant="secondary" className="text-xs">
+                            {t("employees.not_marked")}
+                          </Badge>
                         )}
                       </div>
                     </div>
                     <div className="mt-3 grid grid-cols-3 gap-2 text-sm">
                       <div>
-                        <div className="text-xs text-muted-foreground">{t("employees.clock_in")}</div>
-                        <div className="flex items-center gap-1">{attendance?.clockIn || "--"}</div>
+                        <div className="text-xs text-muted-foreground">
+                          {t("employees.clock_in")}
+                        </div>
+                        <div className="flex items-center gap-1">
+                          {attendance?.clockIn || "--"}
+                        </div>
                       </div>
                       <div>
-                        <div className="text-xs text-muted-foreground">{t("employees.clock_out")}</div>
-                        <div className="flex items-center gap-1">{attendance?.clockOut || "--"}</div>
+                        <div className="text-xs text-muted-foreground">
+                          {t("employees.clock_out")}
+                        </div>
+                        <div className="flex items-center gap-1">
+                          {attendance?.clockOut || "--"}
+                        </div>
                       </div>
                       <div>
-                        <div className="text-xs text-muted-foreground">{t("employees.total_hours")}</div>
-                        <div>{attendance?.totalHours ? `${attendance.totalHours.toFixed(1)}h` : "--"}</div>
+                        <div className="text-xs text-muted-foreground">
+                          {t("employees.total_hours")}
+                        </div>
+                        <div>
+                          {attendance?.totalHours
+                            ? `${attendance.totalHours.toFixed(1)}h`
+                            : "--"}
+                        </div>
                       </div>
                     </div>
                     {attendance?.notes && (
-                      <div className="mt-2 text-xs text-muted-foreground">{attendance.notes}</div>
+                      <div className="mt-2 text-xs text-muted-foreground">
+                        {attendance.notes}
+                      </div>
                     )}
                     <div className="mt-3">
                       <Button
@@ -2882,24 +2919,42 @@ export default function Employees() {
               </Table>
               <div className="md:hidden space-y-3 mt-3">
                 {departmentData.map((dept) => {
-                  const deptEmployees = employees.filter((e) => e.department === dept.department);
+                  const deptEmployees = employees.filter(
+                    (e) => e.department === dept.department,
+                  );
                   const avgSalary = deptEmployees.length
-                    ? Math.round(deptEmployees.reduce((sum, e) => sum + e.salary, 0) / deptEmployees.length)
+                    ? Math.round(
+                        deptEmployees.reduce((sum, e) => sum + e.salary, 0) /
+                          deptEmployees.length,
+                      )
                     : 0;
                   return (
-                    <div key={dept.department} className="rounded-xl border p-4 bg-card shadow-business">
+                    <div
+                      key={dept.department}
+                      className="rounded-xl border p-4 bg-card shadow-business"
+                    >
                       <div className="flex items-center justify-between">
                         <div className="font-semibold">{dept.department}</div>
-                        <div className="text-sm text-muted-foreground">{t("employees.productivity")}: {dept.productivity}%</div>
+                        <div className="text-sm text-muted-foreground">
+                          {t("employees.productivity")}: {dept.productivity}%
+                        </div>
                       </div>
                       <div className="mt-2 grid grid-cols-2 gap-2 text-sm">
                         <div>
-                          <div className="text-xs text-muted-foreground">{t("employees.employee")}</div>
+                          <div className="text-xs text-muted-foreground">
+                            {t("employees.employee")}
+                          </div>
                           <div className="font-medium">{dept.employees}</div>
                         </div>
                         <div>
-                          <div className="text-xs text-muted-foreground">{t("employees.avg_salary", { defaultValue: "Avg Salary" })}</div>
-                          <div className="font-medium">${avgSalary.toLocaleString()}</div>
+                          <div className="text-xs text-muted-foreground">
+                            {t("employees.avg_salary", {
+                              defaultValue: "Avg Salary",
+                            })}
+                          </div>
+                          <div className="font-medium">
+                            ${avgSalary.toLocaleString()}
+                          </div>
                         </div>
                       </div>
                       <div className="mt-2 text-xs text-muted-foreground">
