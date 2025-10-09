@@ -1564,7 +1564,22 @@ export default function Sales() {
         payload.borrow = true;
         payload.isBorrow = true;
       }
-      if (reason) payload.cancellationReason = reason;
+      // ensure backend receives cancellation details regardless of field naming
+      if (reason) {
+        payload.cancellationReason = reason;
+        payload.cancelReason = reason;
+        payload.reason = reason;
+        payload.cancellation_reason = reason as any;
+      }
+      if (newStatus === "cancelled") {
+        payload.isCancelled = true;
+        payload.cancelled = true;
+        payload.cancelledAt = new Date().toISOString();
+        if (currentUser?.id) {
+          payload.cancelledBy = currentUser.id;
+          (payload as any).cancelled_by = currentUser.id;
+        }
+      }
 
       const result = await serverUpdateInvoice(invoiceId, payload);
       const normalized = normalizeApiSale(result);
