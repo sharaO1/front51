@@ -1485,7 +1485,7 @@ export default function Employees() {
         </div>
 
         {/* Mobile-first action buttons */}
-        <div className="flex flex-col gap-2 sm:flex-row">
+        <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
