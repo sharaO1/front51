@@ -193,6 +193,8 @@
     font-feature-settings: "cv11", "ss01";
     font-variant-ligatures: contextual;
     text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+    width: 100%;
   }
 
   body {
@@ -210,6 +212,9 @@
       color 300ms ease;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+    width: 100%;
+    position: relative;
   }
 
   /* Enhanced Typography Scale */
