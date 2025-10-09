@@ -3276,28 +3276,31 @@ export default function Sales() {
                     )}
                     {invoice.status === "sent" && (
                       <>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="text-purple-600"
-                          disabled={updatingIds.has(invoice.id)}
-                          onClick={() =>
-                            updateInvoiceStatus(invoice.id, "borrow")
-                          }
-                        >
-                          {t("sales.mark_borrow", "Mark Borrow")}
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="text-green-600"
-                          disabled={updatingIds.has(invoice.id)}
-                          onClick={() =>
-                            updateInvoiceStatus(invoice.id, "paid")
-                          }
-                        >
-                          {t("sales.mark_paid")}
-                        </Button>
+                        {invoice.borrow ? (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="text-purple-600"
+                            disabled={updatingIds.has(invoice.id)}
+                            onClick={() =>
+                              updateInvoiceStatus(invoice.id, "borrow")
+                            }
+                          >
+                            {t("sales.mark_borrow", "Mark Borrow")}
+                          </Button>
+                        ) : (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="text-green-600"
+                            disabled={updatingIds.has(invoice.id)}
+                            onClick={() =>
+                              updateInvoiceStatus(invoice.id, "paid")
+                            }
+                          >
+                            {t("sales.mark_paid")}
+                          </Button>
+                        )}
                         <Button
                           variant="outline"
                           size="sm"
