@@ -3149,6 +3149,17 @@ export default function Sales() {
                                 size="sm"
                                 disabled={updatingIds.has(invoice.id)}
                                 onClick={() =>
+                                  updateInvoiceStatus(invoice.id, "borrow")
+                                }
+                                className="text-purple-600"
+                              >
+                                {t("sales.mark_borrow", "Mark Borrow")}
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                disabled={updatingIds.has(invoice.id)}
+                                onClick={() =>
                                   updateInvoiceStatus(invoice.id, "paid")
                                 }
                                 className="text-green-600"
