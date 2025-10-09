@@ -129,7 +129,7 @@ export default function Layout({ children }: LayoutProps) {
   }, [openChat]);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background overflow-x-hidden">
       {/* Enhanced Sidebar with Glassmorphism */}
       <div
         className={cn(
@@ -339,7 +339,7 @@ export default function Layout({ children }: LayoutProps) {
       {/* Main content */}
       <div
         className={cn(
-          "transition-all duration-300",
+          "transition-all duration-300 overflow-x-hidden",
           sidebarOpen ? (sidebarCollapsed ? "lg:ml-16" : "lg:ml-64") : "",
         )}
         onClick={handleMainAreaClick}
@@ -428,7 +428,7 @@ export default function Layout({ children }: LayoutProps) {
         </header>
 
         {/* Page content - mobile-optimized padding */}
-        <main className="p-4 pb-24 md:p-6 md:pb-6">{children}</main>
+        <main className="p-4 pb-24 md:p-6 md:pb-6 overflow-x-hidden">{children}</main>
 
         {/* Mobile bottom navigation */}
         <footer className="fixed inset-x-0 bottom-0 z-40 border-t border-gray-200/60 dark:border-gray-700/60 bg-white/90 dark:bg-gray-900/90 backdrop-blur supports-[backdrop-filter]:bg-white/60 lg:hidden">
