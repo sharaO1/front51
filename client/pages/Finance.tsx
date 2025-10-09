@@ -1899,6 +1899,16 @@ ${data.transactions
         </div>
       </div>
 
+      {/* Mobile primary action */}
+      <Button
+        size="icon-lg"
+        className="fixed right-4 bottom-24 z-40 h-14 w-14 rounded-full shadow-business-lg lg:hidden"
+        aria-label={t("finance.add_transaction") as string}
+        onClick={() => setIsAddTransactionOpen(true)}
+      >
+        <Plus className="h-6 w-6" />
+      </Button>
+
       {/* Financial Overview Cards */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
@@ -1973,7 +1983,7 @@ ${data.transactions
       </div>
 
       <Tabs defaultValue="transactions" className="space-y-4">
-        <TabsList>
+        <TabsList className="w-full overflow-x-auto justify-start sm:justify-center">
           <TabsTrigger value="transactions">
             {t("finance.transactions")}
           </TabsTrigger>
@@ -2193,6 +2203,76 @@ ${data.transactions
                     ))}
                   </TableBody>
                 </Table>
+              </div>
+              {/* Mobile list (Transactions) */}
+              <div className="md:hidden space-y-3 mt-3">
+                {filteredTransactions.map((transaction) => (
+                  <div
+                    key={transaction.id}
+                    className="rounded-xl border p-4 bg-card shadow-business"
+                  >
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="text-sm text-muted-foreground">
+                        {new Date(transaction.date).toLocaleDateString(i18n.language || "en")}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {getStatusBadge(transaction.status)}
+                      </div>
+                    </div>
+                    <div className="mt-2 flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Badge
+                          variant={transaction.type === "income" ? "default" : "secondary"}
+                          className={transaction.type === "income" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}
+                        >
+                          {transaction.type === "income"
+                            ? t("finance.income")
+                            : t("finance.expense")}
+                        </Badge>
+                        <span className="text-xs text-muted-foreground">
+                          {translateCategory(transaction.category)}
+                        </span>
+                      </div>
+                      <div
+                        className={`font-semibold ${transaction.type === "income" ? "text-green-600" : "text-red-600"}`}
+                      >
+                        {transaction.type === "income" ? "+" : "-"}${transaction.amount.toLocaleString()}
+                      </div>
+                    </div>
+                    <div className="mt-2 text-sm font-medium">
+                      {formatDescription(transaction.description)}
+                    </div>
+                    <div className="mt-1 text-xs text-muted-foreground flex items-center justify-between">
+                      <span className="capitalize">
+                        {transaction.paymentMethod.replace("_", " ")}
+                      </span>
+                      {transaction.performedBy ? (
+                        <span>
+                          {t("finance.performed_by")}: {getPerformedByDisplay(transaction.performedBy)}
+                        </span>
+                      ) : null}
+                    </div>
+                    <div className="mt-3 grid grid-cols-2 gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          setSelectedTransaction(transaction);
+                          setIsViewTransactionOpen(true);
+                        }}
+                      >
+                        <Eye className="h-4 w-4" /> {t("common.view")}
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => openEditTransactionDialog(transaction)}
+                      >
+                        <Edit className="h-4 w-4" /> {t("common.edit")}
+                      </Button>
+                    </div>
+                  </div>
+                ))}
               </div>
             </CardContent>
           </Card>
@@ -2503,6 +2583,56 @@ ${data.transactions
                   ))}
                 </TableBody>
               </Table>
+              {/* Mobile list (Debts & Lends) */}
+              <div className="md:hidden space-y-3 mt-3">
+                {loans.map((loan) => (
+                  <div key={loan.id} className="rounded-xl border p-4 bg-card shadow-business">
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="text-sm text-muted-foreground">
+                        {new Intl.DateTimeFormat(i18n.language || "en", {
+                          year: "numeric",
+                          month: "2-digit",
+                          day: "2-digit",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        }).format(new Date(loan.date))}
+                      </div>
+                      {getLoanStatusBadge(loan.status)}
+                    </div>
+                    <div className="mt-2 flex items-center justify-between">
+                      <Badge
+                        variant={loan.type === "borrow" ? "secondary" : "default"}
+                        className={loan.type === "borrow" ? "bg-blue-100 text-blue-800" : "bg-purple-100 text-purple-800"}
+                      >
+                        {loan.type === "borrow" ? t("finance.borrow") : t("finance.lend")}
+                      </Badge>
+                      <div className="font-semibold">${(loan.amount ?? 0).toFixed(2)}</div>
+                    </div>
+                    <div className="mt-2">
+                      <div className="font-medium">{loan.partyName}</div>
+                      <div className="text-xs text-muted-foreground capitalize">{loan.partyType}</div>
+                    </div>
+                    <div className="mt-1 text-xs text-muted-foreground flex items-center gap-2">
+                      <Clock className="h-3 w-3" />
+                      <span>{loan.dueDate}</span>
+                    </div>
+                    <div className="mt-3 grid grid-cols-3 gap-2">
+                      <Button variant="outline" size="sm" onClick={() => openEditLoanDialog(loan)}>
+                        <Edit className="h-4 w-4" /> {t("common.edit")}
+                      </Button>
+                      {loan.status !== "returned" && (
+                        <Button variant="outline" size="sm" onClick={() => markLoanReturned(loan.id)}>
+                          <CheckCircle2 className="h-4 w-4" />
+                          {t("common.mark_as_returned", { defaultValue: "Returned" })}
+                        </Button>
+                      )}
+                      <Button variant="outline" size="sm" onClick={() => deleteLoan(loan.id)}>
+                        <Trash2 className="h-4 w-4" /> {t("common.delete")}
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
               {loans.length === 0 && (
                 <div className="text-sm text-muted-foreground mt-2">
                   {t("finance.no_borrow_lend")}
