@@ -471,7 +471,6 @@ export default function Sales() {
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
     const today = new Date().toISOString().slice(0, 10);
     downloadBlob(blob, `sales-report-${today}.csv`);
-    toast({ title: "Exported", description: "Sales CSV downloaded." });
   };
 
   const handleExportJSON = () => {};
@@ -531,12 +530,6 @@ export default function Sales() {
     });
     const today = new Date().toISOString().slice(0, 10);
     downloadBlob(blob, `sales-report-${today}.xls`);
-    toast({
-      title: t("common.export"),
-      description: t("dashboard.export_as_excel", {
-        defaultValue: "Excel downloaded",
-      }),
-    });
   };
 
   // Open a print window using a hidden iframe (reduces browser freezes)
@@ -868,10 +861,6 @@ export default function Sales() {
       );
     }, 50);
 
-    toast({
-      title: t("common.export"),
-      description: t("finance.export_pdf_title", "PDF Report"),
-    });
   };
 
   const buildInvoicePDF = (inv: Invoice) => {
@@ -1578,10 +1567,6 @@ export default function Sales() {
         curr.map((inv) => (inv.id === invoiceId ? normalized : inv)),
       );
 
-      toast({
-        title: "Status updated",
-        description: `Invoice status changed to ${normalized.status}.`,
-      });
     } catch (e: any) {
       toast({
         title: "Failed",
@@ -3110,15 +3095,6 @@ export default function Sales() {
                               size="sm"
                               onClick={() => {
                                 buildInvoicePDF(invoice);
-                                toast({
-                                  title: t(
-                                    "sales.toast.invoice_downloaded_title",
-                                  ),
-                                  description: t(
-                                    "sales.toast.invoice_downloaded_desc_number",
-                                    { number: invoice.invoiceNumber },
-                                  ),
-                                });
                               }}
                             >
                               <Download className="h-4 w-4" />
@@ -3244,13 +3220,6 @@ export default function Sales() {
                       size="sm"
                       onClick={() => {
                         buildInvoicePDF(invoice);
-                        toast({
-                          title: t("sales.toast.invoice_downloaded_title"),
-                          description: t(
-                            "sales.toast.invoice_downloaded_desc_number",
-                            { number: invoice.invoiceNumber },
-                          ),
-                        });
                       }}
                     >
                       <Download className="h-4 w-4" /> PDF
@@ -3541,13 +3510,6 @@ export default function Sales() {
                     onClick={() => {
                       if (!selectedInvoice) return;
                       buildInvoicePDF(selectedInvoice);
-                      toast({
-                        title: t("sales.toast.invoice_downloaded_title"),
-                        description: t(
-                          "sales.toast.invoice_downloaded_desc_number",
-                          { number: selectedInvoice.invoiceNumber },
-                        ),
-                      });
                     }}
                   >
                     <Download className="mr-2 h-4 w-4" />
