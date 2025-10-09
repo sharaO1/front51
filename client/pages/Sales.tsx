@@ -1135,7 +1135,8 @@ export default function Sales() {
     }
   };
 
-  const canDownloadInvoice = (inv: Invoice) => inv.status === "borrow" || inv.status === "paid";
+  const canDownloadInvoice = (inv: Invoice) =>
+    inv.status === "borrow" || inv.status === "paid";
 
   const calculateItemTotal = (item: Partial<InvoiceItem>) => {
     const quantity = item.quantity || 0;
@@ -1475,7 +1476,9 @@ export default function Sales() {
     const status: Invoice["status"] = isCancelled
       ? "cancelled"
       : (map[rawStatus] ??
-        (["draft", "sent", "borrow", "paid", "overdue", "cancelled"].includes(rawStatus)
+        (["draft", "sent", "borrow", "paid", "overdue", "cancelled"].includes(
+          rawStatus,
+        )
           ? (rawStatus as Invoice["status"])
           : "draft"));
 
