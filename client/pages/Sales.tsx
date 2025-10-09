@@ -860,7 +860,6 @@ export default function Sales() {
         `${t("navigation.sales")} ${t("common.export")} PDF`,
       );
     }, 50);
-
   };
 
   const buildInvoicePDF = (inv: Invoice) => {
@@ -1507,9 +1506,17 @@ export default function Sales() {
       cancellationReason:
         r.cancellationReason || r.cancelReason || r.reason || undefined,
       cancelledBy:
-        r.cancelledBy || r.canceledBy || r.cancelled_by || r.canceled_by || undefined,
+        r.cancelledBy ||
+        r.canceledBy ||
+        r.cancelled_by ||
+        r.canceled_by ||
+        undefined,
       cancelledDate:
-        r.cancelledAt || r.canceledAt || r.cancelledDate || r.canceledDate || undefined,
+        r.cancelledAt ||
+        r.canceledAt ||
+        r.cancelledDate ||
+        r.canceledDate ||
+        undefined,
     };
   };
 
@@ -1622,7 +1629,6 @@ export default function Sales() {
       setInvoices((curr) =>
         curr.map((inv) => (inv.id === invoiceId ? normalized : inv)),
       );
-
     } catch (e: any) {
       toast({
         title: "Failed",
