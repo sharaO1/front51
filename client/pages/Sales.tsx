@@ -1564,8 +1564,8 @@ export default function Sales() {
         payload.borrow = true;
         payload.isBorrow = true;
       }
-      // ensure backend receives cancellation details regardless of field naming
-      if (reason) {
+      // ensure backend receives cancellation details only for cancelled status
+      if (newStatus === "cancelled" && reason) {
         payload.cancellationReason = reason;
         payload.cancelReason = reason;
         payload.reason = reason;
