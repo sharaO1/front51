@@ -2076,7 +2076,7 @@ ${data.transactions
             </CardHeader>
             <CardContent>
               <div className="w-full overflow-x-auto">
-                <Table className="min-w-[720px] sm:min-w-0">
+                <Table containerClassName="hidden md:block" className="min-w-[720px] sm:min-w-0">
                   <TableHeader>
                     <TableRow>
                       <TableHead>{t("common.date")}</TableHead>
@@ -2443,7 +2443,7 @@ ${data.transactions
               </Dialog>
             </CardHeader>
             <CardContent>
-              <Table>
+              <Table containerClassName="hidden md:block">
                 <TableHeader>
                   <TableRow>
                     <TableHead>{t("common.date")}</TableHead>
