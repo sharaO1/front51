@@ -1093,7 +1093,7 @@ export default function Sales() {
   );
 
   const getStatusBadge = (status: string, borrow?: boolean) => {
-    if (borrow || status === "borrow") {
+    if (status === "borrow") {
       return (
         <Badge variant="default" className="bg-purple-100 text-purple-800">
           {t("finance.borrow", "Borrow")}
@@ -1135,7 +1135,7 @@ export default function Sales() {
     }
   };
 
-  const canDownloadInvoice = (inv: Invoice) => Boolean(inv.borrow) || inv.status === "paid";
+  const canDownloadInvoice = (inv: Invoice) => inv.status === "borrow" || inv.status === "paid";
 
   const calculateItemTotal = (item: Partial<InvoiceItem>) => {
     const quantity = item.quantity || 0;
