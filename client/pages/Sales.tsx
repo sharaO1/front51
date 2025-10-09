@@ -1459,9 +1459,9 @@ export default function Sales() {
       awaiting_payment: "sent",
       processing: "sent",
       in_progress: "sent",
-      open: "sent",
-      issued: "sent",
-      created: "sent",
+      open: "draft",
+      issued: "draft",
+      created: "draft",
       // Borrow equivalents
       borrow: "borrow",
       borrowed: "borrow",
