@@ -1518,25 +1518,43 @@ export default function Sales() {
       "Content-Type": "application/json",
       ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
     };
-    const url = `${API_BASE}/Sales/${encodeURIComponent(id)}`;
+
+    const urls = [
+      `${API_BASE}/Sales/${encodeURIComponent(id)}`,
+      `${API_BASE}/Sales`,
+      `${API_BASE}/Sales/`,
+    ];
     const methods: RequestInit["method"][] = ["PATCH", "PUT", "POST"];
     let lastError: any = null;
 
-    for (const method of methods) {
-      try {
-        const res = await fetch(url, {
-          method,
-          headers,
-          body: JSON.stringify(payload),
-        });
-        const data = await res.json().catch(() => null);
-        if (res.ok) {
-          return (data && (data.result || data.data || data)) || {};
+    for (const url of urls) {
+      for (const method of methods) {
+        try {
+          const enriched =
+            url.endsWith("/Sales") || url.endsWith("/Sales/")
+              ? {
+                  // include identifiers for backends expecting body IDs
+                  id,
+                  saleId: id,
+                  saleID: id,
+                  ...payload,
+                }
+              : payload;
+
+          const res = await fetch(url, {
+            method,
+            headers,
+            body: JSON.stringify(enriched),
+          });
+          const data = await res.json().catch(() => null);
+          if (res.ok) {
+            return (data && (data.result || data.data || data)) || {};
+          }
+          lastError =
+            (data && (data.message || data.error)) || res.statusText || "Error";
+        } catch (e) {
+          lastError = e;
         }
-        lastError =
-          (data && (data.message || data.error)) || res.statusText || "Error";
-      } catch (e) {
-        lastError = e;
       }
     }
 
@@ -1578,6 +1596,13 @@ export default function Sales() {
         if (currentUser?.id) {
           payload.cancelledBy = currentUser.id;
           (payload as any).cancelled_by = currentUser.id;
+        }
+        // duplicate reason in common fields for maximum compatibility
+        if (reason) {
+          payload.cancellationReason = reason;
+          (payload as any).cancelReason = reason;
+          (payload as any).reason = reason;
+          (payload as any).cancellation_reason = reason;
         }
       }
 
