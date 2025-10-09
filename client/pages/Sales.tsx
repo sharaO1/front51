@@ -1362,7 +1362,7 @@ export default function Sales() {
         taxAmount: Number(newInvoice.taxAmount ?? 0),
         discountAmount: Number(newInvoice.discountAmount ?? 0),
         total: Number(newInvoice.total ?? 0),
-        status: (result.status as any) || "draft",
+        status: "draft",
         paymentMethod: (newInvoice.paymentMethod || "cash") as any,
         notes: newInvoice.notes || "",
         borrow: !!forBorrow,
