@@ -1462,6 +1462,10 @@ export default function Sales() {
       open: "sent",
       issued: "sent",
       created: "sent",
+      // Borrow equivalents
+      borrow: "borrow",
+      borrowed: "borrow",
+      loan: "borrow",
       // Overdue equivalents
       overdue: "overdue",
       past_due: "overdue",
