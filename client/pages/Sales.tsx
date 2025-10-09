@@ -1093,7 +1093,7 @@ export default function Sales() {
   );
 
   const getStatusBadge = (status: string, borrow?: boolean) => {
-    if (borrow) {
+    if (borrow || status === "borrow") {
       return (
         <Badge variant="default" className="bg-purple-100 text-purple-800">
           {t("finance.borrow", "Borrow")}
