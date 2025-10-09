@@ -947,6 +947,7 @@ export default function Sales() {
 
   const { t, i18n } = useTranslation();
   const accessToken = useAuthStore((s) => s.accessToken);
+  const currentUser = useAuthStore((s) => s.user);
 
   const clearCurrentItem = () => {
     setCurrentItem({
@@ -1503,7 +1504,12 @@ export default function Sales() {
       notes: r.notes || "",
       borrow: !!(r.isBorrow ?? r.borrow),
       returnDate: r.returnDate || undefined,
-      cancellationReason: r.cancellationReason || undefined,
+      cancellationReason:
+        r.cancellationReason || r.cancelReason || r.reason || undefined,
+      cancelledBy:
+        r.cancelledBy || r.canceledBy || r.cancelled_by || r.canceled_by || undefined,
+      cancelledDate:
+        r.cancelledAt || r.canceledAt || r.cancelledDate || r.canceledDate || undefined,
     };
   };
 
@@ -1562,6 +1568,16 @@ export default function Sales() {
 
       const result = await serverUpdateInvoice(invoiceId, payload);
       const normalized = normalizeApiSale(result);
+
+      // Ensure local cancellation details are preserved if API didn't echo them
+      if (newStatus === "cancelled") {
+        if (reason && !normalized.cancellationReason)
+          normalized.cancellationReason = reason;
+        if (!normalized.cancelledBy && currentUser?.name)
+          normalized.cancelledBy = currentUser.name;
+        if (!normalized.cancelledDate)
+          normalized.cancelledDate = new Date().toISOString();
+      }
 
       setInvoices((curr) =>
         curr.map((inv) => (inv.id === invoiceId ? normalized : inv)),
