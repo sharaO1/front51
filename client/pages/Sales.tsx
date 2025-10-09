@@ -1136,7 +1136,7 @@ export default function Sales() {
   };
 
   const canDownloadInvoice = (inv: Invoice) =>
-    inv.status === "borrow" || inv.status === "paid";
+    inv.status === "borrow" || inv.status === "paid" || inv.status === "cancelled";
 
   const calculateItemTotal = (item: Partial<InvoiceItem>) => {
     const quantity = item.quantity || 0;
