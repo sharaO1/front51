@@ -441,10 +441,10 @@ export default function Layout({ children }: LayoutProps) {
               { href: "/clients", icon: Users, label: "Clients" },
               { href: "/sales", icon: ShoppingCart, label: "Sales" },
               {
-                href: "/settings",
-                icon: Settings,
-                label: t("navigation.settings"),
-              },
+              href: "/finance",
+              icon: DollarSign,
+              label: t("navigation.finance"),
+            },
             ].map((item) => {
               const active = location.pathname === item.href;
               const Icon = item.icon;
