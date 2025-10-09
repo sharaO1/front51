@@ -1560,6 +1560,10 @@ export default function Sales() {
 
     try {
       const payload: any = { status: newStatus };
+      if (newStatus === "borrow") {
+        payload.borrow = true;
+        payload.isBorrow = true;
+      }
       if (reason) payload.cancellationReason = reason;
 
       const result = await serverUpdateInvoice(invoiceId, payload);
