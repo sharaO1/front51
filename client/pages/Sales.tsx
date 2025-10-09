@@ -130,7 +130,7 @@ interface Invoice {
   taxAmount: number;
   discountAmount: number;
   total: number;
-  status: "draft" | "sent" | "paid" | "overdue" | "cancelled";
+  status: "draft" | "sent" | "borrow" | "paid" | "overdue" | "cancelled";
   paymentMethod: "cash" | "card" | "bank_transfer" | "credit";
   notes: string;
   borrow?: boolean;
