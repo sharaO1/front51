@@ -1922,6 +1922,15 @@ export default function Employees() {
         </div>
       </div>
 
+      <Button
+        size="icon-lg"
+        className="fixed right-4 bottom-24 z-40 h-14 w-14 rounded-full shadow-business-lg lg:hidden"
+        aria-label={t("employees.add_employee") as string}
+        onClick={() => setIsAddEmployeeOpen(true)}
+      >
+        <Plus className="h-6 w-6" />
+      </Button>
+
       {/* Mobile-optimized overview cards */}
       <div className="grid gap-3 grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
         <Card>
@@ -2025,7 +2034,7 @@ export default function Employees() {
       </div>
 
       <Tabs defaultValue="directory" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-2 md:grid-cols-4">
+        <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 overflow-x-auto">
           <TabsTrigger value="directory" className="text-xs md:text-sm">
             {t("employees.employee_directory")}
           </TabsTrigger>
@@ -2110,7 +2119,7 @@ export default function Employees() {
               </div>
             </CardHeader>
             <CardContent>
-              <Table>
+              <Table containerClassName="hidden md:block">
                 <TableHeader>
                   <TableRow>
                     <TableHead>{t("employees.employee")}</TableHead>
@@ -2236,6 +2245,21 @@ export default function Employees() {
                   ))}
                 </TableBody>
               </Table>
+              <div className="md:hidden space-y-3 mt-3">
+                {filteredEmployees.map((employee) => (
+                  <MobileEmployeeCard
+                    key={employee.id}
+                    employee={employee as any}
+                    onView={(emp) => {
+                      setSelectedEmployee(emp as any);
+                      setIsViewEmployeeOpen(true);
+                    }}
+                    onEdit={(emp) => openEditEmployeeDialog(emp as any)}
+                    onDelete={(id) => deleteEmployee(id)}
+                    onStatusChange={(id, status) => updateEmployeeStatus(id, status)}
+                  />
+                ))}
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
@@ -2527,7 +2551,7 @@ export default function Employees() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Table>
+              <Table containerClassName="hidden md:block">
                 <TableHeader>
                   <TableRow>
                     <TableHead>{t("employees.employee")}</TableHead>
@@ -2657,6 +2681,76 @@ export default function Employees() {
                   ))}
                 </TableBody>
               </Table>
+              <div className="md:hidden space-y-3 mt-3">
+                {getTodaysAttendance().map(({ employee, attendance }) => (
+                  <div key={employee.id} className="rounded-xl border p-4 bg-card shadow-business">
+                    <div className="flex items-center gap-3">
+                      <Avatar className="h-10 w-10">
+                        <AvatarFallback>
+                          {`${employee.firstName.charAt(0)}${employee.lastName.charAt(0)}`.toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1">
+                        <div className="font-medium">{employee.firstName} {employee.lastName}</div>
+                        <div className="text-xs text-muted-foreground">{employee.employeeId} • {employee.department}</div>
+                      </div>
+                      <div>
+                        {attendance?.status === "present" && (
+                          <Badge className="bg-green-100 text-green-800 text-xs">{t("status.present")}</Badge>
+                        )}
+                        {attendance?.status === "absent" && (
+                          <Badge variant="destructive" className="text-xs">{t("status.absent")}</Badge>
+                        )}
+                        {attendance?.status === "late" && (
+                          <Badge className="bg-yellow-100 text-yellow-800 text-xs">{t("status.late")}</Badge>
+                        )}
+                        {attendance?.status === "half_day" && (
+                          <Badge variant="outline" className="text-xs">{t("status.half_day")}</Badge>
+                        )}
+                        {attendance?.status === "on_break" && (
+                          <Badge variant="outline" className="text-xs">{t("status.on_break")}</Badge>
+                        )}
+                        {!attendance && (
+                          <Badge variant="secondary" className="text-xs">{t("employees.not_marked")}</Badge>
+                        )}
+                      </div>
+                    </div>
+                    <div className="mt-3 grid grid-cols-3 gap-2 text-sm">
+                      <div>
+                        <div className="text-xs text-muted-foreground">{t("employees.clock_in")}</div>
+                        <div className="flex items-center gap-1">{attendance?.clockIn || "--"}</div>
+                      </div>
+                      <div>
+                        <div className="text-xs text-muted-foreground">{t("employees.clock_out")}</div>
+                        <div className="flex items-center gap-1">{attendance?.clockOut || "--"}</div>
+                      </div>
+                      <div>
+                        <div className="text-xs text-muted-foreground">{t("employees.total_hours")}</div>
+                        <div>{attendance?.totalHours ? `${attendance.totalHours.toFixed(1)}h` : "--"}</div>
+                      </div>
+                    </div>
+                    {attendance?.notes && (
+                      <div className="mt-2 text-xs text-muted-foreground">{attendance.notes}</div>
+                    )}
+                    <div className="mt-3">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          setNewAttendance({
+                            ...newAttendance,
+                            employeeId: employee.id,
+                            date: selectedDate,
+                          });
+                          setIsAttendanceOpen(true);
+                        }}
+                      >
+                        <Clock className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
@@ -2731,7 +2825,7 @@ export default function Employees() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Table>
+              <Table containerClassName="hidden md:block">
                 <TableHeader>
                   <TableRow>
                     <TableHead>Department</TableHead>
@@ -2786,6 +2880,39 @@ export default function Employees() {
                   })}
                 </TableBody>
               </Table>
+              <div className="md:hidden space-y-3 mt-3">
+                {departmentData.map((dept) => {
+                  const deptEmployees = employees.filter((e) => e.department === dept.department);
+                  const avgSalary = deptEmployees.length
+                    ? Math.round(deptEmployees.reduce((sum, e) => sum + e.salary, 0) / deptEmployees.length)
+                    : 0;
+                  return (
+                    <div key={dept.department} className="rounded-xl border p-4 bg-card shadow-business">
+                      <div className="flex items-center justify-between">
+                        <div className="font-semibold">{dept.department}</div>
+                        <div className="text-sm text-muted-foreground">{t("employees.productivity")}: {dept.productivity}%</div>
+                      </div>
+                      <div className="mt-2 grid grid-cols-2 gap-2 text-sm">
+                        <div>
+                          <div className="text-xs text-muted-foreground">{t("employees.employee")}</div>
+                          <div className="font-medium">{dept.employees}</div>
+                        </div>
+                        <div>
+                          <div className="text-xs text-muted-foreground">{t("employees.avg_salary", { defaultValue: "Avg Salary" })}</div>
+                          <div className="font-medium">${avgSalary.toLocaleString()}</div>
+                        </div>
+                      </div>
+                      <div className="mt-2 text-xs text-muted-foreground">
+                        {dept.department === "Sales" ? (
+                          <span>${dept.avgSales.toLocaleString()}/month</span>
+                        ) : (
+                          <span>N/A</span>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
