@@ -515,7 +515,7 @@ export default function Sales() {
       <div class="header">
         <div class="seal"><div class="text">${t("sales.official_seal", "Official Seal")}</div></div>
         <div>
-          <h1>${t("navigation.sales")} — ${t("dashboard.recent_activity", "Recent Activity")}</h1>
+          <h1>${t("navigation.sales")} ��� ${t("dashboard.recent_activity", "Recent Activity")}</h1>
           <div class="subtitle">${new Date().toLocaleString(i18n.language || "en")}</div>
         </div>
       </div>
@@ -624,6 +624,43 @@ export default function Sales() {
         minute: "2-digit",
       },
     ).format(new Date(d));
+
+  const toMs = (v: string | number | Date): number => {
+    if (v instanceof Date) return v.getTime();
+    if (typeof v === "number") return v;
+    if (typeof v === "string") {
+      const tryParse = (s: string) => {
+        const d = new Date(s);
+        const t = d.getTime();
+        return Number.isFinite(t) ? t : NaN;
+      };
+      let s = v.trim();
+      let t = tryParse(s);
+      if (!Number.isFinite(t)) t = tryParse(s.replace(/,/g, ""));
+      if (!Number.isFinite(t)) {
+        const m = s.match(/^(\d{1,2})[\/.\-](\d{1,2})[\/.\-](\d{4})(?:\s+(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM)?)?$/i);
+        if (m) {
+          const a = parseInt(m[1], 10);
+          const b = parseInt(m[2], 10);
+          const yyyy = parseInt(m[3], 10);
+          let hh = m[4] ? parseInt(m[4], 10) : 0;
+          const mm = m[5] ? parseInt(m[5], 10) : 0;
+          const ss = m[6] ? parseInt(m[6], 10) : 0;
+          const ampm = m[7]?.toUpperCase();
+          if (ampm === "PM" && hh < 12) hh += 12;
+          if (ampm === "AM" && hh === 12) hh = 0;
+          const day = a > 12 ? a : b;
+          const mon = a > 12 ? b : a;
+          t = new Date(yyyy, mon - 1, day, hh, mm, ss).getTime();
+        }
+      }
+      if (!Number.isFinite(t) && /T\d{2}:\d{2}/.test(s) && !/[zZ]$/.test(s)) {
+        t = Date.parse(`${s}Z`);
+      }
+      return Number.isFinite(t) ? t : 0;
+    }
+    return 0;
+  };
 
   const renderOfficialSealSVG = (brand = "OLIMPY") => `
     <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-label="Official Seal">
@@ -847,8 +884,8 @@ export default function Sales() {
     // Export should ignore table search/status filters; use full dataset
     const data = invoices
       .filter((i) => {
-        const d = new Date(i.date);
-        return d >= start && d <= end;
+        const ms = toMs(i.date);
+        return ms >= start.getTime() && ms <= end.getTime();
       })
       .filter((i) => i.status === "paid" || i.borrow);
 
