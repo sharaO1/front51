@@ -691,7 +691,7 @@ export default function Sales() {
       period === "today"
         ? `${t("sales.today")} (${dateStr})`
         : period === "last_month"
-          ? `${t("sales.last_month")} (${dateStr})`
+          ? `${t("sales.this_month", "This Month")} (${dateStr})`
           : `${t("finance.last_12_months", "Last 12 Months")} (${dateStr})`;
 
     // Include only paid or borrow invoices in the report
@@ -826,29 +826,12 @@ export default function Sales() {
       }
 
       if (period === "last_month") {
-        const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-        const start = new Date(
-          lastMonth.getFullYear(),
-          lastMonth.getMonth(),
-          1,
-          0,
-          0,
-          0,
-          0,
-        );
-        const end = new Date(
-          lastMonth.getFullYear(),
-          lastMonth.getMonth() + 1,
-          0,
-          23,
-          59,
-          59,
-          999,
-        );
+        const start = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0, 0);
+        const end = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
         const label = new Intl.DateTimeFormat(i18n.language || "en", {
           year: "numeric",
           month: "long",
-        }).format(lastMonth);
+        }).format(now);
         return { start, end, label };
       }
 
