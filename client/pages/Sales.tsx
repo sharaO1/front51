@@ -2836,7 +2836,7 @@ export default function Sales() {
                     <SelectContent>
                       <SelectItem value="today">{t("sales.today")}</SelectItem>
                       <SelectItem value="last_month">
-                        {t("sales.last_month")}
+                        {t("sales.this_month", "This Month")}
                       </SelectItem>
                       <SelectItem value="last_year">
                         {t("finance.last_12_months", "Last 12 Months")}
