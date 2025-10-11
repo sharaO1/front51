@@ -1556,17 +1556,26 @@ export default function Finance() {
 
   const exportFinanceReport = (format: "pdf" | "excel" | "csv") => {
     const scope = buildReportScope();
+    const scopedIncome = scope.list
+      .filter((t) => t.type === "income" && isSettledStatus(t.status))
+      .reduce((s, t) => s + (Number(t.amount) || 0), 0);
+    const scopedExpenses = scope.list
+      .filter((t) => t.type === "expense" && isSettledStatus(t.status))
+      .reduce((s, t) => s + (Number(t.amount) || 0), 0);
+    const scopedNet = scopedIncome - scopedExpenses;
+    const scopedMargin = scopedIncome > 0 ? (scopedNet / scopedIncome) * 100 : 0;
+    const pendingCount = scope.list.filter((t) => String(t.status).toLowerCase() === "pending").length;
+
     const reportData = {
       reportType: "Financial Report",
       generatedAt: new Date().toISOString(),
       periodLabel: scope.label,
       summary: {
-        totalIncome,
-        totalExpenses,
-        netProfit,
-        profitMargin,
-        pendingTransactions: transactions.filter((t) => t.status === "pending")
-          .length,
+        totalIncome: scopedIncome,
+        totalExpenses: scopedExpenses,
+        netProfit: scopedNet,
+        profitMargin: scopedMargin,
+        pendingTransactions: pendingCount,
       },
       transactions: scope.list,
       goals,
