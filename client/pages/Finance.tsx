@@ -884,9 +884,12 @@ export default function Finance() {
   const [exportPeriod, setExportPeriod] = useState<
     "daily" | "monthly" | "yearly"
   >("monthly");
-  const [exportDate, setExportDate] = useState<string>(
-    new Date().toISOString().split("T")[0],
-  );
+  const getTodayLocalDate = () => {
+    const d = new Date();
+    d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+    return d.toISOString().split("T")[0];
+  };
+  const [exportDate, setExportDate] = useState<string>(getTodayLocalDate());
   const [exportMonth, setExportMonth] = useState<string>(() => {
     const d = new Date();
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
@@ -917,6 +920,16 @@ export default function Finance() {
     isEditLoanOpen,
     isExportDialogOpen,
   ]);
+
+  useEffect(() => {
+    if (isExportDialogOpen) {
+      const d = new Date();
+      d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+      setExportDate(d.toISOString().split("T")[0]);
+      setExportMonth(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`);
+      setExportYear(String(d.getFullYear()));
+    }
+  }, [isExportDialogOpen]);
 
   const filteredTransactions = transactions
     .filter((transaction) => {
