@@ -550,6 +550,20 @@ export default function Finance() {
     }
   };
 
+  const isSettledStatus = (s: string | undefined) => {
+    const v = String(s || "").toLowerCase().replace(/\s+/g, "_");
+    return (
+      v === "completed" ||
+      v === "paid" ||
+      v === "approved" ||
+      v === "success" ||
+      v === "successful" ||
+      v === "received" ||
+      v === "fulfilled" ||
+      v === "closed"
+    );
+  };
+
   // Date helpers for report scoping
   const startOfDay = (d: Date) =>
     new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0, 0);
@@ -573,7 +587,7 @@ export default function Finance() {
   const computeScopedExpenseBreakdown = (list: Transaction[]) => {
     const map = new Map<string, number>();
     list
-      .filter((t) => t.type === "expense" && t.status === "completed")
+      .filter((t) => t.type === "expense" && isSettledStatus(t.status))
       .forEach((t) => {
         const key = translateCategory(t.category || "Other");
         map.set(key, (map.get(key) || 0) + (Number(t.amount) || 0));
@@ -612,10 +626,10 @@ export default function Finance() {
         day: "2-digit",
       }).format(d);
       const income = list
-        .filter((t) => t.type === "income" && t.status === "completed")
+        .filter((t) => t.type === "income" && isSettledStatus(t.status))
         .reduce((s, t) => s + (Number(t.amount) || 0), 0);
       const expenses = list
-        .filter((t) => t.type === "expense" && t.status === "completed")
+        .filter((t) => t.type === "expense" && isSettledStatus(t.status))
         .reduce((s, t) => s + (Number(t.amount) || 0), 0);
       return [{ month: label, income, expenses, profit: income - expenses }];
     }
@@ -631,7 +645,7 @@ export default function Finance() {
       list.forEach((t) => {
         const d = new Date(t.date);
         const idx = Math.max(0, Math.min(days - 1, d.getDate() - 1));
-        if (t.status === "completed") {
+        if (isSettledStatus(t.status)) {
           if (t.type === "income") points[idx].income += Number(t.amount) || 0;
           else points[idx].expenses += Number(t.amount) || 0;
         }
@@ -648,7 +662,7 @@ export default function Finance() {
     list.forEach((t) => {
       const d = new Date(t.date);
       const m = d.getMonth();
-      if (t.status === "completed") {
+      if (isSettledStatus(t.status)) {
         if (t.type === "income") pts[m].income += Number(t.amount) || 0;
         else pts[m].expenses += Number(t.amount) || 0;
       }
