@@ -875,7 +875,7 @@ export default function Finance() {
     deadline: "",
   });
   const [timeFilter, setTimeFilter] = useState<
-    "all" | "hour" | "day" | "week" | "month" | "year"
+    "all" | "day" | "week" | "month" | "year"
   >("all");
   const { toast } = useToast();
 
@@ -949,7 +949,6 @@ export default function Finance() {
         const now = new Date();
         const diff = now.getTime() - txDate.getTime();
         const ranges: Record<string, number> = {
-          hour: 60 * 60 * 1000,
           day: 24 * 60 * 60 * 1000,
           week: 7 * 24 * 60 * 60 * 1000,
           month: 30 * 24 * 60 * 60 * 1000,
@@ -2093,9 +2092,6 @@ ${data.transactions
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">{t("finance.all_time")}</SelectItem>
-                    <SelectItem value="hour">
-                      {t("finance.last_hour")}
-                    </SelectItem>
                     <SelectItem value="day">{t("finance.last_day")}</SelectItem>
                     <SelectItem value="week">
                       {t("finance.last_week")}
