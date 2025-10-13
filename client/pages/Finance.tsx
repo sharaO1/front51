@@ -551,7 +551,9 @@ export default function Finance() {
   };
 
   const isSettledStatus = (s: string | undefined) => {
-    const v = String(s || "").toLowerCase().replace(/\s+/g, "_");
+    const v = String(s || "")
+      .toLowerCase()
+      .replace(/\s+/g, "_");
     return (
       v === "completed" ||
       v === "paid" ||
@@ -926,7 +928,9 @@ export default function Finance() {
       const d = new Date();
       d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
       setExportDate(d.toISOString().split("T")[0]);
-      setExportMonth(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`);
+      setExportMonth(
+        `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`,
+      );
       setExportYear(String(d.getFullYear()));
     }
   }, [isExportDialogOpen]);
@@ -1562,8 +1566,11 @@ export default function Finance() {
       .filter((t) => t.type === "expense" && isSettledStatus(t.status))
       .reduce((s, t) => s + (Number(t.amount) || 0), 0);
     const scopedNet = scopedIncome - scopedExpenses;
-    const scopedMargin = scopedIncome > 0 ? (scopedNet / scopedIncome) * 100 : 0;
-    const pendingCount = scope.list.filter((t) => String(t.status).toLowerCase() === "pending").length;
+    const scopedMargin =
+      scopedIncome > 0 ? (scopedNet / scopedIncome) * 100 : 0;
+    const pendingCount = scope.list.filter(
+      (t) => String(t.status).toLowerCase() === "pending",
+    ).length;
 
     const reportData = {
       reportType: "Financial Report",

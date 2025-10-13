@@ -638,7 +638,9 @@ export default function Sales() {
       let t = tryParse(s);
       if (!Number.isFinite(t)) t = tryParse(s.replace(/,/g, ""));
       if (!Number.isFinite(t)) {
-        const m = s.match(/^(\d{1,2})[\/.\-](\d{1,2})[\/.\-](\d{4})(?:\s+(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM)?)?$/i);
+        const m = s.match(
+          /^(\d{1,2})[\/.\-](\d{1,2})[\/.\-](\d{4})(?:\s+(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM)?)?$/i,
+        );
         if (m) {
           const a = parseInt(m[1], 10);
           const b = parseInt(m[2], 10);
@@ -826,8 +828,24 @@ export default function Sales() {
       }
 
       if (period === "last_month") {
-        const start = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0, 0);
-        const end = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+        const start = new Date(
+          now.getFullYear(),
+          now.getMonth(),
+          1,
+          0,
+          0,
+          0,
+          0,
+        );
+        const end = new Date(
+          now.getFullYear(),
+          now.getMonth(),
+          now.getDate(),
+          23,
+          59,
+          59,
+          999,
+        );
         const label = new Intl.DateTimeFormat(i18n.language || "en", {
           year: "numeric",
           month: "long",
