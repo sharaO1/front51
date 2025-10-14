@@ -2732,7 +2732,7 @@ export default function Warehouse() {
           <CardContent>
             <div className="text-2xl font-bold">{products.length}</div>
             <p className="text-xs text-muted-foreground">
-              {products.filter((p) => p.status === "in-stock").length}{" "}
+              {products.filter((p) => calculateStatus(getVisibleQuantity(p), p.minStock) === "in-stock").length}{" "}
               {t("warehouse.in_stock")}
             </p>
           </CardContent>
@@ -2747,7 +2747,7 @@ export default function Warehouse() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-yellow-600">
-              {products.filter((p) => p.status === "low-stock").length}
+              {products.filter((p) => calculateStatus(getVisibleQuantity(p), p.minStock) === "low-stock").length}
             </div>
             <p className="text-xs text-muted-foreground">
               {t("warehouse.need_immediate_attention")}
@@ -2764,7 +2764,7 @@ export default function Warehouse() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-red-600">
-              {products.filter((p) => p.status === "out-of-stock").length}
+              {products.filter((p) => calculateStatus(getVisibleQuantity(p), p.minStock) === "out-of-stock").length}
             </div>
             <p className="text-xs text-muted-foreground">
               {t("warehouse.require_restocking")}
@@ -2895,7 +2895,7 @@ export default function Warehouse() {
                             {t("warehouse.max_stock")}: {product.maxStock}
                           </div>
                         </TableCell>
-                        <TableCell>{getStatusBadge(product.status)}</TableCell>
+                        <TableCell>{getStatusBadge(calculateStatus(getVisibleQuantity(product), product.minStock))}</TableCell>
                         <TableCell>
                           <div className="font-medium">
                             ${product.sellingPrice.toLocaleString()}
