@@ -1367,47 +1367,61 @@ export default function Warehouse() {
     return matchesSearch && matchesCategory && matchesStatus;
   });
 
-  const scopedFilialId = (() => {
+  const scopedFilial = (() => {
     const r = authUser?.role;
-    if (!r) return null;
-    if (r === "super_admin" || r === "admin") return null;
-    return (authUser as any).filialId || null;
+    if (!r || r === "super_admin" || r === "admin") {
+      return { id: null as string | null, name: null as string | null };
+    }
+    const idRaw =
+      (authUser as any).filialId ?? (authUser as any).filialID ?? (authUser as any).storeId ?? null;
+    const nameRaw =
+      (authUser as any).filialName ?? (authUser as any).location ?? null;
+    const id = idRaw != null ? String(idRaw) : null;
+    const name = nameRaw != null ? String(nameRaw).toLowerCase().trim() : null;
+    return { id, name };
   })();
+  const isScoped = Boolean(scopedFilial.id || scopedFilial.name);
+
+  const matchesFilial = (st: ProductStore) => {
+    if (!isScoped) return true;
+    const stId = st && st.storeId != null ? String(st.storeId) : "";
+    const stName = st && st.storeName ? String(st.storeName).toLowerCase().trim() : "";
+    return (
+      (scopedFilial.id && stId === scopedFilial.id) ||
+      (scopedFilial.name && stName === scopedFilial.name)
+    );
+  };
 
   const getVisibleQuantity = (product: Product) => {
-    if (!scopedFilialId) return product.quantity;
-    const s = (product.stores || []).find(
-      (st) => String(st.storeId) === String(scopedFilialId),
-    );
+    if (!isScoped) return product.quantity;
+    const s = (product.stores || []).find(matchesFilial);
     return s ? s.quantity : 0;
   };
 
   const visibleStores = (stores: ProductStore[]) => {
-    if (!scopedFilialId) return stores;
-    return (stores || []).filter(
-      (st) => String(st.storeId) === String(scopedFilialId),
-    );
+    if (!isScoped) return stores;
+    return (stores || []).filter(matchesFilial);
   };
 
   const filteredHistory = warehouseHistory.filter((history: any) => {
     const matchesFilter =
       historyFilter === "all" || history.action === historyFilter;
     const matchesFilial = (() => {
-      if (!scopedFilialId) return true;
+      if (!isScoped) return true;
       const performerId = history.performedById;
       if (!performerId) return false;
       const fid = usersFilialMap[performerId];
-      return fid ? String(fid) === String(scopedFilialId) : false;
+      return fid ? String(fid) === String(scopedFilial.id) : false;
     })();
     return matchesFilter && matchesFilial;
   });
 
   const filteredMovements = stockMovements.filter((m: any) => {
-    if (!scopedFilialId) return true;
+    if (!isScoped) return true;
     const performerId = m.performedById;
     if (!performerId) return false;
     const fid = usersFilialMap[performerId];
-    return fid ? String(fid) === String(scopedFilialId) : false;
+    return fid ? String(fid) === String(scopedFilial.id) : false;
   });
 
   const getStatusBadge = (status: string) => {
