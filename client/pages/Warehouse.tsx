@@ -72,6 +72,7 @@ import {
   User,
   Package2,
 } from "lucide-react";
+import { AdminOnly } from "@/components/PermissionGate";
 
 interface Store {
   id: string;
@@ -1366,28 +1367,47 @@ export default function Warehouse() {
     return matchesSearch && matchesCategory && matchesStatus;
   });
 
-  const managerFilialId =
-    authUser?.role === "manager" ? (authUser as any).filialId : null;
+  const scopedFilialId = (() => {
+    const r = authUser?.role;
+    if (!r) return null;
+    if (r === "super_admin" || r === "admin") return null;
+    return (authUser as any).filialId || null;
+  })();
+
+  const getVisibleQuantity = (product: Product) => {
+    if (!scopedFilialId) return product.quantity;
+    const s = (product.stores || []).find(
+      (st) => String(st.storeId) === String(scopedFilialId),
+    );
+    return s ? s.quantity : 0;
+  };
+
+  const visibleStores = (stores: ProductStore[]) => {
+    if (!scopedFilialId) return stores;
+    return (stores || []).filter(
+      (st) => String(st.storeId) === String(scopedFilialId),
+    );
+  };
 
   const filteredHistory = warehouseHistory.filter((history: any) => {
     const matchesFilter =
       historyFilter === "all" || history.action === historyFilter;
     const matchesFilial = (() => {
-      if (!managerFilialId) return true;
+      if (!scopedFilialId) return true;
       const performerId = history.performedById;
       if (!performerId) return false;
       const fid = usersFilialMap[performerId];
-      return fid ? String(fid) === String(managerFilialId) : false;
+      return fid ? String(fid) === String(scopedFilialId) : false;
     })();
     return matchesFilter && matchesFilial;
   });
 
   const filteredMovements = stockMovements.filter((m: any) => {
-    if (!managerFilialId) return true;
+    if (!scopedFilialId) return true;
     const performerId = m.performedById;
     if (!performerId) return false;
     const fid = usersFilialMap[performerId];
-    return fid ? String(fid) === String(managerFilialId) : false;
+    return fid ? String(fid) === String(scopedFilialId) : false;
   });
 
   const getStatusBadge = (status: string) => {
