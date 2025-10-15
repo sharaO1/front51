@@ -4272,7 +4272,7 @@ export default function Warehouse() {
                     {Math.max(0, (selectedProduct ? getQuantityAtLocation(selectedProduct, stockLocation) : 0) - stockQuantity)}
                   </span>
                 </div>
-                {stockQuantity > selectedProduct.quantity && (
+                {selectedProduct && stockQuantity > getQuantityAtLocation(selectedProduct, stockLocation) && (
                   <div className="text-sm text-red-600 mt-1">
                     ⚠️ {t("warehouse.cannot_remove_more_than_available")}
                   </div>
