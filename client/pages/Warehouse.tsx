@@ -2387,6 +2387,7 @@ export default function Warehouse() {
             {t("warehouse.stock_out")}
           </Button>
 
+          <AdminOnly>
           <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
             <DialogTrigger asChild>
               <Button>
@@ -2669,6 +2670,7 @@ export default function Warehouse() {
               </div>
             </DialogContent>
           </Dialog>
+          </AdminOnly>
         </div>
       </div>
 
