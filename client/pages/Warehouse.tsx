@@ -1398,6 +1398,14 @@ export default function Warehouse() {
     return s ? s.quantity : 0;
   };
 
+  const getQuantityAtLocation = (product: Product, locId: string | null) => {
+    if (!product || !locId) return 0;
+    const s = (product.stores || []).find(
+      (st) => String(st.storeId) === String(locId) || String(st.storeName).toLowerCase().trim() === String(locId).toLowerCase().trim(),
+    );
+    return s ? s.quantity : 0;
+  };
+
   const visibleStores = (stores: ProductStore[]) => {
     if (!isScoped) return stores;
     return (stores || []).filter(matchesFilial);
@@ -4012,13 +4020,13 @@ export default function Warehouse() {
                 <div className="text-sm text-muted-foreground">
                   {t("warehouse.current_stock")}:{" "}
                   <span className="font-medium">
-                    {selectedProduct ? getVisibleQuantity(selectedProduct) : 0}
+                    {selectedProduct ? getQuantityAtLocation(selectedProduct, stockLocation) : 0}
                   </span>
                 </div>
                 <div className="text-sm text-muted-foreground">
                   {t("warehouse.new_stock")}:{" "}
                   <span className="font-medium">
-                    {(selectedProduct ? getVisibleQuantity(selectedProduct) : 0) + stockQuantity}
+                    {(selectedProduct ? getQuantityAtLocation(selectedProduct, stockLocation) : 0) + stockQuantity}
                   </span>
                 </div>
               </div>
@@ -4095,7 +4103,7 @@ export default function Warehouse() {
                 id="stockOutQuantity"
                 type="number"
                 min="1"
-                max={selectedProduct ? getVisibleQuantity(selectedProduct) : 0}
+                max={selectedProduct ? getQuantityAtLocation(selectedProduct, stockLocation) : 0}
                 value={stockQuantity}
                 onChange={(e) =>
                   setStockQuantity(parseInt(e.target.value) || 0)
@@ -4255,13 +4263,13 @@ export default function Warehouse() {
                 <div className="text-sm text-muted-foreground">
                   {t("warehouse.current_stock")}:{" "}
                   <span className="font-medium">
-                    {selectedProduct ? getVisibleQuantity(selectedProduct) : 0}
+                    {selectedProduct ? getQuantityAtLocation(selectedProduct, stockLocation) : 0}
                   </span>
                 </div>
                 <div className="text-sm text-muted-foreground">
                   {t("warehouse.remaining_stock")}:{" "}
                   <span className="font-medium">
-                    {Math.max(0, (selectedProduct ? getVisibleQuantity(selectedProduct) : 0) - stockQuantity)}
+                    {Math.max(0, (selectedProduct ? getQuantityAtLocation(selectedProduct, stockLocation) : 0) - stockQuantity)}
                   </span>
                 </div>
                 {stockQuantity > selectedProduct.quantity && (
