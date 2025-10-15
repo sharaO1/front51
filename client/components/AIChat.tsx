@@ -642,8 +642,12 @@ export default function AIChat({
                     size="sm"
                     onClick={(e) => {
                       e.stopPropagation();
-                      // Hide chat only
                       setIsFullScreen(false);
+                      if (page) {
+                        // leave dedicated chat page
+                        navigate("/dashboard");
+                        return;
+                      }
                       setIsOpen(false);
                     }}
                     className="h-8 w-8 rounded-full"
