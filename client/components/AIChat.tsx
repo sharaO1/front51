@@ -31,6 +31,7 @@ import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/stores/authStore";
 import { useChatStore, ChatMessage, EMPTY_MESSAGES } from "@/stores/chatStore";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 function formatMessage(t: string): string {
   if (!t) return "";
@@ -247,6 +248,7 @@ export default function AIChat({
 }: AIChatProps) {
   const [isOpen, setIsOpen] = useState(variant === "inline" || defaultOpen);
   const [isFullScreen, setIsFullScreen] = useState(false);
+  const isMobile = useIsMobile();
   const navigate = useNavigate();
   const accessToken = useAuthStore((s) => s.accessToken);
   const user = useAuthStore((s) => s.user);
@@ -533,15 +535,20 @@ export default function AIChat({
     (variant === "floating" || page) && !isOpen && showTrigger;
   const containerFixed = isFullScreen || (variant === "floating" && isOpen);
 
-  // Exit fullscreen on Escape
+  // Always full-screen on mobile
   useEffect(() => {
-    if (!isFullScreen) return;
+    if (isMobile && isOpen && !isFullScreen) setIsFullScreen(true);
+  }, [isMobile, isOpen, isFullScreen]);
+
+  // Exit fullscreen on Escape (desktop only)
+  useEffect(() => {
+    if (!isFullScreen || isMobile) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") setIsFullScreen(false);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [isFullScreen]);
+  }, [isFullScreen, isMobile]);
 
   // Lock page scroll only for fullscreen or dedicated chat page, not for floating dock
   useEffect(() => {
@@ -605,26 +612,28 @@ export default function AIChat({
                 <Bot className="h-5 w-5" /> AI Chat
               </CardTitle>
               <div className="absolute right-2 top-2 flex gap-1">
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => {
-                    if (page) {
-                      navigate("/dashboard?chat=open");
-                      return;
-                    }
-                    navigate("/chat");
-                  }}
-                  className="h-8 w-8 rounded-full"
-                  aria-label={page ? "Dock to dashboard" : "Open full screen"}
-                >
-                  {page ? (
-                    <Minimize2 className="h-4 w-4" />
-                  ) : (
-                    <Maximize2 className="h-4 w-4" />
-                  )}
-                </Button>
+                {!isMobile && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      if (page) {
+                        navigate("/dashboard?chat=open");
+                        return;
+                      }
+                      navigate("/chat");
+                    }}
+                    className="h-8 w-8 rounded-full"
+                    aria-label={page ? "Dock to dashboard" : "Open full screen"}
+                  >
+                    {page ? (
+                      <Minimize2 className="h-4 w-4" />
+                    ) : (
+                      <Maximize2 className="h-4 w-4" />
+                    )}
+                  </Button>
+                )}
                 <Button
                   type="button"
                   variant="ghost"
