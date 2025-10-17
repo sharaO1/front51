@@ -1,5 +1,4 @@
 import { type ClassValue, clsx } from "clsx";
-import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import i18n from "./i18n";
 
