@@ -1137,6 +1137,11 @@ export default function Sales() {
   const currentUser = useAuthStore((s) => s.user);
 
   const clearCurrentItem = () => {
+    // Blur any focused input to prevent scanned SKU from going to quantity field
+    const activeElement = document.activeElement as HTMLElement;
+    if (activeElement && (activeElement.id === "quantity" || activeElement.id === "discount")) {
+      activeElement.blur();
+    }
     setCurrentItem({
       productId: "",
       productName: "",
