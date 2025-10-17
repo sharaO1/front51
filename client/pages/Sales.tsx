@@ -377,12 +377,13 @@ export default function Sales() {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       const activeElement = document.activeElement as HTMLElement;
-      const isInputFocused =
-        activeElement?.tagName === "INPUT" ||
+      const isQuantityInput = activeElement?.id === "quantity";
+      const isOtherInput =
+        (activeElement?.tagName === "INPUT" && !isQuantityInput) ||
         activeElement?.tagName === "TEXTAREA";
 
-      // Handle Enter key (only if not typing in an input field)
-      if (event.key === "Enter" && !isInputFocused) {
+      // Handle Enter key (only if not typing in a non-quantity input field)
+      if (event.key === "Enter" && !isOtherInput) {
         event.preventDefault();
 
         // If a product is selected, add item to invoice
@@ -412,12 +413,12 @@ export default function Sales() {
         return;
       }
 
-      // Don't intercept keyboard if typing in any input field
-      if (isInputFocused) {
+      // Don't intercept keyboard if typing in other input fields (except quantity)
+      if (isOtherInput) {
         return;
       }
 
-      // If product is selected, allow numbers to be quantity
+      // If product is selected, allow numbers to be quantity (works even if quantity input is focused)
       if (currentItem.productId) {
         const char = event.key;
         if (/\d/.test(char)) {
