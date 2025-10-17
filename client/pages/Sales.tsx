@@ -2281,6 +2281,7 @@ export default function Sales() {
                           {t("employees.quantity_label")}
                         </Label>
                         <Input
+                          ref={quantityInputRef}
                           id="quantity"
                           type="number"
                           min="1"
@@ -2762,6 +2763,7 @@ export default function Sales() {
                           {t("employees.quantity_label")}
                         </Label>
                         <Input
+                          ref={quantityInputRef}
                           id="quantity"
                           type="number"
                           min="1"
