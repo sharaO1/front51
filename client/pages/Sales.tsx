@@ -382,22 +382,29 @@ export default function Sales() {
     const handleKeyDown = (event: KeyboardEvent) => {
       const activeElement = document.activeElement as HTMLElement;
       const isQuantityInput = activeElement?.id === "quantity";
+      const isDiscountInput = activeElement?.id === "discount";
+      const isItemRelatedInput = isQuantityInput || isDiscountInput;
       const isOtherInput =
-        (activeElement?.tagName === "INPUT" && !isQuantityInput) ||
+        (activeElement?.tagName === "INPUT" && !isItemRelatedInput) ||
         activeElement?.tagName === "TEXTAREA";
 
-      // Handle Enter key (only if not typing in a non-quantity input field)
-      if (event.key === "Enter" && !isOtherInput) {
+      // Handle Enter key
+      if (event.key === "Enter") {
         event.preventDefault();
 
-        // If a product is selected, add item to invoice
-        if (currentItem.productId) {
+        // If a product is selected and Enter is pressed from quantity or discount field, add item
+        if (currentItem.productId && isItemRelatedInput) {
           addItemToInvoice();
           return;
         }
 
-        // If barcodeBuffer has content, treat as barcode scan
-        if (barcodeBuffer.trim().length > 0) {
+        // If a product is selected but Enter from another field, don't do anything
+        if (currentItem.productId && isOtherInput) {
+          return;
+        }
+
+        // If barcode buffer has content and not in an input field, treat as barcode scan
+        if (!isOtherInput && barcodeBuffer.trim().length > 0) {
           handleBarcodeScanned(barcodeBuffer.trim());
           setBarcodeBuffer("");
           if (barcodeTimeoutRef.current) {
@@ -407,7 +414,7 @@ export default function Sales() {
         }
 
         // If no product selected and dialog is open, create invoice
-        if (isCreateDialogOpen) {
+        if (!currentItem.productId && isCreateDialogOpen) {
           createInvoice();
         }
         return;
@@ -417,7 +424,7 @@ export default function Sales() {
         return;
       }
 
-      // Don't intercept keyboard if typing in other input fields (except quantity)
+      // Don't intercept keyboard if typing in other input fields (except item-related ones)
       if (isOtherInput) {
         return;
       }
