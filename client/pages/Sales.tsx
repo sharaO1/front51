@@ -98,6 +98,7 @@ interface Product {
   name: string;
   unitPrice: number;
   category: string;
+  sku?: string;
 }
 
 interface Employee {
@@ -293,6 +294,8 @@ export default function Sales() {
     "today" | "last_month" | "last_year"
   >("today");
   const isMobile = useIsMobile();
+  const [barcodeBuffer, setBarcodeBuffer] = useState("");
+  const barcodeTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
 
   const closeExportLayers = () => {
     setExportMenuOpen(false);
@@ -333,6 +336,68 @@ export default function Sales() {
     discount: 0,
   });
   const { toast } = useToast();
+
+  const handleBarcodeScanned = (sku: string) => {
+    const product = products.find((p) => p.sku?.toLowerCase() === sku.toLowerCase());
+    if (!product) {
+      toast({
+        title: "Product Not Found",
+        description: `No product found with SKU: ${sku}`,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setCurrentItem({
+      productId: product.id,
+      productName: product.name,
+      quantity: 1,
+      unitPrice: product.unitPrice,
+      discount: 0,
+    });
+    setIsCreateDialogOpen(true);
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Enter" && barcodeBuffer.trim().length > 0) {
+        event.preventDefault();
+        handleBarcodeScanned(barcodeBuffer.trim());
+        setBarcodeBuffer("");
+        if (barcodeTimeoutRef.current) {
+          clearTimeout(barcodeTimeoutRef.current);
+        }
+        return;
+      }
+
+      if (event.ctrlKey || event.altKey || event.metaKey) {
+        return;
+      }
+
+      const char = event.key;
+      if (char.length === 1 && /[a-zA-Z0-9\-]/i.test(char)) {
+        event.preventDefault();
+        const newBuffer = barcodeBuffer + char;
+        setBarcodeBuffer(newBuffer);
+
+        if (barcodeTimeoutRef.current) {
+          clearTimeout(barcodeTimeoutRef.current);
+        }
+
+        barcodeTimeoutRef.current = setTimeout(() => {
+          setBarcodeBuffer("");
+        }, 2000);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      if (barcodeTimeoutRef.current) {
+        clearTimeout(barcodeTimeoutRef.current);
+      }
+    };
+  }, [barcodeBuffer, products]);
 
   const buildInvoiceReport = (inv: Invoice) => {
     const sep = "========================================";
