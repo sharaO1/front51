@@ -8,6 +8,7 @@ import RoleProtectedRoute from "./components/RoleProtectedRoute";
 import Dashboard from "./pages/Dashboard";
 import UserManagement from "./pages/admin/UserManagement";
 import Warehouse from "./pages/Warehouse";
+import LowStockAlerts from "./pages/Inventory/LowStockAlerts";
 import Filials from "./pages/Filials";
 import Clients from "./pages/Clients";
 import Sales from "./pages/Sales";
@@ -150,6 +151,10 @@ const App = () => {
                     />
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/warehouse" element={<Warehouse />} />
+                    <Route
+                      path="/low-stock-alerts"
+                      element={<LowStockAlerts />}
+                    />
                     <Route
                       path="/filials"
                       element={
