@@ -2257,7 +2257,8 @@ export default function Sales() {
                           id="quantity"
                           type="number"
                           min="1"
-                          value={currentItem.quantity}
+                          placeholder="1"
+                          value={currentItem.quantity || ""}
                           onChange={(e) =>
                             setCurrentItem({
                               ...currentItem,
@@ -2726,7 +2727,8 @@ export default function Sales() {
                           id="quantity"
                           type="number"
                           min="1"
-                          value={currentItem.quantity}
+                          placeholder="1"
+                          value={currentItem.quantity || ""}
                           onChange={(e) =>
                             setCurrentItem({
                               ...currentItem,
