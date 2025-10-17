@@ -51,6 +51,7 @@ import {
   Eye,
   Send,
 } from "lucide-react";
+import { formatCurrency } from "@/lib/utils";
 
 interface Client {
   id: string;
@@ -583,10 +584,9 @@ export default function Clients() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              $
-              {clients
-                .reduce((sum, c) => sum + c.currentDebt, 0)
-                .toLocaleString()}
+              {formatCurrency(
+                clients.reduce((sum, c) => sum + c.currentDebt, 0)
+              )}
             </div>
             <p className="text-xs text-muted-foreground">
               {t("clients.across_all_clients")}
@@ -620,10 +620,9 @@ export default function Clients() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              $
-              {clients
-                .reduce((sum, c) => sum + c.totalPurchases, 0)
-                .toLocaleString()}
+              {formatCurrency(
+                clients.reduce((sum, c) => sum + c.totalPurchases, 0)
+              )}
             </div>
             <p className="text-xs text-muted-foreground">
               {t("clients.all_time_revenue")}
@@ -686,8 +685,7 @@ export default function Clients() {
                   <div>
                     <div className="font-semibold">{client.name}</div>
                     <div className="text-xs text-muted-foreground">
-                      {t("common.total")}: $
-                      {client.totalPurchases.toLocaleString()}
+                      {t("common.total")}: {formatCurrency(client.totalPurchases)}
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-1 justify-end">
@@ -708,11 +706,10 @@ export default function Clients() {
                 <div className="mt-2 flex items-center justify-between gap-3 text-sm">
                   <div>
                     <div className="font-medium">
-                      ${client.currentDebt.toLocaleString()}
+                      {formatCurrency(client.currentDebt)}
                     </div>
                     <div className="text-xs text-muted-foreground">
-                      {t("clients.credit_limit")}: $
-                      {client.creditLimit.toLocaleString()}
+                      {t("clients.credit_limit")}: {formatCurrency(client.creditLimit)}
                     </div>
                   </div>
                   <div className="flex gap-1">
@@ -828,8 +825,7 @@ export default function Clients() {
                       <div>
                         <div className="font-medium">{client.name}</div>
                         <div className="text-sm text-muted-foreground">
-                          {t("common.total")}: $
-                          {client.totalPurchases.toLocaleString()}
+                          {t("common.total")}: {formatCurrency(client.totalPurchases)}
                         </div>
                       </div>
                     </TableCell>
@@ -849,11 +845,10 @@ export default function Clients() {
                     <TableCell>
                       <div>
                         <div className="font-medium">
-                          ${client.currentDebt.toLocaleString()}
-                        </div>
+                      {formatCurrency(client.currentDebt)}
+                    </div>
                         <div className="text-sm text-muted-foreground">
-                          {t("clients.credit_limit")}: $
-                          {client.creditLimit.toLocaleString()}
+                          {t("clients.credit_limit")}: {formatCurrency(client.creditLimit)}
                         </div>
                       </div>
                     </TableCell>
@@ -946,15 +941,15 @@ export default function Clients() {
                 },
                 {
                   label: t("clients.credit_limit"),
-                  value: `$${selectedClient.creditLimit.toLocaleString()}`,
+                  value: formatCurrency(selectedClient.creditLimit),
                 },
                 {
                   label: t("clients.current_debt"),
-                  value: `$${selectedClient.currentDebt.toLocaleString()}`,
+                  value: formatCurrency(selectedClient.currentDebt),
                 },
                 {
                   label: t("clients.total_purchases"),
-                  value: `$${selectedClient.totalPurchases.toLocaleString()}`,
+                  value: formatCurrency(selectedClient.totalPurchases),
                 },
               ]}
               actions={
