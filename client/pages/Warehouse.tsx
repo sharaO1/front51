@@ -1357,6 +1357,88 @@ export default function Warehouse() {
     if (latest && latest !== selectedProduct) setSelectedProduct(latest);
   }, [products, selectedProduct?.id]);
 
+  // SKU scanning - only in Warehouse page
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      const activeElement = document.activeElement as HTMLElement;
+      const isInputField = activeElement?.tagName === "INPUT" || activeElement?.tagName === "TEXTAREA";
+
+      // Handle Enter key - if buffer has content, search for product
+      if (event.key === "Enter" && skuBuffer.trim().length > 0 && !isInputField) {
+        event.preventDefault();
+        const sku = skuBuffer.trim();
+        const foundProduct = products.find(p => p.sku.toLowerCase() === sku.toLowerCase());
+        if (foundProduct) {
+          setSelectedProduct(foundProduct);
+          setIsViewDialogOpen(true);
+          toast({
+            title: t("common.success"),
+            description: `${t("warehouse.product")} "${foundProduct.name}" ${t("common.found")}`,
+          });
+        } else {
+          toast({
+            title: t("common.error"),
+            description: `${t("warehouse.product")} ${t("common.with")} SKU "${sku}" ${t("common.not_found")}`,
+            variant: "destructive",
+          });
+        }
+        setSkuBuffer("");
+        if (skuTimeoutRef.current) {
+          clearTimeout(skuTimeoutRef.current);
+        }
+        return;
+      }
+
+      // Don't intercept keyboard if typing in input field
+      if (isInputField) {
+        return;
+      }
+
+      // Accumulate characters for SKU scanning (numbers, letters, hyphens)
+      const char = event.key;
+      if (char.length === 1 && /[a-zA-Z0-9\-]/i.test(char)) {
+        event.preventDefault();
+        const newBuffer = skuBuffer + char;
+        setSkuBuffer(newBuffer);
+
+        if (skuTimeoutRef.current) {
+          clearTimeout(skuTimeoutRef.current);
+        }
+
+        // Auto-search after 1.5 seconds of inactivity
+        skuTimeoutRef.current = setTimeout(() => {
+          const sku = newBuffer.trim();
+          if (sku.length > 0) {
+            const foundProduct = products.find(p => p.sku.toLowerCase() === sku.toLowerCase());
+            if (foundProduct) {
+              setSelectedProduct(foundProduct);
+              setIsViewDialogOpen(true);
+              toast({
+                title: t("common.success"),
+                description: `${t("warehouse.product")} "${foundProduct.name}" ${t("common.found")}`,
+              });
+            } else {
+              toast({
+                title: t("common.error"),
+                description: `${t("warehouse.product")} ${t("common.with")} SKU "${sku}" ${t("common.not_found")}`,
+                variant: "destructive",
+              });
+            }
+            setSkuBuffer("");
+          }
+        }, 1500);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      if (skuTimeoutRef.current) {
+        clearTimeout(skuTimeoutRef.current);
+      }
+    };
+  }, [products, skuBuffer, toast, t]);
+
   const filteredProducts = products.filter((product) => {
     const matchesSearch =
       product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
