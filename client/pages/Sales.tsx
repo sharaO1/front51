@@ -358,23 +358,30 @@ export default function Sales() {
 
     const wasDialogClosed = !isCreateDialogOpen;
 
-    setCurrentItem({
+    const scannedItem: Partial<InvoiceItem> = {
       productId: product.id,
       productName: product.name,
       quantity: 1,
       unitPrice: product.unitPrice,
       discount: 0,
-    });
+    };
 
     if (wasDialogClosed) {
       setIsCreateDialogOpen(true);
-      // Give dialog time to render and focus quantity input
+      // Give dialog time to render before adding item
       setTimeout(() => {
-        quantityInputRef.current?.focus();
+        setCurrentItem(scannedItem);
+        // After a brief delay, automatically add the scanned item to the invoice
+        setTimeout(() => {
+          addItemToInvoice(scannedItem);
+        }, 50);
       }, 100);
     } else {
-      // Dialog is already open, focus quantity input immediately
-      quantityInputRef.current?.focus();
+      // Dialog is already open - immediately add the scanned item
+      setCurrentItem(scannedItem);
+      setTimeout(() => {
+        addItemToInvoice(scannedItem);
+      }, 0);
     }
   }, [products, currentItem, isCreateDialogOpen, toast]);
 
