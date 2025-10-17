@@ -2391,7 +2391,14 @@ export default function Sales() {
                             })
                           }
                           onKeyDown={(e) => {
-                            const allowed = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter'];
+                            const allowed = [
+                              "Backspace",
+                              "Delete",
+                              "ArrowLeft",
+                              "ArrowRight",
+                              "Tab",
+                              "Enter",
+                            ];
                             if (allowed.includes(e.key)) return;
                             if (!/^\d$/.test(e.key)) {
                               e.preventDefault();
@@ -2414,7 +2421,15 @@ export default function Sales() {
                             })
                           }
                           onKeyDown={(e) => {
-                            const allowed = ['Backspace', 'Delete', '.', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter'];
+                            const allowed = [
+                              "Backspace",
+                              "Delete",
+                              ".",
+                              "ArrowLeft",
+                              "ArrowRight",
+                              "Tab",
+                              "Enter",
+                            ];
                             if (allowed.includes(e.key)) return;
                             if (!/^\d$/.test(e.key)) {
                               e.preventDefault();
@@ -2891,7 +2906,14 @@ export default function Sales() {
                             })
                           }
                           onKeyDown={(e) => {
-                            const allowed = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter'];
+                            const allowed = [
+                              "Backspace",
+                              "Delete",
+                              "ArrowLeft",
+                              "ArrowRight",
+                              "Tab",
+                              "Enter",
+                            ];
                             if (allowed.includes(e.key)) return;
                             if (!/^\d$/.test(e.key)) {
                               e.preventDefault();
@@ -2914,7 +2936,15 @@ export default function Sales() {
                             })
                           }
                           onKeyDown={(e) => {
-                            const allowed = ['Backspace', 'Delete', '.', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter'];
+                            const allowed = [
+                              "Backspace",
+                              "Delete",
+                              ".",
+                              "ArrowLeft",
+                              "ArrowRight",
+                              "Tab",
+                              "Enter",
+                            ];
                             if (allowed.includes(e.key)) return;
                             if (!/^\d$/.test(e.key)) {
                               e.preventDefault();
