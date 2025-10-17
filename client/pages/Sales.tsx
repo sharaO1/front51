@@ -348,14 +348,27 @@ export default function Sales() {
       return;
     }
 
-    setCurrentItem({
-      productId: product.id,
-      productName: product.name,
-      quantity: 1,
-      unitPrice: product.unitPrice,
-      discount: 0,
-    });
-    setIsCreateDialogOpen(true);
+    if (isCreateDialogOpen) {
+      setCurrentItem({
+        productId: product.id,
+        productName: product.name,
+        quantity: 1,
+        unitPrice: product.unitPrice,
+        discount: 0,
+      });
+      setTimeout(() => {
+        addItemToInvoice();
+      }, 50);
+    } else {
+      setCurrentItem({
+        productId: product.id,
+        productName: product.name,
+        quantity: 1,
+        unitPrice: product.unitPrice,
+        discount: 0,
+      });
+      setIsCreateDialogOpen(true);
+    }
   };
 
   useEffect(() => {
