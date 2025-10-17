@@ -96,12 +96,12 @@ export const handleLowStockAlerts: RequestHandler = (_req, res) => {
         reorderQuantity: product.maxStock - product.stock,
         supplier: "Supplier " + product.id,
         lastRestockDate: new Date(
-          Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000
+          Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000,
         )
           .toISOString()
           .split("T")[0],
         createdAt: new Date(
-          Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000
+          Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000,
         ).toISOString(),
         updatedAt: new Date().toISOString(),
       };

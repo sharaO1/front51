@@ -85,7 +85,7 @@ export default function LowStockAlerts() {
     "all" | "critical" | "warning" | "moderate"
   >("all");
   const [dismissedAlerts, setDismissedAlerts] = useState<Set<string>>(
-    new Set()
+    new Set(),
   );
 
   const fetchAlerts = async () => {
@@ -120,9 +120,7 @@ export default function LowStockAlerts() {
   const filteredAlerts = useMemo(() => {
     return alerts.filter((alert) => {
       const matchesSearch =
-        alert.productName
-          .toLowerCase()
-          .includes(searchQuery.toLowerCase()) ||
+        alert.productName.toLowerCase().includes(searchQuery.toLowerCase()) ||
         alert.category.toLowerCase().includes(searchQuery.toLowerCase());
 
       const matchesStatus =
@@ -140,7 +138,7 @@ export default function LowStockAlerts() {
         `/api/low-stock-alerts/${alertId}/acknowledge`,
         {
           method: "PUT",
-        }
+        },
       );
 
       if (!response.ok) throw new Error("Failed to acknowledge alert");
@@ -177,7 +175,7 @@ export default function LowStockAlerts() {
       filteredAlerts
         .map(
           (alert) =>
-            `"${alert.productName}","${alert.category}",${alert.currentStock},${alert.minRequired},"${alert.status}",${alert.unitPrice},${alert.reorderQuantity}`
+            `"${alert.productName}","${alert.category}",${alert.currentStock},${alert.minRequired},"${alert.status}",${alert.unitPrice},${alert.reorderQuantity}`,
         )
         .join("\n");
 
@@ -231,7 +229,7 @@ export default function LowStockAlerts() {
           <p className="text-muted-foreground mt-2">
             {t(
               "inventory.monitor_inventory_levels",
-              "Monitor and manage products with low inventory levels"
+              "Monitor and manage products with low inventory levels",
             )}
           </p>
         </div>
@@ -359,7 +357,7 @@ export default function LowStockAlerts() {
                 <Input
                   placeholder={t(
                     "inventory.search_products",
-                    "Search products..."
+                    "Search products...",
                   )}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -376,7 +374,7 @@ export default function LowStockAlerts() {
                 value={statusFilter}
                 onValueChange={(value) =>
                   setStatusFilter(
-                    value as "all" | "critical" | "warning" | "moderate"
+                    value as "all" | "critical" | "warning" | "moderate",
                   )
                 }
               >
@@ -384,9 +382,7 @@ export default function LowStockAlerts() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">
-                    {t("common.all", "All")}
-                  </SelectItem>
+                  <SelectItem value="all">{t("common.all", "All")}</SelectItem>
                   <SelectItem value="critical">
                     {t("inventory.critical", "Critical")}
                   </SelectItem>
@@ -432,7 +428,7 @@ export default function LowStockAlerts() {
               <p className="text-muted-foreground">
                 {t(
                   "inventory.all_items_well_stocked",
-                  "All items are well-stocked"
+                  "All items are well-stocked",
                 )}
               </p>
             </div>
@@ -441,12 +437,8 @@ export default function LowStockAlerts() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>
-                      {t("common.product", "Product")}
-                    </TableHead>
-                    <TableHead>
-                      {t("inventory.category", "Category")}
-                    </TableHead>
+                    <TableHead>{t("common.product", "Product")}</TableHead>
+                    <TableHead>{t("inventory.category", "Category")}</TableHead>
                     <TableHead className="text-right">
                       {t("inventory.current_stock", "Current Stock")}
                     </TableHead>
@@ -456,9 +448,7 @@ export default function LowStockAlerts() {
                     <TableHead className="text-right">
                       {t("inventory.reorder_qty", "Reorder Qty")}
                     </TableHead>
-                    <TableHead>
-                      {t("common.status", "Status")}
-                    </TableHead>
+                    <TableHead>{t("common.status", "Status")}</TableHead>
                     <TableHead className="text-right">
                       {t("common.unit_price", "Unit Price")}
                     </TableHead>
@@ -489,14 +479,13 @@ export default function LowStockAlerts() {
                                   ? "bg-red-500"
                                   : alert.status === "warning"
                                     ? "bg-yellow-500"
-                                    : "bg-orange-500"
+                                    : "bg-orange-500",
                               )}
                               style={{
                                 width: `${Math.min(
-                                  (alert.currentStock /
-                                    alert.minRequired) *
+                                  (alert.currentStock / alert.minRequired) *
                                     100,
-                                  100
+                                  100,
                                 )}%`,
                               }}
                             />
@@ -513,7 +502,7 @@ export default function LowStockAlerts() {
                         <Badge
                           className={cn(
                             "gap-1 border",
-                            getStatusColor(alert.status)
+                            getStatusColor(alert.status),
                           )}
                           variant="outline"
                         >
@@ -521,7 +510,7 @@ export default function LowStockAlerts() {
                           {t(
                             `inventory.${alert.status}`,
                             alert.status.charAt(0).toUpperCase() +
-                              alert.status.slice(1)
+                              alert.status.slice(1),
                           )}
                         </Badge>
                       </TableCell>
@@ -537,7 +526,7 @@ export default function LowStockAlerts() {
                             onClick={() => handleAcknowledge(alert.id)}
                             title={t(
                               "inventory.acknowledge_alert",
-                              "Acknowledge alert"
+                              "Acknowledge alert",
                             )}
                           >
                             <CheckCircle2 className="h-4 w-4 text-green-600" />
@@ -549,7 +538,7 @@ export default function LowStockAlerts() {
                             onClick={() => handleDismiss(alert.id)}
                             title={t(
                               "inventory.dismiss_alert",
-                              "Dismiss alert"
+                              "Dismiss alert",
                             )}
                           >
                             <Trash2 className="h-4 w-4 text-muted-foreground" />
