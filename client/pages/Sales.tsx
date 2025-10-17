@@ -338,6 +338,11 @@ export default function Sales() {
   const { toast } = useToast();
 
   const handleBarcodeScanned = (sku: string) => {
+    // Ignore barcode if an item is already selected but not added yet
+    if (currentItem.productId) {
+      return;
+    }
+
     const product = products.find(
       (p) => p.sku?.toLowerCase() === sku.toLowerCase(),
     );
