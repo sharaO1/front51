@@ -331,7 +331,7 @@ export default function Sales() {
   const [currentItem, setCurrentItem] = useState<Partial<InvoiceItem>>({
     productId: "",
     productName: "",
-    quantity: 1,
+    quantity: undefined,
     unitPrice: 0,
     discount: 0,
   });
