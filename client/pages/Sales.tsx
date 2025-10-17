@@ -378,10 +378,10 @@ export default function Sales() {
     }
   }, [products, currentItem, isCreateDialogOpen, toast]);
 
-  // Clear item state when dialog opens to ensure fresh barcode scanning
+  // Clear invoice and item state when dialog closes to reset for next invoice
   useEffect(() => {
-    if (isCreateDialogOpen) {
-      clearCurrentItem();
+    if (!isCreateDialogOpen) {
+      clearNewInvoice();
     }
   }, [isCreateDialogOpen]);
 
