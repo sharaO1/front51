@@ -1827,6 +1827,7 @@ export default function Sales() {
               name: p.name || p.title || "",
               unitPrice: parsedPrice,
               category: p.category || "",
+              sku: p.sku || "",
             };
           });
           setProducts(normalized);
