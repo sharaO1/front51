@@ -1380,8 +1380,7 @@ export default function Sales() {
     // Check if an item with the same product ID and discount already exists
     const existingItemIndex = (newInvoice.items || []).findIndex(
       (item) =>
-        item.productId === itemToAdd.productId &&
-        item.discount === newDiscount,
+        item.productId === itemToAdd.productId && item.discount === newDiscount,
     );
 
     let updatedItems: InvoiceItem[];
