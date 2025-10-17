@@ -350,18 +350,15 @@ export default function Sales() {
       return;
     }
 
-    const scannedItem: Partial<InvoiceItem> = {
+    setCurrentItem({
       productId: product.id,
       productName: product.name,
       quantity: 1,
       unitPrice: product.unitPrice,
       discount: 0,
-    };
+    });
 
-    if (isCreateDialogOpen) {
-      addItemToInvoice(scannedItem);
-    } else {
-      setCurrentItem(scannedItem);
+    if (!isCreateDialogOpen) {
       setIsCreateDialogOpen(true);
     }
   };
