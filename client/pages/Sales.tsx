@@ -439,8 +439,17 @@ export default function Sales() {
         return;
       }
 
-      // Don't intercept keyboard if typing in any input field
-      if (isItemRelatedInput || isOtherInput) {
+      // Allow barcode scanning even if Select is focused, but not text inputs or textareas
+      if (isItemRelatedInput) {
+        return;
+      }
+
+      // Allow barcode input if a text input is focused but only certain ones (prevent barcode in text inputs)
+      if (activeElement?.tagName === "INPUT" && !isItemRelatedInput) {
+        return;
+      }
+
+      if (activeElement?.tagName === "TEXTAREA") {
         return;
       }
 
