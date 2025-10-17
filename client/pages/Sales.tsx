@@ -378,7 +378,7 @@ export default function Sales() {
     }
   }, [products, currentItem, isCreateDialogOpen, toast]);
 
-  // Clear invoice and item state when dialog closes to reset for next invoice
+  // Reset form state when dialog closes
   useEffect(() => {
     if (!isCreateDialogOpen) {
       clearNewInvoice();
