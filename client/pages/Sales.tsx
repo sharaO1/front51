@@ -531,6 +531,8 @@ export default function Sales() {
     isCreateDialogOpen,
     currentItem,
     handleBarcodeScanned,
+    addItemToInvoice,
+    createInvoice,
   ]);
 
   const buildInvoiceReport = (inv: Invoice) => {
