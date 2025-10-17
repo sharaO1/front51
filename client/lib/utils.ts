@@ -1,4 +1,5 @@
 import { type ClassValue, clsx } from "clsx";
+import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import i18n from "./i18n";
 
@@ -7,7 +8,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatCurrency(
-  value: number | null | undefined,
+  value: number | string | null | undefined,
   opts?: {
     currency?: string;
     minimumFractionDigits?: number;
@@ -15,7 +16,9 @@ export function formatCurrency(
     locale?: string;
   },
 ): string {
-  const amount = Number(value || 0);
+  let amount = Number(value);
+  if (!Number.isFinite(amount)) amount = 0;
+
   const {
     currency = "USD",
     minimumFractionDigits = 0,
@@ -36,6 +39,6 @@ export function formatCurrency(
       maximumFractionDigits,
     }).format(amount);
   } catch {
-    return `$${amount.toLocaleString()}`;
+    return `$${(Number.isFinite(amount) ? amount : 0).toLocaleString()}`;
   }
 }
