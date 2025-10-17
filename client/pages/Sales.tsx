@@ -2332,7 +2332,19 @@ export default function Sales() {
                       </div>
                     )}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      <Button onClick={addItemToInvoice}>
+                      <Button
+                        onClick={() => {
+                          if (currentItem.productId) {
+                            handleAddItemWithProduct(currentItem.productId);
+                          } else {
+                            toast({
+                              title: "Error",
+                              description: "Please select a product first",
+                              variant: "destructive",
+                            });
+                          }
+                        }}
+                      >
                         <Plus className="mr-2 h-4 w-4" />
                         {t("sales.add_item")}
                       </Button>
@@ -2806,7 +2818,19 @@ export default function Sales() {
                       </div>
                     )}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      <Button onClick={addItemToInvoice}>
+                      <Button
+                        onClick={() => {
+                          if (currentItem.productId) {
+                            handleAddItemWithProduct(currentItem.productId);
+                          } else {
+                            toast({
+                              title: "Error",
+                              description: "Please select a product first",
+                              variant: "destructive",
+                            });
+                          }
+                        }}
+                      >
                         <Plus className="mr-2 h-4 w-4" />
                         {t("sales.add_item")}
                       </Button>
