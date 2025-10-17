@@ -424,13 +424,13 @@ export default function Sales() {
         return;
       }
 
-      // Don't intercept keyboard if typing in other input fields (except item-related ones)
-      if (isOtherInput) {
+      // Don't intercept keyboard if typing in any input field
+      if (isItemRelatedInput || isOtherInput) {
         return;
       }
 
-      // If product is selected and not in a number input field, allow numbers to be quantity
-      if (currentItem.productId && !isItemRelatedInput) {
+      // If product is selected and not in any input field, allow numbers to be quantity
+      if (currentItem.productId) {
         const char = event.key;
         if (/\d/.test(char)) {
           event.preventDefault();
