@@ -355,6 +355,15 @@ export default function Sales() {
 
     const wasDialogClosed = !isCreateDialogOpen;
 
+    // Mark that a barcode was just scanned to prevent accidental invoice creation
+    justScannedRef.current = true;
+    if (barcodeScanTimeoutRef.current) {
+      clearTimeout(barcodeScanTimeoutRef.current);
+    }
+    barcodeScanTimeoutRef.current = setTimeout(() => {
+      justScannedRef.current = false;
+    }, 500);
+
     // Set current item (this will select it in the product dropdown)
     setCurrentItem({
       productId: product.id,
