@@ -29,6 +29,7 @@ import {
   ChevronDown,
   Globe,
   User,
+  AlertTriangle,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -76,6 +77,11 @@ export default function Layout({ children }: LayoutProps) {
       icon: LayoutDashboard,
     },
     { name: t("navigation.warehouse"), href: "/warehouse", icon: Package },
+    {
+      name: t("navigation.low_stock_alerts", "Low Stock Alerts"),
+      href: "/low-stock-alerts",
+      icon: AlertTriangle,
+    },
     { name: t("navigation.filials"), href: "/filials", icon: Building2 },
     { name: t("navigation.clients"), href: "/clients", icon: Users },
     { name: t("navigation.sales"), href: "/sales", icon: ShoppingCart },
