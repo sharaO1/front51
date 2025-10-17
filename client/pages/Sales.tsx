@@ -410,7 +410,7 @@ export default function Sales() {
         clearTimeout(barcodeTimeoutRef.current);
       }
     };
-  }, [barcodeBuffer, products]);
+  }, [barcodeBuffer, products, isCreateDialogOpen, handleBarcodeScanned]);
 
   const buildInvoiceReport = (inv: Invoice) => {
     const sep = "========================================";
