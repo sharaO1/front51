@@ -370,12 +370,29 @@ export default function Sales() {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Enter" && barcodeBuffer.trim().length > 0) {
+      // Handle Enter key
+      if (event.key === "Enter") {
         event.preventDefault();
-        handleBarcodeScanned(barcodeBuffer.trim());
-        setBarcodeBuffer("");
-        if (barcodeTimeoutRef.current) {
-          clearTimeout(barcodeTimeoutRef.current);
+
+        // If a product is selected, add item to invoice
+        if (currentItem.productId) {
+          addItemToInvoice();
+          return;
+        }
+
+        // If barcodeBuffer has content, treat as barcode scan
+        if (barcodeBuffer.trim().length > 0) {
+          handleBarcodeScanned(barcodeBuffer.trim());
+          setBarcodeBuffer("");
+          if (barcodeTimeoutRef.current) {
+            clearTimeout(barcodeTimeoutRef.current);
+          }
+          return;
+        }
+
+        // If no product selected and dialog is open, create invoice
+        if (isCreateDialogOpen) {
+          createInvoice();
         }
         return;
       }
@@ -384,6 +401,21 @@ export default function Sales() {
         return;
       }
 
+      // If product is selected, allow numbers to be quantity
+      if (currentItem.productId) {
+        const char = event.key;
+        if (/\d/.test(char)) {
+          event.preventDefault();
+          const newQuantity = parseInt(char);
+          setCurrentItem({
+            ...currentItem,
+            quantity: newQuantity,
+          });
+        }
+        return;
+      }
+
+      // Otherwise, treat as barcode input
       const char = event.key;
       if (char.length === 1 && /[a-zA-Z0-9\-]/i.test(char)) {
         event.preventDefault();
@@ -407,7 +439,7 @@ export default function Sales() {
         clearTimeout(barcodeTimeoutRef.current);
       }
     };
-  }, [barcodeBuffer, products, isCreateDialogOpen, handleBarcodeScanned]);
+  }, [barcodeBuffer, products, isCreateDialogOpen, currentItem, handleBarcodeScanned]);
 
   const buildInvoiceReport = (inv: Invoice) => {
     const sep = "========================================";
