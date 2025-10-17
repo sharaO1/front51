@@ -1267,8 +1267,10 @@ export default function Sales() {
     return { subtotal, taxAmount, total };
   };
 
-  const addItemToInvoice = () => {
-    if (!currentItem.productId || !currentItem.quantity) {
+  const addItemToInvoice = (itemData?: Partial<InvoiceItem>) => {
+    const itemToAdd = itemData || currentItem;
+
+    if (!itemToAdd.productId || !itemToAdd.quantity) {
       toast({
         title: "Error",
         description: "Please select a product and enter quantity",
@@ -1277,7 +1279,7 @@ export default function Sales() {
       return;
     }
 
-    const product = products.find((p) => p.id === currentItem.productId);
+    const product = products.find((p) => p.id === itemToAdd.productId);
     if (!product) {
       toast({
         title: "Error",
@@ -1289,12 +1291,12 @@ export default function Sales() {
 
     const item: InvoiceItem = {
       id: Date.now().toString(),
-      productId: currentItem.productId!,
-      productName: currentItem.productName!,
-      quantity: currentItem.quantity!,
-      unitPrice: currentItem.unitPrice!,
-      discount: currentItem.discount || 0,
-      total: calculateItemTotal(currentItem),
+      productId: itemToAdd.productId!,
+      productName: itemToAdd.productName!,
+      quantity: itemToAdd.quantity!,
+      unitPrice: itemToAdd.unitPrice!,
+      discount: itemToAdd.discount || 0,
+      total: calculateItemTotal(itemToAdd),
     };
 
     const updatedItems = [...(newInvoice.items || []), item];
