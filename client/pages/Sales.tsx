@@ -295,7 +295,7 @@ export default function Sales() {
   >("today");
   const isMobile = useIsMobile();
   const [barcodeBuffer, setBarcodeBuffer] = useState("");
-  const barcodeTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
+  const barcodeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const closeExportLayers = () => {
     setExportMenuOpen(false);
