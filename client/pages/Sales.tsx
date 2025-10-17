@@ -2218,6 +2218,7 @@ export default function Sales() {
                                 productId: selectedProduct.id,
                                 productName: selectedProduct.name,
                                 unitPrice: selectedProduct.unitPrice,
+                                quantity: currentItem.quantity || 1,
                               });
                             }
                           }}
@@ -2686,6 +2687,7 @@ export default function Sales() {
                                 productId: selectedProduct.id,
                                 productName: selectedProduct.name,
                                 unitPrice: selectedProduct.unitPrice,
+                                quantity: currentItem.quantity || 1,
                               });
                             }
                           }}
