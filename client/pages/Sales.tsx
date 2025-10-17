@@ -1135,6 +1135,28 @@ export default function Sales() {
     });
   };
 
+  const handleAddItemWithProduct = (productId: string) => {
+    const selectedProduct = products.find((p) => p.id === productId);
+    if (!selectedProduct) {
+      toast({
+        title: "Error",
+        description: "Product not found",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const itemData: Partial<InvoiceItem> = {
+      productId: selectedProduct.id,
+      productName: selectedProduct.name,
+      quantity: currentItem.quantity || 1,
+      unitPrice: selectedProduct.unitPrice,
+      discount: currentItem.discount || 0,
+    };
+
+    addItemToInvoice(itemData);
+  };
+
   const clearNewInvoice = () => {
     setNewInvoice({
       clientId: "",
