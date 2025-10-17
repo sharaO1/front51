@@ -2258,8 +2258,7 @@ export default function Sales() {
                           id="quantity"
                           type="number"
                           min="1"
-                          placeholder="1"
-                          value={currentItem.quantity || ""}
+                          value={currentItem.quantity ?? 1}
                           onChange={(e) =>
                             setCurrentItem({
                               ...currentItem,
@@ -2582,7 +2581,7 @@ export default function Sales() {
                                       {client.name}
                                     </span>
                                     <span className="text-sm text-muted-foreground">
-                                      {client.email} • {client.type}
+                                      {client.email} ��� {client.type}
                                     </span>
                                   </div>
                                 </SelectItem>
@@ -2729,8 +2728,7 @@ export default function Sales() {
                           id="quantity"
                           type="number"
                           min="1"
-                          placeholder="1"
-                          value={currentItem.quantity || ""}
+                          value={currentItem.quantity ?? 1}
                           onChange={(e) =>
                             setCurrentItem({
                               ...currentItem,
