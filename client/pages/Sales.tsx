@@ -429,8 +429,8 @@ export default function Sales() {
         return;
       }
 
-      // If product is selected, allow numbers to be quantity (works even if quantity input is focused)
-      if (currentItem.productId) {
+      // If product is selected and not in a number input field, allow numbers to be quantity
+      if (currentItem.productId && !isItemRelatedInput) {
         const char = event.key;
         if (/\d/.test(char)) {
           event.preventDefault();
