@@ -2247,6 +2247,10 @@ export default function Sales() {
                                 unitPrice: selectedProduct.unitPrice,
                                 quantity: currentItem.quantity || 1,
                               });
+                              // Auto-focus quantity input after product selection
+                              setTimeout(() => {
+                                quantityInputRef.current?.focus();
+                              }, 0);
                             }
                           }}
                         >
@@ -2729,6 +2733,10 @@ export default function Sales() {
                                 unitPrice: selectedProduct.unitPrice,
                                 quantity: currentItem.quantity || 1,
                               });
+                              // Auto-focus quantity input after product selection
+                              setTimeout(() => {
+                                quantityInputRef.current?.focus();
+                              }, 0);
                             }
                           }}
                         >
