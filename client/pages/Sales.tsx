@@ -1328,8 +1328,9 @@ export default function Sales() {
 
   const addItemToInvoice = (itemData?: Partial<InvoiceItem>) => {
     const itemToAdd = itemData || currentItem;
+    const quantity = itemToAdd.quantity || 1;
 
-    if (!itemToAdd.productId || !itemToAdd.quantity) {
+    if (!itemToAdd.productId || quantity <= 0) {
       toast({
         title: "Error",
         description: "Please select a product and enter quantity",
