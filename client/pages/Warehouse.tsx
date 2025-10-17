@@ -605,6 +605,8 @@ export default function Warehouse() {
 
   const [supplierInput, setSupplierInput] = useState<string>("");
   const [editSupplierInput, setEditSupplierInput] = useState<string>("");
+  const [skuBuffer, setSkuBuffer] = useState<string>("");
+  const skuTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { toast } = useToast();
   const accessToken = useAuthStore((s) => s.accessToken);
   const authUser = useAuthStore((s) => s.user);
