@@ -355,6 +355,8 @@ export default function Sales() {
       return;
     }
 
+    const wasDialogClosed = !isCreateDialogOpen;
+
     setCurrentItem({
       productId: product.id,
       productName: product.name,
@@ -363,8 +365,12 @@ export default function Sales() {
       discount: 0,
     });
 
-    if (!isCreateDialogOpen) {
+    if (wasDialogClosed) {
       setIsCreateDialogOpen(true);
+      // Give dialog time to render and receive focus
+      setTimeout(() => {
+        window.focus();
+      }, 100);
     }
   };
 
