@@ -339,11 +339,6 @@ export default function Sales() {
   const { toast } = useToast();
 
   const handleBarcodeScanned = useCallback((sku: string) => {
-    // Ignore barcode if an item is already selected but not added yet
-    if (currentItem.productId) {
-      return;
-    }
-
     const product = products.find(
       (p) => p.sku?.toLowerCase() === sku.toLowerCase(),
     );
@@ -356,34 +351,42 @@ export default function Sales() {
       return;
     }
 
-    const wasDialogClosed = !isCreateDialogOpen;
-
-    const scannedItem: Partial<InvoiceItem> = {
+    // Create invoice item directly from barcode scan
+    const invoiceItem: InvoiceItem = {
+      id: Date.now().toString(),
       productId: product.id,
       productName: product.name,
       quantity: 1,
       unitPrice: product.unitPrice,
       discount: 0,
+      total: product.unitPrice,
     };
+
+    const wasDialogClosed = !isCreateDialogOpen;
+
+    // Add item immediately to invoice
+    const newItems = [...(newInvoice.items || []), invoiceItem];
+    const { subtotal, taxAmount, total } = calculateInvoiceTotal(
+      newItems,
+      newInvoice.taxRate,
+      newInvoice.discountAmount,
+    );
+
+    setNewInvoice({
+      ...newInvoice,
+      items: newItems,
+      subtotal,
+      taxAmount,
+      total,
+    });
+
+    // Clear current item selection for next scan
+    clearCurrentItem();
 
     if (wasDialogClosed) {
       setIsCreateDialogOpen(true);
-      // Give dialog time to render before adding item
-      setTimeout(() => {
-        setCurrentItem(scannedItem);
-        // After a brief delay, automatically add the scanned item to the invoice
-        setTimeout(() => {
-          addItemToInvoice(scannedItem);
-        }, 50);
-      }, 100);
-    } else {
-      // Dialog is already open - immediately add the scanned item
-      setCurrentItem(scannedItem);
-      setTimeout(() => {
-        addItemToInvoice(scannedItem);
-      }, 0);
     }
-  }, [products, currentItem, isCreateDialogOpen, toast]);
+  }, [products, newInvoice, toast]);
 
   // Reset form state when dialog closes, and focus body when dialog opens to enable barcode scanning
   useEffect(() => {
