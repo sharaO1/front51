@@ -338,7 +338,9 @@ export default function Sales() {
   const { toast } = useToast();
 
   const handleBarcodeScanned = (sku: string) => {
-    const product = products.find((p) => p.sku?.toLowerCase() === sku.toLowerCase());
+    const product = products.find(
+      (p) => p.sku?.toLowerCase() === sku.toLowerCase(),
+    );
     if (!product) {
       toast({
         title: "Product Not Found",
