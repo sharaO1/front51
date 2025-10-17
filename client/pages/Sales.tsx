@@ -378,10 +378,18 @@ export default function Sales() {
     }
   }, [products, currentItem, isCreateDialogOpen, toast]);
 
-  // Reset form state when dialog closes
+  // Reset form state when dialog closes, and focus body when dialog opens to enable barcode scanning
   useEffect(() => {
     if (!isCreateDialogOpen) {
       clearNewInvoice();
+    } else {
+      // When dialog opens, blur any focused input to allow barcode scanning
+      setTimeout(() => {
+        const activeElement = document.activeElement as HTMLElement;
+        if (activeElement && activeElement.tagName === "INPUT" || activeElement?.tagName === "SELECT" || activeElement?.tagName === "BUTTON") {
+          activeElement.blur();
+        }
+      }, 100);
     }
   }, [isCreateDialogOpen]);
 
