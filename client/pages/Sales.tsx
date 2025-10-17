@@ -1353,10 +1353,10 @@ export default function Sales() {
       id: Date.now().toString(),
       productId: itemToAdd.productId!,
       productName: itemToAdd.productName!,
-      quantity: itemToAdd.quantity!,
+      quantity: quantity,
       unitPrice: itemToAdd.unitPrice!,
       discount: itemToAdd.discount || 0,
-      total: calculateItemTotal(itemToAdd),
+      total: calculateItemTotal({ ...itemToAdd, quantity }),
     };
 
     const updatedItems = [...(newInvoice.items || []), item];
