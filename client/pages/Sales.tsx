@@ -1330,14 +1330,6 @@ export default function Sales() {
     const itemToAdd = itemData || currentItem;
     const quantity = itemToAdd.quantity || 1;
 
-    console.log("DEBUG: addItemToInvoice called", {
-      itemToAdd,
-      quantity,
-      productId: itemToAdd.productId,
-      currentItem,
-      productsCount: products.length,
-    });
-
     if (!itemToAdd.productId || quantity <= 0) {
       toast({
         title: "Error",
