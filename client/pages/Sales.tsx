@@ -350,25 +350,18 @@ export default function Sales() {
       return;
     }
 
+    const scannedItem: Partial<InvoiceItem> = {
+      productId: product.id,
+      productName: product.name,
+      quantity: 1,
+      unitPrice: product.unitPrice,
+      discount: 0,
+    };
+
     if (isCreateDialogOpen) {
-      setCurrentItem({
-        productId: product.id,
-        productName: product.name,
-        quantity: 1,
-        unitPrice: product.unitPrice,
-        discount: 0,
-      });
-      setTimeout(() => {
-        addItemToInvoice();
-      }, 50);
+      addItemToInvoice(scannedItem);
     } else {
-      setCurrentItem({
-        productId: product.id,
-        productName: product.name,
-        quantity: 1,
-        unitPrice: product.unitPrice,
-        discount: 0,
-      });
+      setCurrentItem(scannedItem);
       setIsCreateDialogOpen(true);
     }
   };
