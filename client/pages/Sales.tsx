@@ -2175,15 +2175,11 @@ export default function Sales() {
                                     <span className="font-medium capitalize">
                                       {product.name}
                                     </span>
-                                    <span className="text-sm text-muted-foreground">
-                                      ${price.toFixed(2)}
-                                      {product.category ? (
-                                        <span className="ml-2">
-                                          {" "}
-                                          • {product.category}
-                                        </span>
-                                      ) : null}
-                                    </span>
+                                    {product.category ? (
+                                      <span className="text-sm text-muted-foreground ml-2">
+                                        • {product.category}
+                                      </span>
+                                    ) : null}
                                   </div>
                                 </SelectItem>
                               );
@@ -2647,15 +2643,11 @@ export default function Sales() {
                                     <span className="font-medium capitalize">
                                       {product.name}
                                     </span>
-                                    <span className="text-sm text-muted-foreground">
-                                      ${price.toFixed(2)}
-                                      {product.category ? (
-                                        <span className="ml-2">
-                                          {" "}
-                                          • {product.category}
-                                        </span>
-                                      ) : null}
-                                    </span>
+                                    {product.category ? (
+                                      <span className="text-sm text-muted-foreground ml-2">
+                                        • {product.category}
+                                      </span>
+                                    ) : null}
                                   </div>
                                 </SelectItem>
                               );
