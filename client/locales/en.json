@@ -87,6 +87,7 @@
   "navigation": {
     "dashboard": "Dashboard",
     "warehouse": "Warehouse",
+    "low_stock_alerts": "Low Stock Alerts",
     "clients": "Clients",
     "sales": "Sales",
     "finance": "Finance",
