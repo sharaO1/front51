@@ -436,7 +436,8 @@ export default function Sales() {
         }
 
         // If no product selected and dialog is open, create invoice
-        if (!currentItem.productId && isCreateDialogOpen) {
+        // But don't do this if a barcode was just scanned (prevents error)
+        if (!currentItem.productId && isCreateDialogOpen && !justScannedRef.current) {
           createInvoice();
         }
         return;
