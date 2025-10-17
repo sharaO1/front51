@@ -340,50 +340,53 @@ export default function Sales() {
   });
   const { toast } = useToast();
 
-  const handleBarcodeScanned = useCallback((sku: string) => {
-    const product = products.find(
-      (p) => p.sku?.toLowerCase() === sku.toLowerCase(),
-    );
-    if (!product) {
-      toast({
-        title: "Product Not Found",
-        description: `No product found with SKU: ${sku}`,
-        variant: "destructive",
+  const handleBarcodeScanned = useCallback(
+    (sku: string) => {
+      const product = products.find(
+        (p) => p.sku?.toLowerCase() === sku.toLowerCase(),
+      );
+      if (!product) {
+        toast({
+          title: "Product Not Found",
+          description: `No product found with SKU: ${sku}`,
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const wasDialogClosed = !isCreateDialogOpen;
+
+      // Mark that a barcode was just scanned to prevent accidental invoice creation
+      justScannedRef.current = true;
+      if (barcodeScanTimeoutRef.current) {
+        clearTimeout(barcodeScanTimeoutRef.current);
+      }
+      barcodeScanTimeoutRef.current = setTimeout(() => {
+        justScannedRef.current = false;
+      }, 500);
+
+      // Set current item (this will select it in the product dropdown)
+      setCurrentItem({
+        productId: product.id,
+        productName: product.name,
+        quantity: 1,
+        unitPrice: product.unitPrice,
+        discount: 0,
       });
-      return;
-    }
 
-    const wasDialogClosed = !isCreateDialogOpen;
-
-    // Mark that a barcode was just scanned to prevent accidental invoice creation
-    justScannedRef.current = true;
-    if (barcodeScanTimeoutRef.current) {
-      clearTimeout(barcodeScanTimeoutRef.current);
-    }
-    barcodeScanTimeoutRef.current = setTimeout(() => {
-      justScannedRef.current = false;
-    }, 500);
-
-    // Set current item (this will select it in the product dropdown)
-    setCurrentItem({
-      productId: product.id,
-      productName: product.name,
-      quantity: 1,
-      unitPrice: product.unitPrice,
-      discount: 0,
-    });
-
-    if (wasDialogClosed) {
-      setIsCreateDialogOpen(true);
-      // Give dialog time to render and focus quantity input
-      setTimeout(() => {
+      if (wasDialogClosed) {
+        setIsCreateDialogOpen(true);
+        // Give dialog time to render and focus quantity input
+        setTimeout(() => {
+          quantityInputRef.current?.focus();
+        }, 100);
+      } else {
+        // Dialog is already open, focus quantity input immediately
         quantityInputRef.current?.focus();
-      }, 100);
-    } else {
-      // Dialog is already open, focus quantity input immediately
-      quantityInputRef.current?.focus();
-    }
-  }, [products, isCreateDialogOpen, toast]);
+      }
+    },
+    [products, isCreateDialogOpen, toast],
+  );
 
   // Reset form state when dialog closes, and focus body when dialog opens to enable barcode scanning
   useEffect(() => {
@@ -393,7 +396,11 @@ export default function Sales() {
       // When dialog opens, blur any focused input to allow barcode scanning
       setTimeout(() => {
         const activeElement = document.activeElement as HTMLElement;
-        if (activeElement && activeElement.tagName === "INPUT" || activeElement?.tagName === "SELECT" || activeElement?.tagName === "BUTTON") {
+        if (
+          (activeElement && activeElement.tagName === "INPUT") ||
+          activeElement?.tagName === "SELECT" ||
+          activeElement?.tagName === "BUTTON"
+        ) {
           activeElement.blur();
         }
       }, 100);
@@ -437,7 +444,11 @@ export default function Sales() {
 
         // If no product selected and dialog is open, create invoice
         // But don't do this if a barcode was just scanned (prevents error)
-        if (!currentItem.productId && isCreateDialogOpen && !justScannedRef.current) {
+        if (
+          !currentItem.productId &&
+          isCreateDialogOpen &&
+          !justScannedRef.current
+        ) {
           createInvoice();
         }
         return;
@@ -1171,7 +1182,10 @@ export default function Sales() {
   const clearCurrentItem = () => {
     // Blur any focused input to prevent scanned SKU from going to quantity field
     const activeElement = document.activeElement as HTMLElement;
-    if (activeElement && (activeElement.id === "quantity" || activeElement.id === "discount")) {
+    if (
+      activeElement &&
+      (activeElement.id === "quantity" || activeElement.id === "discount")
+    ) {
       activeElement.blur();
     }
     setCurrentItem({
