@@ -2390,6 +2390,13 @@ export default function Sales() {
                               quantity: parseInt(e.target.value) || 1,
                             })
                           }
+                          onKeyDown={(e) => {
+                            const allowed = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter'];
+                            if (allowed.includes(e.key)) return;
+                            if (!/^\d$/.test(e.key)) {
+                              e.preventDefault();
+                            }
+                          }}
                         />
                       </div>
                       <div className="space-y-2">
@@ -2876,6 +2883,13 @@ export default function Sales() {
                               quantity: parseInt(e.target.value) || 1,
                             })
                           }
+                          onKeyDown={(e) => {
+                            const allowed = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter'];
+                            if (allowed.includes(e.key)) return;
+                            if (!/^\d$/.test(e.key)) {
+                              e.preventDefault();
+                            }
+                          }}
                         />
                       </div>
                       <div className="space-y-2">
