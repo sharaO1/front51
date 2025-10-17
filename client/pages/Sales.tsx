@@ -422,6 +422,14 @@ export default function Sales() {
             ...currentItem,
             quantity: newQuantity,
           });
+        } else if (char === "Backspace" || char === "Delete") {
+          event.preventDefault();
+          const currentQuantity = currentItem.quantity || 0;
+          const newQuantity = Math.floor(currentQuantity / 10);
+          setCurrentItem({
+            ...currentItem,
+            quantity: newQuantity,
+          });
         }
         return;
       }
