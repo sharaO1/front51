@@ -368,10 +368,13 @@ export default function Sales() {
 
     if (wasDialogClosed) {
       setIsCreateDialogOpen(true);
-      // Give dialog time to render and receive focus
+      // Give dialog time to render and focus quantity input
       setTimeout(() => {
-        window.focus();
+        quantityInputRef.current?.focus();
       }, 100);
+    } else {
+      // Dialog is already open, focus quantity input immediately
+      quantityInputRef.current?.focus();
     }
   };
 
