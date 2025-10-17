@@ -338,7 +338,7 @@ export default function Sales() {
   });
   const { toast } = useToast();
 
-  const handleBarcodeScanned = (sku: string) => {
+  const handleBarcodeScanned = useCallback((sku: string) => {
     // Ignore barcode if an item is already selected but not added yet
     if (currentItem.productId) {
       return;
@@ -376,7 +376,7 @@ export default function Sales() {
       // Dialog is already open, focus quantity input immediately
       quantityInputRef.current?.focus();
     }
-  };
+  }, [products, currentItem, isCreateDialogOpen, toast]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
