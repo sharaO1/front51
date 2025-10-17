@@ -296,6 +296,8 @@ export default function Sales() {
   const isMobile = useIsMobile();
   const [barcodeBuffer, setBarcodeBuffer] = useState("");
   const barcodeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const barcodeScanTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const justScannedRef = useRef(false);
   const quantityInputRef = useRef<HTMLInputElement | null>(null);
 
   const closeExportLayers = () => {
