@@ -585,7 +585,7 @@ export default function Clients() {
           <CardContent>
             <div className="text-2xl font-bold">
               {formatCurrency(
-                clients.reduce((sum, c) => sum + Number(c.currentDebt || 0), 0)
+                clients.reduce((sum, c) => sum + Number(c.currentDebt || 0), 0),
               )}
             </div>
             <p className="text-xs text-muted-foreground">
@@ -621,7 +621,10 @@ export default function Clients() {
           <CardContent>
             <div className="text-2xl font-bold">
               {formatCurrency(
-                clients.reduce((sum, c) => sum + Number(c.totalPurchases || 0), 0)
+                clients.reduce(
+                  (sum, c) => sum + Number(c.totalPurchases || 0),
+                  0,
+                ),
               )}
             </div>
             <p className="text-xs text-muted-foreground">
@@ -685,7 +688,8 @@ export default function Clients() {
                   <div>
                     <div className="font-semibold">{client.name}</div>
                     <div className="text-xs text-muted-foreground">
-                      {t("common.total")}: {formatCurrency(client.totalPurchases)}
+                      {t("common.total")}:{" "}
+                      {formatCurrency(client.totalPurchases)}
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-1 justify-end">
@@ -709,7 +713,8 @@ export default function Clients() {
                       {formatCurrency(client.currentDebt)}
                     </div>
                     <div className="text-xs text-muted-foreground">
-                      {t("clients.credit_limit")}: {formatCurrency(client.creditLimit)}
+                      {t("clients.credit_limit")}:{" "}
+                      {formatCurrency(client.creditLimit)}
                     </div>
                   </div>
                   <div className="flex gap-1">
@@ -825,7 +830,8 @@ export default function Clients() {
                       <div>
                         <div className="font-medium">{client.name}</div>
                         <div className="text-sm text-muted-foreground">
-                          {t("common.total")}: {formatCurrency(client.totalPurchases)}
+                          {t("common.total")}:{" "}
+                          {formatCurrency(client.totalPurchases)}
                         </div>
                       </div>
                     </TableCell>
@@ -845,10 +851,11 @@ export default function Clients() {
                     <TableCell>
                       <div>
                         <div className="font-medium">
-                      {formatCurrency(client.currentDebt)}
-                    </div>
+                          {formatCurrency(client.currentDebt)}
+                        </div>
                         <div className="text-sm text-muted-foreground">
-                          {t("clients.credit_limit")}: {formatCurrency(client.creditLimit)}
+                          {t("clients.credit_limit")}:{" "}
+                          {formatCurrency(client.creditLimit)}
                         </div>
                       </div>
                     </TableCell>
