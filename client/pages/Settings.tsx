@@ -17,6 +17,7 @@ import {
   Moon,
   Sun,
   Bell,
+  AlertTriangle,
   Shield,
   Building,
   Save,
@@ -43,6 +44,16 @@ interface NotificationSettings {
   paymentReminders: boolean;
   systemUpdates: boolean;
   securityAlerts: boolean;
+}
+
+interface LowStockAlertSettings {
+  enabled: boolean;
+  emailNotification: boolean;
+  smsNotification: boolean;
+  criticalThreshold: number;
+  warningThreshold: number;
+  checkFrequency: string;
+  autoReorder: boolean;
 }
 
 interface SecuritySettings {
@@ -80,6 +91,16 @@ export default function Settings() {
     maxLoginAttempts: 5,
   });
 
+  const [lowStockAlertSettings, setLowStockAlertSettings] = useState<LowStockAlertSettings>({
+    enabled: true,
+    emailNotification: true,
+    smsNotification: false,
+    criticalThreshold: 25,
+    warningThreshold: 50,
+    checkFrequency: "daily",
+    autoReorder: false,
+  });
+
   const [showChangePassword, setShowChangePassword] = useState(false);
   const [passwordForm, setPasswordForm] = useState({
     currentPassword: "",
@@ -105,6 +126,13 @@ export default function Settings() {
     toast({
       title: "Security updated",
       description: "Security settings have been applied.",
+    });
+  };
+
+  const saveLowStockAlertSettings = () => {
+    toast({
+      title: "Low Stock Alerts configured",
+      description: "Your low stock alert settings have been saved successfully.",
     });
   };
 
@@ -347,6 +375,136 @@ export default function Settings() {
               <Button onClick={saveNotificationSettings} className="w-full">
                 <Save className="mr-2 h-4 w-4" />
                 Save Notifications
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <AlertTriangle className="h-5 w-5" />
+                Low Stock Alert Configuration
+              </CardTitle>
+              <CardDescription>
+                Fine-tune your low stock alert settings and thresholds
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label>Enable Low Stock Alerts</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Activate monitoring for inventory levels
+                  </p>
+                </div>
+                <Switch
+                  checked={lowStockAlertSettings.enabled}
+                  onCheckedChange={(checked) => setLowStockAlertSettings({...lowStockAlertSettings, enabled: checked})}
+                />
+              </div>
+
+              {lowStockAlertSettings.enabled && (
+                <>
+                  <div className="space-y-4 pt-4 border-t">
+                    <div className="space-y-2">
+                      <Label htmlFor="criticalThreshold">
+                        Critical Stock Threshold (% of minimum)
+                      </Label>
+                      <Input
+                        id="criticalThreshold"
+                        type="number"
+                        min="0"
+                        max="100"
+                        value={lowStockAlertSettings.criticalThreshold}
+                        onChange={(e) => setLowStockAlertSettings({...lowStockAlertSettings, criticalThreshold: Math.max(0, Math.min(100, parseInt(e.target.value) || 0))})}
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        Alert when stock falls below this % of minimum required level
+                      </p>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="warningThreshold">
+                        Warning Stock Threshold (% of minimum)
+                      </Label>
+                      <Input
+                        id="warningThreshold"
+                        type="number"
+                        min="0"
+                        max="100"
+                        value={lowStockAlertSettings.warningThreshold}
+                        onChange={(e) => setLowStockAlertSettings({...lowStockAlertSettings, warningThreshold: Math.max(0, Math.min(100, parseInt(e.target.value) || 0))})}
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        Alert when stock approaches this % of minimum required level
+                      </p>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="checkFrequency">Check Frequency</Label>
+                      <Select
+                        value={lowStockAlertSettings.checkFrequency}
+                        onValueChange={(value) => setLowStockAlertSettings({...lowStockAlertSettings, checkFrequency: value})}
+                      >
+                        <SelectTrigger id="checkFrequency">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="realtime">Real-time</SelectItem>
+                          <SelectItem value="hourly">Hourly</SelectItem>
+                          <SelectItem value="daily">Daily</SelectItem>
+                          <SelectItem value="weekly">Weekly</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="space-y-3 pt-4 border-t">
+                      <Label>Notification Channels</Label>
+                      <div className="flex items-center justify-between">
+                        <div className="space-y-0.5">
+                          <Label className="text-sm">Email Notification</Label>
+                          <p className="text-xs text-muted-foreground">
+                            Receive alerts via email
+                          </p>
+                        </div>
+                        <Switch
+                          checked={lowStockAlertSettings.emailNotification}
+                          onCheckedChange={(checked) => setLowStockAlertSettings({...lowStockAlertSettings, emailNotification: checked})}
+                        />
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div className="space-y-0.5">
+                          <Label className="text-sm">SMS Notification</Label>
+                          <p className="text-xs text-muted-foreground">
+                            Receive alerts via SMS
+                          </p>
+                        </div>
+                        <Switch
+                          checked={lowStockAlertSettings.smsNotification}
+                          onCheckedChange={(checked) => setLowStockAlertSettings({...lowStockAlertSettings, smsNotification: checked})}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between pt-4 border-t">
+                      <div className="space-y-0.5">
+                        <Label className="text-sm">Auto-Reorder</Label>
+                        <p className="text-xs text-muted-foreground">
+                          Automatically create purchase orders when stock is low
+                        </p>
+                      </div>
+                      <Switch
+                        checked={lowStockAlertSettings.autoReorder}
+                        onCheckedChange={(checked) => setLowStockAlertSettings({...lowStockAlertSettings, autoReorder: checked})}
+                      />
+                    </div>
+                  </div>
+                </>
+              )}
+
+              <Button onClick={saveLowStockAlertSettings} className="w-full">
+                <Save className="mr-2 h-4 w-4" />
+                Save Low Stock Settings
               </Button>
             </CardContent>
           </Card>
