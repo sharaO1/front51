@@ -351,42 +351,28 @@ export default function Sales() {
       return;
     }
 
-    // Create invoice item directly from barcode scan
-    const invoiceItem: InvoiceItem = {
-      id: Date.now().toString(),
+    const wasDialogClosed = !isCreateDialogOpen;
+
+    // Set current item (this will select it in the product dropdown)
+    setCurrentItem({
       productId: product.id,
       productName: product.name,
       quantity: 1,
       unitPrice: product.unitPrice,
       discount: 0,
-      total: product.unitPrice,
-    };
-
-    const wasDialogClosed = !isCreateDialogOpen;
-
-    // Add item immediately to invoice
-    const newItems = [...(newInvoice.items || []), invoiceItem];
-    const { subtotal, taxAmount, total } = calculateInvoiceTotal(
-      newItems,
-      newInvoice.taxRate,
-      newInvoice.discountAmount,
-    );
-
-    setNewInvoice({
-      ...newInvoice,
-      items: newItems,
-      subtotal,
-      taxAmount,
-      total,
     });
-
-    // Clear current item selection for next scan
-    clearCurrentItem();
 
     if (wasDialogClosed) {
       setIsCreateDialogOpen(true);
+      // Give dialog time to render and focus quantity input
+      setTimeout(() => {
+        quantityInputRef.current?.focus();
+      }, 100);
+    } else {
+      // Dialog is already open, focus quantity input immediately
+      quantityInputRef.current?.focus();
     }
-  }, [products, newInvoice, toast]);
+  }, [products, isCreateDialogOpen, toast]);
 
   // Reset form state when dialog closes, and focus body when dialog opens to enable barcode scanning
   useEffect(() => {
