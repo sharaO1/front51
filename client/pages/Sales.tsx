@@ -427,7 +427,13 @@ export default function Sales() {
           return;
         }
 
-        // If a product is selected but Enter from another field, don't do anything
+        // If a product is selected and Enter is pressed (not from other inputs), add item
+        if (currentItem.productId && !isOtherInput && isCreateDialogOpen) {
+          addItemToInvoice();
+          return;
+        }
+
+        // If a product is selected but Enter from another field (like notes), don't do anything
         if (currentItem.productId && isOtherInput) {
           return;
         }
