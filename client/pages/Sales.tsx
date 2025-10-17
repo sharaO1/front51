@@ -2218,9 +2218,11 @@ export default function Sales() {
                         <Select
                           value={currentItem.productId || ""}
                           onValueChange={(value) => {
+                            console.log("DEBUG: Product selected, value:", value, "products available:", products.length);
                             const selectedProduct = products.find(
                               (p) => p.id === value,
                             );
+                            console.log("DEBUG: Selected product found:", selectedProduct);
                             if (selectedProduct) {
                               setCurrentItem({
                                 ...currentItem,
@@ -2229,6 +2231,9 @@ export default function Sales() {
                                 unitPrice: selectedProduct.unitPrice,
                                 quantity: currentItem.quantity || 1,
                               });
+                              console.log("DEBUG: currentItem updated with product");
+                            } else {
+                              console.log("DEBUG: Product not found in array");
                             }
                           }}
                         >
@@ -2687,9 +2692,11 @@ export default function Sales() {
                         <Select
                           value={currentItem.productId || ""}
                           onValueChange={(value) => {
+                            console.log("DEBUG: Product selected, value:", value, "products available:", products.length);
                             const selectedProduct = products.find(
                               (p) => p.id === value,
                             );
+                            console.log("DEBUG: Selected product found:", selectedProduct);
                             if (selectedProduct) {
                               setCurrentItem({
                                 ...currentItem,
@@ -2698,6 +2705,9 @@ export default function Sales() {
                                 unitPrice: selectedProduct.unitPrice,
                                 quantity: currentItem.quantity || 1,
                               });
+                              console.log("DEBUG: currentItem updated with product");
+                            } else {
+                              console.log("DEBUG: Product not found in array");
                             }
                           }}
                         >
