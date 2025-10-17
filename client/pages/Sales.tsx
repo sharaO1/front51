@@ -531,8 +531,6 @@ export default function Sales() {
     isCreateDialogOpen,
     currentItem,
     handleBarcodeScanned,
-    addItemToInvoice,
-    createInvoice,
   ]);
 
   const buildInvoiceReport = (inv: Invoice) => {
@@ -939,7 +937,7 @@ export default function Sales() {
         (group, idx) => `
         ${idx > 0 ? '<div class="page-break"></div>' : ""}
         <div class="page-head">
-          <div><strong>${t("navigation.sales")} — ${t("dashboard.recent_activity", "Recent Activity")}</strong></div>
+          <div><strong>${t("navigation.sales")} ��� ${t("dashboard.recent_activity", "Recent Activity")}</strong></div>
           <div class="meta-small">${t("common.date")}: ${periodLabel} • ${t("sales.report.generated_on", "Generated on")}: ${formatDateTime(new Date())} • ${t("common.page", { defaultValue: "Page" })} ${idx + 1}/${totalPages}</div>
         </div>
         <div class="section">
