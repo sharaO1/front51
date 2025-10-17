@@ -2274,7 +2274,8 @@ export default function Sales() {
                           type="number"
                           min="0"
                           max="100"
-                          value={currentItem.discount}
+                          placeholder="0"
+                          value={currentItem.discount || ""}
                           onChange={(e) =>
                             setCurrentItem({
                               ...currentItem,
@@ -2744,7 +2745,8 @@ export default function Sales() {
                           type="number"
                           min="0"
                           max="100"
-                          value={currentItem.discount}
+                          placeholder="0"
+                          value={currentItem.discount || ""}
                           onChange={(e) =>
                             setCurrentItem({
                               ...currentItem,
