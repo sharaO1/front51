@@ -1375,17 +1375,48 @@ export default function Sales() {
       return;
     }
 
-    const item: InvoiceItem = {
-      id: Date.now().toString(),
-      productId: itemToAdd.productId!,
-      productName: itemToAdd.productName!,
-      quantity: quantity,
-      unitPrice: itemToAdd.unitPrice!,
-      discount: itemToAdd.discount || 0,
-      total: calculateItemTotal({ ...itemToAdd, quantity }),
-    };
+    const newDiscount = itemToAdd.discount || 0;
 
-    const updatedItems = [...(newInvoice.items || []), item];
+    // Check if an item with the same product ID and discount already exists
+    const existingItemIndex = (newInvoice.items || []).findIndex(
+      (item) =>
+        item.productId === itemToAdd.productId &&
+        item.discount === newDiscount,
+    );
+
+    let updatedItems: InvoiceItem[];
+
+    if (existingItemIndex >= 0) {
+      // Merge with existing item: increase quantity
+      updatedItems = newInvoice.items!.map((item, index) => {
+        if (index === existingItemIndex) {
+          const newQuantity = item.quantity + quantity;
+          return {
+            ...item,
+            quantity: newQuantity,
+            total: calculateItemTotal({
+              ...item,
+              quantity: newQuantity,
+            }),
+          };
+        }
+        return item;
+      });
+    } else {
+      // Add as new item
+      const item: InvoiceItem = {
+        id: Date.now().toString(),
+        productId: itemToAdd.productId!,
+        productName: itemToAdd.productName!,
+        quantity: quantity,
+        unitPrice: itemToAdd.unitPrice!,
+        discount: newDiscount,
+        total: calculateItemTotal({ ...itemToAdd, quantity }),
+      };
+
+      updatedItems = [...(newInvoice.items || []), item];
+    }
+
     const { subtotal, taxAmount, total } = calculateInvoiceTotal(
       updatedItems,
       newInvoice.taxRate,
