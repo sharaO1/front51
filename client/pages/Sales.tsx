@@ -378,6 +378,13 @@ export default function Sales() {
     }
   }, [products, currentItem, isCreateDialogOpen, toast]);
 
+  // Clear item state when dialog opens to ensure fresh barcode scanning
+  useEffect(() => {
+    if (isCreateDialogOpen) {
+      clearCurrentItem();
+    }
+  }, [isCreateDialogOpen]);
+
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       const activeElement = document.activeElement as HTMLElement;
